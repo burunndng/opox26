@@ -5,9 +5,18 @@ import { SchedulingEngine, InterleavingEngine } from '../server/scheduler.ts';
 import { DataExporter } from '../server/exporter.ts';
 import { Item, Atom, NumberSortItem } from '../src/types.ts';
 import { auditItemPedagogicalQuality } from '../src/utils/learningDesignValidator.ts';
+import { isolateDataDir } from './helpers/isolation.ts';
+
+// Must run before db.init(): redirects the database to a temp dir and disables
+// all AI/Jev network calls. The live ./data/oposilab.db is never touched.
+const ISOLATED_DIR = isolateDataDir();
 
 describe('OposiLab Cognitive Engine Test Suite', () => {
   before(() => {
+    assert.ok(
+      process.env.OPOSILAB_DATA_DIR === ISOLATED_DIR && process.env.OPOSILAB_OFFLINE === '1',
+      'Test isolation env must be set before db.init()'
+    );
     db.init();
   });
 

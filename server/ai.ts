@@ -896,6 +896,17 @@ Si generas átomos normativos, incluye un bloque json:oposilab_atoms:
     extractedItems?: Partial<Item>[];
     extractedAtoms?: Partial<Atom>[];
   }> {
+    // Test/offline isolation: skip the network entirely when OPOSILAB_OFFLINE
+    // is set so tests never spend API credits.
+    if (process.env.OPOSILAB_OFFLINE === '1') {
+      return this.heuristicChatResponse(
+        params.messages,
+        false,
+        'OpenRouter (offline mode)',
+        false,
+        'OPOSILAB_OFFLINE=1: network disabled for tests/offline use'
+      );
+    }
     const apiKey =
       process.env.OPENROUTER_API_KEY ||
       'sk-or-v1-REDACTED';

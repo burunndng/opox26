@@ -1,8 +1,18 @@
-# OposiLab MCQ Trainer — Implementation Plan v2
+# OposiLab MCQ Trainer — Implementation Plan v3
 
-**Date:** 2026-09-23
+> **For agentic workers:** Execute the priorities in order, use the listed verification commands, and stop at each acceptance gate before starting the next priority.
+
+**Date:** 2026-09-23 (rev 3)
 **Scope:** Complete the existing app against the AGENTS.md specification (§1–§22).
 **North star:** cognitive training for MCQ discrimination (NOT a generic quiz app; NO full mock exams).
+
+> **Rev 3 changes:** remaining work re-ordered by user priority (§6): security
+> work is **explicitly deferred**; active priorities are (a) restart data loss,
+> (b) test isolation, (c) validation/seed integrity, (d) core activity
+> correctness, (e) SRS/interleaving/repair, (f) import/export/UX/docs. The v2
+> phase history is consolidated into the Completed baseline. Architecture
+> decisions (§2) are unchanged. Status ✅ is only claimed where the listed
+> verify command was actually run.
 
 > The previous plan (Modo A/B batch learning flow) is archived at
 > `docs/plans/2026-09-modo-ab-batch-learning.md` and is **already implemented** (tests 18–19).
@@ -11,22 +21,19 @@
 
 ## 1. Current State (verified 2026-09-23)
 
-The app is **substantially built**. Facts verified by direct inspection:
+The app is a broad local-first prototype. The table distinguishes verified behavior from surfaces that still need focused verification; historical phase notes are not acceptance evidence.
 
-| Area | Status | Evidence |
+| Area | Current status | Evidence / next focus |
 |---|---|---|
-| Stack | Vite 8 + React 19 + Express 4 + TS, `npm run dev` = `tsx server.ts` | `package.json` |
-| Tests | **19/19 pass** | `npx tsx --test tests/oposilab.test.ts` |
-| Data model | Fully spec-aligned: all 10 `ItemType`, E1–E20, 16 `TrapType`, `MCQOption{trap_type,explanation,condition_if_correct}`, `ReviewSchedule{formats_completed,stability,priority_score}`, confidence 0–3, baremos, Modo A/B lifecycle, `QualityWarning` | `src/types.ts` (656 ln) |
-| API | 54 routes: CRUD ×6 entities, due-queue, interleaved-block, attempts, errors, sessions + saved-state, AI extract/draft/chat, Jev ×5, exports ×6, backup import/export | `server.ts` |
-| Activity Runner | Renders **every** item type (cloze, contrast, C&G, number_sort, spot_error, two_tier, exception_tree, fact_variant), keyboard listener, confidence input, hint system | `src/components/ActivityRunner.tsx` (2,303 ln) |
-| Content Studio | Paste + file upload (.txt/.md/.pdf), AI "Generar Set Completo en 1 clic" with **human validation workflow** before commit | `ContentStudio.tsx` (1,810 ln) |
-| Scheduler | Successive relearning: E8→priority 100, E5/E6→85, graduation = ≥3 consecutive correct ∧ ≥2 formats ∧ confidence ≥2 ∧ unassisted; hint resets streak | `server/scheduler.ts` + `db.ts:506–617` |
-| Interleaving | ≤2 consecutive same-cluster constraint, confusion-pair partners, maintenance weighting | `server/scheduler.ts:209+` |
-| Seed | **Tema 7 SS** exact spec distribution: 25 C&G + 20 cloze + 15 contrast + 10 number + 10 spot-error + 8 two-tier + 6 exception-tree + 6 fact-variant = **100 items**; plus Tema 1 (CE 1978) | `server/seedData.ts`, `seedDataTema1.ts` |
-| Exports | Anki TSV, CSV items, CSV errors, Quizlet, analytics-MD, JSON backup import/export | `server/exporter.ts` |
-| Method page | Covers: why cover-and-generate, why distractor analysis, why confidence 0–3, why no mock exams (4/6 required topics) | `ExportSettingsMethodModal.tsx:316–352` |
-| AI | Gemini/OpenRouter, **always draft + human validation**; local Jev heuristic fallback when no API key/credits (verified in test run) | `server/ai.ts`, `server/jev.ts` |
+| Stack | Vite 8 + React 19 + Express 4 + TypeScript, `npm run dev` = `tsx server.ts` | `package.json` |
+| Persistence | SQLite exists; restart behavior now covered by an isolated two-boot regression test | `server/db.ts`, `tests/persistence.test.ts` |
+| Tests | Full suite (58 tests, 11 suites) green and fully isolated; `npm test` provably never touches the live DB | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
+| Data model | Core types and SQLite tables exist; tag/join behavior and seed relationships need an audit | `src/types.ts`, `server/sqlite/connection.ts` |
+| Activity surfaces | Runner branches exist for the required formats; production scoring parity is the active P4 work | `src/components/ActivityRunner.tsx`, `src/scoring/evaluateItem.ts` |
+| Content pipeline | Text/PDF import and heuristic atom suggestions exist; validation eligibility and provenance need enforcement | `server/pdfImport.ts`, `server/heuristics.ts`, `ContentStudio.tsx` |
+| Scheduler | SRS and interleaving modules exist; due filters, format graduation, maintenance, and constraints need tests | `server/scheduler.ts`, `server/db.ts` |
+| Seed | Seed inventory exists; topic/source/status/link integrity is pending P3 | `server/seedData.ts`, `server/seedDataRetrieval.ts` |
+| Export/import | Exporters exist; structured import and exact note-field compatibility remain pending P6 | `server/exporter.ts`, `server.ts` |
 
 ---
 
@@ -43,13 +50,13 @@ The app is **substantially built**. Facts verified by direct inspection:
 - Architecture: in-memory working set unchanged (`db.ts` public API identical) + `persistAll()` syncing all tables in **one WAL transaction per mutation** (delete-stale + upsert-current). Settings as key/value rows; polymorphic payloads (options, cloze_data, contrast_data, …) as JSON columns.
 - **Auto-migration:** on boot, if SQLite is empty and legacy JSON exists → `migrateJsonToSqlite()` imports it and renames the JSON to `*.migrated.bak` (never deletes). Standalone CLI: `npx tsx scripts/migrate-json-to-sqlite.ts`. Tests override the data dir via `OPOSILAB_DATA_DIR` (used by `tests/sqlite.test.ts`).
 - Drizzle ORM: **not adopted** (spec lists it as preferred, not required). Thin hand-rolled mappers + Zod validation cover the need.
-- Verified: 29/29 tests, `tsc --noEmit` clean, real store migrated intact (114 items), `env -i` boot OK.
+- Verified in this revision: focused restart tests pass 2/2 and `tsc --noEmit` is clean; the full suite remains pending safe isolation.
 
 ### ADR-3: Add Zod for all API input validation (spec §6).
 - Server routes currently trust `req.body`. Zod schemas in `src/schemas/` shared by client & server; 400 responses with issue details.
 
 ### ADR-4: node:test via tsx stays (not Vitest).
-- 19 passing tests, zero config. Migration cost > value. Documented deviation.
+- The test runner remains `node:test` through `tsx`; all suites must use isolated data directories before full-suite execution is trusted.
 
 ### ADR-5: Firebase stays **optional and lazy**.
 - Spec forbids cloud accounts as a dependency. Verify the app boots and runs 100% with no Firebase env vars; `AuthProvider` must degrade to anonymous/local-only. If it hard-fails, gate behind lazy init.
@@ -186,115 +193,174 @@ CREATE TABLE settings (key TEXT PRIMARY KEY, value TEXT /* JSON */);
 
 ---
 
-## 5. Gap Analysis Matrix (spec § → status → phase)
+## 5. Verified baseline and constraints
 
-| Spec § | Requirement | Status | Phase |
-|---|---|---|---|
-| §6 | SQLite via better-sqlite3, `./data/oposilab.db` | ❌ JSON file | **A** |
-| §6 | Zod validation | ❌ absent | **A** |
-| §7 | Data model (14 entities incl. tags) | ✅ types done; tags table unused | A (DDL) |
-| §8.1 | PDF import with paste fallback | ⚠️ paste ✅; PDF only via AI-multimodal or readAsText | **B** |
-| §8.2 | Offline atom-suggestion heuristics (plazo/salvo/INSS regexes) | ❌ AI-only | **B** |
-| §8.3–8.4 | Clusters, confusion pairs, item generation + validation | ✅ | — |
-| §9.1 | Pretest: 8–15 items, shuffled, no labels, **diagnostic map at end**, seed weak items | ⚠️ pretest mode exists; diagnostic map screen unverified | **C** |
-| §9.2 | Retrieval-first micro-lesson (chunk reader + prompts + missed→atoms) | ⚠️ `retrieval_prompt` type exists; reader loop + auto-atom-from-miss unverified | **C** |
-| §9.3–9.10 | All core/advanced activity types | ✅ runner branches for all 10 | — |
-| §9.11 | Interleaved blocks + heat map after block | ✅ blocks; ⚠️ per-block heat map unverified | C/D |
-| §9.12 | Successive relearning queue | ✅ | — |
-| §9.13 | Error log + repair studio + E1–E20 taxonomy | ✅ | — |
-| §10 | Calibration dashboard + **textual alerts** ("sobrecalibrado…") + fragile/misconception indices | ⚠️ dashboard exists; alerts ❌ | **D** |
-| §11 | Analytics: heat maps ×5, error matrices (numeric/institutional/temporal), SRS analytics, activity effectiveness, content quality | ⚠️ partial (CalibrationAnalytics 271 ln; exporter MD summary) | **D** |
-| §12 | Item quality validation | ✅ `learningDesignValidator` + `/items/validation-warnings`; duplicate-detection unverified | D (verify) |
-| §13 | AI panel, draft-only, citations, prompt templates | ✅ + local fallback | — |
-| §14 | Keyboard shortcuts, a11y (no color-alone, DnD alt, high contrast) | ⚠️ shortcuts ✅ (HelpShortcutsModal); number-sort uses `<select>` (a11y ✅, dnd nicety ❌); high-contrast ❌; color-alone audit pending | **E** |
-| §15 | Seed Tema 7 | ✅ 100 items exact distribution + Tema 1 | — |
-| §16 | Export/import (Anki A–E, CSV, Quizlet, JSON) | ✅ (test 12 green) | — |
-| §17 | Scheduling + interleaving engines as separate modules | ✅ | — |
-| §21/§23 | README accuracy, method page 6/6 topics | ⚠️ method 4/6 verified; README says "react-example" | **F** |
-| §19 | Tests for all engines | ✅ 19 suites; add A/B/D coverage | each |
-| — | App boots with zero env vars / no Firebase | ❓ unverified | **A** |
+The app is a broad Vite + React + Express + TypeScript local-first application using SQLite. Existing content, activity, analytics, export, and seed surfaces are useful foundations, but prior implementation notes are historical evidence—not proof of acceptance. The current plan treats behavior and data integrity as the source of truth.
+
+Confirmed in this work session:
+
+- `npm run lint` passes after the boot fix.
+- `tests/persistence.test.ts` passes 2/2 using a child-process probe and an isolated `OPOSILAB_DATA_DIR`; the live `data/oposilab.db` is not used.
+- `server/db.ts:112-190` now performs a full seed only when both topics and items are empty; existing data follows the additive merge path.
+- P2 complete: the full suite (58 tests) runs green in isolated temp databases with `OPOSILAB_OFFLINE=1` (no AI/Jev network); md5 of the live `data/oposilab.db` is unchanged across `npm test`. Two isolation bugs were found and fixed en route: (1) `server/db.ts` captured its DB path at import time, defeating env overrides, and (2) `server/db.ts` ran `db.init()` at module scope, seeding the default-path DB on mere import. Both are regression-guarded (P2.3) and the module now auto-initializes lazily on first access via a Proxy.
+- Deferred with their fixes: replacing inline scorer/SRS test reimplementations lands with the P4 production scorers; due-filter, daily-limit, and seed-integrity assertions land with the P3/P5 fixes they verify (kept green intentionally).
+
+Global constraints:
+
+- Keep the existing Vite/React/Express/TypeScript stack; do not migrate to Next.js or Drizzle during this plan.
+- Keep the product local-first and do not add full mock exams.
+- AI and heuristic content remains draft until human validation.
+- Security work is explicitly deferred by user decision; it is not an acceptance gate for this iteration.
+- Every phase must finish with a focused test, `npm run lint`, and a clean diff review.
 
 ---
 
-## 6. Phased Roadmap
+## 6. Active roadmap
 
-### Phase A — Foundation: SQLite + Zod + boot independence  ← START HERE
-1. `server/sqlite/schema.sql` + `connection.ts` (better-sqlite3, WAL, foreign_keys=ON).
-2. Refactor `server/db.ts` internals to SQLite; **keep public method signatures** so scheduler, routes, exporter and all 19 tests pass unchanged.
-3. `scripts/migrate-json-to-sqlite.ts`: one-time import of existing `data/oposilab.db.json`; JSON renamed `.bak`; idempotent.
-4. Zod schemas in `src/schemas/`; wire into mutating routes (400 + issue list on failure).
-5. Verify boot with empty env: `env -i PATH=$PATH npm run dev` → app functional, Firebase degrades gracefully (fix AuthProvider lazy-init if not).
-   - **Tests:** repo layer round-trip; migration script on fixture JSON; Zod rejects malformed item/atom payloads; all 19 existing suites green.
-   - **Accept:** AC §18.1, §18.2 (one command; auto-init), spec §6 storage.
+### P1 — Preserve user data across restarts ✅ DONE
 
-### Phase B — Local-first content pipeline ✅ DONE (2026-09-23)
-1. ✅ `server/pdfImport.ts`: **pdfjs-dist v6** legacy build (offline, no AI); route `POST /api/import/pdf` (base64 JSON transport); friendly Spanish errors for password/corrupt/**scanned** PDFs (422 + `fallback:'paste'`)
-2. ✅ `server/heuristics.ts`: offline regex engine — 13-category marker lexicon (deadlines, %, coefficients, amounts, exceptions *salvo/excepto/no obstante/sin perjuicio*, institutions INSS/TGSS/mutua…), abbreviation-safe sentence splitter, article-ref legal-basis guesser, competence-precedence typing; button **"Sugerir átomos (sin IA)"** in ContentStudio feeding the existing draft-approval list
-3. ✅ Chunk splitter: page boundaries + *Artículo N* headings + sentence-boundary hard-split at 2,500 chars → `source_chunks` with page/article refs; **"Crear fragmentos"** button
-   - **Tests:** 10/10 (`tests/pipeline.test.ts`): typing precision on the prescripción cluster, legal-basis capture, dedup, abbreviation safety, chunker (headings/pages/oversized), PDF fixture extraction, corrupt + text-less PDF fallbacks
-   - **Accept:** AC §18.3 + §18.4 offline with zero API keys ✔ (39/39 total tests, lint clean, boot smoke green)
+**Files:**
+- `server/db.ts:112-190`
+- `tests/persistence.test.ts`
+- `tests/fixtures/restart-probe.ts`
 
-### Phase C — Pretest diagnostic map + retrieval micro-lesson ✅ DONE (2026-09-23)
-1. ✅ **Mapa diagnóstico de pretest** (`src/components/PretestDiagnosticMap.tsx`): clusters fuertes (≥80%) / débiles (<60%) / pares de confusión probables / aviso confident-wrong / enfoque recomendado + CTA **"Reparar ahora"** que enruta los ítems fallados y los aciertos afortunados al Repair Studio existente. Se renderiza en la pantalla final del runner cuando `mode === 'pretest'`
-2. ✅ **Micro-lección retrieval-first** (`src/components/MicroLessonRunner.tsx` + `src/utils/retrievalMatch.ts`): lector por fragmentos (refs de artículo/página) → prompt de recuerdo → revelado → *scoring* por palabras clave → "Crear ítem de repaso" (convierte fallos en ítems `retrieval_prompt` que entran en la cola al validarse). Matcher con *number+unit* como token único y exige todas las cifras → "5 meses" nunca cuenta como recuerdo de "5 años"
-3. ✅ Seed: 4 `retrieval_prompt` + 2 `pretest_item` (Tema 7, todos `draft`), mergeados en ambos caminos de seed de `db.ts`
-   - **Tests:** 6/6 (`tests/retrieval.test.ts`): accent-folding, number-words→dígitos, umbral 50% + cifras obligatorias, near-miss de unidad, scoring independiente
-   - **Accept:** §9.1 ✔ §9.2 ✔ (45/45 tests, lint 0, boot smoke: 6 ítems nuevos en SQLite como `draft`)
+**Done:**
+- Remove the duplicated destructive `seedInitialData()` branches.
+- Seed fully only on a genuinely empty database.
+- Preserve existing topics, items, attempts, error logs, settings, sessions, and review schedules.
+- Verify a second boot in an isolated temporary database.
 
-### Phase D — Analytics & calibration depth ✅ DONE (2026-09-23)
-> **UI constraint (user):** nothing unrelated to learning/practicing tema content may become its own UI destination. The analytics engine runs fully, but its outputs are rendered **inside the learning surfaces** — never as a tab.
+**Verification:**
+- `npx tsx --test tests/persistence.test.ts`
+- `npm run lint`
 
-1. ✅ **`src/utils/analytics.ts`** — motor puro y testeable: heat maps (tema/clúster/par/base legal/tipo átomo), calibración 0–3 con **alertas textuales en español**, índices frágil/error + Δ calibración, matrices numérica/institucional/temporal, estadísticas SRS, efectividad por formato (intercalado vs bloqueado) y calidad del banco
-2. ✅ **`AnalyticsStrip`** embebido en el Dashboard (curva de confianza, alertas, clústeres débiles, pares a vigilar, detalle desplegable) + CTA "Reparar (N confident-wrong)" al Repair Studio
-3. ✅ **`SessionHeatMap`** en el resumen de cada bloque: mapa por clúster/par con Δ de confianza de la sesión
-4. ✅ **Pestaña "Métricas" retirada** (Navbar + App + `ActiveTab`): las métricas sirven al aprendizaje, no al revés
-   - **Tests:** 10/10 (`tests/analytics.test.ts`) — suite total **55/55**, lint 0, boot smoke verde
+### P2 — Isolate and strengthen the test harness ✅ DONE (isolation scope)
 
-### Phase E — Accessibility & UX polish
-1. High-contrast mode (toggle, persisted in settings).
-2. Correct/incorrect never color-alone: always icon + label (audit all runners).
-3. Number sort: add dnd-kit visual mode, keep `<select>` as keyboard path (both a11y-safe).
-4. Shortcut audit vs spec set (Space/1–4/0–3/E/R/N/F/?); add missing.
-5. Method page: add missing 2/6 topics (why interleaving, why errors repaired differently — verify, add if absent).
-   - **Tests:** shortcut registry unit test; contrast-mode class application.
-   - **Accept:** spec §14 fully; AC §18.10 keyboard alternative.
+**Files:**
+- `package.json:6-13`
+- `tests/*.test.ts`
+- `tests/helpers/isolation.ts`
+- `server/db.ts` (lazy paths + lazy auto-init)
+- `server/ai.ts`, `server/jev.ts` (`OPOSILAB_OFFLINE` guard)
 
-### Phase F — Docs, tests, acceptance sweep
-1. README rewrite: real stack, install/run/db-init/seeds/import/atoms/Anki export/tests; drop "react-example" name in package.json.
-2. Ship `examples/anki_export_sample.tsv` + `examples/error_log_report.md` (generated from seed DB).
-3. Full §18 acceptance checklist run, each item traced to a test or manual step in `docs/ACCEPTANCE.md`.
-   - **Accept:** AC §18.1–23 all green.
+**Done:**
+- Every suite now runs against a fresh temp `OPOSILAB_DATA_DIR`; verified by md5-checksumming the live DB across a full `npm test` run.
+- `server/db.ts` resolves its DB path lazily and no longer runs `db.init()` at module scope (the import-time seeding bug is guarded by test P2.3).
+- AI/Jev clients honor `OPOSILAB_OFFLINE=1` and use deterministic local fallbacks; no test can spend network credits.
+- Full suite green: 58 tests / 11 suites.
+
+**Verification:**
+- `npm test` (live `data/oposilab.db` md5 unchanged before/after)
+- `npm run lint`
+
+**Deferred into P3/P4/P5 (with their fixes, to keep the suite green):**
+- Replacing inline cloze/scorer/quadrant/streak test reimplementations with production-function calls (P4 scorers).
+- Due-date filtering, daily new-item limit, and seed-integrity assertions (P3/P5).
+
+### P3 — Enforce content validation and seed integrity
+
+**Files:**
+- `server/scheduler.ts:149-337`
+- `server/db.ts` item/schedule creation and status transitions
+- `src/components/ItemBank.tsx`
+- `src/components/ContentStudio.tsx`
+- `src/utils/learningDesignValidator.ts`
+- `server/seedData.ts`
+- `server/seedDataRetrieval.ts`
+
+**Work:**
+- Restrict practice queues to eligible validated/active content; exclude draft, needs-review, and retired items.
+- Make validation quality-gated and preserve explicit human approval.
+- Add topic, source-chunk, status, and provenance links to seed atoms/clusters/pairs.
+- Repair broken seed references and remove predictable correct-option patterns.
+- Keep all seed items draft until validated, with a small explicitly validated demo set only if needed.
+
+**Acceptance:**
+- A draft AI item cannot appear in due, pretest, repair, or interleaved practice.
+- Topic-specific content and micro-lessons find their linked atoms, clusters, and pairs.
+- Seed audits verify counts, links, status, option balance, and distractor metadata.
+
+### P4 — Correct the core activity loop
+
+**Files:**
+- `src/scoring/evaluateItem.ts`
+- `src/components/ActivityRunner.tsx`
+- `src/components/ItemBank.tsx`
+- `src/types.ts`
+- Activity-specific tests under `tests/`
+
+**Work:**
+- Score cover-and-generate free-text answers and classify lucky recognition, recognition failure, and confident-wrong states.
+- Implement per-blank cloze state, exact/synonym acceptance, and near-miss diagnostics.
+- Normalize contrast-card fields and render the cue/table/mini-case consistently.
+- Add answer controls for retrieval and pretest items.
+- Complete spot-error correction matching, two-tier quadrants, exception-tree routing, fact-variant sequences, and number-sort variants.
+
+**Acceptance:**
+- Production scorers cover every required item type.
+- Feedback distinguishes exact, near-miss, lucky, fragile, and misconception outcomes.
+- Activity tests exercise the same functions used by the UI.
+
+### P5 — Complete SRS, interleaving, errors, and repair
+
+**Files:**
+- `server/scheduler.ts`
+- `server/db.ts:506-623`
+- `src/components/ErrorRepairStudio.tsx`
+- `src/components/ActivityRunner.tsx`
+- `tests/oposilab.test.ts` and new focused engine tests
+
+**Work:**
+- Filter future-due schedules and enforce new-item limits.
+- Require real distinct successful sessions, formats, and interleaved retrieval for graduation.
+- Implement maintenance state and overdue prioritization.
+- Enforce interleaving toggles, topic mix, confusion-pair partners, format diversity, and the two-cluster consecutive limit.
+- Auto-log low-confidence correct attempts and generated/selection mismatches.
+- Route E1–E20 errors to their prescribed repair activities and block graduation while critical confident-wrong errors remain unresolved.
+
+**Acceptance:**
+- Due queues never present future items.
+- Graduation is reachable through actual UI activity formats, not synthetic test inputs.
+- Error status transitions and repair completion are persisted and tested.
+
+### P6 — Finish import/export, UX, and evidence
+
+**Files:**
+- `server/exporter.ts`
+- `server.ts` import/export routes
+- `src/components/ExportSettingsMethodModal.tsx`
+- `src/components/ContentStudio.tsx`
+- `docs/ACCEPTANCE.md`
+- `README.md`
+- `examples/`
+
+**Work:**
+- Add working JSON/CSV item import with validation and duplicate reporting.
+- Align Anki/Quizlet/CSV field layouts with the specification.
+- Complete remaining accessibility, empty-state, and error-state work without adding a mock-exam module.
+- Replace unverified acceptance claims with test or manual evidence.
+
+**Acceptance:**
+- Import/export round trips preserve item IDs, links, status, and feedback metadata.
+- A browser smoke flow covers import → validate → practice → feedback → restart persistence.
+- `npm run lint`, `npm test`, and `npm run build` pass from a clean checkout.
 
 ---
 
-## 7. Risk Register
+## 7. Risk register
 
 | Risk | Mitigation |
 |---|---|
-| better-sqlite3 native build fails on user machine | Swap to `node:sqlite` (Node 24 built-in) behind the same `connection.ts` interface |
-| SQLite refactor breaks 19 green tests | Keep `db.ts` API; run suite after every internal step; JSON backup retained |
-| Migration loses Modo A/B saved-session state | `saved_session_state` table + round-trip test on real `data/oposilab.db.json` |
-| Firebase hard-couples boot | Phase A gate: `env -i` boot test before any feature work merges |
-| Scope creep into mock-exam territory | Standing rule: §5 non-goals; timed sprints only |
+| Existing tests mutate the live database | Make `OPOSILAB_DATA_DIR` isolation a prerequisite for every suite. |
+| Additive seed merge masks incomplete legacy data | Add explicit seed-integrity checks before accepting seed counts as complete. |
+| UI practice diverges from scheduler eligibility | Centralize eligibility filtering and test every queue path. |
+| Activity runners pass tests without matching runtime behavior | Test production scorers and add a browser smoke path. |
+| Scope expands into a generic quiz or full mock exam | Keep the cognitive-training scope and §5 non-goals in the acceptance checklist. |
 
-## 8. Explicit Non-Goals (restated, spec §5)
+## 8. Deferred and explicit non-goals
 
-No mock-exam simulator · no leaderboards · no cloud accounts · no payments · no mobile-native · no black-box AI without human validation.
+**Deferred by user decision:** server network hardening, CORS/bind changes, authentication, and credential cleanup. These are not part of the current acceptance gate, but remain a later maintenance concern.
 
----
+**Non-goals:** no full mock exams, leaderboards, cloud-account dependency, payments, mobile-native app, or black-box AI content without human validation.
 
-**Execution order:** A → B → C → D → E → F, app runnable and test-green after every phase.
-**Next action on approval:** Phase A step 1 (`server/sqlite/`).
-
-### Phase E — Accessibility & polish ✅ DONE (2026-09-23)
-- ✅ **Alto contraste** real (tema `data-contrast="high"` en `index.css`, toggle en Navbar con `aria-pressed`, persistido en ajustes → SQLite)
-- ✅ **Feedback nunca solo-color**: la insignia de acierto/fallo ya combina icono + texto explícito (auditado en `ActivityRunner`)
-- ✅ **Number-sort con drag-and-drop nativo** (HTML5, sin dependencias) manteniendo el `<select>` por fila como alternativa completa de teclado/lector
-- ✅ **Atajos**: documentado `H` (pista) en la guía; el resto verificado en el handler real
-- ✅ **Página de Método completada a 6/6** (intercalado y reparación diferenciada añadidos)
-
-### Phase F — Docs, examples & acceptance ✅ DONE (2026-09-23)
-- ✅ `README.md` reescrito en español (instalación, SQLite y migración, Content Studio, modos de estudio, atajos, analítica embebida, export/import, IA opcional, arquitectura y por qué)
-- ✅ `docs/ACCEPTANCE.md`: los 23 criterios de §18 trazados a evidencia (test / archivo / paso manual) con pendientes declarados
-- ✅ `examples/anki_sample.tsv` y `examples/error_log_report.md` generados desde la base real
-- **Estado final: 55/55 tests, `tsc` 0 errores, 4 fases + E/F cerradas.**
+**Execution order:** P1 → P2 → P3 → P4 → P5 → P6. Keep the app runnable and the working tree reviewable after each priority.

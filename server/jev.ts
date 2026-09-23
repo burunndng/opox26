@@ -120,6 +120,12 @@ export class JevClient {
     request: JevDecisionRequest
   ): Promise<JevDecisionResponse> {
     const startTime = Date.now();
+    // Test/offline isolation: never touch the network (or spend API credits)
+    // when OPOSILAB_OFFLINE is set. The local heuristic engine produces the
+    // same typed result shape deterministically.
+    if (process.env.OPOSILAB_OFFLINE === '1') {
+      return this.localHeuristicDecisions(request, startTime);
+    }
     const apiKey = this.getApiKey();
     const model = request.model || this.JEV_MODEL;
 

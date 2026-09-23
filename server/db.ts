@@ -32,13 +32,16 @@ import { loadAll, migrateJsonToSqlite, persistAll } from './sqlite/persist.ts';
 import { defaultSettings } from './sqlite/defaults.ts';
 import { DatabaseSync } from 'node:sqlite';
 
-const DATA_DIR = process.env.OPOSILAB_DATA_DIR || path.join(process.cwd(), 'data');
-const DB_FILE = defaultDbPath();
-const LEGACY_JSON = legacyJsonPath();
+// Resolved lazily (at init/connect time, NOT at import time) so that tests can
+// point OPOSILAB_DATA_DIR at a temp directory after importing this module.
+const dataDir = () => process.env.OPOSILAB_DATA_DIR || path.join(process.cwd(), 'data');
+const dbFile = () => defaultDbPath();
+const legacyJson = () => legacyJsonPath();
 
 class LocalDatabase {
   private data: DatabaseSchema;
-  private initialized = false;
+  /** Internal readiness flag (public only for the lazy-init proxy below). */
+  public initialized = false;
   private conn: DatabaseSync | null = null;
 
   constructor() {
@@ -61,29 +64,29 @@ class LocalDatabase {
   public init() {
     if (this.initialized) return;
 
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
+    if (!fs.existsSync(dataDir())) {
+      fs.mkdirSync(dataDir(), { recursive: true });
     }
 
     // Open (and ensure schema of) the SQLite store at ./data/oposilab.db
-    this.conn = openDatabase(DB_FILE);
+    this.conn = openDatabase(dbFile());
     const loaded = loadAll(this.conn);
 
     if (loaded) {
       this.data = loaded;
-    } else if (fs.existsSync(LEGACY_JSON)) {
+    } else if (fs.existsSync(legacyJson())) {
       // One-time automatic migration from the legacy JSON store (data/oposilab.db.json)
       try {
-        const result = migrateJsonToSqlite(this.conn, LEGACY_JSON);
+        const result = migrateJsonToSqlite(this.conn, legacyJson());
         if (result.migrated) {
           this.data = loadAll(this.conn)!;
           // Preserve the JSON as a backup (never silently destroy user data)
           try {
-            fs.renameSync(LEGACY_JSON, `${LEGACY_JSON}.migrated.bak`);
+            fs.renameSync(legacyJson(), `${legacyJson()}.migrated.bak`);
           } catch (renameErr) {
             console.warn('Migrated to SQLite but could not rename legacy JSON backup:', renameErr);
           }
-          console.log(`[OposiLab] Migrated legacy JSON store to SQLite: ${DB_FILE}`, result.counts);
+          console.log(`[OposiLab] Migrated legacy JSON store to SQLite: ${dbFile()}`, result.counts);
         } else {
           console.warn(`[OposiLab] Legacy JSON migration skipped: ${result.reason}`);
           this.seedInitialData();
@@ -109,15 +112,12 @@ class LocalDatabase {
     if (!this.data.errorLogs) this.data.errorLogs = [];
     if (!this.data.sessions) this.data.sessions = [];
 
-    // If empty topics or items, seed
-    if (this.data.topics.length === 0 || this.data.items.length === 0) {
-      this.seedInitialData();
-    } else {
-      this.seedInitialData();
-    }
-
-    // If empty topics or items, seed
-    if (this.data.topics.length === 0 || this.data.items.length === 0) {
+    // Idempotent, non-destructive boot seeding (restart data-loss fix):
+    // a full seed runs ONLY when the database is genuinely empty (fresh
+    // install). Any existing database takes the additive merge path below,
+    // which preserves user topics, attempts, settings, review schedules and
+    // error logs across restarts.
+    if (this.data.topics.length === 0 && this.data.items.length === 0) {
       this.seedInitialData();
     } else {
       // Merge any missing seed topics, chunks, clusters, confusion pairs, atoms, and items (e.g. Tema 1)
@@ -229,7 +229,7 @@ class LocalDatabase {
 
   private saveSync() {
     try {
-      if (!this.conn) this.conn = openDatabase(DB_FILE);
+      if (!this.conn) this.conn = openDatabase(dbFile());
       persistAll(this.conn, this.data);
     } catch (err) {
       console.error('Failed to persist database (SQLite):', err);
@@ -800,5 +800,23 @@ class LocalDatabase {
   }
 }
 
-export const db = new LocalDatabase();
-db.init();
+// NOTE: no eager db.init() here. Importing this module must never touch the
+// filesystem: tests set OPOSILAB_DATA_DIR AFTER import (see
+// tests/helpers/isolation.ts), and an import-time init would seed the live
+// ./data/oposilab.db before that override applies. Instead, the exported
+// singleton auto-initializes on first property access, by which point env
+// overrides are in place. db.init() stays available and idempotent.
+const rawDb = new LocalDatabase();
+export const db = new Proxy(rawDb, {
+  get(target, prop, receiver) {
+    if (
+      !target.initialized &&
+      typeof prop !== 'symbol' &&
+      prop !== 'init' &&
+      prop !== 'initialized'
+    ) {
+      target.init();
+    }
+    return Reflect.get(target, prop, receiver);
+  },
+}) as LocalDatabase;
