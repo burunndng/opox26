@@ -311,7 +311,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6] text-stone-900 flex flex-col font-sans selection:bg-amber-100 selection:text-amber-900">
+    <div className="min-h-screen bg-[#0c0f17] text-slate-100 flex flex-col font-sans selection:bg-blue-600/30 selection:text-blue-200">
       {/* Top Navigation */}
       <Navbar
         activeTab={activeTab}

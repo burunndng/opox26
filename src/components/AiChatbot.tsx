@@ -475,28 +475,28 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
   };
 
   return (
-    <div id="ai-chatbot-container" className="flex flex-col h-[calc(100vh-140px)] min-h-[550px] bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+    <div id="ai-chatbot-container" className="flex flex-col h-[calc(100vh-140px)] min-h-[550px] bg-[#121722] rounded-2xl border border-[#20293a] shadow-sm overflow-hidden">
       {/* Header bar */}
-      <div className="flex flex-wrap items-center justify-between px-5 py-3.5 bg-stone-50 border-b border-stone-200 gap-3">
+      <div className="flex flex-wrap items-center justify-between px-5 py-3.5 bg-[#0c0f17] border-b border-[#20293a] gap-3">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-md flex items-center justify-center font-bold bg-amber-500/10 border border-amber-500/30 text-amber-700">
+          <div className="w-9 h-9 rounded-md flex items-center justify-center font-bold bg-amber-500/10 border border-amber-500/30 text-amber-400">
             {useOpenRouter ? (
-              <Cpu className="w-5 h-5 text-amber-700" />
+              <Cpu className="w-5 h-5 text-amber-400" />
             ) : (
-              <Scale className="w-5 h-5 text-amber-700" />
+              <Scale className="w-5 h-5 text-amber-400" />
             )}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-semibold text-stone-900 tracking-tight">
+              <h2 className="text-sm font-semibold text-slate-100 tracking-tight">
                 {useOpenRouter ? 'Asistente Normativo (OpenRouter)' : 'Asistente Normativo & Preparador'}
               </h2>
-              <span className="text-slate-400 text-xs" aria-hidden="true">·</span>
-              <span className="font-mono text-xs text-stone-600">
+              <span className="text-slate-500 text-xs" aria-hidden="true">·</span>
+              <span className="font-mono text-xs text-slate-400">
                 {useOpenRouter ? 'openrouter/free' : 'Búsqueda Web & Multimodal'}
               </span>
             </div>
-            <p className="text-xs text-stone-500">
+            <p className="text-xs text-slate-400">
               Analiza temas, extrae proposiciones de alta interferencia y genera reactivos de discriminación
             </p>
           </div>
@@ -510,8 +510,8 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
             onClick={handleToggleOpenRouter}
             className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all shadow-2xs cursor-pointer ${
               useOpenRouter
-                ? 'bg-purple-50 text-purple-900 border-purple-300 ring-2 ring-purple-400/30'
-                : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
+                ? 'bg-purple-950/60 text-purple-300 border-purple-700/60 ring-2 ring-purple-500/30'
+                : 'bg-[#182030] text-slate-300 border-[#20293a] hover:bg-[#202b40]'
             }`}
             title={
               useOpenRouter
@@ -519,12 +519,12 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
                 : 'Alternar proveedor a OpenRouter (modelo openrouter/free sin cuota de Gemini)'
             }
           >
-            <Cpu className={`w-3.5 h-3.5 ${useOpenRouter ? 'text-purple-600 animate-pulse' : 'text-stone-400'}`} />
+            <Cpu className={`w-3.5 h-3.5 ${useOpenRouter ? 'text-purple-400 animate-pulse' : 'text-slate-400'}`} />
             <div className="flex items-center gap-1.5">
               <span>OpenRouter</span>
               <span
                 className={`text-[10px] px-1.5 py-0.5 rounded font-mono font-bold tracking-tight ${
-                  useOpenRouter ? 'bg-purple-200 text-purple-950' : 'bg-stone-100 text-stone-500'
+                  useOpenRouter ? 'bg-purple-900/60 text-purple-300' : 'bg-slate-800 text-slate-400'
                 }`}
               >
                 openrouter/free
@@ -532,7 +532,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
             </div>
             <span
               className={`w-2 h-2 rounded-full transition-colors ${
-                useOpenRouter ? 'bg-purple-600 ring-2 ring-purple-300' : 'bg-stone-300'
+                useOpenRouter ? 'bg-purple-500 ring-2 ring-purple-400' : 'bg-slate-600'
               }`}
             />
           </button>
@@ -544,16 +544,16 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
               onClick={() => setEnableWebSearch(!enableWebSearch)}
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors shadow-2xs ${
                 enableWebSearch
-                  ? 'bg-blue-50 text-blue-800 border-blue-300 hover:bg-blue-100'
-                  : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
+                  ? 'bg-blue-950/60 text-blue-300 border-blue-700/60 hover:bg-blue-900/40'
+                  : 'bg-[#182030] text-slate-300 border-[#20293a] hover:bg-[#202b40]'
               }`}
               title="Activa Google Search Grounding para información actualizada del BOE y Seguridad Social"
             >
-              <Globe className={`w-3.5 h-3.5 ${enableWebSearch ? 'text-blue-600 animate-pulse' : 'text-stone-400'}`} />
+              <Globe className={`w-3.5 h-3.5 ${enableWebSearch ? 'text-blue-400 animate-pulse' : 'text-slate-400'}`} />
               <span>Búsqueda Web</span>
               <span
                 className={`w-2 h-2 rounded-full ${
-                  enableWebSearch ? 'bg-blue-600' : 'bg-stone-300'
+                  enableWebSearch ? 'bg-blue-500' : 'bg-slate-600'
                 }`}
               />
             </button>
@@ -562,22 +562,22 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
           {/* Model selector dropdown or OpenRouter indicator */}
           {useOpenRouter ? (
             <div
-              className="inline-flex items-center gap-1.5 text-xs font-medium bg-purple-100/70 text-purple-900 border border-purple-300 rounded-lg px-2.5 py-1.5 shadow-2xs"
+              className="inline-flex items-center gap-1.5 text-xs font-medium bg-purple-950/40 text-purple-300 border border-purple-800/60 rounded-lg px-2.5 py-1.5 shadow-2xs"
               title="Modelo activo en OpenRouter: openrouter/free"
             >
-              <Zap className="w-3.5 h-3.5 text-purple-600" />
+              <Zap className="w-3.5 h-3.5 text-purple-400" />
               <span className="font-semibold">openrouter/free</span>
-              <span className="text-[10px] bg-purple-200 text-purple-950 font-bold px-1.5 py-0.2 rounded">Gratuito</span>
+              <span className="text-[10px] bg-purple-900/60 text-purple-200 font-bold px-1.5 py-0.2 rounded">Gratuito</span>
             </div>
           ) : (
             <div className="relative">
               <select
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
-                className="text-xs font-medium bg-white text-stone-800 border border-stone-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-2xs cursor-pointer"
+                className="text-xs font-medium bg-[#182030] text-slate-200 border border-[#20293a] rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-amber-500 shadow-2xs cursor-pointer"
               >
                 {MODEL_OPTIONS.map((m) => (
-                  <option key={m.id} value={m.id}>
+                  <option key={m.id} value={m.id} className="bg-[#121722] text-slate-200">
                     {m.name} ({m.badge})
                   </option>
                 ))}
@@ -591,8 +591,8 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
             onClick={() => setShowConfig(!showConfig)}
             className={`p-1.5 rounded-lg border transition-colors ${
               showConfig
-                ? 'bg-amber-100 text-amber-900 border-amber-300'
-                : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
+                ? 'bg-amber-950/60 text-amber-300 border-amber-700/60'
+                : 'bg-[#182030] text-slate-300 border-[#20293a] hover:bg-[#202b40]'
             }`}
             title="Configurar rol del asistente y parámetros"
           >
@@ -602,7 +602,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
           <button
             type="button"
             onClick={handleExportChat}
-            className="p-1.5 rounded-lg bg-white text-stone-600 border border-stone-200 hover:bg-stone-50 transition-colors"
+            className="p-1.5 rounded-lg bg-[#182030] text-slate-300 border border-[#20293a] hover:bg-[#202b40] hover:text-white transition-colors"
             title="Descargar conversación como archivo Markdown"
           >
             <Download className="w-4 h-4" />
@@ -611,7 +611,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
           <button
             type="button"
             onClick={handleClearChat}
-            className="p-1.5 rounded-lg bg-white text-stone-600 border border-stone-200 hover:bg-red-50 hover:text-red-600 transition-colors"
+            className="p-1.5 rounded-lg bg-[#182030] text-slate-300 border border-[#20293a] hover:bg-rose-950/50 hover:text-rose-400 hover:border-rose-800 transition-colors"
             title="Limpiar mensajes"
           >
             <Trash2 className="w-4 h-4" />
@@ -621,10 +621,10 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
 
       {/* Expandable Configuration Drawer */}
       {showConfig && (
-        <div className="bg-amber-50/70 border-b border-amber-200/80 px-5 py-3 text-xs text-stone-800 animate-in fade-in duration-150">
+        <div className="bg-[#182030] border-b border-[#20293a] px-5 py-3 text-xs text-slate-300 animate-in fade-in duration-150">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="font-bold text-stone-900 block mb-1">
+              <label className="font-bold text-slate-200 block mb-1">
                 Rol e Instrucción del Sistema:
               </label>
               <div className="flex gap-2 mb-2">
@@ -635,8 +635,8 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
                     onClick={() => handleRoleChange(idx)}
                     className={`px-2.5 py-1 rounded-md border font-medium transition-colors ${
                       selectedRoleIndex === idx
-                        ? 'bg-amber-600 text-white border-amber-700 shadow-xs'
-                        : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
+                        ? 'bg-amber-600 text-white border-amber-500 shadow-xs'
+                        : 'bg-[#121722] text-slate-300 border-[#20293a] hover:bg-[#202b40]'
                     }`}
                   >
                     {r.name}
@@ -647,44 +647,44 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
                 value={customSystemPrompt}
                 onChange={(e) => setCustomSystemPrompt(e.target.value)}
                 rows={2}
-                className="w-full text-xs font-mono bg-white border border-stone-300 rounded-md p-2 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+                className="w-full text-xs font-mono bg-[#0c0f17] border border-[#20293a] text-slate-200 rounded-md p-2 focus:ring-1 focus:ring-amber-500 focus:outline-none"
                 placeholder="Instrucción del sistema personalizada..."
               />
             </div>
 
             <div className="flex flex-col justify-between">
               <div>
-                <label className="font-bold text-stone-900 block mb-1">
+                <label className="font-bold text-slate-200 block mb-1">
                   Capacidades Activas:
                 </label>
-                <ul className="space-y-1 text-stone-600">
+                <ul className="space-y-1 text-slate-400">
                   <li className="flex items-center gap-1.5">
-                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
                     <span>
-                      <strong>Proveedor Activo:</strong>{' '}
+                      <strong className="text-slate-300">Proveedor Activo:</strong>{' '}
                       {useOpenRouter ? (
-                        <span className="text-purple-700 font-bold">OpenRouter (openrouter/free)</span>
+                        <span className="text-purple-400 font-bold">OpenRouter (openrouter/free)</span>
                       ) : (
-                        <span className="text-amber-800 font-bold">Google Gemini ({selectedModel})</span>
+                        <span className="text-amber-400 font-bold">Google Gemini ({selectedModel})</span>
                       )}
                     </span>
                   </li>
                   <li className="flex items-center gap-1.5">
-                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
                     <span>
-                      <strong>Google Search Grounding:</strong> {enableWebSearch && !useOpenRouter ? 'Habilitado (Google Search)' : 'Desactivado'}
+                      <strong className="text-slate-300">Google Search Grounding:</strong> {enableWebSearch && !useOpenRouter ? 'Habilitado (Google Search)' : 'Desactivado'}
                     </span>
                   </li>
                   <li className="flex items-center gap-1.5">
-                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
                     <span>
-                      <strong>Ingestión Documental:</strong> PDF nativo (vía inlineData), Markdown, TXT y CSV.
+                      <strong className="text-slate-300">Ingestión Documental:</strong> PDF nativo (vía inlineData), Markdown, TXT y CSV.
                     </span>
                   </li>
                   <li className="flex items-center gap-1.5">
-                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
                     <span>
-                      <strong>Autopsia de Distractores:</strong> Clasificación automática de trampas (E1-E20).
+                      <strong className="text-slate-300">Autopsia de Distractores:</strong> Clasificación automática de trampas (E1-E20).
                     </span>
                   </li>
                 </ul>
@@ -693,7 +693,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
                 <button
                   type="button"
                   onClick={() => setShowConfig(false)}
-                  className="text-xs text-stone-600 hover:text-stone-900 font-semibold underline"
+                  className="text-xs text-slate-400 hover:text-slate-200 font-semibold underline"
                 >
                   Cerrar ajustes
                 </button>
@@ -704,7 +704,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
       )}
 
       {/* Chat Messages Thread */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-stone-50/40">
+      <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-[#0c0f17]/50">
         {messages.map((msg) => (
           <div
             key={msg.id}
@@ -716,7 +716,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-2xs font-semibold text-xs ${
                 msg.role === 'user'
-                  ? 'bg-stone-800 text-white'
+                  ? 'bg-blue-600 text-white'
                   : 'bg-amber-600 text-white'
               }`}
             >
@@ -732,25 +732,25 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
               <div
                 className={`rounded-2xl px-4 py-3.5 text-sm leading-relaxed shadow-xs ${
                   msg.role === 'user'
-                    ? 'bg-stone-900 text-stone-50 rounded-tr-xs'
-                    : 'bg-white text-stone-900 border border-stone-200 rounded-tl-xs'
+                    ? 'bg-blue-600 text-white rounded-tr-xs'
+                    : 'bg-[#182030] text-slate-100 border border-[#20293a] rounded-tl-xs'
                 }`}
               >
                 {/* User Attachments display */}
                 {msg.attachments && msg.attachments.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-2.5 pb-2.5 border-b border-stone-700/50">
+                  <div className="flex flex-wrap gap-2 mb-2.5 pb-2.5 border-b border-white/20">
                     {msg.attachments.map((att) => (
                       <div
                         key={att.id}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-stone-800 text-stone-200 text-xs font-mono border border-stone-700"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/20 text-white text-xs font-mono border border-white/20"
                       >
                         {att.type === 'pdf' ? (
-                          <FileText className="w-3.5 h-3.5 text-red-400" />
+                          <FileText className="w-3.5 h-3.5 text-red-300" />
                         ) : (
-                          <FileCode className="w-3.5 h-3.5 text-blue-400" />
+                          <FileCode className="w-3.5 h-3.5 text-blue-300" />
                         )}
                         <span className="font-semibold truncate max-w-[150px]">{att.name}</span>
-                        <span className="text-[10px] text-stone-400">
+                        <span className="text-[10px] text-white/70">
                           ({(att.size / 1024).toFixed(0)} KB)
                         </span>
                       </div>
@@ -759,22 +759,22 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
                 )}
 
                 {/* Markdown text */}
-                <div className={msg.role === 'user' ? 'text-stone-100 prose-invert' : 'text-stone-900'}>
+                <div className={msg.role === 'user' ? 'text-white prose-invert' : 'text-slate-200'}>
                   <Markdown
                     components={{
                       p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
                       ul: ({ children }) => <ul className="list-disc pl-5 mb-2 space-y-1">{children}</ul>,
                       ol: ({ children }) => <ol className="list-decimal pl-5 mb-2 space-y-1">{children}</ol>,
                       li: ({ children }) => <li>{children}</li>,
-                      h3: ({ children }) => <h3 className="text-sm font-bold mt-3 mb-1 text-stone-900">{children}</h3>,
-                      h4: ({ children }) => <h4 className="text-xs font-bold mt-2 mb-1 text-stone-900">{children}</h4>,
+                      h3: ({ children }) => <h3 className="text-sm font-bold mt-3 mb-1 text-slate-100">{children}</h3>,
+                      h4: ({ children }) => <h4 className="text-xs font-bold mt-2 mb-1 text-slate-100">{children}</h4>,
                       code: ({ children }) => (
-                        <code className="font-mono text-xs bg-stone-100 text-amber-800 px-1 py-0.5 rounded">
+                        <code className="font-mono text-xs bg-[#0c0f17] text-amber-300 border border-[#20293a] px-1 py-0.5 rounded">
                           {children}
                         </code>
                       ),
                       blockquote: ({ children }) => (
-                        <blockquote className="border-l-3 border-amber-500 pl-3 my-2 text-stone-600 italic text-xs">
+                        <blockquote className="border-l-3 border-amber-500 pl-3 my-2 text-slate-300 italic text-xs">
                           {children}
                         </blockquote>
                       ),
@@ -786,9 +786,9 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
 
                 {/* Grounding / Web Search Citations */}
                 {msg.citations && msg.citations.length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-stone-100">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-stone-600 mb-1.5">
-                      <Globe className="w-3.5 h-3.5 text-blue-600" />
+                  <div className="mt-3 pt-3 border-t border-[#20293a]">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400 mb-1.5">
+                      <Globe className="w-3.5 h-3.5 text-blue-400" />
                       <span>Fuentes verificadas por Google Search:</span>
                     </div>
                     <div className="flex flex-wrap gap-1.5">
@@ -798,7 +798,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
                           href={cite.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs bg-blue-50/80 hover:bg-blue-100 text-blue-800 border border-blue-200 transition-colors"
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs bg-[#121722] hover:bg-[#1e2738] text-blue-300 border border-[#20293a] transition-colors"
                         >
                           <span className="truncate max-w-[220px] font-medium">{cite.title}</span>
                           <ExternalLink className="w-3 h-3 shrink-0" />
@@ -812,8 +812,8 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
               {/* Actionable Cards for Extracted Items */}
               {msg.extractedItems && msg.extractedItems.length > 0 && (
                 <div className="w-full mt-2 space-y-2">
-                  <div className="text-xs font-bold text-stone-600 flex items-center gap-1.5">
-                    <Target className="w-3.5 h-3.5 text-amber-600" />
+                  <div className="text-xs font-bold text-slate-400 flex items-center gap-1.5">
+                    <Target className="w-3.5 h-3.5 text-amber-400" />
                     <span>Ejercicios generados listos para incorporar:</span>
                   </div>
                   {msg.extractedItems.map((item, idx) => {
@@ -822,31 +822,31 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
                     return (
                       <div
                         key={idx}
-                        className="bg-white border border-amber-200 rounded-xl p-3.5 shadow-2xs hover:border-amber-400 transition-all flex flex-col gap-2.5"
+                        className="bg-[#121722] border border-[#20293a] rounded-xl p-3.5 shadow-2xs hover:border-slate-700 transition-all flex flex-col gap-2.5"
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div>
-                            <span className="inline-block px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded bg-amber-100 text-amber-800 border border-amber-300 mb-1">
+                            <span className="inline-block px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 mb-1">
                               {item.item_type || 'cover_and_generate_mcq'}
                             </span>
-                            <p className="text-xs font-semibold text-stone-900 leading-snug">
+                            <p className="text-xs font-semibold text-slate-100 leading-snug">
                               {item.stem}
                             </p>
                           </div>
-                          <span className="text-[10px] font-mono text-stone-500 shrink-0 bg-stone-100 px-1.5 py-0.5 rounded">
+                          <span className="text-[10px] font-mono text-slate-400 shrink-0 bg-[#182030] px-1.5 py-0.5 rounded border border-[#20293a]">
                             {item.legal_basis || 'TRLGSS'}
                           </span>
                         </div>
 
                         {item.options && (
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px] text-stone-700 bg-stone-50 p-2 rounded-lg border border-stone-100">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px] text-slate-300 bg-[#0c0f17] p-2 rounded-lg border border-[#20293a]">
                             {item.options.map((opt: any) => (
                               <div
                                 key={opt.id}
                                 className={`px-2 py-1 rounded flex items-center gap-1.5 ${
                                   opt.is_correct
-                                    ? 'bg-emerald-50 text-emerald-900 font-semibold border border-emerald-200'
-                                    : 'bg-white text-stone-600 border border-stone-200'
+                                    ? 'bg-emerald-950/40 text-emerald-300 font-semibold border border-emerald-700/50'
+                                    : 'bg-[#182030] text-slate-300 border border-[#20293a]'
                                 }`}
                               >
                                 <span className="font-bold">{opt.id})</span>
@@ -856,17 +856,17 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
                           </div>
                         )}
 
-                        <div className="flex items-center justify-between pt-1 gap-2 border-t border-stone-100">
-                          <span className="text-[11px] text-stone-500 italic truncate">
+                        <div className="flex items-center justify-between pt-1 gap-2 border-t border-[#20293a]">
+                          <span className="text-[11px] text-slate-400 italic truncate">
                             Base: {item.legal_basis}
                           </span>
                           <div className="flex items-center gap-2">
                             <button
                               type="button"
                               onClick={() => handlePracticeExtractedItem(item)}
-                              className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 rounded-md transition-colors"
+                              className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-slate-200 bg-[#182030] hover:bg-[#202b40] rounded-md border border-[#20293a] transition-colors"
                             >
-                              <Play className="w-3 h-3 text-amber-700" />
+                              <Play className="w-3 h-3 text-amber-400" />
                               <span>Practicar ahora</span>
                             </button>
                             <button
@@ -875,13 +875,13 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
                               onClick={() => handleImportItem(item, itemKey)}
                               className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-bold rounded-md transition-colors shadow-2xs ${
                                 isImported
-                                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                                  : 'bg-amber-600 hover:bg-amber-700 text-white'
+                                  ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-700/60'
+                                  : 'bg-amber-600 hover:bg-amber-500 text-white'
                               }`}
                             >
                               {isImported ? (
                                 <>
-                                  <Check className="w-3 h-3 text-emerald-700" />
+                                  <Check className="w-3 h-3 text-emerald-400" />
                                   <span>Guardado</span>
                                 </>
                               ) : (
@@ -902,8 +902,8 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
               {/* Actionable Cards for Extracted Atoms */}
               {msg.extractedAtoms && msg.extractedAtoms.length > 0 && (
                 <div className="w-full mt-2 space-y-2">
-                  <div className="text-xs font-bold text-stone-600 flex items-center gap-1.5">
-                    <Brain className="w-3.5 h-3.5 text-teal-600" />
+                  <div className="text-xs font-bold text-slate-400 flex items-center gap-1.5">
+                    <Brain className="w-3.5 h-3.5 text-teal-400" />
                     <span>Átomos normativos identificados:</span>
                   </div>
                   {msg.extractedAtoms.map((atom, idx) => {
@@ -912,18 +912,18 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
                     return (
                       <div
                         key={idx}
-                        className="bg-white border border-teal-200 rounded-xl p-3 shadow-2xs hover:border-teal-400 transition-all flex items-center justify-between gap-3"
+                        className="bg-[#121722] border border-[#20293a] rounded-xl p-3 shadow-2xs hover:border-slate-700 transition-all flex items-center justify-between gap-3"
                       >
                         <div className="text-xs">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="px-1.5 py-0.5 text-[10px] font-bold rounded bg-teal-50 text-teal-800 border border-teal-200 uppercase">
+                            <span className="px-1.5 py-0.5 text-[10px] font-bold rounded bg-teal-950/50 text-teal-300 border border-teal-700/50 uppercase">
                               {atom.atom_type || 'norma'}
                             </span>
-                            <span className="font-mono text-[10px] text-stone-500">
+                            <span className="font-mono text-[10px] text-slate-400">
                               {atom.legal_basis}
                             </span>
                           </div>
-                          <p className="text-stone-900 font-medium">{atom.text}</p>
+                          <p className="text-slate-200 font-medium">{atom.text}</p>
                         </div>
                         <button
                           type="button"
@@ -931,8 +931,8 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
                           onClick={() => handleImportAtom(atom, atomKey)}
                           className={`shrink-0 inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold rounded-md transition-colors ${
                             isImported
-                              ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                              : 'bg-teal-600 hover:bg-teal-700 text-white'
+                              ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-700/60'
+                              : 'bg-teal-600 hover:bg-teal-500 text-white'
                           }`}
                         >
                           {isImported ? (
@@ -954,10 +954,10 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
               )}
 
               {/* Timestamp & Model Badge */}
-              <div className="flex items-center gap-2 text-[10px] text-stone-400 px-1">
+              <div className="flex items-center gap-2 text-[10px] text-slate-500 px-1">
                 <span>{msg.timestamp}</span>
                 {msg.modelUsed && (
-                  <span className="font-mono bg-stone-100 px-1.5 py-0.2 rounded text-stone-500">
+                  <span className="font-mono bg-[#182030] px-1.5 py-0.2 rounded text-slate-400 border border-[#20293a]">
                     {msg.modelUsed}
                   </span>
                 )}
@@ -972,9 +972,9 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
             <div className={`w-8 h-8 rounded-full ${useOpenRouter ? 'bg-purple-600' : 'bg-amber-600'} text-white flex items-center justify-center shrink-0 shadow-2xs font-semibold text-xs`}>
               {useOpenRouter ? <Cpu className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4 animate-spin" />}
             </div>
-            <div className="bg-white text-stone-800 border border-stone-200 rounded-2xl rounded-tl-xs px-4 py-3 shadow-xs">
-              <div className="flex items-center gap-2 text-xs font-medium text-stone-600">
-                <RefreshCw className={`w-3.5 h-3.5 ${useOpenRouter ? 'text-purple-600' : 'text-amber-600'} animate-spin`} />
+            <div className="bg-[#182030] text-slate-200 border border-[#20293a] rounded-2xl rounded-tl-xs px-4 py-3 shadow-xs">
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-300">
+                <RefreshCw className={`w-3.5 h-3.5 ${useOpenRouter ? 'text-purple-400' : 'text-amber-400'} animate-spin`} />
                 <span>
                   {useOpenRouter
                     ? 'Consultando OpenRouter (openrouter/free) y generando reactivos...'
@@ -991,9 +991,9 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
       </div>
 
       {/* Quick Prompts Carousel */}
-      <div className="px-5 py-2 bg-stone-100 border-t border-stone-200 flex items-center gap-2 overflow-x-auto scrollbar-none">
-        <span className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider shrink-0 flex items-center gap-1">
-          <Target className="w-3.5 h-3.5 text-amber-600" />
+      <div className="px-5 py-2 bg-[#0c0f17] border-t border-[#20293a] flex items-center gap-2 overflow-x-auto scrollbar-none">
+        <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider shrink-0 flex items-center gap-1">
+          <Target className="w-3.5 h-3.5 text-amber-400" />
           Sugerencias:
         </span>
         {QUICK_PROMPTS.map((qp, idx) => (
@@ -1002,7 +1002,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
             type="button"
             disabled={isLoading}
             onClick={() => handleSendMessage(qp.prompt)}
-            className="whitespace-nowrap px-3 py-1 rounded text-xs font-medium bg-white hover:bg-stone-50 text-stone-700 hover:text-stone-950 border border-stone-200 transition-colors shadow-2xs"
+            className="whitespace-nowrap px-3 py-1 rounded text-xs font-medium bg-[#182030] hover:bg-[#202b40] text-slate-300 hover:text-white border border-[#20293a] transition-colors shadow-2xs"
           >
             {qp.label}
           </button>
@@ -1011,25 +1011,25 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
 
       {/* Attachment Previews */}
       {attachments.length > 0 && (
-        <div className="px-5 py-2 bg-amber-50/50 border-t border-amber-200/50 flex flex-wrap gap-2">
+        <div className="px-5 py-2 bg-[#182030]/60 border-t border-[#20293a] flex flex-wrap gap-2">
           {attachments.map((att) => (
             <div
               key={att.id}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-amber-300 text-xs shadow-2xs"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#121722] border border-[#20293a] text-xs text-slate-200 shadow-2xs"
             >
               {att.type === 'pdf' ? (
-                <FileText className="w-4 h-4 text-red-500" />
+                <FileText className="w-4 h-4 text-red-400" />
               ) : (
-                <FileCode className="w-4 h-4 text-blue-500" />
+                <FileCode className="w-4 h-4 text-blue-400" />
               )}
-              <span className="font-semibold text-stone-800 max-w-[200px] truncate">{att.name}</span>
-              <span className="text-[10px] text-stone-400">
+              <span className="font-semibold text-slate-200 max-w-[200px] truncate">{att.name}</span>
+              <span className="text-[10px] text-slate-400">
                 ({(att.size / 1024).toFixed(0)} KB)
               </span>
               <button
                 type="button"
                 onClick={() => removeAttachment(att.id)}
-                className="text-stone-400 hover:text-red-500 transition-colors"
+                className="text-slate-400 hover:text-rose-400 transition-colors"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -1039,26 +1039,26 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
       )}
 
       {/* Input box */}
-      <div className="p-4 bg-white border-t border-stone-200">
+      <div className="p-4 bg-[#0c0f17] border-t border-[#20293a]">
         <div className="flex items-center justify-between px-1 mb-2 text-xs">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-stone-700 font-medium">
-              Proveedor: <strong>{useOpenRouter ? 'OpenRouter' : 'Google Gemini'}</strong>
-              <span className="font-mono text-xs text-stone-500 ml-1">({useOpenRouter ? 'openrouter/free' : selectedModel})</span>
+            <span className="text-xs text-slate-300 font-medium">
+              Proveedor: <strong className="text-slate-100">{useOpenRouter ? 'OpenRouter' : 'Google Gemini'}</strong>
+              <span className="font-mono text-xs text-slate-400 ml-1">({useOpenRouter ? 'openrouter/free' : selectedModel})</span>
             </span>
-            <span className="text-stone-300">·</span>
+            <span className="text-slate-600">·</span>
             <button
               type="button"
               onClick={handleToggleOpenRouter}
-              className="text-xs text-amber-700 hover:text-amber-800 underline transition-colors cursor-pointer"
+              className="text-xs text-amber-400 hover:text-amber-300 underline transition-colors cursor-pointer"
             >
               {useOpenRouter ? 'Cambiar a Gemini' : 'Cambiar a OpenRouter Free'}
             </button>
           </div>
-          <span className="text-[11px] text-stone-400 hidden sm:inline">Shift + Enter para nueva línea</span>
+          <span className="text-[11px] text-slate-500 hidden sm:inline">Shift + Enter para nueva línea</span>
         </div>
 
-        <div className="flex items-end gap-2 bg-stone-50 border border-stone-300 rounded-xl p-2 focus-within:ring-2 focus-within:ring-amber-500 focus-within:border-amber-500 transition-all shadow-xs">
+        <div className="flex items-end gap-2 bg-[#182030] border border-[#20293a] rounded-xl p-2 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all shadow-xs">
           {/* File upload hidden input */}
           <input
             type="file"
@@ -1072,7 +1072,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="p-2 text-stone-500 hover:text-amber-700 hover:bg-stone-200/60 rounded-lg transition-colors shrink-0"
+            className="p-2 text-slate-400 hover:text-amber-400 hover:bg-[#202b40] rounded-lg transition-colors shrink-0"
             title="Adjuntar documento (PDF, Markdown .md, TXT, CSV, JSON)"
           >
             <Paperclip className="w-5 h-5" />
@@ -1085,7 +1085,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
             disabled={isLoading}
             placeholder="Escribe tu instrucción o pregunta sobre el temario (ej: 'Extrae los átomos del documento y crea 2 preguntas de test')..."
             rows={2}
-            className="flex-1 bg-transparent border-0 resize-none text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-0 px-1 py-1"
+            className="flex-1 bg-transparent border-0 resize-none text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-0 px-1 py-1"
           />
 
           <button
@@ -1094,8 +1094,8 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
             onClick={() => handleSendMessage()}
             className={`p-2 rounded-lg transition-all shrink-0 ${
               !inputText.trim() && attachments.length === 0
-                ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                : 'bg-amber-600 hover:bg-amber-700 text-white shadow-xs'
+                ? 'bg-[#121722] text-slate-600 cursor-not-allowed border border-[#20293a]'
+                : 'bg-amber-600 hover:bg-amber-500 text-white shadow-xs'
             }`}
             title="Enviar mensaje"
           >
@@ -1103,7 +1103,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
           </button>
         </div>
 
-        <div className="flex items-center justify-between text-[11px] text-stone-400 mt-2 px-1">
+        <div className="flex items-center justify-between text-[11px] text-slate-500 mt-2 px-1">
           <div className="flex items-center gap-2">
             <span>Presiona <strong>Enter</strong> para enviar, <strong>Shift + Enter</strong> para salto de línea</span>
           </div>
