@@ -54,6 +54,7 @@ import {
 } from '../services/firebaseSync.ts';
 import { ModeAStudyRunner } from './ModeAStudyRunner.tsx';
 import { PretestDiagnosticMap } from './PretestDiagnosticMap.tsx';
+import { SessionHeatMap } from './SessionHeatMap.tsx';
 
 /**
  * Helper to determine if an item must enter Mode A encoding first.
@@ -1003,6 +1004,9 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               </div>
             </div>
           )}
+
+          {/* Session heat map: where this block went wrong (spec §9.11/§11) */}
+          {mode !== 'pretest' && <SessionHeatMap items={items} attemptLogs={attemptLogs} />}
 
           {/* Pretest Diagnostic Map (spec §9.1): strong/weak clusters, confusion pairs, focus */}
           {mode === 'pretest' && (

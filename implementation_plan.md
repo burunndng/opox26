@@ -241,15 +241,14 @@ CREATE TABLE settings (key TEXT PRIMARY KEY, value TEXT /* JSON */);
    - **Tests:** 6/6 (`tests/retrieval.test.ts`): accent-folding, number-words→dígitos, umbral 50% + cifras obligatorias, near-miss de unidad, scoring independiente
    - **Accept:** §9.1 ✔ §9.2 ✔ (45/45 tests, lint 0, boot smoke: 6 ítems nuevos en SQLite como `draft`)
 
-### Phase D — Analytics & calibration depth
-1. Heat maps: accuracy by topic / cluster / confusion pair / legal basis / atom type (Recharts, existing dep).
-2. Calibration: confidence×accuracy curve per level 0–3, over/under-calibration **alerts** ("Estás sobrecalibrado en automaticidad relativa"), fragile-knowledge index, misconception index, trend over time.
-3. Confusion matrices: numeric (E6 pairs), institutional (E17), temporal (E16) from error history.
-4. SRS analytics: due/overdue, lapse rate, graduation rate, maintenance load, avg interval.
-5. Activity effectiveness: accuracy & retention by `activity_type`, interleaved vs not.
-6. Content-quality dashboard on top of existing QualityWarning engine + duplicate detection (normalized stem hash).
-   - **Tests:** synthetic attempts fixture → expected alert strings, matrix counts, heat-map aggregates.
-   - **Accept:** AC §18.19, spec §10 alerts, §11.1–11.7.
+### Phase D — Analytics & calibration depth ✅ DONE (2026-09-23)
+> **UI constraint (user):** nothing unrelated to learning/practicing tema content may become its own UI destination. The analytics engine runs fully, but its outputs are rendered **inside the learning surfaces** — never as a tab.
+
+1. ✅ **`src/utils/analytics.ts`** — motor puro y testeable: heat maps (tema/clúster/par/base legal/tipo átomo), calibración 0–3 con **alertas textuales en español**, índices frágil/error + Δ calibración, matrices numérica/institucional/temporal, estadísticas SRS, efectividad por formato (intercalado vs bloqueado) y calidad del banco
+2. ✅ **`AnalyticsStrip`** embebido en el Dashboard (curva de confianza, alertas, clústeres débiles, pares a vigilar, detalle desplegable) + CTA "Reparar (N confident-wrong)" al Repair Studio
+3. ✅ **`SessionHeatMap`** en el resumen de cada bloque: mapa por clúster/par con Δ de confianza de la sesión
+4. ✅ **Pestaña "Métricas" retirada** (Navbar + App + `ActiveTab`): las métricas sirven al aprendizaje, no al revés
+   - **Tests:** 10/10 (`tests/analytics.test.ts`) — suite total **55/55**, lint 0, boot smoke verde
 
 ### Phase E — Accessibility & UX polish
 1. High-contrast mode (toggle, persisted in settings).

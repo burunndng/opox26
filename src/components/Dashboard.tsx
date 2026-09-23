@@ -28,6 +28,7 @@ import {
   Atom,
   BAREMOS,
 } from '../types.ts';
+import { AnalyticsStrip } from './AnalyticsStrip.tsx';
 import { useAuth } from '../context/AuthContext.tsx';
 
 interface DashboardProps {
@@ -72,6 +73,7 @@ interface DashboardProps {
 export const Dashboard: React.FC<DashboardProps> = ({
   dueStats,
   confusionPairs,
+  clusters = [],
   openErrors,
   items,
   atoms = [],
@@ -290,7 +292,18 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
       </div>
 
-      {/* 3. Study Sets Grid (Temas) */}
+      {/* 3. Embedded analytics (calibration + weak points) — intentionally a
+          section of the Dashboard, never its own tab (see implementation plan) */}
+      <AnalyticsStrip
+        items={items}
+        clusters={clusters}
+        confusionPairs={confusionPairs}
+        attempts={attempts}
+        errors={openErrors}
+        onOpenRepair={onGoToErrors}
+      />
+
+      {/* 4. Study Sets Grid (Temas) */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center space-x-2 font-mono">

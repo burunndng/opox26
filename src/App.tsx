@@ -467,15 +467,6 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'analytics' && (
-          <CalibrationAnalytics
-            attempts={attempts}
-            errors={openErrors}
-            clusters={clusters}
-            items={items}
-          />
-        )}
-
         {activeTab === 'export' && (
           <ExportSettingsMethodModal settings={settings} onRefresh={loadData} />
         )}

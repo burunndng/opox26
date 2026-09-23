@@ -27,7 +27,6 @@ export type ActiveTab =
   | 'content'
   | 'items'
   | 'chat'
-  | 'analytics'
   | 'export'
   | 'help';
 
@@ -96,12 +95,6 @@ export const Navbar: React.FC<NavbarProps> = ({
       icon: AlertTriangle,
       count: openErrorsCount > 0 ? openErrorsCount : null,
       countColor: 'text-rose-400 font-numeric font-bold',
-    },
-    {
-      id: 'analytics',
-      label: 'Métricas',
-      icon: BarChart3,
-      count: null,
     },
   ];
 
@@ -246,19 +239,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
               )}
             </div>
-
-            {/* Métricas */}
-            <button
-              onClick={() => setActiveTab('analytics')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-b-2 ${
-                activeTab === 'analytics'
-                  ? 'border-blue-500 text-white font-semibold'
-                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700'
-              }`}
-            >
-              <BarChart3 className="w-3.5 h-3.5" />
-              <span>Métricas</span>
-            </button>
           </nav>
 
           {/* Zone 3: Actions & Quick Topic Selector */}
