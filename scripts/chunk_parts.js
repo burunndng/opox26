@@ -1,0 +1,82 @@
+import fs from 'fs';
+import path from 'path';
+
+// Construct the complete seedData.ts file content
+const topicsCode = `export const seedTopics: Topic[] = [
+  {
+    id: 'topic_tema_7',
+    name: 'Seguridad Social - Tema 7: Régimen General y Régimen Jurídico de Prestaciones',
+    description: 'Régimen jurídico de las prestaciones: prescripción, caducidad, reintegro, automaticidad, responsabilidad empresarial, inembargabilidad, coeficientes de cómputo y revalorización 2026.',
+    status: 'active',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+];`;
+
+const chunksCode = `export const seedSourceChunks: SourceChunk[] = [
+  {
+    id: 'chunk-1',
+    topic_id: 'topic_tema_7',
+    article_reference: 'Art. 53 y 54 TRLGSS',
+    order_index: 1,
+    raw_text: \`Artículo 53. Prescripción.
+1. El derecho al reconocimiento de las prestaciones prescribirá a los cinco años, contados desde el día siguiente a aquel en que tenga lugar el hecho causante de la prestación de que se trate, sin perjuicio de las excepciones que se determinen en la presente ley y de que los efectos de tal reconocimiento se produzcan a partir de los tres meses anteriores a la fecha en que se presente la correspondiente solicitud.
+2. Si el contenido de la resolución administrativa o judicial sobre el reconocimiento o revisión de una prestación fuese favorable al interesado, los efectos económicos de dicha resolución se retrotraerán a los tres meses anteriores a la fecha de presentación de la solicitud.
+3. El derecho al reconocimiento de la pensión de jubilación y de incapacidad permanente no prescribirá.
+
+Artículo 54. Caducidad.
+1. El derecho al percibo de las prestaciones a tanto alzado y por una sola vez caducará al año, a contar desde el día siguiente al de haber sido notificada en forma al interesado la concesión de la prestación.
+2. Si se trata de prestaciones periódicas, el derecho al percibo de cada mensualidad caducará al año de su respectivo vencimiento.\`,
+    summary: 'Régimen de prescripción (5 años desde hecho causante, retroactividad 3 meses) y caducidad (1 año para percibo desde notificación o vencimiento).',
+  },
+  {
+    id: 'chunk-2',
+    topic_id: 'topic_tema_7',
+    article_reference: 'Art. 44 y 47 TRLGSS; Art. 607 LEC',
+    order_index: 2,
+    raw_text: \`Artículo 44. Carácter de las prestaciones e inembargabilidad.
+1. Las prestaciones de la Seguridad Social no podrán ser objeto de retención, cesión, compensación o descuento salvo para deudas de alimentos a cónyuge e hijos o deudas con la propia Seguridad Social.
+2. Son inembargables los salarios o pensiones que no superen la cuantía del Salario Mínimo Interprofesional (SMI). El exceso sobre el SMI se embarga por tramos escalonados: 30% hasta el doble del SMI, 50% hasta el triple, 60% hasta el cuádruple, 75% hasta el quíntuple y 90% para cualquier cantidad superior.
+
+Artículo 47. Requisito de estar al corriente.
+En el caso de trabajadores responsables del ingreso de cotizaciones (RETA, empresarios), si no estuviesen al corriente, la entidad gestora cursará invitación al pago concediendo 30 días naturales improrrogables.\`,
+    summary: 'Intangibilidad, inembargabilidad hasta el SMI, escala de embargo del art. 607 LEC e invitación al pago de 30 días naturales.',
+  },
+  {
+    id: 'chunk-3',
+    topic_id: 'topic_tema_7',
+    article_reference: 'Decreto 21 abril 1966; Art. 164 y 167 TRLGSS',
+    order_index: 3,
+    raw_text: \`Principio de Automaticidad y Recargo de Prestaciones:
+1. Automaticidad absoluta: opera en contingencias profesionales (Accidentes de Trabajo y Enfermedades Profesionales), desempleo y riesgo de embarazo. La entidad gestora o mutua anticipa el pago sin exigir alta previa del trabajador.
+2. Automaticidad relativa: opera en contingencias comunes. Exige inexcusablemente que el trabajador se encuentre en alta o situación asimilada al alta al sobrevenir el hecho causante.
+3. Recargo de prestaciones: oscila entre el 30% y el 50% en caso de accidente o enfermedad laboral por falta de medidas de seguridad. Recae exclusivamente sobre el empresario infractor y es nulo todo pacto de aseguramiento.\`,
+    summary: 'Automaticidad absoluta vs relativa y recargo no asegurable del 30% al 50%.',
+  },
+  {
+    id: 'chunk-4',
+    topic_id: 'topic_tema_7',
+    article_reference: 'Art. 247, 249 bis y 235 TRLGSS',
+    order_index: 4,
+    raw_text: \`Cómputo de periodos de cotización y coeficientes correctores:
+1. Fijos-discontinuos (art. 247): días cotizados multiplicados por 1,5, tope de días naturales del año.
+2. Contratos temporales <= 5 días (art. 249 bis): cada día computa como 1,4 días, tope de días del mes natural.
+3. Beneficio por parto (art. 235): 112 días de cotización computable por el primer hijo (+14 días por hijo a partir del segundo en parto múltiple).\`,
+    summary: 'Coeficientes multiplicadores: 1,5 fijo-discontinuo, 1,4 contratos cortos, beneficio por parto 112 días + 14 días.',
+  },
+  {
+    id: 'chunk-5',
+    topic_id: 'topic_tema_7',
+    article_reference: 'Art. 58 TRLGSS y Cifras Oficiales 2026',
+    order_index: 5,
+    raw_text: \`Importes oficiales y revalorización 2026:
+1. Revalorización contributiva: 2,7%.
+2. Pensión máxima 2026: 3.359,60 €/mes (47.034,40 €/año en 14 pagas).
+3. Pensión no contributiva anual: 8.803,20 €/año (628,80 €/mes).
+4. Límites ingresos para complemento por mínimos: 9.442,00 €/año (sin cónyuge) y 11.013,00 €/año (con cónyuge a cargo).
+5. Anticipos a cuenta FOGASA / prestaciones: límite de 2,5 veces el IPREM.\`,
+    summary: 'Cifras clave 2026: 2,7%, 3.359,60 €/mes, 8.803,20 € PNC, 9.442 € y 11.013 € complementos, 2,5 IPREM.',
+  }
+];`;
+
+console.log('Seed chunks ready');

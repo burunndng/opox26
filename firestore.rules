@@ -1,0 +1,145 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // User Profile Validation
+    function isValidUserProfile(data, userId) {
+      return data.userId is string && data.userId == userId &&
+             data.email is string && data.email.size() <= 256;
+    }
+
+    // User Review Schedule Validation
+    function isValidReviewSchedule(data, userId, itemId) {
+      return data.userId is string && data.userId == userId &&
+             data.itemId is string && data.itemId == itemId &&
+             data.state is string && (data.state in ['new', 'learning', 'review', 'graduated', 'maintenance', 'suspended']);
+    }
+
+    // User Activity Attempt Validation
+    function isValidActivityAttempt(data, userId) {
+      return data.userId is string && data.userId == userId &&
+             data.itemId is string && data.itemId.size() <= 128 &&
+             data.activityType is string && data.activityType.size() <= 64 &&
+             data.correct is bool;
+    }
+
+    // User Error Log Validation
+    function isValidErrorLog(data, userId) {
+      return data.userId is string && data.userId == userId &&
+             data.itemId is string && data.itemId.size() <= 128 &&
+             data.errorTypeCode is string && data.errorTypeCode.size() <= 32 &&
+             data.status is string && (data.status in ['open', 'repairing', 'repaired', 'mastered', 'graduated']);
+    }
+
+    // User Active Session Validation
+    function isValidActiveSession(data, userId) {
+      return data.userId is string && data.userId == userId &&
+             data.sessionType is string && data.sessionType.size() <= 64;
+    }
+
+    // User Custom Atom Validation
+    function isValidCustomAtom(data, userId, atomId) {
+      return data.userId is string && data.userId == userId &&
+             data.atomId is string && data.atomId == atomId &&
+             data.text is string && data.text.size() <= 4000;
+    }
+
+    // User Custom Item Validation
+    function isValidCustomItem(data, userId, itemId) {
+      return data.userId is string && data.userId == userId &&
+             data.itemId is string && data.itemId == itemId &&
+             data.stem is string && data.stem.size() <= 4000 &&
+             data.itemType is string && data.itemType.size() <= 64;
+    }
+
+    // User Document & Subcollections
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidId(userId) && isValidUserProfile(incoming(), userId);
+      allow update: if isOwner(userId) && isValidId(userId) && isValidUserProfile(incoming(), userId) &&
+                    incoming().userId == existing().userId;
+      allow delete: if isOwner(userId);
+
+      // Review Schedules subcollection
+      match /reviewSchedules/{itemId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(itemId) && isValidReviewSchedule(incoming(), userId, itemId);
+        allow update: if isOwner(userId) && isValidId(itemId) && isValidReviewSchedule(incoming(), userId, itemId) &&
+                      incoming().userId == existing().userId && incoming().itemId == existing().itemId;
+        allow delete: if isOwner(userId);
+      }
+
+      // Activity Attempts subcollection
+      match /activityAttempts/{attemptId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(attemptId) && isValidActivityAttempt(incoming(), userId);
+        allow update: if isOwner(userId) && isValidId(attemptId) && isValidActivityAttempt(incoming(), userId) &&
+                      incoming().userId == existing().userId;
+        allow delete: if isOwner(userId);
+      }
+
+      // Error Logs subcollection
+      match /errorLogs/{errorId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(errorId) && isValidErrorLog(incoming(), userId);
+        allow update: if isOwner(userId) && isValidId(errorId) && isValidErrorLog(incoming(), userId) &&
+                      incoming().userId == existing().userId;
+        allow delete: if isOwner(userId);
+      }
+
+      // Active Study Sessions subcollection
+      match /activeSessions/{sessionId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(sessionId) && isValidActiveSession(incoming(), userId);
+        allow update: if isOwner(userId) && isValidId(sessionId) && isValidActiveSession(incoming(), userId) &&
+                      incoming().userId == existing().userId;
+        allow delete: if isOwner(userId);
+      }
+
+      // Custom Atoms subcollection
+      match /customAtoms/{atomId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(atomId) && isValidCustomAtom(incoming(), userId, atomId);
+        allow update: if isOwner(userId) && isValidId(atomId) && isValidCustomAtom(incoming(), userId, atomId) &&
+                      incoming().userId == existing().userId && incoming().atomId == existing().atomId;
+        allow delete: if isOwner(userId);
+      }
+
+      // Custom Items subcollection
+      match /customItems/{itemId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(itemId) && isValidCustomItem(incoming(), userId, itemId);
+        allow update: if isOwner(userId) && isValidId(itemId) && isValidCustomItem(incoming(), userId, itemId) &&
+                      incoming().userId == existing().userId && incoming().itemId == existing().itemId;
+        allow delete: if isOwner(userId);
+      }
+    }
+  }
+}

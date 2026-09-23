@@ -1,0 +1,418 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with study settings and preferences for spaced repetition and metacognition.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The unique Firebase Auth UID of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the user."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The display name of the user."
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "Avatar image URL."
+        },
+        "srsAlgorithm": {
+          "type": "string",
+          "description": "Selected spaced repetition algorithm."
+        },
+        "maxNewItemsPerDay": {
+          "type": "number",
+          "description": "Maximum new items introduced per study day."
+        },
+        "confidenceRequiredForGraduation": {
+          "type": "number",
+          "description": "Minimum confidence level (0-3) required for item graduation."
+        },
+        "requireTwoFormatsForGraduation": {
+          "type": "boolean",
+          "description": "Whether graduation requires passing in at least two distinct activity formats."
+        },
+        "requireInterleavedSuccessForGraduation": {
+          "type": "boolean",
+          "description": "Whether graduation requires passing in an interleaved block."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp."
+        }
+      },
+      "required": ["userId", "email"]
+    },
+    "UserReviewSchedule": {
+      "title": "UserReviewSchedule",
+      "description": "User-specific spaced repetition state and successive relearning progression for an item.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The owner user ID."
+        },
+        "itemId": {
+          "type": "string",
+          "description": "The referenced Item ID."
+        },
+        "state": {
+          "type": "string",
+          "enum": ["new", "learning", "review", "graduated", "maintenance", "suspended"],
+          "description": "Current SRS state."
+        },
+        "dueDate": {
+          "type": "string",
+          "description": "ISO date string when item is next due."
+        },
+        "intervalDays": {
+          "type": "number",
+          "description": "Current repetition interval in days."
+        },
+        "easeFactor": {
+          "type": "number",
+          "description": "SM-2 ease factor multiplier."
+        },
+        "stability": {
+          "type": "number",
+          "description": "FSRS memory stability in days."
+        },
+        "difficulty": {
+          "type": "number",
+          "description": "FSRS item difficulty (1-10)."
+        },
+        "lapses": {
+          "type": "number",
+          "description": "Total number of forgetful lapses."
+        },
+        "consecutiveCorrectSessions": {
+          "type": "number",
+          "description": "Count of consecutive correct review sessions."
+        },
+        "formatsCompleted": {
+          "type": "string",
+          "description": "JSON string or comma-separated list of formats completed."
+        },
+        "lastConfidence": {
+          "type": "number",
+          "description": "Last recorded metacognitive confidence rating (0-3)."
+        },
+        "lastErrorType": {
+          "type": "string",
+          "description": "Last error taxonomy code (e.g. E1-E20)."
+        },
+        "priorityScore": {
+          "type": "number",
+          "description": "Dynamic priority score for review queue."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last review timestamp."
+        }
+      },
+      "required": ["userId", "itemId", "state"]
+    },
+    "UserActivityAttempt": {
+      "title": "UserActivityAttempt",
+      "description": "Detailed log of an item retrieval attempt, generative answer, option selection, confidence, and latency.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The owner user ID."
+        },
+        "itemId": {
+          "type": "string",
+          "description": "Referenced item ID."
+        },
+        "activityType": {
+          "type": "string",
+          "description": "Activity format used (cover_and_generate_mcq, cloze, contrast_card, etc.)."
+        },
+        "userResponse": {
+          "type": "string",
+          "description": "User-generated text answer before options."
+        },
+        "selectedOption": {
+          "type": "string",
+          "description": "Option selected after reveal."
+        },
+        "confidence": {
+          "type": "number",
+          "description": "Confidence level (0-3)."
+        },
+        "correct": {
+          "type": "boolean",
+          "description": "Whether the attempt was evaluated as correct."
+        },
+        "errorTypeCode": {
+          "type": "string",
+          "description": "Error taxonomy code (E1-E20) if incorrect."
+        },
+        "trapSelectedByUser": {
+          "type": "string",
+          "description": "Trap type associated with chosen distractor."
+        },
+        "timeToAnswerMs": {
+          "type": "number",
+          "description": "Response latency in milliseconds."
+        },
+        "wasInterleaved": {
+          "type": "boolean",
+          "description": "Whether attempt occurred during an interleaved block."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Attempt timestamp."
+        }
+      },
+      "required": ["userId", "itemId", "activityType", "correct"]
+    },
+    "UserErrorLog": {
+      "title": "UserErrorLog",
+      "description": "Metacognitive error log entry for targeted repair studios and misconception remediation.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The owner user ID."
+        },
+        "itemId": {
+          "type": "string",
+          "description": "Referenced item ID."
+        },
+        "topicId": {
+          "type": "string",
+          "description": "Topic ID."
+        },
+        "clusterId": {
+          "type": "string",
+          "description": "Cluster ID if applicable."
+        },
+        "confusionPairId": {
+          "type": "string",
+          "description": "Confusion pair ID if applicable."
+        },
+        "errorTypeCode": {
+          "type": "string",
+          "description": "Taxonomy code E1-E20."
+        },
+        "confidence": {
+          "type": "number",
+          "description": "Confidence level (0-3)."
+        },
+        "userExplanation": {
+          "type": "string",
+          "description": "User explanation of the misconception or trap."
+        },
+        "correctiveRule": {
+          "type": "string",
+          "description": "Legal corrective rule statement."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["open", "repairing", "repaired", "mastered", "graduated"],
+          "description": "Remediation lifecycle state."
+        },
+        "nextReviewDate": {
+          "type": "string",
+          "description": "Target date for next repair drill."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Error creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last status modification timestamp."
+        }
+      },
+      "required": ["userId", "itemId", "errorTypeCode", "status"]
+    },
+    "UserActiveSession": {
+      "title": "UserActiveSession",
+      "description": "Persisted active study session state allowing seamless continuation across reloads and devices.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The owner user ID."
+        },
+        "sessionType": {
+          "type": "string",
+          "description": "Type of study session."
+        },
+        "itemIds": {
+          "type": "string",
+          "description": "JSON string containing array of item IDs."
+        },
+        "currentIndex": {
+          "type": "number",
+          "description": "Current item index in queue."
+        },
+        "attemptsJson": {
+          "type": "string",
+          "description": "JSON serialized array of session attempts."
+        },
+        "isCompleted": {
+          "type": "boolean",
+          "description": "Whether session is finished."
+        },
+        "startedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Session start timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Session last active timestamp."
+        }
+      },
+      "required": ["userId", "sessionType"]
+    },
+    "UserCustomAtom": {
+      "title": "UserCustomAtom",
+      "description": "User-created legal proposition atoms stored per user account.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The owner user ID."
+        },
+        "atomId": {
+          "type": "string",
+          "description": "Unique atom ID."
+        },
+        "topicId": {
+          "type": "string",
+          "description": "Topic ID."
+        },
+        "text": {
+          "type": "string",
+          "description": "Proposition text."
+        },
+        "atomType": {
+          "type": "string",
+          "description": "Type of atom."
+        },
+        "legalBasis": {
+          "type": "string",
+          "description": "Normative legal article."
+        },
+        "difficulty": {
+          "type": "string",
+          "description": "Subjective difficulty."
+        },
+        "status": {
+          "type": "string",
+          "description": "Draft or validated status."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp."
+        }
+      },
+      "required": ["userId", "atomId", "text"]
+    },
+    "UserCustomItem": {
+      "title": "UserCustomItem",
+      "description": "User-created MCQ or discrimination exercise items stored per user account.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The owner user ID."
+        },
+        "itemId": {
+          "type": "string",
+          "description": "Unique item ID."
+        },
+        "topicId": {
+          "type": "string",
+          "description": "Topic ID."
+        },
+        "itemType": {
+          "type": "string",
+          "description": "Item format."
+        },
+        "stem": {
+          "type": "string",
+          "description": "Stem prompt."
+        },
+        "correctAnswer": {
+          "type": "string",
+          "description": "Correct answer."
+        },
+        "legalBasis": {
+          "type": "string",
+          "description": "Legal basis."
+        },
+        "ruleStatement": {
+          "type": "string",
+          "description": "Rule explanation."
+        },
+        "optionsJson": {
+          "type": "string",
+          "description": "JSON string of options."
+        },
+        "status": {
+          "type": "string",
+          "description": "Validation status."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp."
+        }
+      },
+      "required": ["userId", "itemId", "stem", "itemType"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User study profile and cognitive parameters."
+    },
+    "/users/{userId}/reviewSchedules/{itemId}": {
+      "schema": { "$ref": "#/entities/UserReviewSchedule" },
+      "description": "User spaced repetition state for an item."
+    },
+    "/users/{userId}/activityAttempts/{attemptId}": {
+      "schema": { "$ref": "#/entities/UserActivityAttempt" },
+      "description": "User activity attempt records."
+    },
+    "/users/{userId}/errorLogs/{errorId}": {
+      "schema": { "$ref": "#/entities/UserErrorLog" },
+      "description": "User metacognitive error log and repair studio records."
+    },
+    "/users/{userId}/activeSessions/{sessionId}": {
+      "schema": { "$ref": "#/entities/UserActiveSession" },
+      "description": "User active study sessions."
+    },
+    "/users/{userId}/customAtoms/{atomId}": {
+      "schema": { "$ref": "#/entities/UserCustomAtom" },
+      "description": "User-authored atomic propositions."
+    },
+    "/users/{userId}/customItems/{itemId}": {
+      "schema": { "$ref": "#/entities/UserCustomItem" },
+      "description": "User-authored practice items."
+    }
+  }
+}
