@@ -12,6 +12,7 @@ import { HelpShortcutsModal } from './components/HelpShortcutsModal.tsx';
 import { JevLabModal } from './components/JevLabModal.tsx';
 import { AiChatbot } from './components/AiChatbot.tsx';
 import { CreateTopicModal } from './components/CreateTopicModal.tsx';
+import { MicroLessonRunner } from './components/MicroLessonRunner.tsx';
 import { api } from './api.ts';
 import { selectSniperItems } from './utils/sniperFilter.ts';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
@@ -36,6 +37,7 @@ export default function App() {
   // Core domain data
   const [topics, setTopics] = useState<Topic[]>([]);
   const [atoms, setAtoms] = useState<Atom[]>([]);
+  const [microLessonTopic, setMicroLessonTopic] = useState<Topic | null>(null);
   const [clusters, setClusters] = useState<Cluster[]>([]);
   const [confusionPairs, setConfusionPairs] = useState<ConfusionPair[]>([]);
   const [items, setItems] = useState<Item[]>([]);
@@ -201,8 +203,7 @@ export default function App() {
   };
 
   // Launch Diagnostic Pretest
-  const handleStartPretest = (explicitTopicId?: string) => {
-    const topicScope = explicitTopicId || (selectedTopicId !== 'all' ? selectedTopicId : undefined);
+  const handleStartPretest = (explicitTopicId?: string) => {    const topicScope = explicitTopicId || (selectedTopicId !== 'all' ? selectedTopicId : undefined);
     const pool = topicScope ? items.filter(i => i.topic_id === topicScope) : items;
     const shuffled = [...pool].sort(() => 0.5 - Math.random()).slice(0, 10);
     setRunnerItems(shuffled);
@@ -213,6 +214,18 @@ export default function App() {
         : 'Pretest Diagnóstico (Sin Etiquetas)'
     );
     setRunnerMode('pretest');
+    setActiveTab('runner');
+  };
+
+  // Launch Retrieval-First Micro-Lesson (spec §9.2)
+  const handleStartMicroLesson = (topicId: string) => {
+    const topic = topics.find((t) => t.id === topicId);
+    if (!topic) {
+      alert('Tema no encontrado para la micro-lección.');
+      return;
+    }
+    setRunnerItems([]);
+    setMicroLessonTopic(topic);
     setActiveTab('runner');
   };
 
@@ -344,6 +357,7 @@ export default function App() {
             onOpenCreateTopic={() => setIsCreateTopicModalOpen(true)}
             onStartTopicDue={(topicId) => handleStartDueSession(topicId)}
             onStartTopicPretest={(topicId) => handleStartPretest(topicId)}
+            onStartTopicMicroLesson={handleStartMicroLesson}
             onStartTopicInterleaved={(topicId) => {
               setSelectedTopicId(topicId);
               setIsInterleavedModalOpen(true);
@@ -361,6 +375,18 @@ export default function App() {
         )}
 
         {activeTab === 'runner' && (
+          microLessonTopic ? (
+            <MicroLessonRunner
+              topic={microLessonTopic}
+              atoms={atoms.filter((a) => a.topic_id === microLessonTopic.id)}
+              onExit={() => {
+                setMicroLessonTopic(null);
+                setActiveTab('dashboard');
+                loadData();
+              }}
+              onItemCreated={loadData}
+            />
+          ) : (
           <ActivityRunner
             items={runnerItems.length > 0 ? runnerItems : items.slice(0, 10)}
             title={runnerTitle}
@@ -369,6 +395,9 @@ export default function App() {
             initialIndex={runnerInitialIndex}
             initialResults={runnerInitialResults}
             initialSessionId={runnerSessionId}
+            clusters={clusters}
+            confusionPairs={confusionPairs}
+            onLaunchRepair={handleLaunchRepairSession}
             onExit={() => {
               setRunnerInitialIndex(0);
               setRunnerInitialResults(undefined);
@@ -383,6 +412,7 @@ export default function App() {
               loadData();
             }}
           />
+          )
         )}
 
         {activeTab === 'errors' && (

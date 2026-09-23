@@ -26,6 +26,7 @@ import {
   seedAtoms,
   seedItems,
 } from './seedData.ts';
+import { seedItemsRetrieval } from './seedDataRetrieval.ts';
 import { defaultDbPath, legacyJsonPath, openDatabase } from './sqlite/connection.ts';
 import { loadAll, migrateJsonToSqlite, persistAll } from './sqlite/persist.ts';
 import { defaultSettings } from './sqlite/defaults.ts';
@@ -164,7 +165,7 @@ class LocalDatabase {
         }
       }
       const now = new Date();
-      for (const it of seedItems) {
+      for (const it of [...seedItems, ...seedItemsRetrieval]) {
         if (!this.data.items.some((existing) => existing.id === it.id)) {
           this.data.items.push(it);
           if (!this.data.reviewSchedules.some((s) => s.item_id === it.id)) {
@@ -200,7 +201,7 @@ class LocalDatabase {
     this.data.clusters = [...seedClusters];
     this.data.confusionPairs = [...seedConfusionPairs];
     this.data.atoms = [...seedAtoms];
-    this.data.items = [...seedItems];
+    this.data.items = [...seedItems, ...seedItemsRetrieval];
     this.data.activityAttempts = [];
     this.data.errorLogs = [];
     this.data.sessions = [];

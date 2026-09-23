@@ -53,6 +53,7 @@ interface DashboardProps {
   onStartTopicDue?: (topicId: string) => void;
   onStartTopicPretest?: (topicId: string) => void;
   onStartTopicInterleaved?: (topicId: string) => void;
+  onStartTopicMicroLesson?: (topicId: string) => void;
   onResumeSession?: (saved: SavedSessionState) => void;
   onStartDueSession: () => void;
   onStartInterleaved: () => void;
@@ -80,6 +81,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   onStartTopicDue,
   onStartTopicPretest,
   onStartTopicInterleaved,
+  onStartTopicMicroLesson,
   onResumeSession,
   onStartInterleaved,
   onStartPretest,
@@ -395,6 +397,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     >
                       <Target className="w-3 h-3 text-slate-400" />
                       <span>Pretest</span>
+                    </button>
+
+                    <button
+                      onClick={() => onStartTopicMicroLesson && onStartTopicMicroLesson(topic.id)}
+                      className="inline-flex items-center justify-center space-x-1.5 py-1.5 px-2 rounded-md bg-[#182030] hover:bg-[#202b40] text-slate-300 text-xs font-medium border border-[#20293a] transition"
+                      title="Micro-lección con recuperación primero (lectura → recuerdo → revelado)"
+                    >
+                      <BookOpen className="w-3 h-3 text-indigo-400" />
+                      <span>Micro-lección</span>
                     </button>
                   </div>
                 </div>

@@ -42,6 +42,8 @@ import {
   BAREMOS,
   BaremoConfig,
   ItemStudyLifecycleState,
+  Cluster,
+  ConfusionPair,
 } from '../types.ts';
 import { api } from '../api.ts';
 import { evaluateItem, EvaluationResult } from '../scoring/evaluateItem.ts';
@@ -51,6 +53,7 @@ import {
   clearActiveSessionFromCloud,
 } from '../services/firebaseSync.ts';
 import { ModeAStudyRunner } from './ModeAStudyRunner.tsx';
+import { PretestDiagnosticMap } from './PretestDiagnosticMap.tsx';
 
 /**
  * Helper to determine if an item must enter Mode A encoding first.
@@ -136,6 +139,11 @@ interface ActivityRunnerProps {
   };
   initialBaremoPenalty?: number;
   initialSessionId?: string;
+  /** Lookups for the pretest diagnostic map (spec §9.1) */
+  clusters?: Cluster[];
+  confusionPairs?: ConfusionPair[];
+  /** Routes weak pretest items into a Repair Studio session */
+  onLaunchRepair?: (itemIds: string[]) => void;
   onExit: () => void;
   onFinished: (stats: { total: number; correct: number; avgConfidence: number }) => void;
 }
@@ -148,6 +156,9 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
   initialResults,
   initialBaremoPenalty,
   initialSessionId,
+  clusters,
+  confusionPairs,
+  onLaunchRepair,
   onExit,
   onFinished,
 }) => {
@@ -991,6 +1002,17 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                 )}
               </div>
             </div>
+          )}
+
+          {/* Pretest Diagnostic Map (spec §9.1): strong/weak clusters, confusion pairs, focus */}
+          {mode === 'pretest' && (
+            <PretestDiagnosticMap
+              items={items}
+              attemptLogs={attemptLogs}
+              clusters={clusters}
+              confusionPairs={confusionPairs}
+              onLaunchRepair={onLaunchRepair}
+            />
           )}
 
           {/* Action Buttons */}

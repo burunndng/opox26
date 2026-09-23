@@ -234,13 +234,12 @@ CREATE TABLE settings (key TEXT PRIMARY KEY, value TEXT /* JSON */);
    - **Tests:** 10/10 (`tests/pipeline.test.ts`): typing precision on the prescripción cluster, legal-basis capture, dedup, abbreviation safety, chunker (headings/pages/oversized), PDF fixture extraction, corrupt + text-less PDF fallbacks
    - **Accept:** AC §18.3 + §18.4 offline with zero API keys ✔ (39/39 total tests, lint clean, boot smoke green)
 
-### Phase C — Pretest diagnostic map + retrieval micro-lesson
-1. Pretest end-screen **mapa diagnóstico**: strong/weak clusters, likely confusion pairs, recommended focus; auto-seed review queue with weak items; store pretest session for gain analysis. (Verify what exists in ActivityRunner pretest flow; build missing end-screen + queue-seeding.)
-2. Retrieval-first micro-lesson runner: chunk-by-chunk reader, embedded prompts ("Escribe la regla de memoria…"), reveal, keyword-match scoring vs atoms, "Crear átoma de error" → auto-creates draft atom + queue entry.
-3. Per-block heat map after interleaved blocks (reuse D1 components).
-4. Seed: add ≥4 `retrieval_prompt` + `pretest_item` examples.
-   - **Tests:** pretest seeding logic; keyword matcher hits/misses; micro-lesson miss → atom creation.
-   - **Accept:** AC §18.12 partial (two-tier already ✅), §9.1, §9.2.
+### Phase C — Pretest diagnostic map + retrieval micro-lesson ✅ DONE (2026-09-23)
+1. ✅ **Mapa diagnóstico de pretest** (`src/components/PretestDiagnosticMap.tsx`): clusters fuertes (≥80%) / débiles (<60%) / pares de confusión probables / aviso confident-wrong / enfoque recomendado + CTA **"Reparar ahora"** que enruta los ítems fallados y los aciertos afortunados al Repair Studio existente. Se renderiza en la pantalla final del runner cuando `mode === 'pretest'`
+2. ✅ **Micro-lección retrieval-first** (`src/components/MicroLessonRunner.tsx` + `src/utils/retrievalMatch.ts`): lector por fragmentos (refs de artículo/página) → prompt de recuerdo → revelado → *scoring* por palabras clave → "Crear ítem de repaso" (convierte fallos en ítems `retrieval_prompt` que entran en la cola al validarse). Matcher con *number+unit* como token único y exige todas las cifras → "5 meses" nunca cuenta como recuerdo de "5 años"
+3. ✅ Seed: 4 `retrieval_prompt` + 2 `pretest_item` (Tema 7, todos `draft`), mergeados en ambos caminos de seed de `db.ts`
+   - **Tests:** 6/6 (`tests/retrieval.test.ts`): accent-folding, number-words→dígitos, umbral 50% + cifras obligatorias, near-miss de unidad, scoring independiente
+   - **Accept:** §9.1 ✔ §9.2 ✔ (45/45 tests, lint 0, boot smoke: 6 ítems nuevos en SQLite como `draft`)
 
 ### Phase D — Analytics & calibration depth
 1. Heat maps: accuracy by topic / cluster / confusion pair / legal basis / atom type (Recharts, existing dep).
