@@ -378,6 +378,48 @@ export const api = {
     );
   },
 
+  // --- Local-first import pipeline (offline, no AI) ---
+
+  async importPdf(filename: string, dataBase64: string): Promise<{
+    filename?: string;
+    pageCount: number;
+    pages: Array<{ pageNumber: number; text: string }>;
+    fullText: string;
+  }> {
+    return request('/api/import/pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filename, data_base64: dataBase64 }),
+    });
+  },
+
+  async suggestAtomsOffline(text: string): Promise<{
+    suggestions: Array<{
+      text: string;
+      atom_type: Atom['atom_type'];
+      legal_basis?: string;
+      matched_markers: string[];
+      confidence: number;
+    }>;
+    stats: { total_sentences: number; by_type: Record<string, number> };
+  }> {
+    return request('/api/import/suggest-atoms', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    });
+  },
+
+  async splitChunks(input: { text?: string; pages?: Array<{ pageNumber: number; text: string }> }): Promise<{
+    chunks: Array<{ raw_text: string; page_number?: number; article_reference?: string; order_index: number }>;
+  }> {
+    return request('/api/import/chunk', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(input),
+    });
+  },
+
   async aiDraftItem(atom: Atom, itemType: string): Promise<Partial<Item>> {
     return request<Partial<Item>>(
       '/api/ai/draft-item',

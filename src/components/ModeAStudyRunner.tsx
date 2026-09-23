@@ -13,11 +13,15 @@ import { Item, MCQOption } from '../types.ts';
 
 export interface ModeAStudyRunnerProps {
   item: Item;
-  currentIndex: number;
-  totalItems: number;
+  currentIndex?: number;
+  totalItems?: number;
+  queueIndex?: number;
+  queueTotal?: number;
+  uniquePassedCount?: number;
+  uniqueTotalCount?: number;
   isRemediation?: boolean;
   lapseCount?: number;
-  onCompleted: (success: boolean) => void;
+  onCompleted: (result: { success: boolean; item: Item } | boolean) => void;
   onExit: () => void;
 }
 
@@ -76,6 +80,10 @@ export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
   item,
   currentIndex,
   totalItems,
+  queueIndex,
+  queueTotal,
+  uniquePassedCount,
+  uniqueTotalCount,
   isRemediation = false,
   lapseCount = 0,
   onCompleted,
@@ -86,6 +94,17 @@ export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [checkedResult, setCheckedResult] = useState<boolean | null>(null);
   const [hasFailedPrevious, setHasFailedPrevious] = useState(false);
+
+  // Reset state whenever a new item is presented in the batch queue
+  React.useEffect(() => {
+    setStage('read');
+    setSelectedOption(null);
+    setCheckedResult(null);
+    setHasFailedPrevious(false);
+  }, [item.id]);
+
+  const effectiveIndex = queueIndex ?? currentIndex ?? 0;
+  const effectiveTotal = queueTotal ?? totalItems ?? 1;
 
   // Fallbacks for rule statement
   const ruleText = item.rule_statement || item.why_correct || item.stem;
@@ -142,36 +161,42 @@ export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
     setCheckedResult(isCorrect);
   };
 
-  const handleFinishModeA = () => {
-    // Only allow advancing when the answer was confirmed correct
-    if (checkedResult === true) {
-      onCompleted(true);
-    }
+  const handleAdvanceModeA = (success: boolean) => {
+    onCompleted({ success, item });
   };
+
+  const isLastInQueue = queueIndex !== undefined && queueTotal !== undefined
+    ? queueIndex + 1 >= queueTotal
+    : false;
 
   return (
     <div className="max-w-3xl mx-auto py-8 px-4">
       {/* Visual & UI Differentiation for Mode A (Calm, low-stakes, no timer, no score) */}
-      <div className="flex items-center justify-between pb-4 mb-6 border-b border-sky-900/30 text-xs gap-2">
-        <div className="flex items-center space-x-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-6 border-b border-sky-900/30 text-xs gap-3">
+        <div className="flex items-center flex-wrap gap-2">
           {isRemediation ? (
             <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 font-semibold shadow-xs">
               <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
-              <span>🔁 BUCLE DE REMEDIACIÓN · Fallos: {lapseCount || 2}</span>
+              <span>🔁 REMEDIACIÓN EN LOTE · Fallos: {lapseCount || 2}</span>
             </span>
           ) : (
             <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/30 font-medium">
               <BookOpen className="w-3.5 h-3.5" />
-              <span>📖 APRENDIZAJE · Primer Contacto (Modo A)</span>
+              <span>📖 LOTE MODO A · Aprendizaje Previo</span>
             </span>
           )}
-          <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded bg-slate-800 text-slate-400 text-[11px] font-mono">
+          <span className="inline-flex items-center px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[11px] font-mono">
             {stage === 'read' ? 'Paso 1/2: Codificación' : 'Paso 2/2: Chequeo'}
           </span>
+          {uniqueTotalCount !== undefined && uniquePassedCount !== undefined && (
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-mono">
+              ✓ {uniquePassedCount}/{uniqueTotalCount} asimilados
+            </span>
+          )}
         </div>
-        <div className="flex items-center space-x-3 text-slate-400 font-mono text-[11px] sm:text-xs">
+        <div className="flex items-center justify-between sm:justify-end space-x-3 text-slate-400 font-mono text-[11px] sm:text-xs">
           <span>
-            Átomo {currentIndex + 1} de {totalItems} vistos (Cobertura)
+            Cola: Reactivo {effectiveIndex + 1} de {effectiveTotal}
           </span>
           <button
             onClick={onExit}
@@ -317,58 +342,95 @@ export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
             </div>
 
             {selectedOption !== null && (
-              <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-t border-sky-900/30">
-                <div className="text-xs text-slate-300">
+              <div className="pt-4 space-y-4 border-t border-sky-900/30">
+                <div className="p-4 rounded-xl border text-xs sm:text-sm leading-relaxed space-y-2.5 bg-slate-900/60 border-slate-800">
                   {checkedResult ? (
-                    <span className="text-emerald-400 font-semibold flex items-center space-x-1.5">
-                      <Check className="w-4 h-4 shrink-0" />
+                    <div className="text-emerald-400 font-semibold flex items-center space-x-2">
+                      <Check className="w-4 h-4 shrink-0 text-emerald-400" />
                       <span>¡Correcto! Átomo codificado con éxito en la memoria.</span>
-                    </span>
+                    </div>
                   ) : (
-                    <span className="text-amber-400 font-semibold flex items-center space-x-1.5">
-                      <AlertTriangle className="w-4 h-4 shrink-0" />
-                      <span>Respuesta incorrecta: el modelo mental aún no está fijado.</span>
-                    </span>
+                    <div className="space-y-2">
+                      <div className="text-rose-400 font-semibold flex items-center space-x-2">
+                        <AlertTriangle className="w-4 h-4 shrink-0 text-rose-400" />
+                        <span>Respuesta incorrecta: el modelo mental aún no está fijado.</span>
+                      </div>
+                      {(() => {
+                        const correctOpt = options.find(
+                          (o) => o.is_correct || o.id === item.correct_answer
+                        );
+                        const selectedOptObj = options.find((o) => o.id === selectedOption);
+                        return (
+                          <div className="p-3 bg-rose-950/20 border border-rose-900/40 rounded-lg text-slate-300 text-xs space-y-1.5">
+                            {correctOpt && (
+                              <p>
+                                <strong className="text-emerald-400 font-mono">
+                                  Opción correcta ({correctOpt.id}):
+                                </strong>{' '}
+                                {correctOpt.text}
+                              </p>
+                            )}
+                            {selectedOptObj?.explanation && (
+                              <p className="text-slate-400">
+                                <strong className="text-amber-400">Fallo detectado:</strong>{' '}
+                                {selectedOptObj.explanation}
+                              </p>
+                            )}
+                            <p className="text-sky-300 pt-1 border-t border-slate-800">
+                              <strong>Regla jurídica:</strong> {ruleText}
+                            </p>
+                            <p className="text-amber-300/90 text-[11px] pt-1 font-mono">
+                              🔁 Reactivo reencolado al lote de Modo A: volverás a responderlo antes de pasar al examen.
+                            </p>
+                          </div>
+                        );
+                      })()}
+                    </div>
                   )}
                 </div>
 
-                <div className="flex items-center gap-2 justify-end">
-                  {checkedResult ? (
-                    <button
-                      onClick={handleFinishModeA}
-                      className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition flex items-center space-x-2 shadow-md cursor-pointer"
-                    >
-                      <span>Avanzar a Modo B (Entrenamiento ⚔️)</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  ) : (
-                    <>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                  <div className="text-[11px] text-slate-400 font-mono">
+                    {checkedResult
+                      ? '✓ Marcado como apto para entrenamiento (Modo B).'
+                      : 'Cola activa: el ítem se ha añadido al final del lote.'}
+                  </div>
+
+                  <div className="flex items-center gap-2 justify-end">
+                    {checkedResult ? (
                       <button
-                        onClick={() => {
-                          setSelectedOption(null);
-                          setCheckedResult(null);
-                        }}
-                        className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-xs sm:text-sm transition flex items-center space-x-1.5 cursor-pointer border border-slate-700"
-                        title="Reintentar seleccionar una opción"
+                        onClick={() => handleAdvanceModeA(true)}
+                        className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition flex items-center space-x-2 shadow-md cursor-pointer"
                       >
-                        <RotateCcw className="w-3.5 h-3.5" />
-                        <span>Reintentar Chequeo</span>
+                        <span>
+                          {isLastInQueue ? 'Finalizar Lote de Aprendizaje' : 'Siguiente reactivo del lote'}
+                        </span>
+                        <ArrowRight className="w-4 h-4" />
                       </button>
-                      <button
-                        onClick={() => {
-                          setHasFailedPrevious(true);
-                          setStage('read');
-                          setSelectedOption(null);
-                          setCheckedResult(null);
-                        }}
-                        className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-semibold text-xs sm:text-sm transition flex items-center space-x-1.5 shadow-md cursor-pointer"
-                        title="Volver a leer la norma y el ejemplo guiado"
-                      >
-                        <BookOpen className="w-3.5 h-3.5" />
-                        <span>Revisar Norma y Pista</span>
-                      </button>
-                    </>
-                  )}
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => {
+                            setHasFailedPrevious(true);
+                            setStage('read');
+                          }}
+                          className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs sm:text-sm transition flex items-center space-x-1.5 cursor-pointer border border-slate-700"
+                          title="Volver a leer la norma y el ejemplo guiado antes de continuar"
+                        >
+                          <BookOpen className="w-3.5 h-3.5" />
+                          <span>Revisar Norma</span>
+                        </button>
+                        <button
+                          onClick={() => handleAdvanceModeA(false)}
+                          className="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs sm:text-sm transition flex items-center space-x-2 shadow-md cursor-pointer"
+                          title="Avanzar al siguiente ítem de la tanda; este ítem aparecerá al final"
+                        >
+                          <span>Continuar con el lote</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             )}

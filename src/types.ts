@@ -98,6 +98,27 @@ export interface Topic {
   updated_at: string;
 }
 
+/**
+ * Full in-memory database shape persisted to SQLite (data/oposilab.db).
+ * Moved here from server/db.ts so both the server and the persistence layer
+ * (and tests) can share it without circular imports.
+ */
+export interface DatabaseSchema {
+  version: number;
+  settings: AppSettings;
+  topics: Topic[];
+  sourceChunks: SourceChunk[];
+  atoms: Atom[];
+  clusters: Cluster[];
+  confusionPairs: ConfusionPair[];
+  items: Item[];
+  activityAttempts: ActivityAttempt[];
+  reviewSchedules: ReviewSchedule[];
+  errorLogs: ErrorLog[];
+  sessions: Session[];
+  savedSessionState?: any;
+}
+
 export interface SourceChunk {
   id: string;
   topic_id: string;
@@ -178,10 +199,12 @@ export interface SpotErrorData {
   explanation?: string;
   trap_type?: TrapType;
   error_spans?: Array<{
+    id?: string;
     text: string;
     correction: string;
     explanation: string;
     trap_type: TrapType;
+    is_error?: boolean;
   }>;
 }
 
@@ -379,6 +402,14 @@ export const BAREMOS: BaremoConfig[] = [
   },
 ];
 
+export type ItemStudyLifecycleState =
+  | 'new_unseen'
+  | 'modo_a_in_progress'
+  | 'modo_a_passed'
+  | 'modo_b_active'
+  | 'failed_in_modo_b'
+  | 'needs_remediation';
+
 export interface SavedSessionState {
   version: number;
   id: string;
@@ -395,6 +426,10 @@ export interface SavedSessionState {
     total: number;
     confidences: number[];
   };
+  phase?: 'modo_a_batch' | 'batch_transition' | 'modo_b_batch';
+  modoAQueue?: Item[];
+  modoAIndex?: number;
+  itemLifecycles?: Record<string, ItemStudyLifecycleState>;
 }
 
 export interface ReviewSchedule {

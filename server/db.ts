@@ -13,7 +13,11 @@ import {
   Session,
   AppSettings,
   QualityWarning,
+  DatabaseSchema,
 } from '../src/types.ts';
+
+// Re-export for backwards compatibility (DatabaseSchema now lives in src/types.ts)
+export type { DatabaseSchema };
 import {
   seedTopics,
   seedSourceChunks,
@@ -22,41 +26,19 @@ import {
   seedAtoms,
   seedItems,
 } from './seedData.ts';
+import { defaultDbPath, legacyJsonPath, openDatabase } from './sqlite/connection.ts';
+import { loadAll, migrateJsonToSqlite, persistAll } from './sqlite/persist.ts';
+import { defaultSettings } from './sqlite/defaults.ts';
+import { DatabaseSync } from 'node:sqlite';
 
-export interface DatabaseSchema {
-  version: number;
-  settings: AppSettings;
-  topics: Topic[];
-  sourceChunks: SourceChunk[];
-  atoms: Atom[];
-  clusters: Cluster[];
-  confusionPairs: ConfusionPair[];
-  items: Item[];
-  activityAttempts: ActivityAttempt[];
-  reviewSchedules: ReviewSchedule[];
-  errorLogs: ErrorLog[];
-  sessions: Session[];
-  savedSessionState?: any;
-}
-
-const DATA_DIR = path.join(process.cwd(), 'data');
-const DB_FILE = path.join(DATA_DIR, 'oposilab.db.json');
-
-const defaultSettings: AppSettings = {
-  ai_provider: 'gemini',
-  ai_model: 'gemini-3.8-flash',
-  default_language: 'es',
-  srs_algorithm: 'successive_relearning',
-  graduating_interval: 21, // days
-  max_new_items_per_day: 15,
-  confidence_required_for_graduation: 2,
-  require_two_formats_for_graduation: true,
-  require_interleaved_success_for_graduation: true,
-};
+const DATA_DIR = process.env.OPOSILAB_DATA_DIR || path.join(process.cwd(), 'data');
+const DB_FILE = defaultDbPath();
+const LEGACY_JSON = legacyJsonPath();
 
 class LocalDatabase {
   private data: DatabaseSchema;
   private initialized = false;
+  private conn: DatabaseSync | null = null;
 
   constructor() {
     this.data = {
@@ -82,26 +64,53 @@ class LocalDatabase {
       fs.mkdirSync(DATA_DIR, { recursive: true });
     }
 
-    if (fs.existsSync(DB_FILE)) {
+    // Open (and ensure schema of) the SQLite store at ./data/oposilab.db
+    this.conn = openDatabase(DB_FILE);
+    const loaded = loadAll(this.conn);
+
+    if (loaded) {
+      this.data = loaded;
+    } else if (fs.existsSync(LEGACY_JSON)) {
+      // One-time automatic migration from the legacy JSON store (data/oposilab.db.json)
       try {
-        const raw = fs.readFileSync(DB_FILE, 'utf-8');
-        this.data = JSON.parse(raw);
-        // Ensure defaults if any missing keys
-        if (!this.data.settings) this.data.settings = defaultSettings;
-        if (!this.data.topics) this.data.topics = [];
-        if (!this.data.sourceChunks) this.data.sourceChunks = [];
-        if (!this.data.atoms) this.data.atoms = [];
-        if (!this.data.clusters) this.data.clusters = [];
-        if (!this.data.confusionPairs) this.data.confusionPairs = [];
-        if (!this.data.items) this.data.items = [];
-        if (!this.data.activityAttempts) this.data.activityAttempts = [];
-        if (!this.data.reviewSchedules) this.data.reviewSchedules = [];
-        if (!this.data.errorLogs) this.data.errorLogs = [];
-        if (!this.data.sessions) this.data.sessions = [];
+        const result = migrateJsonToSqlite(this.conn, LEGACY_JSON);
+        if (result.migrated) {
+          this.data = loadAll(this.conn)!;
+          // Preserve the JSON as a backup (never silently destroy user data)
+          try {
+            fs.renameSync(LEGACY_JSON, `${LEGACY_JSON}.migrated.bak`);
+          } catch (renameErr) {
+            console.warn('Migrated to SQLite but could not rename legacy JSON backup:', renameErr);
+          }
+          console.log(`[OposiLab] Migrated legacy JSON store to SQLite: ${DB_FILE}`, result.counts);
+        } else {
+          console.warn(`[OposiLab] Legacy JSON migration skipped: ${result.reason}`);
+          this.seedInitialData();
+        }
       } catch (err) {
-        console.error('Error reading db file, re-initializing:', err);
+        console.error('Legacy JSON migration failed, initializing fresh seed data:', err);
         this.seedInitialData();
       }
+    } else {
+      this.seedInitialData();
+    }
+
+    // Ensure defaults if any missing keys
+    if (!this.data.settings) this.data.settings = defaultSettings;
+    if (!this.data.topics) this.data.topics = [];
+    if (!this.data.sourceChunks) this.data.sourceChunks = [];
+    if (!this.data.atoms) this.data.atoms = [];
+    if (!this.data.clusters) this.data.clusters = [];
+    if (!this.data.confusionPairs) this.data.confusionPairs = [];
+    if (!this.data.items) this.data.items = [];
+    if (!this.data.activityAttempts) this.data.activityAttempts = [];
+    if (!this.data.reviewSchedules) this.data.reviewSchedules = [];
+    if (!this.data.errorLogs) this.data.errorLogs = [];
+    if (!this.data.sessions) this.data.sessions = [];
+
+    // If empty topics or items, seed
+    if (this.data.topics.length === 0 || this.data.items.length === 0) {
+      this.seedInitialData();
     } else {
       this.seedInitialData();
     }
@@ -219,11 +228,10 @@ class LocalDatabase {
 
   private saveSync() {
     try {
-      const tempPath = `${DB_FILE}.tmp`;
-      fs.writeFileSync(tempPath, JSON.stringify(this.data, null, 2), 'utf-8');
-      fs.renameSync(tempPath, DB_FILE);
+      if (!this.conn) this.conn = openDatabase(DB_FILE);
+      persistAll(this.conn, this.data);
     } catch (err) {
-      console.error('Failed to save database:', err);
+      console.error('Failed to persist database (SQLite):', err);
     }
   }
 

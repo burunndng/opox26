@@ -1,12 +1,59 @@
 import express from 'express';
 import path from 'path';
 import { createServer as createViteServer } from 'vite';
+import { z } from 'zod';
 import { db } from './server/db.ts';
 import { SchedulingEngine, InterleavingEngine } from './server/scheduler.ts';
 import { DataExporter } from './server/exporter.ts';
 import { AiAssistant } from './server/ai.ts';
 import { JevClient } from './server/jev.ts';
-import { QualityWarning, Item } from './src/types.ts';
+import { QualityWarning, Item, AppSettings } from './src/types.ts';
+import {
+  topicInput,
+  sourceChunkInput,
+  atomInput,
+  clusterInput,
+  confusionPairInput,
+  itemInput,
+  attemptInput,
+  errorLogUpdateInput,
+  settingsUpdateInput,
+  sessionInput,
+  pdfImportInput,
+  suggestAtomsInput,
+  chunkSplitInput,
+} from './src/schemas/index.ts';
+import { parsePdf, PdfImportError } from './server/pdfImport.ts';
+import { suggestAtoms, splitIntoChunks } from './server/heuristics.ts';
+
+/**
+ * Validates req.body against a Zod schema. On failure responds 400 with an
+ * issue list and returns undefined; on success returns the parsed data
+ * (unknown keys preserved via .passthrough()).
+ */
+function validateBody<S extends z.ZodTypeAny>(schema: S, body: unknown, res: express.Response): z.infer<S> | undefined {
+  const result = schema.safeParse(body);
+  if (!result.success) {
+    res.status(400).json({
+      error: 'Validación fallida',
+      issues: result.error.issues.map((i) => ({
+        path: i.path.join('.'),
+        code: i.code,
+        message: i.message,
+      })),
+    });
+    return undefined;
+  }
+  return result.data;
+}
+
+/** Aggregates atom suggestions by inferred type for quick UI stats. */
+function countByType(suggestions: Array<{ atom_type: string }>): Record<string, number> {
+  return suggestions.reduce<Record<string, number>>((acc, s) => {
+    acc[s.atom_type] = (acc[s.atom_type] ?? 0) + 1;
+    return acc;
+  }, {});
+}
 
 async function startServer() {
   const app = express();
@@ -35,7 +82,9 @@ async function startServer() {
   });
 
   app.put('/api/settings', (req, res) => {
-    const updated = db.updateSettings(req.body);
+    const body = validateBody(settingsUpdateInput, req.body, res);
+    if (body === undefined) return;
+    const updated = db.updateSettings(body as Partial<AppSettings>);
     res.json(updated);
   });
 
@@ -51,12 +100,16 @@ async function startServer() {
   });
 
   app.post('/api/topics', (req, res) => {
-    const topic = db.createTopic(req.body);
+    const body = validateBody(topicInput, req.body, res);
+    if (body === undefined) return;
+    const topic = db.createTopic(body);
     res.status(201).json(topic);
   });
 
   app.put('/api/topics/:id', (req, res) => {
-    const updated = db.updateTopic(req.params.id, req.body);
+    const body = validateBody(topicInput.partial(), req.body, res);
+    if (body === undefined) return;
+    const updated = db.updateTopic(req.params.id, body);
     if (!updated) return res.status(404).json({ error: 'Topic not found' });
     res.json(updated);
   });
@@ -73,8 +126,44 @@ async function startServer() {
   });
 
   app.post('/api/source-chunks', (req, res) => {
-    const chunk = db.createSourceChunk(req.body);
+    const body = validateBody(sourceChunkInput, req.body, res);
+    if (body === undefined) return;
+    const chunk = db.createSourceChunk(body as any);
     res.status(201).json(chunk);
+  });
+
+  // --- Local-first import pipeline (offline, no AI) ---
+  app.post('/api/import/pdf', async (req, res) => {
+    const body = validateBody(pdfImportInput, req.body, res);
+    if (body === undefined) return;
+    try {
+      const buffer = Buffer.from(body.data_base64, 'base64');
+      const result = await parsePdf(buffer);
+      res.json({ filename: body.filename, ...result });
+    } catch (err: any) {
+      if (err instanceof PdfImportError) {
+        res.status(422).json({ error: err.message, fallback: 'paste' });
+      } else {
+        res.status(500).json({ error: err?.message || 'Error inesperado al procesar el PDF' });
+      }
+    }
+  });
+
+  app.post('/api/import/suggest-atoms', (req, res) => {
+    const body = validateBody(suggestAtomsInput, req.body, res);
+    if (body === undefined) return;
+    const suggestions = suggestAtoms(body.text, body.max_suggestions);
+    res.json({
+      suggestions,
+      stats: { total_sentences: suggestions.length, by_type: countByType(suggestions) },
+    });
+  });
+
+  app.post('/api/import/chunk', (req, res) => {
+    const body = validateBody(chunkSplitInput, req.body, res);
+    if (body === undefined) return;
+    const drafts = splitIntoChunks(body.pages ?? body.text!);
+    res.json({ chunks: drafts });
   });
 
   // Atoms
@@ -88,12 +177,16 @@ async function startServer() {
   });
 
   app.post('/api/atoms', (req, res) => {
-    const atom = db.createAtom(req.body);
+    const body = validateBody(atomInput, req.body, res);
+    if (body === undefined) return;
+    const atom = db.createAtom(body as any);
     res.status(201).json(atom);
   });
 
   app.put('/api/atoms/:id', (req, res) => {
-    const updated = db.updateAtom(req.params.id, req.body);
+    const body = validateBody(atomInput.partial(), req.body, res);
+    if (body === undefined) return;
+    const updated = db.updateAtom(req.params.id, body as any);
     if (!updated) return res.status(404).json({ error: 'Atom not found' });
     res.json(updated);
   });
@@ -110,7 +203,9 @@ async function startServer() {
   });
 
   app.post('/api/clusters', (req, res) => {
-    const cluster = db.createCluster(req.body);
+    const body = validateBody(clusterInput, req.body, res);
+    if (body === undefined) return;
+    const cluster = db.createCluster(body as any);
     res.status(201).json(cluster);
   });
 
@@ -121,7 +216,9 @@ async function startServer() {
   });
 
   app.post('/api/confusion-pairs', (req, res) => {
-    const pair = db.createConfusionPair(req.body);
+    const body = validateBody(confusionPairInput, req.body, res);
+    if (body === undefined) return;
+    const pair = db.createConfusionPair(body as any);
     res.status(201).json(pair);
   });
 
@@ -194,12 +291,16 @@ async function startServer() {
   });
 
   app.post('/api/items', (req, res) => {
-    const item = db.createItem(req.body);
+    const body = validateBody(itemInput, req.body, res);
+    if (body === undefined) return;
+    const item = db.createItem(body as any);
     res.status(201).json(item);
   });
 
   app.put('/api/items/:id', (req, res) => {
-    const updated = db.updateItem(req.params.id, req.body);
+    const body = validateBody(itemInput.partial(), req.body, res);
+    if (body === undefined) return;
+    const updated = db.updateItem(req.params.id, body as any);
     if (!updated) return res.status(404).json({ error: 'Item not found' });
     res.json(updated);
   });
@@ -228,7 +329,9 @@ async function startServer() {
 
   // Attempt recording (SRS Engine)
   app.post('/api/attempts', (req, res) => {
-    const result = db.recordAttempt(req.body);
+    const body = validateBody(attemptInput, req.body, res);
+    if (body === undefined) return;
+    const result = db.recordAttempt(body as any);
     res.status(201).json(result);
   });
 
@@ -243,7 +346,9 @@ async function startServer() {
   });
 
   app.put('/api/errors/:id', (req, res) => {
-    const updated = db.updateErrorLog(req.params.id, req.body);
+    const body = validateBody(errorLogUpdateInput, req.body, res);
+    if (body === undefined) return;
+    const updated = db.updateErrorLog(req.params.id, body as any);
     if (!updated) return res.status(404).json({ error: 'Error log not found' });
     res.json(updated);
   });
@@ -254,7 +359,9 @@ async function startServer() {
   });
 
   app.post('/api/sessions', (req, res) => {
-    const session = db.createSession(req.body);
+    const body = validateBody(sessionInput, req.body, res);
+    if (body === undefined) return;
+    const session = db.createSession(body as any);
     res.status(201).json(session);
   });
 

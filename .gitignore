@@ -6,3 +6,9 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Local runtime database (SQLite + migration backup) — never commit study data
+data/oposilab.db
+data/oposilab.db-shm
+data/oposilab.db-wal
+data/*.migrated.bak

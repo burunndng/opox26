@@ -59,6 +59,13 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
   const [articleRef, setArticleRef] = useState('');
   const [isExtracting, setIsExtracting] = useState(false);
   const [draftedAtoms, setDraftedAtoms] = useState<Partial<Atom>[]>([]);
+  // Local-first (offline) import pipeline states
+  const [pdfPages, setPdfPages] = useState<Array<{ pageNumber: number; text: string }> | null>(null);
+  const [pdfImportError, setPdfImportError] = useState<string | null>(null);
+  const [isImportingPdf, setIsImportingPdf] = useState(false);
+  const [isSuggestingOffline, setIsSuggestingOffline] = useState(false);
+  const [isCreatingChunks, setIsCreatingChunks] = useState(false);
+  const [chunkStatus, setChunkStatus] = useState<string | null>(null);
   const [selectedSetTopicId, setSelectedSetTopicId] = useState<string>(
     topics[0]?.id || 'tema_7_seguridad_social'
   );
@@ -364,17 +371,98 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setPdfImportError(null);
+
+    // PDF → offline server-side extraction (pdfjs-dist, no AI, no network beyond localhost)
+    if (file.name.toLowerCase().endsWith('.pdf')) {
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const dataUrl = event.target?.result as string;
+        const base64 = dataUrl?.split(',')[1];
+        if (!base64) return;
+        setIsImportingPdf(true);
+        try {
+          const result = await api.importPdf(file.name, base64);
+          setSourceText(result.fullText);
+          setPdfPages(result.pages);
+          if (!articleRef) setArticleRef(file.name.replace(/\.pdf$/i, ''));
+        } catch (err: any) {
+          setPdfImportError(
+            err?.message || 'No se pudo extraer el texto del PDF. Pega el texto manualmente como alternativa.'
+          );
+        } finally {
+          setIsImportingPdf(false);
+        }
+      };
+      reader.readAsDataURL(file);
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = (event) => {
       const content = event.target?.result as string;
       if (content) {
         setSourceText(content);
+        setPdfPages(null);
         if (!articleRef) {
           setArticleRef(file.name.replace(/\.[^/.]+$/, ''));
         }
       }
     };
     reader.readAsText(file);
+  };
+
+  // Offline (no-AI) atom suggestions from regex heuristics — drafts land in the
+  // existing approval list, human validation required before they count.
+  const handleSuggestAtomsOffline = async () => {
+    if (!sourceText.trim()) return;
+    setIsSuggestingOffline(true);
+    try {
+      const result = await api.suggestAtomsOffline(sourceText);
+      setDraftedAtoms(
+        result.suggestions.map((s) => ({
+          text: s.text,
+          atom_type: s.atom_type,
+          legal_basis: s.legal_basis || articleRef || 'TRLGSS',
+          tags: s.matched_markers,
+          difficulty: Math.max(1, Math.min(5, Math.round(s.confidence * 4))),
+          status: 'draft' as const,
+        }))
+      );
+    } catch (err) {
+      console.error('Offline suggestion error:', err);
+    } finally {
+      setIsSuggestingOffline(false);
+    }
+  };
+
+  // Split source text (or PDF pages) into referenced SourceChunks.
+  const handleCreateChunks = async () => {
+    const targetTopicId =
+      selectedSetTopicId !== '__new__' ? selectedSetTopicId : topics[0]?.id || 'tema_7_seguridad_social';
+    setIsCreatingChunks(true);
+    setChunkStatus(null);
+    try {
+      const input = pdfPages ? { pages: pdfPages } : { text: sourceText };
+      const { chunks } = await api.splitChunks(input);
+      for (const c of chunks) {
+        await api.createSourceChunk({
+          topic_id: targetTopicId,
+          raw_text: c.raw_text,
+          page_number: c.page_number,
+          article_reference: c.article_reference || articleRef || undefined,
+          order_index: c.order_index,
+          summary: '',
+        });
+      }
+      setChunkStatus(`${chunks.length} fragmentos creados${pdfPages ? ' con referencia de página' : ''}.`);
+      onRefresh();
+    } catch (err) {
+      console.error('Chunk creation error:', err);
+      setChunkStatus('Error al crear los fragmentos. Revisa la consola.');
+    } finally {
+      setIsCreatingChunks(false);
+    }
   };
 
   // Heuristic extraction
@@ -1346,6 +1434,29 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
               <span>{sourceText.length} caracteres | {sourceText.split(/\s+/).filter(Boolean).length} palabras</span>
             </div>
 
+            {/* Offline import pipeline status */}
+            {(isImportingPdf || pdfImportError || pdfPages || chunkStatus) && (
+              <div className="text-xs space-y-1.5">
+                {isImportingPdf && (
+                  <div className="flex items-center space-x-2 text-indigo-300">
+                    <span className="animate-spin inline-block w-3 h-3 border-2 border-indigo-400 border-t-transparent rounded-full" />
+                    <span>Extrayendo texto del PDF localmente (sin IA, sin conexión)…</span>
+                  </div>
+                )}
+                {pdfImportError && (
+                  <div className="p-2.5 bg-rose-950/40 border border-rose-800 rounded-lg text-rose-300">
+                    ⚠️ {pdfImportError} — puedes pegar el texto manualmente abajo.
+                  </div>
+                )}
+                {pdfPages && !pdfImportError && (
+                  <div className="text-emerald-400">
+                    ✓ PDF procesado: {pdfPages.length} páginas extraídas localmente. Los fragmentos conservarán la referencia de página.
+                  </div>
+                )}
+                {chunkStatus && <div className="text-slate-300">{chunkStatus}</div>}
+              </div>
+            )}
+
             {/* Source Text Input */}
             <textarea
               rows={7}
@@ -1364,6 +1475,26 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 </span>
               </div>
               <div className="flex items-center space-x-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={handleSuggestAtomsOffline}
+                  disabled={isSuggestingOffline || !sourceText.trim()}
+                  title="Detección por marcadores léxicos (plazos, porcentajes, excepciones, órganos…). Sin IA, sin API key."
+                  className="px-3.5 py-2 bg-slate-800 hover:bg-slate-750 disabled:opacity-50 text-cyan-300 rounded-xl text-xs font-semibold transition flex items-center space-x-1.5"
+                >
+                  <Search className="w-3.5 h-3.5" />
+                  <span>{isSuggestingOffline ? 'Analizando…' : 'Sugerir átomos (sin IA)'}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCreateChunks}
+                  disabled={isCreatingChunks || !sourceText.trim()}
+                  title="Divide el texto en fragmentos con referencia de artículo y página"
+                  className="px-3.5 py-2 bg-slate-800 hover:bg-slate-750 disabled:opacity-50 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center space-x-1.5"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>{isCreatingChunks ? 'Creando…' : 'Crear fragmentos'}</span>
+                </button>
                 <button
                   type="button"
                   onClick={handleExtractAtoms}

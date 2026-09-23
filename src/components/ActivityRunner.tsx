@@ -27,6 +27,9 @@ import {
   Scale,
   Brain,
   Flame,
+  Sparkles,
+  Shuffle,
+  Trophy,
 } from 'lucide-react';
 import {
   Item,
@@ -38,6 +41,7 @@ import {
   SavedSessionState,
   BAREMOS,
   BaremoConfig,
+  ItemStudyLifecycleState,
 } from '../types.ts';
 import { api } from '../api.ts';
 import { evaluateItem, EvaluationResult } from '../scoring/evaluateItem.ts';
@@ -47,6 +51,64 @@ import {
   clearActiveSessionFromCloud,
 } from '../services/firebaseSync.ts';
 import { ModeAStudyRunner } from './ModeAStudyRunner.tsx';
+
+/**
+ * Helper to determine if an item must enter Mode A encoding first.
+ * Pretest mode bypasses Mode A by definition (diagnostic baseline).
+ * In all other modes, new items or items with recurring lapses (>= 2) require Mode A.
+ */
+export function doesItemRequireModeA(
+  mode: string,
+  fsrsInfo?: { state?: string; lapses?: number }
+): boolean {
+  if (mode === 'pretest') return false;
+  const isNew = !fsrsInfo || fsrsInfo.state === 'new';
+  const hasLapses = (fsrsInfo?.lapses || 0) >= 2;
+  return isNew || hasLapses;
+}
+
+export function renderLifecycleBadge(state?: ItemStudyLifecycleState) {
+  switch (state) {
+    case 'new_unseen':
+      return (
+        <span className="inline-flex items-center px-2 py-0.5 rounded bg-slate-800 text-slate-400 text-[11px] font-mono border border-slate-700">
+          Nuevo / Sin Ver
+        </span>
+      );
+    case 'modo_a_in_progress':
+      return (
+        <span className="inline-flex items-center px-2 py-0.5 rounded bg-sky-500/15 text-sky-300 text-[11px] font-mono border border-sky-500/30">
+          Modo A en curso
+        </span>
+      );
+    case 'modo_a_passed':
+      return (
+        <span className="inline-flex items-center px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 text-[11px] font-mono border border-emerald-500/30">
+          ✓ Apto Modo B
+        </span>
+      );
+    case 'modo_b_active':
+      return (
+        <span className="inline-flex items-center px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 text-[11px] font-mono border border-amber-500/30">
+          🎯 Examen Activo
+        </span>
+      );
+    case 'failed_in_modo_b':
+      return (
+        <span className="inline-flex items-center px-2 py-0.5 rounded bg-rose-500/15 text-rose-300 text-[11px] font-mono border border-rose-500/30">
+          ⚠️ Reintento Examen
+        </span>
+      );
+    case 'needs_remediation':
+      return (
+        <span className="inline-flex items-center px-2 py-0.5 rounded bg-purple-500/15 text-purple-300 text-[11px] font-mono border border-purple-500/30">
+          🔁 Remediación
+        </span>
+      );
+    default:
+      return null;
+  }
+}
 
 
 export interface SessionAttemptLog {
@@ -975,7 +1037,8 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
         totalItems={items.length}
         isRemediation={isRemediation}
         lapseCount={fsrsInfo.lapses || 0}
-        onCompleted={async (success: boolean) => {
+        onCompleted={async (result: boolean | { success: boolean; item: Item }) => {
+          const success = typeof result === 'boolean' ? result : result.success;
           if (success) {
             try {
               await api.recordAttempt({
