@@ -11,6 +11,7 @@ export const HelpShortcutsModal: React.FC<HelpModalProps> = ({ isOpen, onClose }
 
   const shortcuts = [
     { key: 'Espacio', desc: 'Revelar opciones en MCQ / Siguiente ítem en feedback' },
+    { key: 'H', desc: 'Pedir una pista (reduce el intervalo de repaso)' },
     { key: '1, 2, 3, 4', desc: 'Seleccionar alternativa A, B, C o D' },
     { key: '0, 1, 2, 3', desc: 'Calificar nivel de certeza o confianza metacognitiva' },
     { key: 'Esc', desc: 'Cerrar ventanas modales o salir al panel' },

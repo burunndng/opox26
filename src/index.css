@@ -19,6 +19,41 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* High-contrast mode (accessibility, spec §14): stronger canvas/border/text
+     separation. Applied via <html data-contrast="high">. Colors are reinforced,
+     never the only signal — status always carries an icon + text label. */
+  [data-contrast='high'] {
+    --canvas-bg: #000000;
+    --card-surface: #0a0f1a;
+    --card-elevated: #111827;
+    --border-subtle: #64748b;
+  }
+
+  [data-contrast='high'] body {
+    color: #f8fafc;
+  }
+
+  [data-contrast='high'] .bg-slate-900,
+  [data-contrast='high'] .bg-\[\#121722\],
+  [data-contrast='high'] .bg-\[\#182030\] {
+    border-color: #94a3b8 !important;
+  }
+
+  [data-contrast='high'] .text-slate-400,
+  [data-contrast='high'] .text-slate-500 {
+    color: #cbd5e1 !important;
+  }
+
+  [data-contrast='high'] .border-slate-800,
+  [data-contrast='high'] .border-slate-700 {
+    border-color: #94a3b8 !important;
+  }
+
+  [data-contrast='high'] :focus-visible {
+    outline: 3px solid #facc15;
+    outline-offset: 2px;
+  }
+
   /* Clear, robust typographic scale */
   h1 {
     font-size: 1.75rem;

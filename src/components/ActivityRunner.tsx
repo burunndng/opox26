@@ -1766,10 +1766,40 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               Asigna a cada supuesto su plazo, porcentaje o cuantía exacta de la lista:
             </p>
 
+            {/* Draggable value chips (mouse path). The <select> on each row is
+                the full keyboard/screen-reader alternative (spec §14). */}
+            <div className="flex flex-wrap gap-2 p-3 bg-slate-950/60 border border-slate-800 rounded-xl">
+              {(currentItem.number_sort_data?.items || []).map((o) => (
+                <span
+                  key={o.id}
+                  draggable={stage === 'answering'}
+                  onDragStart={(e) => e.dataTransfer.setData('text/plain', o.correct_value)}
+                  title="Arrastra este valor sobre el supuesto correcto"
+                  className={`px-2.5 py-1 rounded-lg text-xs font-mono border cursor-grab select-none ${
+                    stage === 'answering'
+                      ? 'bg-slate-900 border-slate-700 text-slate-200 hover:border-indigo-500'
+                      : 'bg-slate-950 border-slate-850 text-slate-600 opacity-60'
+                  }`}
+                >
+                  {o.correct_value}
+                </span>
+              ))}
+            </div>
+
             <div className="space-y-3">
               {(currentItem.number_sort_data?.items || []).map((pair) => (
                 <div
                   key={pair.id}
+                  onDragOver={(e) => {
+                    if (stage === 'answering') e.preventDefault();
+                  }}
+                  onDrop={(e) => {
+                    if (stage !== 'answering') return;
+                    e.preventDefault();
+                    const value = e.dataTransfer.getData('text/plain');
+                    if (!value) return;
+                    setNumberSortMatches((prev) => ({ ...prev, [pair.id]: value }));
+                  }}
                   className="p-3 bg-slate-950 border border-slate-800 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-2"
                 >
                   <span className="text-xs text-slate-200 font-medium flex-1">{pair.concept}</span>

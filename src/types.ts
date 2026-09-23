@@ -508,6 +508,8 @@ export interface AppSettings {
   require_two_formats_for_graduation: boolean;
   require_interleaved_success_for_graduation: boolean;
   jev_enabled?: boolean;
+  /** Accessibility: stronger contrast theme (spec §14) */
+  high_contrast?: boolean;
 }
 
 export type JevPrimitiveType = 'choice' | 'noul' | 'score';

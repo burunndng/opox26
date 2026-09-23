@@ -7,6 +7,7 @@ import {
   Database,
   BarChart3,
   Settings2,
+  Contrast,
   HelpCircle,
   BookOpen,
   Plus,
@@ -38,6 +39,8 @@ interface NavbarProps {
   onOpenHelp: () => void;
   onOpenJevLab?: () => void;
   jevEnabled?: boolean;
+  highContrast?: boolean;
+  onToggleHighContrast?: () => void;
   topics: Topic[];
   selectedTopicId: string | 'all';
   setSelectedTopicId: (id: string | 'all') => void;
@@ -52,6 +55,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenHelp,
   onOpenJevLab,
   jevEnabled = true,
+  highContrast = false,
+  onToggleHighContrast,
   topics,
   selectedTopicId,
   setSelectedTopicId,
@@ -269,6 +274,20 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Plus className="w-3.5 h-3.5" />
               </button>
             )}
+
+            {/* High-contrast toggle (accessibility, spec §14) */}
+            <button
+              onClick={onToggleHighContrast}
+              title={highContrast ? 'Desactivar alto contraste' : 'Activar alto contraste'}
+              aria-pressed={highContrast}
+              className={`p-1.5 rounded-md transition border ${
+                highContrast
+                  ? 'bg-[#182030] text-amber-300 border-amber-500/50'
+                  : 'bg-[#121722] hover:bg-[#182030] text-slate-400 hover:text-slate-200 border-[#20293a]'
+              }`}
+            >
+              <Contrast className="w-3.5 h-3.5" />
+            </button>
 
             {/* Settings & Export Button */}
             <button

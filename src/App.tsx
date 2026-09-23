@@ -56,6 +56,26 @@ export default function App() {
     require_interleaved_success_for_graduation: true,
   });
 
+  const highContrast = !!settings.high_contrast;
+
+  // Apply / remove the high-contrast theme on the document root
+  useEffect(() => {
+    if (highContrast) document.documentElement.setAttribute('data-contrast', 'high');
+    else document.documentElement.removeAttribute('data-contrast');
+  }, [highContrast]);
+
+  const handleToggleHighContrast = async () => {
+    const next = !highContrast;
+    if (next) document.documentElement.setAttribute('data-contrast', 'high');
+    else document.documentElement.removeAttribute('data-contrast');
+    try {
+      await api.updateSettings({ high_contrast: next });
+      await loadData();
+    } catch (e) {
+      console.warn('No se pudo guardar la preferencia de contraste:', e);
+    }
+  };
+
   const [dueStats, setDueStats] = useState({
     dueToday: 0,
     learning: 0,
@@ -334,6 +354,8 @@ export default function App() {
         onOpenHelp={() => setIsHelpModalOpen(true)}
         onOpenJevLab={() => setIsJevLabModalOpen(true)}
         jevEnabled={settings.jev_enabled !== false}
+        highContrast={highContrast}
+        onToggleHighContrast={handleToggleHighContrast}
         topics={topics}
         selectedTopicId={selectedTopicId}
         setSelectedTopicId={setSelectedTopicId}

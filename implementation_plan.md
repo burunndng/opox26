@@ -285,3 +285,16 @@ No mock-exam simulator · no leaderboards · no cloud accounts · no payments ·
 
 **Execution order:** A → B → C → D → E → F, app runnable and test-green after every phase.
 **Next action on approval:** Phase A step 1 (`server/sqlite/`).
+
+### Phase E — Accessibility & polish ✅ DONE (2026-09-23)
+- ✅ **Alto contraste** real (tema `data-contrast="high"` en `index.css`, toggle en Navbar con `aria-pressed`, persistido en ajustes → SQLite)
+- ✅ **Feedback nunca solo-color**: la insignia de acierto/fallo ya combina icono + texto explícito (auditado en `ActivityRunner`)
+- ✅ **Number-sort con drag-and-drop nativo** (HTML5, sin dependencias) manteniendo el `<select>` por fila como alternativa completa de teclado/lector
+- ✅ **Atajos**: documentado `H` (pista) en la guía; el resto verificado en el handler real
+- ✅ **Página de Método completada a 6/6** (intercalado y reparación diferenciada añadidos)
+
+### Phase F — Docs, examples & acceptance ✅ DONE (2026-09-23)
+- ✅ `README.md` reescrito en español (instalación, SQLite y migración, Content Studio, modos de estudio, atajos, analítica embebida, export/import, IA opcional, arquitectura y por qué)
+- ✅ `docs/ACCEPTANCE.md`: los 23 criterios de §18 trazados a evidencia (test / archivo / paso manual) con pendientes declarados
+- ✅ `examples/anki_sample.tsv` y `examples/error_log_report.md` generados desde la base real
+- **Estado final: 55/55 tests, `tsc` 0 errores, 4 fases + E/F cerradas.**

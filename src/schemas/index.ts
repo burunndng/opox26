@@ -173,6 +173,7 @@ export const settingsUpdateInput = z
     require_two_formats_for_graduation: z.boolean().optional(),
     require_interleaved_success_for_graduation: z.boolean().optional(),
     jev_enabled: z.boolean().optional(),
+    high_contrast: z.boolean().optional(),
   })
   .passthrough();
 

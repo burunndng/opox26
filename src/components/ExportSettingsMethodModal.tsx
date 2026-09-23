@@ -358,6 +358,34 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                 deliberado y el reaprendizaje sucesivo.
               </p>
             </div>
+
+            <div className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+              <h4 className="font-bold text-indigo-300">
+                5. ¿Por qué intercalamos bloques en lugar de estudiar temas bloques?
+              </h4>
+              <p className="text-slate-400 text-xs leading-relaxed">
+                Estudiar un tema entero seguido produce un efecto de bloque: el reconoces porque acabas
+                de verlo, no porque lo domines. Al alternar clústeres y formatos (y limitando a dos
+                ítems seguidos del mismo clúster) obligamos a discriminar entre reglas vecinas —
+                prescripción frente a caducidad, 1,4 frente a 1,5— que es exactamente lo que exige
+                el tipo test. Además se incluyen ítems antiguos en mantenimiento, de modo que la
+                retención se practica como ocurre en el examen real: mezcla.
+              </p>
+            </div>
+
+            <div className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+              <h4 className="font-bold text-indigo-300">
+                6. ¿Por qué cada error se repara de forma distinta?
+              </h4>
+              <p className="text-slate-400 text-xs leading-relaxed">
+                No todos los fallos son ignorancia. Un número hecho (E6) se corrige con repetición
+                numérica; una excepción no vista (E4) con un árbol de reglas; una mezcla conceptual
+                (E5) con una tarjeta de contraste A/B; un acierto por suerte (E7) con la regla
+                explícita; y un "estaba seguro y fallé" (E8) exige reparación prioritaria y dos
+                formatos distintos antes de volver a graduar el ítem. Reparar todo igual es
+                contraproducente: subir el ítem a la cola sin atacar la causa concreta del error.
+              </p>
+            </div>
           </div>
         </div>
       )}
