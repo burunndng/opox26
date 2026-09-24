@@ -1,4 +1,11 @@
-import { Item, ReviewSchedule, ErrorLog, ItemType, ItemFsrsInfo } from '../src/types.ts';
+import {
+  Item,
+  ReviewSchedule,
+  ErrorLog,
+  ItemType,
+  ItemFsrsInfo,
+  isPracticeEligible,
+} from '../src/types.ts';
 import { db } from './db.ts';
 
 export interface InterleavedBlockParams {
@@ -105,7 +112,7 @@ export class SchedulingEngine {
 
   public static getDueStats(topicId?: string): DueStats {
     const schedules = db.getReviewSchedules();
-    const items = db.getItems(topicId ? { topic_id: topicId } : undefined);
+    const items = db.getItems(topicId ? { topic_id: topicId } : undefined).filter(isPracticeEligible);
     const itemMap = new Map(items.map((i) => [i.id, i]));
     const errorLogs = db.getErrorLogs({ status: 'open' });
 
@@ -148,7 +155,7 @@ export class SchedulingEngine {
 
   public static getDueQueue(limit = 20, topicId?: string): Item[] {
     const schedules = db.getReviewSchedules();
-    const allItems = db.getItems(topicId ? { topic_id: topicId } : undefined);
+    const allItems = db.getItems(topicId ? { topic_id: topicId } : undefined).filter(isPracticeEligible);
     const itemMap = new Map(allItems.map((i) => [i.id, i]));
     const openErrors = db.getErrorLogs({ status: 'open' });
     const errorMap = new Map(openErrors.map((e) => [e.item_id, e]));
@@ -222,7 +229,7 @@ export class InterleavingEngine {
       activityTypes,
     } = params;
 
-    let allItems = db.getItems(topicId ? { topic_id: topicId } : undefined);
+    let allItems = db.getItems(topicId ? { topic_id: topicId } : undefined).filter(isPracticeEligible);
 
     if (activityTypes && activityTypes.length > 0) {
       allItems = allItems.filter((i) => activityTypes.includes(i.item_type));

@@ -38,6 +38,12 @@ export type ItemType =
 
 export type ItemStatus = 'draft' | 'needs_review' | 'validated' | 'active' | 'retired';
 
+export const PRACTICE_ELIGIBLE_STATUSES = ['validated', 'active'] as const;
+
+export function isPracticeEligible(item: Pick<Item, 'status'>): boolean {
+  return PRACTICE_ELIGIBLE_STATUSES.some((status) => status === item.status);
+}
+
 export type CognitiveOperation =
   | 'generative_retrieval'
   | 'micro_discrimination'
@@ -678,4 +684,3 @@ export interface ChatConversation {
   enableWebSearch: boolean;
   systemInstruction?: string;
 }
-
