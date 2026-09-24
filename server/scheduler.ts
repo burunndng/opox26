@@ -7,6 +7,7 @@ import {
   isPracticeEligible,
 } from '../src/types.ts';
 import { db } from './db.ts';
+import { interleaveByType, countNewItemsSeenToday, capNewItems } from './queueOrder.ts';
 
 export interface InterleavedBlockParams {
   blockSize: number;
@@ -171,8 +172,9 @@ export class SchedulingEngine {
     // 3. Overdue review items
     // 4. Learning queue
     // 5. New items
-    const scoredSchedules = schedules
-      .filter((s) => itemMap.has(s.item_id))
+    const candidates = schedules
+      .filter((s) => s.state !== 'suspended' && itemMap.has(s.item_id))
+      .filter((s) => s.state === 'new' || new Date(s.due_date) <= now)
       .map((s) => {
         let score = s.priority_score || 0;
 
@@ -188,26 +190,23 @@ export class SchedulingEngine {
         if (s.state === 'learning') score += 50;
         if (s.state === 'new') score += 20;
 
-        return { schedule: s, score };
+        return { item: itemMap.get(s.item_id)!, schedule: s, score };
       });
 
-    scoredSchedules.sort((a, b) => b.score - a.score);
+    candidates.sort((a, b) => b.score - a.score);
 
-    const resultItems: Item[] = [];
-    for (const entry of scoredSchedules.slice(0, limit)) {
-      const baseItem = itemMap.get(entry.schedule.item_id);
-      if (baseItem) {
-        const fsrs_info = this.computeFsrsMetadata(baseItem, entry.schedule, {
-          openError: errorMap.get(baseItem.id),
-          isDueQueue: true,
-        });
-        resultItems.push({
-          ...baseItem,
-          fsrs_info,
-        });
-      }
-    }
-    return resultItems;
+    const interleaved = interleaveByType(candidates);
+    const newSeenToday = countNewItemsSeenToday(db.getAttempts());
+    const { max_new_items_per_day } = db.getSettings();
+    const capped = capNewItems(interleaved, newSeenToday, max_new_items_per_day ?? 15);
+
+    return capped.slice(0, limit).map((entry) => ({
+      ...entry.item,
+      fsrs_info: this.computeFsrsMetadata(entry.item, entry.schedule, {
+        openError: errorMap.get(entry.item.id),
+        isDueQueue: true,
+      }),
+    }));
   }
 }
 

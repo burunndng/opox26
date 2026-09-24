@@ -51,7 +51,7 @@ export default function App() {
     default_language: 'es',
     srs_algorithm: 'fsrs',
     graduating_interval: 4,
-    max_new_items_per_day: 20,
+    max_new_items_per_day: 15,
     confidence_required_for_graduation: 2,
     require_two_formats_for_graduation: true,
     require_interleaved_success_for_graduation: true,

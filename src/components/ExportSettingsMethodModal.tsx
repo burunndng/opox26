@@ -438,7 +438,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                 onChange={(e) =>
                   setSrsSettings({
                     ...srsSettings,
-                    max_new_items_per_day: parseInt(e.target.value) || 20,
+                    max_new_items_per_day: parseInt(e.target.value) || 15,
                   })
                 }
                 className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white"
