@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -55,6 +55,57 @@ import {
 import { ModeAStudyRunner } from './ModeAStudyRunner.tsx';
 import { PretestDiagnosticMap } from './PretestDiagnosticMap.tsx';
 import { SessionHeatMap } from './SessionHeatMap.tsx';
+import { optionIdAtPosition, optionOrderSeed, orderOptions } from '../utils/optionOrder.ts';
+
+const EMPTY_OPTION_CHOICES: Array<{
+  id: string;
+  text: string;
+  is_correct: boolean;
+  explanation?: string;
+}> = [];
+
+function buildFactVariantChoices(item?: Item): Array<{ id: string; text: string }> {
+  if (item?.options?.length) return item.options;
+
+  const variantData = item?.fact_variant_data;
+  const firstVariant = variantData?.variants?.[0];
+  if (firstVariant) {
+    return [
+      {
+        id: 'A',
+        text:
+          firstVariant.expected_outcome ||
+          firstVariant.correct_outcome ||
+          'El cambio de circunstancia modifica el resultado jurídico',
+      },
+      {
+        id: 'B',
+        text:
+          variantData?.base_case?.correct_outcome ||
+          'Se mantiene el resultado de la regla general sin alteración',
+      },
+      {
+        id: 'C',
+        text: 'La consecuencia jurídica es indeterminada salvo resolución expresa',
+      },
+    ];
+  }
+
+  return [
+    { id: 'A', text: 'El cambio de hecho modifica la consecuencia jurídica' },
+    { id: 'B', text: 'La consecuencia jurídica no varía' },
+  ];
+}
+
+function optionLabelAtPosition(position: number): string {
+  return String.fromCharCode(65 + position);
+}
+
+function labelForOptionId(options: Array<{ id: string }>, optionId?: string | null): string {
+  if (!optionId) return '';
+  const position = options.findIndex((option) => option.id === optionId);
+  return position >= 0 ? optionLabelAtPosition(position) : optionId;
+}
 
 /**
  * Helper to determine if an item must enter Mode A encoding first.
@@ -166,6 +217,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
   const { user } = useAuth();
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const currentItem = items[currentIndex];
+  const [currentEncounter, setCurrentEncounter] = useState(0);
 
   // Official exam scoring baremo penalty configuration
   const [baremoPenalty, setBaremoPenalty] = useState<number>(() => {
@@ -294,6 +346,101 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
   const modeRef = useRef(mode);
   const titleRef = useRef(title);
   const sessionCompleteRef = useRef(sessionComplete);
+  const encounterCountsRef = useRef(new Map<string, number>());
+  const lastEncounterRef = useRef<{ index: number; itemId: string } | null>(null);
+  const encounterSessionIdRef = useRef(initialSessionId || sessionIdRef.current);
+
+  useLayoutEffect(() => {
+    const activeSessionId = initialSessionId || sessionIdRef.current;
+    if (encounterSessionIdRef.current !== activeSessionId) {
+      encounterSessionIdRef.current = activeSessionId;
+      encounterCountsRef.current.clear();
+      lastEncounterRef.current = null;
+    }
+
+    if (!currentItem) return;
+    const lastEncounter = lastEncounterRef.current;
+    if (lastEncounter?.index === currentIndex && lastEncounter.itemId === currentItem.id) return;
+
+    const encounter = encounterCountsRef.current.get(currentItem.id) ?? 0;
+    encounterCountsRef.current.set(currentItem.id, encounter + 1);
+    lastEncounterRef.current = { index: currentIndex, itemId: currentItem.id };
+    setCurrentEncounter(encounter);
+  }, [initialSessionId, currentIndex, currentItem?.id]);
+
+  const itemOptions = currentItem?.options ?? EMPTY_OPTION_CHOICES;
+  const tier1SourceOptions =
+    currentItem?.two_tier_data?.tier1?.options ??
+    currentItem?.two_tier_data?.tier1_options ??
+    itemOptions;
+  const tier2SourceOptions =
+    currentItem?.two_tier_data?.tier2?.options ??
+    currentItem?.two_tier_data?.tier2_options ??
+    EMPTY_OPTION_CHOICES;
+  const factVariantSourceOptions = useMemo(
+    () => buildFactVariantChoices(currentItem),
+    [currentItem?.id, currentItem?.options, currentItem?.fact_variant_data],
+  );
+  const hasPositionalOptionShortcuts =
+    currentItem?.item_type === 'cover_and_generate_mcq' ||
+    currentItem?.item_type === 'pretest_item' ||
+    currentItem?.item_type === 'cloze' ||
+    currentItem?.item_type === 'two_tier' ||
+    currentItem?.item_type === 'fact_variant';
+
+  const orderedItemOptions = useMemo(
+    () =>
+      hasPositionalOptionShortcuts
+        ? orderOptions(itemOptions, optionOrderSeed(currentItem?.id ?? '', currentEncounter))
+        : [...itemOptions],
+    [hasPositionalOptionShortcuts, itemOptions, currentItem?.id, currentEncounter],
+  );
+  const orderedTier1Options = useMemo(
+    () =>
+      orderOptions(
+        tier1SourceOptions,
+        optionOrderSeed(`${currentItem?.id ?? ''}:tier1`, currentEncounter),
+      ),
+    [tier1SourceOptions, currentItem?.id, currentEncounter],
+  );
+  const orderedTier2Options = useMemo(
+    () =>
+      orderOptions(
+        tier2SourceOptions,
+        optionOrderSeed(`${currentItem?.id ?? ''}:tier2`, currentEncounter),
+      ),
+    [tier2SourceOptions, currentItem?.id, currentEncounter],
+  );
+  const orderedFactVariantOptions = useMemo(
+    () =>
+      orderOptions(
+        factVariantSourceOptions,
+        optionOrderSeed(`${currentItem?.id ?? ''}:fact-variant`, currentEncounter),
+      ),
+    [factVariantSourceOptions, currentItem?.id, currentEncounter],
+  );
+
+  const displayedOptions =
+    currentItem?.item_type === 'two_tier'
+      ? orderedTier1Options
+      : currentItem?.item_type === 'fact_variant'
+        ? orderedFactVariantOptions
+        : orderedItemOptions;
+  const keyboardOptions =
+    currentItem?.item_type === 'two_tier'
+      ? twoTierStage === 'tier1'
+        ? orderedTier1Options
+        : orderedTier2Options
+      : currentItem?.item_type === 'fact_variant'
+        ? orderedFactVariantOptions
+        : orderedItemOptions;
+  const correctAnswerId =
+    currentItem?.item_type === 'two_tier'
+      ? tier1SourceOptions.find((option) => option.is_correct)?.id ?? currentItem.correct_answer
+      : currentItem?.correct_answer;
+  const correctAnswerLabel = hasPositionalOptionShortcuts
+    ? labelForOptionId(displayedOptions, correctAnswerId)
+    : correctAnswerId ?? '';
 
   useEffect(() => {
     runnerItemsRef.current = runnerItems;
@@ -516,8 +663,20 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
           e.preventDefault();
           handleBlankSubmit();
         } else if (['1', '2', '3', '4'].includes(e.key)) {
-          const letter = String.fromCharCode(64 + parseInt(e.key));
-          handleSubmitOption(letter);
+          const position = parseInt(e.key, 10) - 1;
+          if (hasPositionalOptionShortcuts) {
+            const optionId = optionIdAtPosition(keyboardOptions, position);
+            if (!optionId) return;
+
+            if (currentItem.item_type === 'two_tier' && twoTierStage === 'tier2') {
+              setUserReasoning(optionId);
+              setStage('confidence');
+            } else {
+              handleSubmitOption(optionId);
+            }
+          } else {
+            handleSubmitOption(String.fromCharCode(64 + position + 1));
+          }
         }
       } else if (stage === 'confidence') {
         if (['0', '1', '2', '3'].includes(e.key)) {
@@ -531,7 +690,17 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [stage, selectedOption, generatedAnswer, hintLevel, isHintOpen]);
+  }, [
+    stage,
+    selectedOption,
+    generatedAnswer,
+    hintLevel,
+    isHintOpen,
+    currentItem,
+    twoTierStage,
+    hasPositionalOptionShortcuts,
+    keyboardOptions,
+  ]);
 
   // Handle Hint trigger
   const handleTriggerHint = () => {
@@ -1509,9 +1678,9 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                 )}
 
                 <div className="grid grid-cols-1 gap-2.5">
-                  {(currentItem.options || []).map((opt) => {
+                  {orderedItemOptions.map((opt, index) => {
                     const isSelected = selectedOption === opt.id;
-                    const letter = opt.id;
+                    const letter = optionLabelAtPosition(index);
 
                     let optionStyle =
                       'bg-[#0c0f17] border-[#20293a] hover:border-blue-500/60 hover:bg-[#141a27] text-slate-200';
@@ -1594,7 +1763,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
             {stage === 'answering' && (() => {
               // Build chip options: from item.options if present, otherwise derive from cloze blanks
               const chipOpts = currentItem.options && currentItem.options.length > 0
-                ? currentItem.options
+                ? orderedItemOptions
                 : (() => {
                     const rawText = currentItem.cloze_data?.template_text || currentItem.cloze_data?.text_with_clozes || '';
                     const regex = /\{\{c\d+::(.*?)\}\}/g;
@@ -1611,7 +1780,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                       Selecciona la redacción jurídica exacta del término o plazo que falta:
                     </p>
                     <div className="grid grid-cols-1 gap-2.5">
-                      {chipOpts.map((opt) => {
+                      {chipOpts.map((opt, index) => {
                         const isSelected = selectedOption === opt.id;
                         return (
                           <button
@@ -1625,7 +1794,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                             }`}
                           >
                             <span className="w-6 h-6 rounded bg-[#182030] border border-[#2b374c] flex items-center justify-center text-xs font-bold shrink-0 text-slate-300 font-mono">
-                              {opt.id}
+                              {optionLabelAtPosition(index)}
                             </span>
                             <span className="flex-1 text-sm leading-relaxed font-mono">{opt.text}</span>
                           </button>
@@ -1944,19 +2113,12 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
         {/* ---------------------------------------------------- */}
         {currentItem.item_type === 'two_tier' && (() => {
           // Support both nested schema (tier1.options / tier2.options) and flat schema
-          const t1Options =
-            currentItem.two_tier_data?.tier1?.options ||
-            currentItem.two_tier_data?.tier1_options ||
-            currentItem.options ||
-            [];
+          const t1Options = orderedTier1Options;
           const t1Prompt =
             currentItem.two_tier_data?.tier1?.prompt ||
             currentItem.two_tier_data?.tier1_question ||
             currentItem.stem;
-          const t2Options =
-            currentItem.two_tier_data?.tier2?.options ||
-            currentItem.two_tier_data?.tier2_options ||
-            [];
+          const t2Options = orderedTier2Options;
           const t2Prompt =
             currentItem.two_tier_data?.tier2?.prompt ||
             currentItem.two_tier_data?.tier2_prompt ||
@@ -1972,14 +2134,16 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                     <p className="text-sm text-slate-200 leading-relaxed">{t1Prompt}</p>
                   )}
                   <div className="grid grid-cols-1 gap-3">
-                    {t1Options.map((opt: any) => (
+                    {t1Options.map((opt, index) => (
                       <button
                         key={opt.id}
                         disabled={stage !== 'answering'}
                         onClick={() => handleSubmitOption(opt.id)}
                         className="w-full text-left p-3.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-indigo-500 text-xs text-slate-200 flex items-center space-x-3 disabled:opacity-50"
                       >
-                        <span className="w-5 h-5 rounded bg-slate-800 flex items-center justify-center font-bold shrink-0">{opt.id}</span>
+                        <span className="w-5 h-5 rounded bg-slate-800 flex items-center justify-center font-bold shrink-0">
+                          {optionLabelAtPosition(index)}
+                        </span>
                         <span>{opt.text}</span>
                       </button>
                     ))}
@@ -1990,7 +2154,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                   <div className="text-xs font-bold text-purple-400 font-mono">Nivel 2 · Justificación Causal</div>
                   <p className="text-xs text-slate-300 italic">"{t2Prompt}"</p>
                   <div className="grid grid-cols-1 gap-3">
-                    {t2Options.map((opt: any) => (
+                    {t2Options.map((opt, index) => (
                       <button
                         key={opt.id}
                         disabled={stage !== 'answering'}
@@ -2000,7 +2164,9 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                         }}
                         className="w-full text-left p-3.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-purple-500 text-xs text-slate-200 flex items-center space-x-3 disabled:opacity-50"
                       >
-                        <span className="w-5 h-5 rounded bg-slate-800 flex items-center justify-center font-bold shrink-0">{opt.id}</span>
+                        <span className="w-5 h-5 rounded bg-slate-800 flex items-center justify-center font-bold shrink-0">
+                          {optionLabelAtPosition(index)}
+                        </span>
                         <span>{opt.text}</span>
                       </button>
                     ))}
@@ -2017,7 +2183,10 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
         {(currentItem.item_type === 'exception_tree' ||
           currentItem.item_type === 'fact_variant') && (() => {
           // Synthesize answer options from polymorphic data when top-level options is empty
-          let opts: Array<{ id: string; text: string }> = currentItem.options || [];
+          let opts: Array<{ id: string; text: string }> =
+            currentItem.item_type === 'fact_variant'
+              ? orderedFactVariantOptions
+              : currentItem.options || [];
 
           if (opts.length === 0 && currentItem.item_type === 'exception_tree') {
             const cases = currentItem.exception_tree_data?.test_cases || [];
@@ -2040,36 +2209,20 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
             }
           }
 
-          if (opts.length === 0 && currentItem.item_type === 'fact_variant') {
-            const fvData = currentItem.fact_variant_data;
-            const variants = fvData?.variants || [];
-            if (variants.length > 0) {
-              const firstVariant = variants[0];
-              opts = [
-                { id: 'A', text: firstVariant.expected_outcome || firstVariant.correct_outcome || 'El cambio de circunstancia modifica el resultado jurídico' },
-                { id: 'B', text: fvData?.base_case?.correct_outcome || 'Se mantiene el resultado de la regla general sin alteración' },
-                { id: 'C', text: 'La consecuencia jurídica es indeterminada salvo resolución expresa' },
-              ];
-            } else {
-              opts = [
-                { id: 'A', text: 'El cambio de hecho modifica la consecuencia jurídica' },
-                { id: 'B', text: 'La consecuencia jurídica no varía' },
-              ];
-            }
-          }
-
           return (
             <div className="space-y-4">
               {stage === 'answering' && (
                 <div className="grid grid-cols-1 gap-3">
-                  {opts.map((opt) => (
+                  {opts.map((opt, index) => (
                     <button
                       key={opt.id}
                       disabled={stage !== 'answering'}
                       onClick={() => handleSubmitOption(opt.id)}
                       className="w-full text-left p-3.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-indigo-500 text-xs text-slate-200 flex items-center space-x-3 disabled:opacity-50"
                     >
-                      <span className="w-5 h-5 rounded bg-slate-800 flex items-center justify-center font-bold shrink-0">{opt.id}</span>
+                      <span className="w-5 h-5 rounded bg-slate-800 flex items-center justify-center font-bold shrink-0">
+                        {currentItem.item_type === 'fact_variant' ? optionLabelAtPosition(index) : opt.id}
+                      </span>
                       <span>{opt.text}</span>
                     </button>
                   ))}
@@ -2158,7 +2311,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                         Decisión táctica de examen: Has evitado una penalización de{' '}
                         <strong className="text-amber-400">-{baremoPenalty.toFixed(2)} pts</strong> al no
                         arriesgar a ciegas. La opción correcta era la{' '}
-                        <strong>{currentItem.correct_answer}</strong>.
+                        <strong>{correctAnswerLabel}</strong>.
                       </div>
                     </div>
                   </div>
@@ -2183,7 +2336,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                       <span>
                         {isCorrect
                           ? '¡Respuesta Correcta!'
-                          : `Incorrecto · La opción correcta es la ${currentItem.correct_answer}`}
+                          : `Incorrecto · La opción correcta es la ${correctAnswerLabel}`}
                       </span>
                       <span className="text-xs px-2 py-0.5 rounded font-mono font-bold bg-slate-900 border border-slate-750">
                         {isCorrect ? '+1.00 pt' : `-${baremoPenalty.toFixed(2)} pts`}
@@ -2247,7 +2400,9 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                         className="p-3 bg-[#0c0f17] border border-[#20293a] rounded-md text-xs space-y-1"
                       >
                         <div className="flex items-center space-x-2">
-                          <span className="font-bold text-slate-300">Opción {opt.id}:</span>
+                          <span className="font-bold text-slate-300">
+                            Opción {labelForOptionId(displayedOptions, opt.id)}:
+                          </span>
                           <span className="text-rose-400 font-mono text-[11px]">
                             Trampa: {opt.trap_type || 'distractor'}
                           </span>
@@ -2357,4 +2512,3 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
     </div>
   );
 };
-
