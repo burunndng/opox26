@@ -1,4 +1,4 @@
-import { Item, ErrorLog, ConfusionPair, TrapType } from '../types.ts';
+import { Item, ErrorLog, ConfusionPair, TrapType, isPracticeEligible } from '../types.ts';
 
 export type SniperModeType = 'numeric' | 'confident_wrong' | 'mixed';
 
@@ -111,8 +111,8 @@ export function selectSniperItems(
 
   const pool =
     topicScope && topicScope !== 'all'
-      ? allItems.filter((i) => i.topic_id === topicScope)
-      : allItems;
+      ? allItems.filter((i) => i.topic_id === topicScope && isPracticeEligible(i))
+      : allItems.filter(isPracticeEligible);
 
   if (pool.length === 0) return [];
 

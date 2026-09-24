@@ -15,6 +15,7 @@ import { CreateTopicModal } from './components/CreateTopicModal.tsx';
 import { MicroLessonRunner } from './components/MicroLessonRunner.tsx';
 import { api } from './api.ts';
 import { selectSniperItems } from './utils/sniperFilter.ts';
+import { eligibleForPractice, buildPretestPool } from './utils/practicePools.ts';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import {
   Topic,
@@ -198,7 +199,9 @@ export default function App() {
       const topicScope = explicitTopicId || (selectedTopicId !== 'all' ? selectedTopicId : undefined);
       let queue = await api.getDueQueue(15, topicScope);
       if (queue.length === 0) {
-        queue = (topicScope ? items.filter(i => i.topic_id === topicScope) : items).slice(0, 10);
+        queue = eligibleForPractice(
+          topicScope ? items.filter(i => i.topic_id === topicScope) : items
+        ).slice(0, 10);
       }
       setRunnerItems(queue);
       const matchedTopic = topicScope ? topics.find(t => t.id === topicScope) : null;
@@ -223,9 +226,10 @@ export default function App() {
   };
 
   // Launch Diagnostic Pretest
-  const handleStartPretest = (explicitTopicId?: string) => {    const topicScope = explicitTopicId || (selectedTopicId !== 'all' ? selectedTopicId : undefined);
+  const handleStartPretest = (explicitTopicId?: string) => {
+    const topicScope = explicitTopicId || (selectedTopicId !== 'all' ? selectedTopicId : undefined);
     const pool = topicScope ? items.filter(i => i.topic_id === topicScope) : items;
-    const shuffled = [...pool].sort(() => 0.5 - Math.random()).slice(0, 10);
+    const shuffled = buildPretestPool(pool, 10);
     setRunnerItems(shuffled);
     const matchedTopic = topicScope ? topics.find(t => t.id === topicScope) : null;
     setRunnerTitle(
@@ -251,7 +255,7 @@ export default function App() {
 
   // Launch Activity Specific drill
   const handleStartActivityType = (activityType: string) => {
-    const matched = items.filter((i) => i.item_type === activityType);
+    const matched = eligibleForPractice(items).filter((i) => i.item_type === activityType);
     if (matched.length === 0) {
       alert(`No hay ítems registrados para el formato ${activityType}.`);
       return;
@@ -265,7 +269,7 @@ export default function App() {
 
   // Launch Targeted Repair
   const handleLaunchRepairSession = (itemIds: string[]) => {
-    const repairItems = items.filter((i) => itemIds.includes(i.id));
+    const repairItems = eligibleForPractice(items).filter((i) => itemIds.includes(i.id));
     if (repairItems.length === 0) return;
     setRunnerItems(repairItems);
     setRunnerTitle(`Taller de Reparación (${repairItems.length} fallos)`);
@@ -282,7 +286,7 @@ export default function App() {
     const subType = options?.subType || 'mixed';
     const count = options?.count || 10;
     const penalty = options?.baremoPenalty !== undefined ? options?.baremoPenalty : 0.25;
-    const selected = selectSniperItems(items, openErrors, { subType, count, confusionPairs });
+    const selected = selectSniperItems(eligibleForPractice(items), openErrors, { subType, count, confusionPairs });
 
     if (selected.length === 0) {
       alert(
