@@ -34,6 +34,19 @@ function contentStemForDuplicateCheck(item: Item): string {
   return item.stem;
 }
 
+function hasYearLinkedAmountOrPercentage(item: Item): boolean {
+  const text = [
+    item.stem,
+    item.rule_statement,
+    item.correct_answer,
+    ...(item.options ?? []).map((option) => option.text),
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return /\b20\d{2}\b/.test(text) && /\d[\d.,]*\s*(?:€|euros?|%|por ciento)/i.test(text);
+}
+
 describe('Seed-bank integrity', () => {
   test('F1: each standard MCQ and two-tier tier has one correct option and unique stable IDs', () => {
     const failures: string[] = [];
@@ -151,5 +164,18 @@ describe('Seed-bank integrity', () => {
     }
 
     assert.deepEqual(failures, [], `Duplicate normalized stems:\n${failures.join('\n')}`);
+  });
+
+  test('F7: every year-linked figure and every 2026-amount item has a figure status', () => {
+    const failures = allSeedItems
+      .filter(
+        (item) =>
+          (item.cluster_id === 'cluster_importes_2026' || hasYearLinkedAmountOrPercentage(item)) &&
+          item.figure_status !== 'BOE_VERIFIED' &&
+          item.figure_status !== 'ESTIMATED_LPGE',
+      )
+      .map((item) => item.id);
+
+    assert.deepEqual(failures, [], `Missing figure status: ${failures.join(', ')}`);
   });
 });

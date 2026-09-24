@@ -1867,6 +1867,7 @@ const seedItemsTema7: Item[] = [
   },
   {
     "id": "item-mcq-12",
+    "figure_status": "BOE_VERIFIED",
     "topic_id": "topic_seguridad_social_tema_7",
     "cluster_id": "cluster_importes_2026",
     "confusion_pair_id": "pair_complemento_minimos_pension_maxima",
@@ -1935,6 +1936,7 @@ const seedItemsTema7: Item[] = [
   },
   {
     "id": "item-mcq-13",
+    "figure_status": "BOE_VERIFIED",
     "topic_id": "topic_seguridad_social_tema_7",
     "cluster_id": "cluster_importes_2026",
     "confusion_pair_id": "pair_complemento_minimos_pension_maxima",
@@ -2003,6 +2005,7 @@ const seedItemsTema7: Item[] = [
   },
   {
     "id": "item-mcq-14",
+    "figure_status": "BOE_VERIFIED",
     "topic_id": "topic_seguridad_social_tema_7",
     "cluster_id": "cluster_importes_2026",
     "confusion_pair_id": "pair_contributiva_no_contributiva",
@@ -2071,6 +2074,7 @@ const seedItemsTema7: Item[] = [
   },
   {
     "id": "item-mcq-15",
+    "figure_status": "BOE_VERIFIED",
     "topic_id": "topic_seguridad_social_tema_7",
     "cluster_id": "cluster_importes_2026",
     "confusion_pair_id": "pair_complemento_minimos_pension_maxima",
@@ -2139,6 +2143,7 @@ const seedItemsTema7: Item[] = [
   },
   {
     "id": "item-mcq-16",
+    "figure_status": "BOE_VERIFIED",
     "topic_id": "topic_seguridad_social_tema_7",
     "cluster_id": "cluster_importes_2026",
     "confusion_pair_id": "pair_complemento_minimos_pension_maxima",
@@ -3224,6 +3229,7 @@ const seedItemsTema7: Item[] = [
   },
   {
     "id": "item-cloze-10",
+    "figure_status": "BOE_VERIFIED",
     "topic_id": "topic_seguridad_social_tema_7",
     "cluster_id": "cluster_importes_2026",
     "confusion_pair_id": "pair_complemento_minimos_pension_maxima",
@@ -3262,6 +3268,7 @@ const seedItemsTema7: Item[] = [
   },
   {
     "id": "item-cloze-11",
+    "figure_status": "BOE_VERIFIED",
     "topic_id": "topic_seguridad_social_tema_7",
     "cluster_id": "cluster_importes_2026",
     "confusion_pair_id": "pair_complemento_minimos_pension_maxima",
@@ -3300,6 +3307,7 @@ const seedItemsTema7: Item[] = [
   },
   {
     "id": "item-cloze-12",
+    "figure_status": "BOE_VERIFIED",
     "topic_id": "topic_seguridad_social_tema_7",
     "cluster_id": "cluster_importes_2026",
     "confusion_pair_id": "pair_contributiva_no_contributiva",
@@ -3338,6 +3346,7 @@ const seedItemsTema7: Item[] = [
   },
   {
     "id": "item-cloze-13",
+    "figure_status": "BOE_VERIFIED",
     "topic_id": "topic_seguridad_social_tema_7",
     "cluster_id": "cluster_importes_2026",
     "confusion_pair_id": "pair_complemento_minimos_pension_maxima",
@@ -3376,6 +3385,7 @@ const seedItemsTema7: Item[] = [
   },
   {
     "id": "item-cloze-14",
+    "figure_status": "BOE_VERIFIED",
     "topic_id": "topic_seguridad_social_tema_7",
     "cluster_id": "cluster_importes_2026",
     "confusion_pair_id": "pair_complemento_minimos_pension_maxima",
@@ -4377,6 +4387,7 @@ const seedItemsTema7: Item[] = [
   },
   {
     "id": "item-numsort-3",
+    "figure_status": "BOE_VERIFIED",
     "topic_id": "topic_seguridad_social_tema_7",
     "cluster_id": "cluster_importes_2026",
     "confusion_pair_id": "pair_complemento_minimos_pension_maxima",
@@ -4869,6 +4880,7 @@ const seedItemsTema7: Item[] = [
   },
   {
     "id": "item-spot-4",
+    "figure_status": "BOE_VERIFIED",
     "topic_id": "topic_seguridad_social_tema_7",
     "cluster_id": "cluster_importes_2026",
     "confusion_pair_id": "pair_complemento_minimos_pension_maxima",
@@ -5009,6 +5021,7 @@ const seedItemsTema7: Item[] = [
   },
   {
     "id": "item-spot-9",
+    "figure_status": "BOE_VERIFIED",
     "topic_id": "topic_seguridad_social_tema_7",
     "cluster_id": "cluster_importes_2026",
     "confusion_pair_id": "pair_complemento_minimos_pension_maxima",

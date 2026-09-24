@@ -28,6 +28,7 @@ Estado verificado en la última revisión. "Test" = prueba automatizada en `test
 | 21 | Seed Tema 7 carga correctamente | ✅ | `server/seedData.ts` (100 ítems: 25/20/15/10/10/8/6/6) + `seedDataTema1.ts` + 6 de retrieval/pretest — test 1 |
 | 22 | Tests unitarios de scheduling, interleaving, validación, cloze, errores | ✅ | `tests/oposilab.test.ts` (1–19), `sqlite` (A1–A10), `pipeline` (B1–B10), `retrieval` (C11–C16), `analytics` (D1–D10) — **55/55** |
 | 23 | README explica el uso | ✅ | `README.md` (español): instalación, base de datos, Content Studio, estudios, atajos, exportación, IA opcional, tests |
+| 24 | Cuantías 2026 verificadas en fuente oficial | ✅ | [BOE-A-2026-2548](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-2548) (RDL 3/2026, 3-feb): revalorización 2,7 %; tope 3.359,60 €/mes · 47.034,40 €/año; PNC 8.803,20 €/año en 14 pagas (RD 357/1991 art. 14.1); límites de ingresos 9.442,00 €/11.013,00 €. `figure_status` en 13 ítems del clúster `importes_2026` — `tests/seed-integrity.test.ts` F7 |
 
 ## Pendientes declarados (fuera de alcance o diferido)
 
