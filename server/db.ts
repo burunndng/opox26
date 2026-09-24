@@ -165,8 +165,12 @@ class LocalDatabase {
         }
       }
       const now = new Date();
+      // Seed definitions may update status/figure metadata only until a learner
+      // has attempted that seed. This intentionally reverts manual edits to an
+      // untouched seed item; content with any recorded attempt is user-owned.
       for (const it of [...seedItems, ...seedItemsRetrieval]) {
-        if (!this.data.items.some((existing) => existing.id === it.id)) {
+        const existingIdx = this.data.items.findIndex((existing) => existing.id === it.id);
+        if (existingIdx === -1) {
           this.data.items.push(it);
           if (!this.data.reviewSchedules.some((s) => s.item_id === it.id)) {
             this.data.reviewSchedules.push({
@@ -185,6 +189,13 @@ class LocalDatabase {
             });
           }
           hasNewSeeds = true;
+        } else if (!this.data.activityAttempts.some((attempt) => attempt.item_id === it.id)) {
+          const existing = this.data.items[existingIdx];
+          if (existing.status !== it.status || existing.figure_status !== it.figure_status) {
+            existing.status = it.status;
+            existing.figure_status = it.figure_status;
+            hasNewSeeds = true;
+          }
         }
       }
       if (hasNewSeeds) {
