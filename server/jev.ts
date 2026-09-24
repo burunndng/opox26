@@ -102,6 +102,57 @@ export interface JevCascadeVerificationResult {
   is_mock?: boolean;
 }
 
+function shiftNumericKeys(record: Record<string, unknown>): Record<string, unknown> {
+  const shifted: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(record)) {
+    shifted[/^\d+$/.test(key) ? String(Number(key) + 1) : key] = value;
+  }
+  return shifted;
+}
+
+/**
+ * The live OpenRouter Decisions API returns noul answers as {noul: n} and score
+ * answers as an expected value over 0-based level keys ({score: 0.39, legend
+ * keyed '0'..'4'}), while internal consumers and the UI expect JevNoulAnswer
+ * ({probability}) and JevScoreAnswer (1-5 score, keys '1'..'5'). Idempotent:
+ * already-canonical answers pass through untouched.
+ */
+export function normalizeJevAnswer(answer: any): any {
+  if (!answer || typeof answer !== 'object') return answer;
+  if (typeof answer.noul === 'number' && typeof answer.probability !== 'number') {
+    return { ...answer, probability: answer.noul };
+  }
+  if (typeof answer.score === 'number') {
+    const probs =
+      answer.probabilities && typeof answer.probabilities === 'object' ? answer.probabilities : null;
+    const zeroBased =
+      answer.legend != null ||
+      (probs != null && Object.prototype.hasOwnProperty.call(probs, '0'));
+    if (zeroBased) {
+      return {
+        ...answer,
+        score: answer.score + 1,
+        ...(probs ? { probabilities: shiftNumericKeys(probs) } : {}),
+        ...(answer.legend && typeof answer.legend === 'object'
+          ? { legend: shiftNumericKeys(answer.legend) }
+          : {}),
+      };
+    }
+  }
+  return answer;
+}
+
+export function normalizeJevAnswers(
+  answers: Record<string, any> | null | undefined
+): Record<string, any> {
+  if (!answers || typeof answers !== 'object') return {};
+  const normalized: Record<string, any> = {};
+  for (const [key, answer] of Object.entries(answers)) {
+    normalized[key] = normalizeJevAnswer(answer);
+  }
+  return normalized;
+}
+
 export class JevClient {
   private static readonly JEV_MODEL = 'typesafe/jev-1.13';
   private static readonly OPENROUTER_DECISIONS_URL = 'https://openrouter.ai/api/alpha/decisions';
@@ -196,7 +247,7 @@ export class JevClient {
 
       return {
         model: data.model || model,
-        answers: data.answers || {},
+        answers: normalizeJevAnswers(data.answers),
         usage: data.usage || { cost: 0.0001, input_tokens: 350, output_tokens: 0 },
         latency_ms,
         is_mock: false,
