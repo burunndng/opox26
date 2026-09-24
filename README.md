@@ -28,7 +28,7 @@ Otros comandos:
 
 ```bash
 npm run lint     # tsc --noEmit (0 errores exigido)
-npm test         # 55 pruebas (node:test vía tsx)
+npm test         # 95 pruebas (node:test vía tsx)
 npm run build    # bundle de producción; npm start lo sirve
 ```
 
@@ -107,12 +107,12 @@ sesión y calidad del banco. Activa el **alto contraste** con el botón del Navb
   framework no aportaba nada pedagógicamente y el proyecto ya funcionaba).
 - **SQLite con `node:sqlite`** (sin dependencias nativas) en lugar de better-sqlite3: cero compilación,
   una promesa de "un comando" real.
-- **Sin Drizzle** y **sin Vitest**: repositorios tipados sobre `node:sqlite` y las 55 pruebas con
+- **Sin Drizzle** y **sin Vitest**: repositorios tipados sobre `node:sqlite` y las 95 pruebas con
   `node:test` cubren lo necesario con menos machinery.
 - **Módulos puros y testeados**: `server/scheduler.ts` (SRS + intercalado), `server/heuristics.ts`
   (sugerencias offline), `server/pdfImport.ts`, `src/scoring/evaluateItem.ts`, `src/utils/analytics.ts`,
   `src/utils/retrievalMatch.ts`.
-- `docs/ACCEPTANCE.md` traza los 23 criterios de aceptación de la spec a su evidencia.
+- `docs/ACCEPTANCE.md` traza los 29 criterios de aceptación de la spec a su evidencia.
 
 ## Estructura (resumen)
 
@@ -123,7 +123,7 @@ src/components/         Dashboard, ActivityRunner, ContentStudio, ItemBank, Repa
                         MicroLessonRunner, PretestDiagnosticMap, AnalyticsStrip, SessionHeatMap…
 src/utils/              analytics, retrievalMatch, learningDesignValidator
 src/scoring/            evaluateItem (cloze, spot-error, two-tier, number-sort…)
-tests/                  55 pruebas (unit + integración)
+tests/                  95 pruebas (unit + integración)
 data/                   SQLite local (no versionado)
 examples/               exportaciones reales de ejemplo
 docs/                   ACCEPTANCE.md, plans/

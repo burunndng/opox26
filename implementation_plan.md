@@ -280,6 +280,24 @@ Global constraints:
 - Topic-specific content and micro-lessons find their linked atoms, clusters, and pairs.
 - Seed audits verify counts, links, status, option balance, and distractor metadata.
 
+**Completed slices (audit hardening, 2026-09):**
+
+- ✅ **P3-a — práctica solo con contenido elegible + reconciliación de seeds intactos:** predicado
+  compartido `isPracticeEligible` aplicado en las colas SRS/intercalado (`server/scheduler.ts`) y en
+  los pools de cliente (`src/utils/practicePools.ts`, `src/utils/sniperFilter.ts`); metadatos de seeds
+  sin intentos se reconcilian al arrancar (`server/db.ts`). Evidencia:
+  `tests/eligibility.test.ts` E1–E4, `tests/seed-reconcile.test.ts` R1–R4,
+  `tests/practice-pools.test.ts` P1–P6.
+- ✅ **P3-b — integridad de opciones/seeds del alcance auditado:** rebalanceo posicional determinista
+  (ciclo A/B/D/C) preservando IDs estables, orden de opciones por encuentro con etiquetas posicionales,
+  diagnóstico pedagógico del banco completo en el endpoint de avisos y `figure_status` verificado
+  contra BOE. Evidencia: `tests/option-order.test.ts` O1–O5, `tests/seed-integrity.test.ts` F1–F7,
+  `tests/validation-warnings.test.ts` V1–V4.
+
+**Still open in P3 (not completed):** quality-gating beyond the warnings endpoint, provenance/topic
+and source-chunk links for seeds, seed-reference repairs, and explicit human validation of generated
+content.
+
 ### P4 — Correct the core activity loop
 
 **Files:**
