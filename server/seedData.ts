@@ -1264,7 +1264,7 @@ const seedItemsTema7: Item[] = [
     "options": [
       {
         "id": "A",
-        "text": "Al año, contado desde el día siguiente a la notificación de la concesión al beneficiario.",
+        "text": "Un año desde el día siguiente a la notificación de la concesión.",
         "is_correct": true,
         "trap_type": "factual_misapplication",
         "explanation": "El derecho al percibo caduca al año desde la notificación de la resolución de concesión si es tanto alzado.",
@@ -1468,7 +1468,7 @@ const seedItemsTema7: Item[] = [
     "options": [
       {
         "id": "A",
-        "text": "Un accidente de trabajo o enfermedad profesional, aun con falta total de afiliación o alta por la empresa.",
+        "text": "Accidente de trabajo o enfermedad profesional, aun sin afiliación ni alta empresarial.",
         "is_correct": true,
         "trap_type": "factual_misapplication",
         "explanation": "La automaticidad absoluta no exige alta previa del trabajador para AT, EP y desempleo.",
@@ -1536,7 +1536,7 @@ const seedItemsTema7: Item[] = [
     "options": [
       {
         "id": "A",
-        "text": "Que el trabajador se encuentre en alta o en situación legalmente asimilada al alta al sobrevenir la contingencia.",
+        "text": "Estar en alta o situación asimilada al sobrevenir la contingencia.",
         "is_correct": true,
         "trap_type": "factual_misapplication",
         "explanation": "La automaticidad relativa exige obligatoriamente el alta o situación asimilada en la fecha del hecho causante.",
@@ -1604,7 +1604,7 @@ const seedItemsTema7: Item[] = [
     "options": [
       {
         "id": "A",
-        "text": "Se aplica un coeficiente del 1,5 a los días cotizados, con el límite máximo de los días naturales del año.",
+        "text": "Coeficiente 1,5, con tope en los días naturales del año.",
         "is_correct": true,
         "trap_type": "factual_misapplication",
         "explanation": "A los días efectivamente cotizados se aplica el coeficiente del 1,5, sin superar los días naturales de cada año.",
@@ -1672,7 +1672,7 @@ const seedItemsTema7: Item[] = [
     "options": [
       {
         "id": "A",
-        "text": "Cada día de trabajo se considera como 1,4 días de cotización, sin que el cómputo mensual supere los días naturales del mes.",
+        "text": "Cada día trabajado computa como 1,4 días, con tope de días naturales al mes.",
         "is_correct": true,
         "trap_type": "factual_misapplication",
         "explanation": "A los contratos temporales <= 5 días se aplica coeficiente 1,4 con límite mensual de días naturales.",
@@ -1740,7 +1740,7 @@ const seedItemsTema7: Item[] = [
     "options": [
       {
         "id": "A",
-        "text": "Un total de 112 días completos de cotización sin necesidad de que la madre hubiera cotizado antes.",
+        "text": "112 días de cotización ficticia, aunque no hubiera cotizado antes.",
         "is_correct": true,
         "trap_type": "factual_misapplication",
         "explanation": "El parto simple otorga 112 días de cotización ficticia efectiva para jubilación e incapacidad.",
@@ -1808,7 +1808,7 @@ const seedItemsTema7: Item[] = [
     "options": [
       {
         "id": "A",
-        "text": "14 días adicionales de cotización por cada hijo a partir del segundo.",
+        "text": "14 días adicionales por hijo, desde el segundo.",
         "is_correct": true,
         "trap_type": "factual_misapplication",
         "explanation": "En parto múltiple se computan 112 días más 14 días adicionales por cada hijo a partir del segundo.",
@@ -1944,7 +1944,7 @@ const seedItemsTema7: Item[] = [
     "options": [
       {
         "id": "A",
-        "text": "3.359,60 euros mensuales y 47.034,40 euros en cómputo anual (14 pagas).",
+        "text": "3.359,60 €/mes y 47.034,40 €/año (14 pagas).",
         "is_correct": true,
         "trap_type": "factual_misapplication",
         "explanation": "El tope máximo de pensión en 2026 es de 3.359,60 € al mes y 47.034,40 € anuales.",
@@ -2012,7 +2012,7 @@ const seedItemsTema7: Item[] = [
     "options": [
       {
         "id": "A",
-        "text": "8.803,20 euros anuales, distribuidos en 14 mensualidades de 628,80 euros.",
+        "text": "8.803,20 €/año en 14 pagas de 628,80 €.",
         "is_correct": true,
         "trap_type": "factual_misapplication",
         "explanation": "La pensión no contributiva en 2026 asciende a 8.803,20 € anuales (628,80 €/mes en 14 pagas).",
@@ -6350,4 +6350,30 @@ const seedItemsTema7: Item[] = [
   }
 ];
 
-export const seedItems: Item[] = [...seedItemsTema7, ...seedItemsTema1];
+const canonicalCorrectOptionPositionCycle = [0, 1, 3, 2, 0, 2, 1, 3];
+const standardMcqItemTypes = new Set<Item['item_type']>(['cover_and_generate_mcq', 'pretest_item']);
+
+function rebalanceCanonicalMcqOptions(items: Item[]): Item[] {
+  let mcqIndex = 0;
+
+  return items.map((item) => {
+    if (!standardMcqItemTypes.has(item.item_type) || !item.options?.length) return item;
+
+    const targetPosition = canonicalCorrectOptionPositionCycle[mcqIndex % canonicalCorrectOptionPositionCycle.length];
+    mcqIndex++;
+    const correctPosition = item.options.findIndex((option) => option.is_correct);
+    if (correctPosition < 0 || targetPosition >= item.options.length || correctPosition === targetPosition) {
+      return item;
+    }
+
+    const options = [...item.options];
+    const [correctOption] = options.splice(correctPosition, 1);
+    options.splice(targetPosition, 0, correctOption);
+    return { ...item, options };
+  });
+}
+
+export const seedItems: Item[] = rebalanceCanonicalMcqOptions([
+  ...seedItemsTema7,
+  ...seedItemsTema1,
+]);

@@ -683,7 +683,7 @@ export const seedItemsTema1: Item[] = [
     options: [
       {
         id: 'A',
-        text: 'El procedimiento agravado del artículo 168, requiriendo mayoría de 2/3 de cada Cámara, disolución inmediata de las Cortes y referéndum obligatorio.',
+        text: 'Art. 168: 2/3 en cada Cámara, disolución inmediata y referéndum obligatorio.',
         is_correct: true,
         explanation: 'El Art. 168.1 CE reserva el procedimiento agravado para la revisión total, el Título Preliminar, la Sección 1ª del Cap. II del Título I y el Título II (La Corona).',
         condition_if_correct: 'Correcto conforme al Art. 168 CE.',
@@ -742,7 +742,7 @@ export const seedItemsTema1: Item[] = [
     options: [
       {
         id: 'A',
-        text: 'Al Gobierno, al Congreso, al Senado y a las Asambleas legislativas de las CCAA, quedando excluida la iniciativa popular.',
+        text: 'Gobierno, Congreso, Senado y Asambleas legislativas de las CCAA; se excluye la iniciativa popular.',
         is_correct: true,
         explanation: 'El Art. 166 remite a los apartados 1 y 2 del Art. 87, excluyendo taxativamente el apartado 3 (iniciativa popular).',
         condition_if_correct: 'Correcto según Arts. 166 y 87.3 CE.',
@@ -860,7 +860,7 @@ export const seedItemsTema1: Item[] = [
     options: [
       {
         id: 'A',
-        text: 'Modificar el artículo 49 para sustituir el término "disminuidos" por "personas con discapacidad" y actualizar su marco de protección.',
+        text: 'Reformar el art. 49 para sustituir «disminuidos» por «personas con discapacidad».',
         is_correct: true,
         explanation: 'La 3ª reforma de la CE (15 febrero 2024) reformó íntegramente el art. 49 sustituyendo disminuidos por personas con discapacidad.',
         condition_if_correct: 'Correcto según la 3ª reforma constitucional.',
