@@ -1672,7 +1672,7 @@ const seedItemsTema7: Item[] = [
     "options": [
       {
         "id": "A",
-        "text": "Cada día trabajado computa como 1,4 días, con tope de días naturales al mes.",
+        "text": "Cada jornada cotizada se computa como 1,4, con límite mensual igual a los días del mes.",
         "is_correct": true,
         "trap_type": "factual_misapplication",
         "explanation": "A los contratos temporales <= 5 días se aplica coeficiente 1,4 con límite mensual de días naturales.",
@@ -1808,7 +1808,7 @@ const seedItemsTema7: Item[] = [
     "options": [
       {
         "id": "A",
-        "text": "14 días adicionales por hijo, desde el segundo.",
+        "text": "Un incremento de 14 días por descendiente adicional.",
         "is_correct": true,
         "trap_type": "factual_misapplication",
         "explanation": "En parto múltiple se computan 112 días más 14 días adicionales por cada hijo a partir del segundo.",
@@ -2556,7 +2556,7 @@ const seedItemsTema7: Item[] = [
     "options": [
       {
         "id": "A",
-        "text": "De treinta días naturales, improrrogables, contados desde la notificación de la invitación.",
+        "text": "Treinta días naturales improrrogables desde la notificación.",
         "is_correct": true,
         "trap_type": "factual_misapplication",
         "explanation": "La entidad gestora invitará al deudor para que, en el plazo improrrogable de 30 días naturales, ingrese las cuotas debidas.",

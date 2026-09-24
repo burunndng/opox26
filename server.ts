@@ -7,7 +7,7 @@ import { SchedulingEngine, InterleavingEngine } from './server/scheduler.ts';
 import { DataExporter } from './server/exporter.ts';
 import { AiAssistant } from './server/ai.ts';
 import { JevClient } from './server/jev.ts';
-import { QualityWarning, Item, AppSettings } from './src/types.ts';
+import { Item, AppSettings } from './src/types.ts';
 import {
   topicInput,
   sourceChunkInput,
@@ -25,6 +25,7 @@ import {
 } from './src/schemas/index.ts';
 import { parsePdf, PdfImportError } from './server/pdfImport.ts';
 import { suggestAtoms, splitIntoChunks } from './server/heuristics.ts';
+import { buildValidationWarnings } from './server/validationWarnings.ts';
 
 /**
  * Validates req.body against a Zod schema. On failure responds 400 with an
@@ -235,53 +236,7 @@ async function startServer() {
   });
 
   app.get('/api/items/validation-warnings', (req, res) => {
-    const items = db.getItems();
-    const warnings: QualityWarning[] = [];
-
-    for (const item of items) {
-      if (!item.legal_basis || item.legal_basis.trim() === '') {
-        warnings.push({
-          item_id: item.id,
-          severity: 'critical',
-          rule: 'missing_legal_basis',
-          message: `El ítem "${item.stem.slice(0, 40)}..." carece de cita de base legal explícita.`,
-        });
-      }
-
-      if (item.item_type === 'cover_and_generate_mcq') {
-        const opts = item.options || [];
-        if (opts.length < 3) {
-          warnings.push({
-            item_id: item.id,
-            severity: 'critical',
-            rule: 'insufficient_options',
-            message: `El ítem tiene menos de 3 opciones de respuesta (${opts.length}).`,
-          });
-        }
-        for (const opt of opts) {
-          if (!opt.is_correct) {
-            if (!opt.explanation || opt.explanation.trim() === '') {
-              warnings.push({
-                item_id: item.id,
-                severity: 'warning',
-                rule: 'missing_distractor_explanation',
-                message: `El distractor "${opt.id}" no tiene explicación de falsedad.`,
-              });
-            }
-            if (!opt.trap_type) {
-              warnings.push({
-                item_id: item.id,
-                severity: 'warning',
-                rule: 'missing_trap_type',
-                message: `El distractor "${opt.id}" no tiene asignada tipología de trampa.`,
-              });
-            }
-          }
-        }
-      }
-    }
-
-    res.json(warnings);
+    res.json(buildValidationWarnings(db.getItems()));
   });
 
   app.get('/api/items/:id', (req, res) => {

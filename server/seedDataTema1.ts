@@ -742,7 +742,7 @@ export const seedItemsTema1: Item[] = [
     options: [
       {
         id: 'A',
-        text: 'Gobierno, Congreso, Senado y Asambleas legislativas de las CCAA; se excluye la iniciativa popular.',
+        text: 'Gobierno, Congreso, Senado y Asambleas legislativas de las CCAA; los ciudadanos no están legitimados.',
         is_correct: true,
         explanation: 'El Art. 166 remite a los apartados 1 y 2 del Art. 87, excluyendo taxativamente el apartado 3 (iniciativa popular).',
         condition_if_correct: 'Correcto según Arts. 166 y 87.3 CE.',
