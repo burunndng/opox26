@@ -153,6 +153,14 @@ export function normalizeJevAnswers(
   return normalized;
 }
 
+/**
+ * Upper bound for the source excerpt sent to the Decisions API. Large enough
+ * that evidence paragraphs deep inside a slide deck still reach Jev (the old
+ * 1500-char cut truncated real paragraphs mid-document), small enough to keep
+ * request payloads reasonable.
+ */
+export const JEV_SOURCE_CHUNK_LIMIT = 16000;
+
 export class JevClient {
   private static readonly JEV_MODEL = 'typesafe/jev-1.13';
   private static readonly OPENROUTER_DECISIONS_URL = 'https://openrouter.ai/api/alpha/decisions';
@@ -529,7 +537,7 @@ export class JevClient {
     sourceText: string
   ): Promise<JevCascadeVerificationResult> {
     const state = {
-      source_chunk: sourceText.slice(0, 1500),
+      source_chunk: sourceText.slice(0, JEV_SOURCE_CHUNK_LIMIT),
       draft_stem: draftItem.stem,
       draft_correct_answer: draftItem.correct_answer,
       draft_rule: draftItem.rule_statement,

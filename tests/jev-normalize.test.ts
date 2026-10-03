@@ -4,6 +4,7 @@ import {
   normalizeJevAnswer,
   normalizeJevAnswers,
   JevClient,
+  JEV_SOURCE_CHUNK_LIMIT,
 } from '../server/jev.ts';
 
 // This suite must exercise the LIVE code path (stubbed fetch, not the offline
@@ -171,5 +172,49 @@ describe('Jev live-path integration (stubbed fetch)', () => {
     } finally {
       restore();
     }
+  });
+
+  /** Runs fn() while capturing the JSON body posted to the Decisions API. */
+  async function captureDecisionRequest(fn: () => Promise<unknown>) {
+    const original = globalThis.fetch;
+    let captured: any;
+    globalThis.fetch = (async (_url: unknown, init: any) => {
+      captured = JSON.parse(init.body);
+      return {
+        ok: true,
+        json: async () => ({ model: 'typesafe/jev-1.13', answers: {} }),
+      };
+    }) as unknown as typeof fetch;
+    try {
+      await fn();
+    } finally {
+      globalThis.fetch = original;
+    }
+    return captured;
+  }
+
+  test('J7 verifyCascade sends source evidence located beyond the old 1500-char cut', async () => {
+    const filler =
+      'El régimen jurídico de la Seguridad Social se desarrolla en el texto normativo fuente. '.repeat(30);
+    const sourceText =
+      filler + 'La revalorización inicial de las pensiones para 2026 es del 2,7 por ciento (art. 58 TRLGSS).';
+    assert.ok(sourceText.indexOf('2,7') >= 1500, 'precondition: evidence past the old cut point');
+
+    const captured = await captureDecisionRequest(() =>
+      JevClient.verifyCascade(sampleItem, sourceText)
+    );
+    assert.ok(
+      captured.state.source_chunk.includes('2,7'),
+      `source_chunk must reach the evidence paragraph; got ${captured.state.source_chunk.length} chars`
+    );
+  });
+
+  test('J8 verifyCascade still bounds huge source texts to JEV_SOURCE_CHUNK_LIMIT', async () => {
+    const sourceText = 'x'.repeat(40_000);
+    const captured = await captureDecisionRequest(() =>
+      JevClient.verifyCascade(sampleItem, sourceText)
+    );
+    assert.ok(JEV_SOURCE_CHUNK_LIMIT >= 1500);
+    assert.equal(captured.state.source_chunk.length, JEV_SOURCE_CHUNK_LIMIT);
   });
 });
