@@ -593,7 +593,7 @@ const seedAtomsTema7: Atom[] = [
     "id": "atom-14",
     "type": "amount",
     "text": "La pensión no contributiva de jubilación e invalidez se fija para 2026 en 8.803,20 € íntegros anuales (628,80 €/mes en 14 pagas).",
-    "legal": "Art. 363 TRLGSS",
+    "legal": "Arts. 364 y 370 TRLGSS",
     "cluster": "cluster_importes_2026",
     "pair": "pair_contributiva_no_contributiva",
     "tags": [
@@ -1978,7 +1978,7 @@ const seedItemsTema7: Item[] = [
       }
     ],
     "correct_answer": "A",
-    "legal_basis": "Art. 58 TRLGSS",
+    "legal_basis": "D.T. 39.ª TRLGSS",
     "rule_statement": "El tope máximo de pensión en 2026 es de 3.359,60 € al mes y 47.034,40 € anuales.",
     "why_correct": "El tope máximo de pensión en 2026 es de 3.359,60 € al mes y 47.034,40 € anuales.",
     "distractor_analysis": {
@@ -2047,7 +2047,7 @@ const seedItemsTema7: Item[] = [
       }
     ],
     "correct_answer": "A",
-    "legal_basis": "Art. 363 TRLGSS",
+    "legal_basis": "Arts. 364 y 370 TRLGSS",
     "rule_statement": "La pensión no contributiva en 2026 asciende a 8.803,20 € anuales (628,80 €/mes en 14 pagas).",
     "why_correct": "La pensión no contributiva en 2026 asciende a 8.803,20 € anuales (628,80 €/mes en 14 pagas).",
     "distractor_analysis": {
@@ -3325,15 +3325,15 @@ const seedItemsTema7: Item[] = [
             "8.803,20 euros"
           ],
           "prompt_hint": "Dato jurídico exacto",
-          "explanation": "El valor exacto según Art. 363 TRLGSS es 8.803,20 €.",
+          "explanation": "El valor exacto según los arts. 364 y 370 TRLGSS es 8.803,20 €.",
           "trap_type_if_missed": "numeric_precision"
         }
       ]
     },
-    "legal_basis": "Art. 363 TRLGSS",
-    "rule_statement": "Precepto regulado en Art. 363 TRLGSS.",
-    "why_correct": "Compleción exacta según el texto legal de Art. 363 TRLGSS.",
-    "corrective_rule": "Memoriza con precisión las magnitudes fijadas en Art. 363 TRLGSS.",
+    "legal_basis": "Arts. 364 y 370 TRLGSS",
+    "rule_statement": "Precepto regulado en los arts. 364 y 370 TRLGSS.",
+    "why_correct": "Compleción exacta según el texto legal de los arts. 364 y 370 TRLGSS.",
+    "corrective_rule": "Memoriza con precisión las magnitudes fijadas en los arts. 364 y 370 TRLGSS.",
     "difficulty": 2,
     "cognitive_operations": [
       "generative_retrieval",
@@ -4429,9 +4429,9 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
-    "legal_basis": "Art. 58, 59 y 363 TRLGSS",
-    "rule_statement": "Parámetros cuantitativos tasados por Art. 58, 59 y 363 TRLGSS.",
-    "why_correct": "Valores normativos estrictos fijados en Art. 58, 59 y 363 TRLGSS.",
+    "legal_basis": "Art. 58, 59, 364 y 370 TRLGSS",
+    "rule_statement": "Parámetros cuantitativos tasados por Art. 58, 59, 364 y 370 TRLGSS.",
+    "why_correct": "Valores normativos estrictos fijados en Art. 58, 59, 364 y 370 TRLGSS.",
     "corrective_rule": "Evita la interferencia numérica asociando el concepto causal con su magnitud exacta.",
     "difficulty": 2,
     "cognitive_operations": [
@@ -5031,13 +5031,13 @@ const seedItemsTema7: Item[] = [
       "full_statement": "La cuantía máxima de las pensiones de la Seguridad Social para 2026 no puede superar los 4.500,00 euros mensuales.",
       "erroneous_span": "4.500,00 euros mensuales",
       "corrected_text": "3.359,60 euros mensuales",
-      "explanation": "El tope legal mensual para 2026 asciende exactamente a 3.359,60 € (art. 58 TRLGSS).",
+      "explanation": "El tope legal mensual para 2026 asciende exactamente a 3.359,60 € (D.T. 39.ª TRLGSS).",
       "trap_type": "numeric_substitution"
     },
-    "legal_basis": "Art. 58 TRLGSS",
-    "rule_statement": "Corrección estricta amparada en Art. 58 TRLGSS.",
-    "why_correct": "El tope legal mensual para 2026 asciende exactamente a 3.359,60 € (art. 58 TRLGSS).",
-    "corrective_rule": "No des por válida una afirmación con cifras o conceptos descontextualizados; verifica siempre con Art. 58 TRLGSS.",
+    "legal_basis": "D.T. 39.ª TRLGSS",
+    "rule_statement": "Corrección estricta amparada en la D.T. 39.ª TRLGSS.",
+    "why_correct": "El tope legal mensual para 2026 asciende exactamente a 3.359,60 € (D.T. 39.ª TRLGSS).",
+    "corrective_rule": "No des por válida una afirmación con cifras o conceptos descontextualizados; verifica siempre con la D.T. 39.ª TRLGSS.",
     "difficulty": 2,
     "cognitive_operations": [
       "response_inhibition",

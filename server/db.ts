@@ -159,15 +159,43 @@ class LocalDatabase {
         if (existingIdx === -1) {
           this.data.atoms.push(a);
           hasNewSeeds = true;
-        } else if (!this.data.atoms[existingIdx].topic_id && a.topic_id) {
-          this.data.atoms[existingIdx].topic_id = a.topic_id;
-          hasNewSeeds = true;
+        } else {
+          const existing = this.data.atoms[existingIdx];
+          let changed = false;
+          // Seed atoms have no attempt state, so seed-owned citation content
+          // (text + legal, alias keys legal/legal_basis map to one column on
+          // persist) always wins for seed atoms on boot.
+          if (existing.text !== a.text) {
+            existing.text = a.text;
+            changed = true;
+          }
+          const seedLegal = a.legal_basis ?? a.legal;
+          if ((existing.legal_basis ?? existing.legal) !== seedLegal) {
+            existing.legal_basis = seedLegal;
+            existing.legal = seedLegal;
+            changed = true;
+          }
+          if (!existing.topic_id && a.topic_id) {
+            existing.topic_id = a.topic_id;
+            changed = true;
+          }
+          if (changed) hasNewSeeds = true;
         }
       }
       const now = new Date();
-      // Seed definitions may update status/figure metadata only until a learner
-      // has attempted that seed. This intentionally reverts manual edits to an
-      // untouched seed item; content with any recorded attempt is user-owned.
+      // Untouched seeds are seed-owned: boot sync reverts manual edits to
+      // status/figure metadata AND citation/statement content (including
+      // nested explanation blocks) so corrected seed definitions reach the
+      // live database. The first recorded attempt freezes the item as
+      // user-owned; attempted items are never touched again.
+      const contentSyncFields = [
+        'legal_basis',
+        'rule_statement',
+        'why_correct',
+        'corrective_rule',
+        'cloze_data',
+        'spot_error_data',
+      ] as const;
       for (const it of [...seedItems, ...seedItemsRetrieval]) {
         const existingIdx = this.data.items.findIndex((existing) => existing.id === it.id);
         if (existingIdx === -1) {
@@ -191,11 +219,21 @@ class LocalDatabase {
           hasNewSeeds = true;
         } else if (!this.data.activityAttempts.some((attempt) => attempt.item_id === it.id)) {
           const existing = this.data.items[existingIdx];
+          let changed = false;
+          for (const field of contentSyncFields) {
+            if (!(field in it)) continue;
+            const seedValue = (it as any)[field];
+            if (JSON.stringify((existing as any)[field]) !== JSON.stringify(seedValue)) {
+              (existing as any)[field] = seedValue;
+              changed = true;
+            }
+          }
           if (existing.status !== it.status || existing.figure_status !== it.figure_status) {
             existing.status = it.status;
             existing.figure_status = it.figure_status;
-            hasNewSeeds = true;
+            changed = true;
           }
+          if (changed) hasNewSeeds = true;
         }
       }
       if (hasNewSeeds) {
