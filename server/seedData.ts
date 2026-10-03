@@ -1396,14 +1396,14 @@ const seedItemsTema7: Item[] = [
     "confusion_pair_id": "pair_prescripcion_caducidad",
     "item_type": "cover_and_generate_mcq",
     "stem": "¿Cuál de las siguientes prestaciones se encuentra legalmente exenta de prescripción extintiva en el sistema de la Seguridad Social?",
-    "prompt_before_options": "Antes de ver las opciones, recuerda las dos prestaciones declaradas legalmente imprescriptibles en el TRLGSS.",
+    "prompt_before_options": "Antes de ver las opciones, recuerda qué prestaciones tienen un derecho al reconocimiento declaradamente imprescriptible en el TRLGSS.",
     "options": [
       {
         "id": "A",
-        "text": "La pensión de jubilación ordinaria y la incapacidad permanente.",
+        "text": "La jubilación contributiva y las prestaciones por muerte y supervivencia.",
         "is_correct": true,
         "trap_type": "factual_misapplication",
-        "explanation": "La pensión de jubilación y las de incapacidad permanente son imprescriptibles en su reconocimiento.",
+        "explanation": "La pensión de jubilación contributiva (art. 212 TRLGSS) y las prestaciones por muerte y supervivencia (art. 230 TRLGSS) son imprescriptibles en su reconocimiento.",
         "condition_if_correct": "Correcto con arreglo a la norma vigente."
       },
       {
@@ -1411,41 +1411,41 @@ const seedItemsTema7: Item[] = [
         "text": "El subsidio por incapacidad temporal derivado de enfermedad común.",
         "is_correct": false,
         "trap_type": "overbroad_statement",
-        "explanation": "Incorrecto. Si la ley confiriese carácter imprescriptible a subsidios de corta duración.",
+        "explanation": "Incorrecto: el subsidio por incapacidad temporal prescribe a los cinco años (art. 53.1 TRLGSS).",
         "condition_if_correct": "Si la ley confiriese carácter imprescriptible a subsidios de corta duración."
       },
       {
         "id": "C",
-        "text": "El subsidio por nacimiento y cuidado de menor en familias monoparentales.",
+        "text": "La incapacidad permanente en cualquiera de sus grados.",
         "is_correct": false,
-        "trap_type": "exception_ignored",
-        "explanation": "Incorrecto. Si las prestaciones familiares de pago periódico estuviesen blindadas por norma expresa.",
-        "condition_if_correct": "Si las prestaciones familiares de pago periódico estuviesen blindadas por norma expresa."
+        "trap_type": "conceptual_merger",
+        "explanation": "Incorrecto: la incapacidad permanente no es imprescriptible, prescribe a los cinco años (art. 53.1 TRLGSS).",
+        "condition_if_correct": "Si se extendiera la imprescriptibilidad de la jubilación contributiva a la incapacidad permanente."
       },
       {
         "id": "D",
         "text": "La indemnización a tanto alzado por lesiones permanentes no invalidantes.",
         "is_correct": false,
-        "trap_type": "conceptual_merger",
-        "explanation": "Incorrecto. Si se asimilara indebidamente una indemnización de pago único a una pensión vitalicia.",
+        "trap_type": "exception_ignored",
+        "explanation": "Incorrecto: la indemnización a tanto alzado no es una prestación contributiva y se rige por su normativa específica.",
         "condition_if_correct": "Si se asimilara indebidamente una indemnización de pago único a una pensión vitalicia."
       }
     ],
     "correct_answer": "A",
-    "legal_basis": "Art. 53.3 TRLGSS",
-    "rule_statement": "La pensión de jubilación y las de incapacidad permanente son imprescriptibles en su reconocimiento.",
-    "why_correct": "La pensión de jubilación y las de incapacidad permanente son imprescriptibles en su reconocimiento.",
+    "legal_basis": "Arts. 53.1, 212 y 230 TRLGSS",
+    "rule_statement": "La pensión de jubilación contributiva y las prestaciones por muerte y supervivencia son imprescriptibles en su reconocimiento.",
+    "why_correct": "La pensión de jubilación contributiva y las prestaciones por muerte y supervivencia son imprescriptibles en su reconocimiento.",
     "distractor_analysis": {
       "B": "Si la ley confiriese carácter imprescriptible a subsidios de corta duración.",
-      "C": "Si las prestaciones familiares de pago periódico estuviesen blindadas por norma expresa.",
+      "C": "Si se extendiera la imprescriptibilidad de la jubilación contributiva a la incapacidad permanente.",
       "D": "Si se asimilara indebidamente una indemnización de pago único a una pensión vitalicia."
     },
     "trap_types": [
       "overbroad_statement",
-      "exception_ignored",
-      "conceptual_merger"
+      "conceptual_merger",
+      "exception_ignored"
     ],
-    "corrective_rule": "Regla: Solo la JUBILACIÓN y la INCAPACIDAD PERMANENTE son imprescriptibles (Art. 53.3).",
+    "corrective_rule": "Regla: solo la JUBILACIÓN CONTRIBUTIVA y las PRESTACIONES POR MUERTE Y SUPERVIVENCIA son imprescriptibles (Arts. 212 y 230 TRLGSS); la incapacidad permanente prescribe a los cinco años (art. 53.1 TRLGSS).",
     "difficulty": 2,
     "cognitive_operations": [
       "generative_retrieval",
@@ -2976,36 +2976,40 @@ const seedItemsTema7: Item[] = [
     "cluster_id": "cluster_prescripcion_caducidad",
     "confusion_pair_id": "pair_prescripcion_caducidad",
     "item_type": "cloze",
-    "stem": "Completa los términos y cifras exactas en el siguiente precepto legal:\n\nSon legalmente imprescriptibles el derecho al reconocimiento de las pensiones de {{c1::jubilación}} y de {{c2::incapacidad permanente}}.",
+    "stem": "Completa los términos y cifras exactas en el siguiente precepto legal:\n\nSon legalmente imprescriptibles el derecho al reconocimiento de la pensión de {{c1::jubilación}} en su modalidad contributiva y de las prestaciones por {{c2::muerte y supervivencia}}.",
     "cloze_data": {
-      "template_text": "Son legalmente imprescriptibles el derecho al reconocimiento de las pensiones de {{c1::jubilación}} y de {{c2::incapacidad permanente}}.",
+      "template_text": "Son legalmente imprescriptibles el derecho al reconocimiento de la pensión de {{c1::jubilación}} en su modalidad contributiva y de las prestaciones por {{c2::muerte y supervivencia}}.",
       "blanks": [
         {
           "id": "c1",
           "correct_answer": "jubilación",
           "synonyms": [
-            "pensión de jubilación"
+            "pensión de jubilación",
+            "jubilación contributiva",
+            "modalidad contributiva"
           ],
           "prompt_hint": "Dato jurídico exacto",
-          "explanation": "El valor exacto según Art. 53.3 TRLGSS es jubilación.",
+          "explanation": "El derecho al reconocimiento de la pensión de jubilación en su modalidad contributiva es imprescriptible (Art. 212 TRLGSS), sin perjuicio de que sus efectos se produzcan desde los tres meses anteriores a la solicitud.",
           "trap_type_if_missed": "numeric_precision"
         },
         {
           "id": "c2",
-          "correct_answer": "incapacidad permanente",
+          "correct_answer": "muerte y supervivencia",
           "synonyms": [
-            "IP"
+            "muerte",
+            "prestaciones por muerte y supervivencia",
+            "viudedad y orfandad"
           ],
           "prompt_hint": "Término legal",
-          "explanation": "El término exacto según Art. 53.3 TRLGSS es incapacidad permanente.",
+          "explanation": "Las prestaciones por muerte y supervivencia son también imprescriptibles (Art. 230 TRLGSS). En cambio, la incapacidad permanente NO es imprescriptible: prescribe a los cinco años (Art. 53.1 TRLGSS).",
           "trap_type_if_missed": "conceptual_merger"
         }
       ]
     },
-    "legal_basis": "Art. 53.3 TRLGSS",
-    "rule_statement": "Precepto regulado en Art. 53.3 TRLGSS.",
-    "why_correct": "Compleción exacta según el texto legal de Art. 53.3 TRLGSS.",
-    "corrective_rule": "Memoriza con precisión las magnitudes fijadas en Art. 53.3 TRLGSS.",
+    "legal_basis": "Arts. 212 y 230 TRLGSS",
+    "rule_statement": "Excepciones a la prescripción quinquenal del Art. 53.1 TRLGSS en los Arts. 212 y 230 TRLGSS.",
+    "why_correct": "Solo la pensión de jubilación contributiva (Art. 212 TRLGSS) y las prestaciones por muerte y supervivencia (Art. 230 TRLGSS) son imprescriptibles; la incapacidad permanente queda sometida a la prescripción de cinco años.",
+    "corrective_rule": "No extiendas la imprescriptibilidad a la incapacidad permanente: prescribe a los cinco años desde el hecho causante.",
     "difficulty": 2,
     "cognitive_operations": [
       "generative_retrieval",
@@ -3642,7 +3646,7 @@ const seedItemsTema7: Item[] = [
             "365"
           ],
           "prompt_hint": "Dato jurídico exacto",
-          "explanation": "El valor exacto según Art. 169 TRLGSS es 365 días.",
+          "explanation": "El valor exacto según Art. 170.1 TRLGSS es 365 días.",
           "trap_type_if_missed": "numeric_precision"
         },
         {
@@ -3652,15 +3656,15 @@ const seedItemsTema7: Item[] = [
             "180"
           ],
           "prompt_hint": "Término legal",
-          "explanation": "El término exacto según Art. 169 TRLGSS es 180 días.",
+          "explanation": "El valor exacto según Art. 170.2 TRLGSS es 180 días de prórroga expresa.",
           "trap_type_if_missed": "conceptual_merger"
         }
       ]
     },
-    "legal_basis": "Art. 169 TRLGSS",
-    "rule_statement": "Precepto regulado en Art. 169 TRLGSS.",
-    "why_correct": "Compleción exacta según el texto legal de Art. 169 TRLGSS.",
-    "corrective_rule": "Memoriza con precisión las magnitudes fijadas en Art. 169 TRLGSS.",
+    "legal_basis": "Arts. 170.1 y 170.2 TRLGSS",
+    "rule_statement": "Duración y prórroga de la incapacidad temporal en los Arts. 170.1 y 170.2 TRLGSS.",
+    "why_correct": "Compleción exacta según el texto legal de los Arts. 170.1 y 170.2 TRLGSS.",
+    "corrective_rule": "Memoriza con precisión las magnitudes fijadas en los Arts. 170.1 y 170.2 TRLGSS.",
     "difficulty": 2,
     "cognitive_operations": [
       "generative_retrieval",
@@ -4177,7 +4181,7 @@ const seedItemsTema7: Item[] = [
       "rows": [
         {
           "criterion": "Duración de la situación",
-          "concept_a_val": "Temporal: máx 365 días + 180 prórroga (+180 demora)",
+          "concept_a_val": "Temporal: 365 días + prórroga expresa de 180 días (calificación en 90 días; tope 730 días)",
           "concept_b_val": "Previsiblemente definitiva (secuelas anatómicas/funcionales)",
           "trap_note": "Considerar la IP como situación meramente transitoria."
         },
@@ -4189,9 +4193,9 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
-    "legal_basis": "Art. 169 y 193 TRLGSS",
-    "rule_statement": "Régimen de discriminación positiva y negativa amparado en Art. 169 y 193 TRLGSS.",
-    "why_correct": "Análisis cruzado riguroso según Art. 169 y 193 TRLGSS.",
+    "legal_basis": "Arts. 170, 174 y 193 TRLGSS",
+    "rule_statement": "Régimen de discriminación positiva y negativa amparado en los Arts. 170, 174 y 193 TRLGSS.",
+    "why_correct": "Análisis cruzado riguroso según los Arts. 170, 174 y 193 TRLGSS.",
     "corrective_rule": "Analiza siempre el objeto y el dies a quo para no mezclar Incapacidad Temporal y Incapacidad Permanente.",
     "difficulty": 2,
     "cognitive_operations": [
@@ -4519,27 +4523,27 @@ const seedItemsTema7: Item[] = [
       "items": [
         {
           "id": "1",
-          "concept": "Duración máxima ordinaria",
+          "concept": "Duración máxima ordinaria de la situación de IT",
           "correct_value": "365 días",
           "category": "Duración"
         },
         {
           "id": "2",
-          "concept": "Prórroga expresa extraordinaria",
+          "concept": "Prórroga expresa (agotados los 365 días)",
           "correct_value": "180 días",
           "category": "Prórroga"
         },
         {
           "id": "3",
-          "concept": "Límite máximo absoluto con demora",
+          "concept": "Límite máximo con demora en la calificación de incapacidad permanente",
           "correct_value": "730 días",
           "category": "Límite"
         }
       ]
     },
-    "legal_basis": "Art. 169 y 174 TRLGSS",
-    "rule_statement": "Parámetros cuantitativos tasados por Art. 169 y 174 TRLGSS.",
-    "why_correct": "Valores normativos estrictos fijados en Art. 169 y 174 TRLGSS.",
+    "legal_basis": "Arts. 170.1, 170.2 y 174.2 TRLGSS",
+    "rule_statement": "Parámetros cuantitativos tasados por los Arts. 170.1, 170.2 y 174.2 TRLGSS.",
+    "why_correct": "La duración ordinaria de la incapacidad temporal es de 365 días (art. 170.1), la prórroga expresa alcanza otros 180 días (art. 170.2) y la demora en la calificación de incapacidad permanente no puede rebasar los 730 días (art. 174.2).",
     "corrective_rule": "Evita la interferencia numérica asociando el concepto causal con su magnitud exacta.",
     "difficulty": 2,
     "cognitive_operations": [
@@ -4582,13 +4586,13 @@ const seedItemsTema7: Item[] = [
         },
         {
           "id": "4",
-          "concept": "Nacimiento trabajadores 21 a 26 años",
+          "concept": "Nacimiento trabajadores de 21 a menos de 26 años",
           "correct_value": "90 días en 7 años",
           "category": "Carencia"
         },
         {
           "id": "5",
-          "concept": "Nacimiento trabajadores > 26 años",
+          "concept": "Nacimiento trabajadores de 26 años o más",
           "correct_value": "180 días en 7 años",
           "category": "Carencia"
         }
@@ -4639,15 +4643,15 @@ const seedItemsTema7: Item[] = [
         },
         {
           "id": "4",
-          "concept": "Ingreso del capital coste por la empresa",
-          "correct_value": "30 días",
+          "concept": "Ingreso del capital coste por la empresa (plazo reglamentario de ingreso)",
+          "correct_value": "1 mes (último día hábil del mes siguiente)",
           "category": "Plazo"
         }
       ]
     },
-    "legal_basis": "Art. 47, 164 TRLGSS y RD 1415/2004",
-    "rule_statement": "Parámetros cuantitativos tasados por Art. 47, 164 TRLGSS y RD 1415/2004.",
-    "why_correct": "Valores normativos estrictos fijados en Art. 47, 164 TRLGSS y RD 1415/2004.",
+    "legal_basis": "Art. 47 y 164 TRLGSS, y art. 70 RD 1415/2004",
+    "rule_statement": "Parámetros cuantitativos tasados por Art. 47 y 164 TRLGSS y por el art. 70 del Reglamento General de Recaudación.",
+    "why_correct": "El recargo va del 30 al 50%, la invitación al pago son 30 días naturales y el plazo reglamentario de ingreso del capital coste finaliza el último día hábil del mes siguiente a la notificación de la reclamación de deuda (art. 70.1 RD 1415/2004).",
     "corrective_rule": "Evita la interferencia numérica asociando el concepto causal con su magnitud exacta.",
     "difficulty": 2,
     "cognitive_operations": [
@@ -4723,21 +4727,21 @@ const seedItemsTema7: Item[] = [
       "items": [
         {
           "id": "1",
-          "concept": "Responsabilidad solidaria contratas propia actividad",
+          "concept": "Responsabilidad solidaria por obligaciones salariales (empresario principal en contratas)",
           "correct_value": "1 año",
           "category": "Plazo"
         },
         {
           "id": "2",
-          "concept": "Tope límite de anticipo FOGASA / garantías",
+          "concept": "Tope máximo del anticipo de prestaciones (art. 167 TRLGSS)",
           "correct_value": "2,5 veces IPREM",
           "category": "Límite"
         }
       ]
     },
-    "legal_basis": "Art. 42 ET y Art. 33 ET",
-    "rule_statement": "Parámetros cuantitativos tasados por Art. 42 ET y Art. 33 ET.",
-    "why_correct": "Valores normativos estrictos fijados en Art. 42 ET y Art. 33 ET.",
+    "legal_basis": "Art. 42.2 ET y art. 167 TRLGSS",
+    "rule_statement": "Parámetros cuantitativos tasados por Art. 42.2 ET (responsabilidad solidaria salarial) y Art. 167 TRLGSS (anticipo de prestaciones).",
+    "why_correct": "El año siguiente es la responsabilidad solidaria por obligaciones salariales (art. 42.2 ET) y el límite de dos veces y media el IPREM es el tope del anticipo de prestaciones del art. 167 TRLGSS, no un límite de FOGASA (art. 33 ET).",
     "corrective_rule": "Evita la interferencia numérica asociando el concepto causal con su magnitud exacta.",
     "difficulty": 2,
     "cognitive_operations": [
@@ -4943,16 +4947,16 @@ const seedItemsTema7: Item[] = [
     "item_type": "spot_error",
     "stem": "Detección e Inhibición de Errores: Identifica y corrige la afirmación errónea en el enunciado jurídico.",
     "spot_error_data": {
-      "full_statement": "La pensión de jubilación y todas las pensiones de viudedad son imprescriptibles en el sistema de la Seguridad Social.",
-      "erroneous_span": "y todas las pensiones de viudedad",
-      "corrected_text": "y la incapacidad permanente",
-      "explanation": "Solo la jubilación y la incapacidad permanente son legalmente imprescriptibles (art. 53.3).",
+      "full_statement": "La pensión de jubilación y la incapacidad permanente son imprescriptibles en el sistema de la Seguridad Social.",
+      "erroneous_span": "y la incapacidad permanente",
+      "corrected_text": "y las prestaciones por muerte y supervivencia",
+      "explanation": "Solo la pensión de jubilación en su modalidad contributiva (art. 212 TRLGSS) y las prestaciones por muerte y supervivencia (art. 230 TRLGSS) son legalmente imprescriptibles; la incapacidad permanente prescribe a los cinco años (art. 53.1 TRLGSS).",
       "trap_type": "overbroad_statement"
     },
-    "legal_basis": "Art. 53.3 TRLGSS",
-    "rule_statement": "Corrección estricta amparada en Art. 53.3 TRLGSS.",
-    "why_correct": "Solo la jubilación y la incapacidad permanente son legalmente imprescriptibles (art. 53.3).",
-    "corrective_rule": "No des por válida una afirmación con cifras o conceptos descontextualizados; verifica siempre con Art. 53.3 TRLGSS.",
+    "legal_basis": "Arts. 53.1, 212 y 230 TRLGSS",
+    "rule_statement": "Corrección estricta amparada en los Arts. 53.1, 212 y 230 TRLGSS.",
+    "why_correct": "Solo la pensión de jubilación contributiva y las prestaciones por muerte y supervivencia son legalmente imprescriptibles (arts. 212 y 230 TRLGSS).",
+    "corrective_rule": "No des por válida una afirmación con cifras o conceptos descontextualizados; verifica siempre con los Arts. 53.1, 212 y 230 TRLGSS.",
     "difficulty": 2,
     "cognitive_operations": [
       "response_inhibition",
@@ -5881,9 +5885,9 @@ const seedItemsTema7: Item[] = [
           },
           {
             "id": "leaf_imprescriptible",
-            "label": "Reconocimiento de jubilación o incapacidad permanente",
-            "rule_text": "Imprescriptible (no prescribe nunca).",
-            "legal_basis": "Art. 53.3 TRLGSS",
+            "label": "Reconocimiento de la pensión de jubilación contributiva",
+            "rule_text": "Imprescriptible (no prescribe nunca), con efectos desde los tres meses anteriores a la solicitud. La incapacidad permanente, en cambio, prescribe a los 5 años.",
+            "legal_basis": "Art. 212 TRLGSS",
             "children": []
           },
           {
@@ -5899,7 +5903,12 @@ const seedItemsTema7: Item[] = [
         {
           "scenario": "Solicitud de pensión de jubilación 7 años tras cumplir los 65 años.",
           "correct_leaf_id": "leaf_imprescriptible",
-          "explanation": "La jubilación es imprescriptible (art. 53.3)."
+          "explanation": "La pensión de jubilación contributiva es imprescriptible (art. 212 TRLGSS)."
+        },
+        {
+          "scenario": "Solicitud de pensión de incapacidad permanente 7 años después del hecho causante.",
+          "correct_leaf_id": "leaf_prescripcion_general",
+          "explanation": "La incapacidad permanente no es imprescriptible: ha superado los 5 años del art. 53.1 TRLGSS."
         },
         {
           "scenario": "Reclamación de subsidio de IT denegado hace 6 años.",
@@ -5908,9 +5917,9 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
-    "legal_basis": "Art. 53 y 54 TRLGSS",
-    "rule_statement": "Estructura condicional jerarquizada en Art. 53 y 54 TRLGSS.",
-    "why_correct": "Enrutamiento estricto siguiendo las ramas de regla y excepción de Art. 53 y 54 TRLGSS.",
+    "legal_basis": "Arts. 53, 54 y 212 TRLGSS",
+    "rule_statement": "Estructura condicional jerarquizada en Art. 53 y 54 TRLGSS, con la excepción de imprescriptibilidad del Art. 212 TRLGSS.",
+    "why_correct": "Enrutamiento estricto siguiendo las ramas de regla y excepción de Art. 53 y 54 TRLGSS; la impresscriptibilidad solo alcanza a la jubilación contributiva (Art. 212 TRLGSS) y a las prestaciones por muerte y supervivencia (Art. 230 TRLGSS).",
     "corrective_rule": "Identifica siempre la condición previa que conmuta la regla general a la rama de excepción.",
     "difficulty": 3,
     "cognitive_operations": [
@@ -6009,14 +6018,14 @@ const seedItemsTema7: Item[] = [
           },
           {
             "id": "leaf_21_a_26",
-            "label": "De 21 a 26 años cumplidos",
+            "label": "De 21 a menos de 26 años cumplidos",
             "rule_text": "90 días en los 7 años anteriores o 180 días en toda su vida laboral.",
             "legal_basis": "Art. 178.2 TRLGSS",
             "children": []
           },
           {
             "id": "leaf_mayor_26",
-            "label": "Mayor de 26 años",
+            "label": "26 años o más",
             "rule_text": "180 días en los 7 años anteriores o 360 días a lo largo de la vida laboral.",
             "legal_basis": "Art. 178.3 TRLGSS",
             "children": []
@@ -6143,25 +6152,25 @@ const seedItemsTema7: Item[] = [
         },
         {
           "id": "v2",
-          "changed_fact": "La solicitud se presenta 6 años después del hecho causante.",
-          "new_scenario": "Solicitud de pensión de viudedad cursada transcurridos 6 años desde el fallecimiento.",
+          "changed_fact": "La prestación solicitada es el subsidio por incapacidad temporal en lugar de la pensión de viudedad.",
+          "new_scenario": "Solicitud de subsidio por incapacidad temporal cursada transcurridos 6 años desde el hecho causante.",
           "outcome_changes": true,
           "correct_outcome": "El derecho al reconocimiento ha prescrito por haber transcurrido más de cinco años (art. 53.1).",
-          "explanation": "La viudedad no es imprescriptible; prescribe a los 5 años desde el hecho causante."
+          "explanation": "El subsidio por incapacidad temporal sí prescribe a los 5 años; la imprescriptibilidad de las prestaciones por muerte y supervivencia (art. 230 TRLGSS) no se extiende a los subsidios."
         },
         {
           "id": "v3",
-          "changed_fact": "La pensión solicitada 6 años después es de jubilación ordinaria en lugar de viudedad.",
-          "new_scenario": "Solicitud de jubilación ordinaria formulada 6 años después de cumplir la edad y cesar en el trabajo.",
+          "changed_fact": "La pensión solicitada 6 años después es de jubilación contributiva en lugar de viudedad.",
+          "new_scenario": "Solicitud de pensión de jubilación contributiva formulada 6 años después de cumplir la edad y cesar en el trabajo.",
           "outcome_changes": true,
-          "correct_outcome": "El derecho se reconoce por ser imprescriptible (art. 53.3), con retroactividad económica de 3 meses.",
-          "explanation": "La jubilación no prescribe nunca, pero sus efectos económicos solo viajan 3 meses hacia atrás."
+          "correct_outcome": "El derecho se reconoce por ser imprescriptible (art. 212 TRLGSS), con retroactividad económica de 3 meses.",
+          "explanation": "La pensión de jubilación contributiva no prescribe nunca, pero sus efectos económicos solo viajan 3 meses hacia atrás."
         }
       ]
     },
-    "legal_basis": "Art. 53 TRLGSS",
-    "rule_statement": "Análisis de sensibilidad fáctica fundado en Art. 53 TRLGSS.",
-    "why_correct": "Variación causal de supuestos de hecho conforme a la hermenéutica de Art. 53 TRLGSS.",
+    "legal_basis": "Arts. 53.1, 212 y 230 TRLGSS",
+    "rule_statement": "Análisis de sensibilidad fáctica fundado en los Arts. 53.1, 212 y 230 TRLGSS.",
+    "why_correct": "Variación causal de supuestos de hecho conforme a la hermenéutica de los Arts. 53.1, 212 y 230 TRLGSS.",
     "corrective_rule": "Comprueba siempre qué hecho concreto cambia (duración, fecha, contingencia) antes de extrapolar la regla.",
     "difficulty": 3,
     "cognitive_operations": [

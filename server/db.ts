@@ -193,8 +193,16 @@ class LocalDatabase {
         'rule_statement',
         'why_correct',
         'corrective_rule',
+        'prompt_before_options',
+        'options',
+        'correct_answer',
         'cloze_data',
         'spot_error_data',
+        'number_sort_data',
+        'contrast_data',
+        'exception_tree_data',
+        'two_tier_data',
+        'fact_variant_data',
       ] as const;
       for (const it of [...seedItems, ...seedItemsRetrieval]) {
         const existingIdx = this.data.items.findIndex((existing) => existing.id === it.id);
