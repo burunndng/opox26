@@ -100,12 +100,11 @@ export const ItemBank: React.FC<ItemBankProps> = ({
           <div className="flex items-center space-x-2">
             <Database className="w-5 h-5 text-amber-500" />
             <h1 className="text-xl font-bold text-white tracking-tight">
-              Banco de Ítems Calibrados
+              Banco de preguntas
             </h1>
           </div>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl">
-            {items.length} ítems en total. Cada ítem contiene alternativas competitivas basadas en
-            el TRLGSS, autopsia de distractores, clasificación de trampas y regla correctiva.
+            {items.length} preguntas en total, con su regla legal y análisis de trampas.
           </p>
         </div>
 

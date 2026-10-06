@@ -112,13 +112,11 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
           <div className="flex items-center space-x-2">
             <Wrench className="w-5 h-5 text-amber-500" />
             <h1 className="text-xl font-bold text-white tracking-tight">
-              Taller de Reparación de Errores (Error Studio)
+              Mis fallos
             </h1>
           </div>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl">
-            Cada error es una oportunidad de fijación discriminativa. Clasifica tus fallos según la
-            taxonomía E1–E20 y ejecuta entrenamientos correctivos específicos para evitar el
-            reaprendizaje pasivo.
+            Cada fallo es una oportunidad. Repasa tus errores por regla hasta que queden fijados.
           </p>
         </div>
 

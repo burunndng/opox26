@@ -72,7 +72,7 @@ export const CreateTopicModal: React.FC<CreateTopicModalProps> = ({
               <FolderPlus className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">Crear Nuevo Tema / Set de Estudio</h2>
+              <h2 className="text-base font-bold text-white">Añadir tema</h2>
               <p className="text-xs text-slate-400">
                 Organiza y estudia módulos independientes (estilo Sets de Quizlet)
               </p>

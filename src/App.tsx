@@ -10,6 +10,7 @@ import { ExportSettingsMethodModal } from './components/ExportSettingsMethodModa
 import { InterleavedBlockModal } from './components/InterleavedBlockModal.tsx';
 import { HelpShortcutsModal } from './components/HelpShortcutsModal.tsx';
 import { JevLabModal } from './components/JevLabModal.tsx';
+import { StudySetup } from './components/StudySetup.tsx';
 import { AiChatbot } from './components/AiChatbot.tsx';
 import { CreateTopicModal } from './components/CreateTopicModal.tsx';
 import { MicroLessonRunner } from './components/MicroLessonRunner.tsx';
@@ -89,7 +90,7 @@ export default function App() {
 
   // Runner state
   const [runnerItems, setRunnerItems] = useState<Item[]>([]);
-  const [runnerTitle, setRunnerTitle] = useState('Entrenamiento Cognitivo');
+  const [runnerTitle, setRunnerTitle] = useState('Test');
   const [runnerMode, setRunnerMode] = useState<
     'srs' | 'interleaved' | 'activity_specific' | 'pretest' | 'repair' | 'sniper'
   >('srs');
@@ -206,9 +207,7 @@ export default function App() {
       setRunnerItems(queue);
       const matchedTopic = topicScope ? topics.find(t => t.id === topicScope) : null;
       setRunnerTitle(
-        matchedTopic
-          ? `Repaso Espaciado: ${matchedTopic.name}`
-          : 'Repaso Espaciado Diario (Due Queue)'
+        matchedTopic ? `Test: ${matchedTopic.name}` : 'Test de repaso'
       );
       setRunnerMode('srs');
       setActiveTab('runner');
@@ -220,12 +219,12 @@ export default function App() {
   // Launch Interleaved Block
   const handleLaunchInterleavedBlock = (blockItems: Item[]) => {
     setRunnerItems(blockItems);
-    setRunnerTitle(`Bloque Intercalado (${blockItems.length} ítems)`);
+    setRunnerTitle(`Test mezclado (${blockItems.length} preguntas)`);
     setRunnerMode('interleaved');
     setActiveTab('runner');
   };
 
-  // Launch Diagnostic Pretest
+  // Launch blind level-check test
   const handleStartPretest = (explicitTopicId?: string) => {
     const topicScope = explicitTopicId || (selectedTopicId !== 'all' ? selectedTopicId : undefined);
     const pool = topicScope ? items.filter(i => i.topic_id === topicScope) : items;
@@ -233,9 +232,7 @@ export default function App() {
     setRunnerItems(shuffled);
     const matchedTopic = topicScope ? topics.find(t => t.id === topicScope) : null;
     setRunnerTitle(
-      matchedTopic
-        ? `Pretest Diagnóstico: ${matchedTopic.name}`
-        : 'Pretest Diagnóstico (Sin Etiquetas)'
+      matchedTopic ? `Test de nivel: ${matchedTopic.name}` : 'Test de nivel'
     );
     setRunnerMode('pretest');
     setActiveTab('runner');
@@ -253,31 +250,17 @@ export default function App() {
     setActiveTab('runner');
   };
 
-  // Launch Activity Specific drill
-  const handleStartActivityType = (activityType: string) => {
-    const matched = eligibleForPractice(items).filter((i) => i.item_type === activityType);
-    if (matched.length === 0) {
-      alert(`No hay ítems registrados para el formato ${activityType}.`);
-      return;
-    }
-    const shuffled = [...matched].sort(() => 0.5 - Math.random()).slice(0, 15);
-    setRunnerItems(shuffled);
-    setRunnerTitle(`Entrenamiento Específico: ${activityType.replace(/_/g, ' ')}`);
-    setRunnerMode('activity_specific');
-    setActiveTab('runner');
-  };
-
   // Launch Targeted Repair
   const handleLaunchRepairSession = (itemIds: string[]) => {
     const repairItems = eligibleForPractice(items).filter((i) => itemIds.includes(i.id));
     if (repairItems.length === 0) return;
     setRunnerItems(repairItems);
-    setRunnerTitle(`Taller de Reparación (${repairItems.length} fallos)`);
+    setRunnerTitle(`Repaso de fallos (${repairItems.length})`);
     setRunnerMode('repair');
     setActiveTab('runner');
   };
 
-  // Launch Drill Sniper (High Interference / Confident-Wrong / Numeric Traps)
+  // Launch exam-like simulacro (hard questions, official penalty)
   const handleStartSniper = (options?: {
     subType?: 'numeric' | 'confident_wrong' | 'mixed';
     count?: number;
@@ -290,25 +273,30 @@ export default function App() {
 
     if (selected.length === 0) {
       alert(
-        'No se encontraron suficientes reactivos en la base de datos para los criterios seleccionados del Drill Sniper.'
+        'No hay suficientes preguntas en la base de datos para este simulacro.'
       );
       return;
     }
 
     const titles: Record<string, string> = {
-      numeric: `🎯 Drill Sniper: Anti-Trampa Numérica (${selected.length} reactivos)`,
-      confident_wrong: `🎯 Drill Sniper: Reparación Confident-Wrong (${selected.length} reactivos)`,
-      mixed: `🎯 Drill Sniper de Alta Interferencia (${selected.length} reactivos)`,
+      numeric: `Simulacro: trampas numéricas (${selected.length} preguntas)`,
+      confident_wrong: `Simulacro: tus fallos con confianza (${selected.length} preguntas)`,
+      mixed: `Simulacro con penalización (${selected.length} preguntas)`,
     };
 
     setRunnerItems(selected);
-    setRunnerTitle(titles[subType] || `🎯 Drill Sniper (${selected.length} reactivos)`);
+    setRunnerTitle(titles[subType] || `Simulacro con penalización (${selected.length} preguntas)`);
     setRunnerMode('sniper');
     setRunnerBaremoPenalty(penalty);
     setRunnerInitialIndex(0);
     setRunnerInitialResults(undefined);
     setRunnerSessionId(`sniper-${Date.now()}`);
     setActiveTab('runner');
+  };
+
+  // Launch exam-like simulacro: hard questions with official -0.25 penalty
+  const handleStartSimulacro = () => {
+    handleStartSniper({ subType: 'mixed', count: 15, baremoPenalty: 0.25 });
   };
 
   if (isLoading) {
@@ -377,31 +365,30 @@ export default function App() {
             items={items}
             attempts={attempts}
             topics={topics}
-            atoms={atoms}
-            selectedTopicId={selectedTopicId}
-            onSelectTopic={(topicId) => setSelectedTopicId(topicId)}
             onOpenCreateTopic={() => setIsCreateTopicModalOpen(true)}
             onStartTopicDue={(topicId) => handleStartDueSession(topicId)}
-            onStartTopicPretest={(topicId) => handleStartPretest(topicId)}
-            onStartTopicMicroLesson={handleStartMicroLesson}
-            onStartTopicInterleaved={(topicId) => {
-              setSelectedTopicId(topicId);
-              setIsInterleavedModalOpen(true);
-            }}
             onResumeSession={handleResumeSession}
-            onStartDueSession={() => handleStartDueSession()}
-            onStartInterleaved={() => setIsInterleavedModalOpen(true)}
-            onStartPretest={() => handleStartPretest()}
-            onStartSniper={handleStartSniper}
-            onStartActivityType={handleStartActivityType}
             onGoToErrors={() => setActiveTab('errors')}
-            onGoToContent={() => setActiveTab('content')}
-            onGoToChat={() => setActiveTab('chat')}
+            onGoToStudy={() => setActiveTab('runner')}
           />
         )}
 
         {activeTab === 'runner' && (
-          microLessonTopic ? (
+          !microLessonTopic && runnerItems.length === 0 ? (
+            <StudySetup
+              topics={topics}
+              selectedTopicId={selectedTopicId}
+              onSelectTopic={(topicId) => setSelectedTopicId(topicId)}
+              dueCount={dueStats.dueToday}
+              openErrorsCount={dueStats.openErrors}
+              onStartDue={() => handleStartDueSession()}
+              onGoToErrors={() => setActiveTab('errors')}
+              onStartSimulacro={handleStartSimulacro}
+              onOpenInterleaved={() => setIsInterleavedModalOpen(true)}
+              onStartPretest={() => handleStartPretest()}
+              onStartGuided={(topicId) => handleStartMicroLesson(topicId)}
+            />
+          ) : microLessonTopic ? (
             <MicroLessonRunner
               topic={microLessonTopic}
               atoms={atoms.filter((a) => a.topic_id === microLessonTopic.id)}
@@ -425,6 +412,9 @@ export default function App() {
             confusionPairs={confusionPairs}
             onLaunchRepair={handleLaunchRepairSession}
             onExit={() => {
+              setRunnerItems([]);
+              setRunnerTitle('Test');
+              setRunnerMode('srs');
               setRunnerInitialIndex(0);
               setRunnerInitialResults(undefined);
               setRunnerSessionId(undefined);
@@ -432,6 +422,9 @@ export default function App() {
               loadData();
             }}
             onFinished={() => {
+              setRunnerItems([]);
+              setRunnerTitle('Test');
+              setRunnerMode('srs');
               setRunnerInitialIndex(0);
               setRunnerInitialResults(undefined);
               setRunnerSessionId(undefined);

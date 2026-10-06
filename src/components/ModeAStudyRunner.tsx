@@ -294,7 +294,7 @@ export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
             {/* Step 2: Gentle Check (Lowest cognitive load: 3-Option MCQ with single-element distractor violation) */}
             <div className="space-y-3">
               <span className="text-xs font-mono uppercase tracking-wider text-sky-400">
-                Chequeo Suave de Codificación (Modo A)
+                Calentamiento (Modo A)
               </span>
               <h2 className="text-lg font-bold text-white font-legal-serif">{item.stem}</h2>
               <p className="text-xs text-slate-400">
@@ -380,7 +380,7 @@ export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
                               <strong>Regla jurídica:</strong> {ruleText}
                             </p>
                             <p className="text-amber-300/90 text-[11px] pt-1 font-mono">
-                              🔁 Reactivo reencolado al lote de Modo A: volverás a responderlo antes de pasar al examen.
+                              🔁 Pregunta devuelta al calentamiento: volverás a responderla antes del simulacro.
                             </p>
                           </div>
                         );
@@ -392,7 +392,7 @@ export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
                   <div className="text-[11px] text-slate-400 font-mono">
                     {checkedResult
-                      ? '✓ Marcado como apto para entrenamiento (Modo B).'
+                      ? '✓ Lista para el simulacro (Modo B).'
                       : 'Cola activa: el ítem se ha añadido al final del lote.'}
                   </div>
 

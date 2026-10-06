@@ -580,13 +580,11 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
         <div className="flex items-center space-x-2">
           <FolderGit2 className="w-5 h-5 text-indigo-400" />
           <h1 className="text-xl font-bold text-white tracking-tight">
-            Estudio de Contenidos & Proposiciones Atómicas
+            Contenidos
           </h1>
         </div>
         <p className="text-xs text-slate-400 mt-1 max-w-3xl">
-          El contenido legal para oposiciones se atomiza en unidades mínimas evaluables y se somete a
-          auditoría psicométrica de diseño instruccional para evitar reactivos defectuosos con pistas
-          o sobrecarga cognitiva.
+          Material de apoyo para crear temas y revisar la calidad de las preguntas.
         </p>
 
         {/* Tab controls */}

@@ -5,6 +5,7 @@ import {
   AlertTriangle,
   FolderGit2,
   Database,
+  MoreHorizontal,
   BarChart3,
   Settings2,
   Contrast,
@@ -64,62 +65,77 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const { user, loading: authLoading, signInWithGoogle, signOut } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [showContentMenu, setShowContentMenu] = useState(false);
-  const contentMenuRef = useRef<HTMLDivElement>(null);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [showMobileMore, setShowMobileMore] = useState(false);
+  const moreMenuRef = useRef<HTMLDivElement>(null);
 
-  // Close content dropdown on outside click
+  // Close "Más" drawer on outside click or Escape
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (contentMenuRef.current && !contentMenuRef.current.contains(event.target as Node)) {
-        setShowContentMenu(false);
+      if (moreMenuRef.current && !moreMenuRef.current.contains(event.target as Node)) {
+        setShowMoreMenu(false);
+      }
+    };
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowMoreMenu(false);
+        setShowMobileMore(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
   }, []);
 
-  const isContentActive = ['content', 'items', 'chat'].includes(activeTab);
+  const isMoreActive = ['content', 'items', 'chat', 'export'].includes(activeTab);
 
+  // Primary navigation: the 3 jobs of an opositor (study, syllabus, mistakes).
+  // Everything else lives in the "Más" drawer so the daily path stays obvious.
   const primaryNavItems = [
     {
       id: 'dashboard',
-      label: 'Panel',
+      label: 'Temario',
       icon: LayoutDashboard,
       count: null,
     },
     {
       id: 'runner',
-      label: 'Entrenar',
+      label: 'Estudiar',
       icon: PlayCircle,
       count: dueCount > 0 ? dueCount : null,
       countColor: 'text-blue-400 font-numeric font-bold',
     },
     {
       id: 'errors',
-      label: 'Errores',
+      label: 'Mis fallos',
       icon: AlertTriangle,
       count: openErrorsCount > 0 ? openErrorsCount : null,
       countColor: 'text-rose-400 font-numeric font-bold',
     },
   ];
 
-  const contentSubItems = [
+  // Advanced tools: kept, but tucked into the "Más" drawer with plain names.
+  // Tab ids are unchanged so no study logic is affected.
+  const drawerTabItems = [
     {
       id: 'content' as ActiveTab,
-      label: 'Estudio y Átomos',
-      subtext: 'Atomizador legal, fuentes y pares',
+      label: 'Contenidos',
+      subtext: 'Material de apoyo para crear temas',
       icon: FolderGit2,
     },
     {
       id: 'items' as ActiveTab,
-      label: 'Banco de Reactivos',
-      subtext: 'Repositorio de ítems y validación',
+      label: 'Preguntas',
+      subtext: 'Banco y validación de preguntas',
       icon: Database,
     },
     {
       id: 'chat' as ActiveTab,
-      label: 'Consultor Doctrinal',
-      subtext: 'Asistente jurídico especializado',
+      label: 'Consultor',
+      subtext: 'Asistente con IA (necesita clave)',
       icon: Scale,
     },
   ];
@@ -158,7 +174,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               }`}
             >
               <LayoutDashboard className="w-3.5 h-3.5" />
-              <span>Panel</span>
+              <span>Temario</span>
             </button>
 
             {/* Entrenar (with count) */}
@@ -171,7 +187,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               }`}
             >
               <PlayCircle className="w-3.5 h-3.5" />
-              <span>Entrenar</span>
+              <span>Estudiar</span>
               {dueCount > 0 && (
                 <span className="text-[11px] font-numeric font-bold text-blue-400">
                   ({dueCount})
@@ -189,7 +205,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               }`}
             >
               <AlertTriangle className="w-3.5 h-3.5" />
-              <span>Errores</span>
+              <span>Mis fallos</span>
               {openErrorsCount > 0 && (
                 <span className="text-[11px] font-numeric font-bold text-rose-400">
                   ({openErrorsCount})
@@ -197,35 +213,38 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </button>
 
-            {/* Contenido Dropdown (Estudio, Banco, Consultor) */}
-            <div className="relative" ref={contentMenuRef}>
+            {/* "Más" drawer: advanced tools stay available, out of the daily path */}
+            <div className="relative" ref={moreMenuRef}>
               <button
-                onClick={() => setShowContentMenu(!showContentMenu)}
+                onClick={() => setShowMoreMenu(!showMoreMenu)}
+                aria-expanded={showMoreMenu}
+                aria-haspopup="menu"
                 className={`flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-b-2 ${
-                  isContentActive
+                  isMoreActive
                     ? 'border-blue-500 text-white font-semibold'
                     : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700'
                 }`}
               >
-                <FolderGit2 className="w-3.5 h-3.5" />
-                <span>Contenido</span>
+                <MoreHorizontal className="w-3.5 h-3.5" />
+                <span>Más</span>
                 <ChevronDown className="w-3 h-3 text-slate-400 transition-transform" />
               </button>
 
-              {showContentMenu && (
-                <div className="absolute left-0 mt-1.5 w-64 rounded-md bg-[#121722] border border-[#20293a] shadow-xl py-1.5 z-50 animate-fadeIn">
+              {showMoreMenu && (
+                <div role="menu" className="absolute left-0 mt-1.5 w-64 rounded-md bg-[#121722] border border-[#20293a] shadow-xl py-1.5 z-50 animate-fadeIn">
                   <div className="px-3 py-1 text-[10px] uppercase font-mono tracking-wider text-slate-500 border-b border-[#20293a] mb-1">
-                    Gestión & Fuentes
+                    Contenido avanzado
                   </div>
-                  {contentSubItems.map((item) => {
+                  {drawerTabItems.map((item) => {
                     const SubIcon = item.icon;
                     const isSubActive = activeTab === item.id;
                     return (
                       <button
                         key={item.id}
+                        role="menuitem"
                         onClick={() => {
                           setActiveTab(item.id);
-                          setShowContentMenu(false);
+                          setShowMoreMenu(false);
                         }}
                         className={`w-full text-left px-3 py-2 flex items-start space-x-2.5 transition ${
                           isSubActive
@@ -241,6 +260,44 @@ export const Navbar: React.FC<NavbarProps> = ({
                       </button>
                     );
                   })}
+                  <div className="px-3 py-1 text-[10px] uppercase font-mono tracking-wider text-slate-500 border-b border-[#20293a] border-t mt-1 mb-1">
+                    Ajustes y herramientas
+                  </div>
+                  <button
+                    role="menuitem"
+                    onClick={() => {
+                      setActiveTab('export');
+                      setShowMoreMenu(false);
+                    }}
+                    className={`w-full text-left px-3 py-2 flex items-start space-x-2.5 transition ${
+                      activeTab === 'export'
+                        ? 'bg-[#182030] text-blue-400'
+                        : 'text-slate-300 hover:bg-[#182030] hover:text-white'
+                    }`}
+                  >
+                    <Settings2 className="w-4 h-4 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="text-xs font-semibold">Ajustes y copia</div>
+                      <div className="text-[11px] text-slate-400">Anki, CSV y copia de seguridad</div>
+                    </div>
+                  </button>
+                  {onOpenJevLab && jevEnabled && (
+                    <button
+                      role="menuitem"
+                      onClick={() => {
+                        onOpenJevLab();
+                        setShowMoreMenu(false);
+                      }}
+                      title="Motor de Inferencia y Decisión"
+                      className="w-full text-left px-3 py-2 flex items-start space-x-2.5 transition text-slate-300 hover:bg-[#182030] hover:text-white"
+                    >
+                      <Cpu className="w-4 h-4 shrink-0 mt-0.5" />
+                      <div>
+                        <div className="text-xs font-semibold">Jev</div>
+                        <div className="text-[11px] text-slate-400">Ajuste del motor (avanzado)</div>
+                      </div>
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -288,30 +345,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <Contrast className="w-3.5 h-3.5" />
             </button>
-
-            {/* Settings & Export Button */}
-            <button
-              onClick={() => setActiveTab('export')}
-              title="Ajustes y Exportación a Anki"
-              className={`p-1.5 rounded-md transition border ${
-                activeTab === 'export'
-                  ? 'bg-[#182030] text-blue-400 border-blue-500/50'
-                  : 'bg-[#121722] hover:bg-[#182030] text-slate-400 hover:text-slate-200 border-[#20293a]'
-              }`}
-            >
-              <Settings2 className="w-3.5 h-3.5" />
-            </button>
-
-            {onOpenJevLab && jevEnabled && (
-              <button
-                onClick={onOpenJevLab}
-                title="Motor de Inferencia y Decisión"
-                className="flex items-center space-x-1 px-2 py-1 rounded-md bg-[#121722] border border-[#20293a] text-slate-300 hover:text-white hover:bg-[#182030] transition text-xs font-mono"
-              >
-                <Cpu className="w-3 h-3 text-blue-400" />
-                <span className="hidden md:inline">Jev</span>
-              </button>
-            )}
 
             <button
               onClick={onOpenHelp}
@@ -412,24 +445,69 @@ export const Navbar: React.FC<NavbarProps> = ({
           );
         })}
 
-        {/* Mobile quick links for Content items */}
-        {contentSubItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeTab === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={`flex items-center space-x-1 px-2 py-1 rounded text-xs whitespace-nowrap font-medium transition-colors ${
-                isActive ? 'bg-[#182030] text-blue-400 font-semibold' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              <Icon className="w-3.5 h-3.5" />
-              <span>{item.label.split(' ')[0]}</span>
-            </button>
-          );
-        })}
+        {/* Mobile "Más": one toggle, expands to the same advanced tools as desktop */}
+        <button
+          onClick={() => setShowMobileMore(!showMobileMore)}
+          aria-expanded={showMobileMore}
+          className={`flex items-center space-x-1 px-2.5 py-1 rounded text-xs whitespace-nowrap font-medium transition-colors ${
+            isMoreActive ? 'bg-[#182030] text-blue-400 font-semibold' : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          <MoreHorizontal className="w-3.5 h-3.5" />
+          <span>Más</span>
+          <ChevronDown className="w-3 h-3" />
+        </button>
       </div>
+      {showMobileMore && (
+        <div className="md:hidden px-4 pb-3 bg-[#0c0f17] border-b border-[#20293a] space-y-0.5">
+          {drawerTabItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  setShowMobileMore(false);
+                }}
+                className={`w-full text-left flex items-center space-x-2.5 px-2 py-2 rounded text-xs transition ${
+                  isActive ? 'bg-[#182030] text-blue-400 font-semibold' : 'text-slate-300 hover:bg-[#182030]'
+                }`}
+              >
+                <Icon className="w-4 h-4 shrink-0" />
+                <span className="font-medium">{item.label}</span>
+                <span className="text-slate-500 text-[11px] truncate">{item.subtext}</span>
+              </button>
+            );
+          })}
+          <button
+            onClick={() => {
+              setActiveTab('export');
+              setShowMobileMore(false);
+            }}
+            className={`w-full text-left flex items-center space-x-2.5 px-2 py-2 rounded text-xs transition ${
+              activeTab === 'export' ? 'bg-[#182030] text-blue-400 font-semibold' : 'text-slate-300 hover:bg-[#182030]'
+            }`}
+          >
+            <Settings2 className="w-4 h-4 shrink-0" />
+            <span className="font-medium">Ajustes y copia</span>
+            <span className="text-slate-500 text-[11px] truncate">Anki, CSV y copia de seguridad</span>
+          </button>
+          {onOpenJevLab && jevEnabled && (
+            <button
+              onClick={() => {
+                onOpenJevLab();
+                setShowMobileMore(false);
+              }}
+              className="w-full text-left flex items-center space-x-2.5 px-2 py-2 rounded text-xs transition text-slate-300 hover:bg-[#182030]"
+            >
+              <Cpu className="w-4 h-4 shrink-0" />
+              <span className="font-medium">Jev</span>
+              <span className="text-slate-500 text-[11px] truncate">Ajuste del motor (avanzado)</span>
+            </button>
+          )}
+        </div>
+      )}
     </header>
   );
 };

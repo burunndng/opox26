@@ -133,13 +133,13 @@ export function renderLifecycleBadge(state?: ItemStudyLifecycleState) {
     case 'modo_a_in_progress':
       return (
         <span className="inline-flex items-center px-2 py-0.5 rounded bg-sky-500/15 text-sky-300 text-[11px] font-mono border border-sky-500/30">
-          Modo A en curso
+          Calentamiento en curso (Modo A)
         </span>
       );
     case 'modo_a_passed':
       return (
         <span className="inline-flex items-center px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 text-[11px] font-mono border border-emerald-500/30">
-          ✓ Apto Modo B
+          ✓ Lista para el simulacro (Modo B)
         </span>
       );
     case 'modo_b_active':
@@ -620,12 +620,12 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
     state: 'new', // Default to 'new' so fresh items lacking FSRS data correctly enter Mode A in SRS
     selection_reason_badge:
       mode === 'interleaved'
-        ? '🔀 Intercalación FSRS'
+        ? '🔀 Mezcla de temas'
         : mode === 'pretest'
-        ? '🧭 Pretest Diagnóstico'
-        : '🗓️ Repaso Espaciado FSRS',
+        ? '🧭 Test de nivel'
+        : '🗓️ Repaso en el momento justo',
     selection_reason_detail:
-      'Ítem programado por el algoritmo FSRS para afianzar retención antes del umbral de olvido.',
+      'Pregunta programada para repasar antes de que la olvides.',
   };
 
   const [showModeA, setShowModeA] = useState(false);
@@ -974,13 +974,13 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
             {mode === 'pretest'
-              ? 'Diagnóstico Completado'
+              ? 'Test de nivel completado'
               : mode === 'sniper'
-              ? '🎯 Drill Sniper Completado'
-              : 'Sesión de Entrenamiento Finalizada'}
+              ? 'Simulacro completado'
+              : 'Test finalizado'}
           </h2>
           <p className="text-slate-400 text-xs sm:text-sm mt-2 max-w-xl mx-auto">
-            Evaluación táctica con baremo de penalización de examen oficial y actualización de memoria FSRS.
+            Con penalización de −0,25 por fallo, como en el examen.
           </p>
 
           {/* Baremo Selector Banner */}
@@ -1264,7 +1264,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
       <div className="flex items-center space-x-2 pb-2">
         <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs font-semibold">
           <Zap className="w-3.5 h-3.5" />
-          <span>⚔️ ENTRENAMIENTO · Examen / Drill (Modo B)</span>
+          <span>Examen / Simulacro (Modo B)</span>
         </span>
       </div>
 

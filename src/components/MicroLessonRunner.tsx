@@ -85,7 +85,7 @@ export const MicroLessonRunner: React.FC<MicroLessonRunnerProps> = ({ topic, ato
         correct_answer: atom.text,
         legal_basis: atom.legal_basis || 'TRLGSS',
         rule_statement: atom.text ?? '',
-        why_correct: 'Regla literal del temario (átomo validado).',
+        why_correct: 'Regla literal del temario.',
         corrective_rule: atom.legal_basis ? `Repasa ${atom.legal_basis}.` : 'Repasa el fragmento de origen.',
         difficulty: atom.difficulty ?? 3,
         cognitive_operations: ['generative_retrieval'],
@@ -142,7 +142,7 @@ export const MicroLessonRunner: React.FC<MicroLessonRunnerProps> = ({ topic, ato
       <div className="max-w-3xl mx-auto py-10 px-4">
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center space-y-5">
           <BrainCircuit className="w-12 h-12 text-indigo-400 mx-auto" />
-          <h2 className="text-xl font-bold text-white">Micro-lección completada</h2>
+          <h2 className="text-xl font-bold text-white">Estudio completado</h2>
           <p className="text-sm text-slate-300">
             {chunks.length} fragmentos leídos · recuperación:{' '}
             <span className="font-mono font-bold text-indigo-300">{totalRecalled.recalled}/{totalRecalled.total}</span>{' '}
@@ -176,7 +176,7 @@ export const MicroLessonRunner: React.FC<MicroLessonRunnerProps> = ({ topic, ato
         <div className="flex items-center space-x-2">
           <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 text-xs font-semibold">
             <BookOpen className="w-3.5 h-3.5" />
-            <span>Micro-lección: {topic.name}</span>
+            <span>Estudio guiado: {topic.name}</span>
           </span>
         </div>
         <button onClick={onExit} className="text-xs text-slate-400 hover:text-white transition">

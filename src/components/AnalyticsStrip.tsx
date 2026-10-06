@@ -57,7 +57,7 @@ export const AnalyticsStrip: React.FC<AnalyticsStripProps> = ({
         <div className="flex items-center space-x-2">
           <Gauge className="w-4 h-4 text-indigo-400" />
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-200">
-            Calibración &amp; puntos débiles
+            Tu progreso y puntos débiles
           </h2>
         </div>
         <div className="flex items-center space-x-2">
@@ -82,7 +82,7 @@ export const AnalyticsStrip: React.FC<AnalyticsStripProps> = ({
 
       {!hasData ? (
         <p className="mt-3 text-xs text-slate-500">
-          Aún no hay intentos registrados. Completa una sesión o un pretest para ver tu calibración.
+          Aún no hay intentos registrados. Completa un test para ver tu progreso.
         </p>
       ) : (
         <>
@@ -174,7 +174,7 @@ export const AnalyticsStrip: React.FC<AnalyticsStripProps> = ({
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <Stat label="Índice frágil" value={`${indices.fragileKnowledgeIndex}%`} hint="Aciertos con duda" />
                 <Stat label="Índice de error" value={`${indices.misconceptionIndex}%`} hint="Fallos con certeza" />
-                <Stat label="Δ calibración" value={`${indices.calibrationDelta > 0 ? '+' : ''}${indices.calibrationDelta}`} hint="certeza − acierto" />
+                <Stat label="Exceso de confianza" value={`${indices.calibrationDelta > 0 ? '+' : ''}${indices.calibrationDelta}`} hint="certeza − acierto" />
                 <Stat label="Lapse rate" value={`${snap.srs.lapseRate}%`} hint="intentos fallidos" />
               </div>
 

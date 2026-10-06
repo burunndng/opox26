@@ -58,7 +58,7 @@ export const InterleavedBlockModal: React.FC<InterleavedBlockModalProps> = ({
         <div className="flex items-center justify-between border-b border-slate-800 pb-4">
           <div className="flex items-center space-x-2">
             <Shuffle className="w-5 h-5 text-emerald-400" />
-            <h2 className="text-base font-bold text-white">Generador de Bloque Intercalado</h2>
+            <h2 className="text-base font-bold text-white">Mezclar temas</h2>
           </div>
           <button onClick={onClose} className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
             <X className="w-5 h-5" />

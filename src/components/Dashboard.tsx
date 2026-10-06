@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
   BookOpen,
-  Scale,
   Play,
   RotateCcw,
-  Shuffle,
-  Target,
-  AlertOctagon,
-  Crosshair,
   Plus,
   Bookmark,
   CheckCircle2,
   Trash2,
-  ArrowRight,
   Cloud,
   CloudCheck,
   LogIn,
@@ -25,8 +19,6 @@ import {
   SavedSessionState,
   Topic,
   ActivityAttempt,
-  Atom,
-  BAREMOS,
 } from '../types.ts';
 import { AnalyticsStrip } from './AnalyticsStrip.tsx';
 import { getTopicBadge } from '../utils/topicBadge.ts';
@@ -46,29 +38,13 @@ interface DashboardProps {
   confusionPairs: ConfusionPair[];
   openErrors: ErrorLog[];
   items: Item[];
-  atoms?: Atom[];
   attempts?: ActivityAttempt[];
   topics?: Topic[];
-  selectedTopicId?: string | 'all';
-  onSelectTopic?: (topicId: string | 'all') => void;
   onOpenCreateTopic?: () => void;
   onStartTopicDue?: (topicId: string) => void;
-  onStartTopicPretest?: (topicId: string) => void;
-  onStartTopicInterleaved?: (topicId: string) => void;
-  onStartTopicMicroLesson?: (topicId: string) => void;
   onResumeSession?: (saved: SavedSessionState) => void;
-  onStartDueSession: () => void;
-  onStartInterleaved: () => void;
-  onStartPretest: () => void;
-  onStartSniper?: (options?: {
-    subType?: 'numeric' | 'confident_wrong' | 'mixed';
-    count?: number;
-    baremoPenalty?: number;
-  }) => void;
-  onStartActivityType: (type: string) => void;
   onGoToErrors: () => void;
-  onGoToContent: () => void;
-  onGoToChat?: () => void;
+  onGoToStudy: () => void;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({
@@ -77,25 +53,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
   clusters = [],
   openErrors,
   items,
-  atoms = [],
   attempts = [],
   topics = [],
   onOpenCreateTopic,
   onStartTopicDue,
-  onStartTopicPretest,
-  onStartTopicInterleaved,
-  onStartTopicMicroLesson,
   onResumeSession,
-  onStartInterleaved,
-  onStartPretest,
-  onStartSniper,
   onGoToErrors,
+  onGoToStudy,
 }) => {
   const { user, signInWithGoogle } = useAuth();
   const [recentSessions, setRecentSessions] = useState<SavedSessionState[]>([]);
-  const [selectedBaremoPenalty, setSelectedBaremoPenalty] = useState<number>(0.25);
-  const [sniperCount, setSniperCount] = useState<number>(10);
-  const [activeSniperTab] = useState<'mixed' | 'numeric' | 'confident_wrong'>('mixed');
 
   // Load paused sessions from localStorage
   const refreshRecentSessions = () => {
@@ -146,8 +113,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
   // Helper for per-topic statistics and progress
   const getTopicStats = (topicId: string) => {
     const tItems = items.filter((i) => i.topic_id === topicId);
-    const tAtoms = atoms.filter((a) => a.topic_id === topicId);
-    const tPairs = confusionPairs.filter((p) => p.topic_id === topicId);
     const tErrors = openErrors.filter(
       (e) => e.topic_id === topicId || tItems.some((i) => i.id === e.item_id)
     );
@@ -174,8 +139,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
     return {
       total,
-      atomsCount: tAtoms.length,
-      pairsCount: tPairs.length,
       errorsCount: tErrors.length,
       completed,
       graduated,
@@ -199,7 +162,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 {activePausedSession.title || 'Entrenamiento cognitivo'}
               </strong>{' '}
               <span className="text-slate-400 font-mono text-[11px] ml-1 tabular-nums">
-                · Reactivo {activePausedSession.currentIndex + 1} de {activePausedSession.items.length}
+                · Pregunta {activePausedSession.currentIndex + 1} de {activePausedSession.items.length}
               </span>
             </div>
           </div>
@@ -257,13 +220,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pt-2 border-b border-[#20293a] pb-5">
         <div>
           <div className="text-xs text-slate-400 uppercase tracking-widest font-mono mb-1">
-            OposiLab · Laboratorio de Discriminación Legal
+            OposiLab · Test para oposiciones de Seguridad Social
           </div>
           <h1 className="text-2xl font-bold text-slate-100 tracking-tight font-legal-serif">
-            Módulos del Temario
+            Temario
           </h1>
           <p className="text-xs text-slate-400 mt-1 max-w-xl">
-            Práctica deliberada para dominar plazos, coeficientes, órganos competentes y trampas de examen sin memorización pasiva.
+            Preguntas tipo test por temas, con la penalización del examen (−0,25 por fallo).
           </p>
         </div>
 
@@ -275,7 +238,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
           <span className="text-slate-700" aria-hidden="true">·</span>
           <div>
-            <span className="text-slate-400">Total banco: </span>
+            <span className="text-slate-400">Total preguntas: </span>
             <strong className="text-slate-100 font-mono tabular-nums">{items.length}</strong>
           </div>
           {openErrors.length > 0 && (
@@ -285,7 +248,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 onClick={onGoToErrors}
                 className="hover:underline text-rose-400 font-medium flex items-center space-x-1"
               >
-                <span>Errores abiertos:</span>
+                <span>Fallos abiertos:</span>
                 <strong className="font-mono tabular-nums">{openErrors.length}</strong>
               </button>
             </>
@@ -309,7 +272,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center space-x-2 font-mono">
             <BookOpen className="w-3.5 h-3.5 text-slate-400" />
-            <span>Temario Registrado ({topics.length} materias)</span>
+            <span>Temas ({topics.length})</span>
           </h2>
           {onOpenCreateTopic && (
             <button
@@ -317,7 +280,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               className="text-xs text-blue-400 hover:text-blue-300 font-medium inline-flex items-center space-x-1"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Añadir Tema</span>
+              <span>Añadir tema</span>
             </button>
           )}
         </div>
@@ -348,7 +311,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       )}
                     </span>
                     <span className="font-mono text-[11px] text-slate-400 tabular-nums">
-                      {stats.total} reactivos
+                      {stats.total} preguntas
                     </span>
                   </div>
 
@@ -367,7 +330,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-slate-400 flex items-center space-x-1.5">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                        <span>Dominio de retención</span>
+                        <span>Dominado</span>
                       </span>
                       <span className="font-medium text-slate-200 font-mono tabular-nums">
                         {stats.graduated} / {stats.total} ({stats.progressPct}%)
@@ -381,11 +344,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       />
                     </div>
 
-                    {/* Unboxed Metadata metrics */}
+                    {/* Plain progress metadata */}
                     <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 font-mono">
-                      <span>{stats.atomsCount} átomos</span>
-                      <span aria-hidden="true">·</span>
-                      <span>{stats.pairsCount} pares confusión</span>
+                      <span>{stats.completed} vistas</span>
                       <span aria-hidden="true">·</span>
                       <span className={stats.errorsCount > 0 ? 'text-rose-400 font-medium' : 'text-slate-400'}>
                         {stats.errorsCount} fallos
@@ -394,42 +355,32 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   </div>
                 </div>
 
-                {/* Actions */}
+                {/* Actions: one primary CTA; everything else lives in Estudiar */}
                 <div className="mt-5 pt-3 border-t border-[#20293a] space-y-2">
                   <button
                     onClick={() => onStartTopicDue && onStartTopicDue(topic.id)}
-                    className="w-full flex items-center justify-center space-x-2 py-2.5 px-3 rounded-md bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs shadow-xs transition"
+                    className="w-full flex items-center justify-center space-x-2 py-3 px-3 rounded-md bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm shadow-xs transition min-h-[44px]"
                   >
                     <Play className="w-3.5 h-3.5 fill-current" />
-                    <span>Iniciar Entrenamiento del Tema</span>
+                    <span>Empezar test</span>
                   </button>
 
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="flex items-center justify-between text-xs pt-1">
+                    {stats.errorsCount > 0 ? (
+                      <button
+                        onClick={onGoToErrors}
+                        className="text-rose-400 hover:text-rose-300 font-medium py-2"
+                      >
+                        Repasar fallos ({stats.errorsCount})
+                      </button>
+                    ) : (
+                      <span />
+                    )}
                     <button
-                      onClick={() => onStartTopicInterleaved && onStartTopicInterleaved(topic.id)}
-                      className="inline-flex items-center justify-center space-x-1.5 py-1.5 px-2 rounded-md bg-[#182030] hover:bg-[#202b40] text-slate-300 text-xs font-medium border border-[#20293a] transition"
-                      title="Práctica intercalada"
+                      onClick={onGoToStudy}
+                      className="text-slate-400 hover:text-slate-200 font-medium py-2"
                     >
-                      <Shuffle className="w-3 h-3 text-slate-400" />
-                      <span>Intercalado</span>
-                    </button>
-
-                    <button
-                      onClick={() => onStartTopicPretest && onStartTopicPretest(topic.id)}
-                      className="inline-flex items-center justify-center space-x-1.5 py-1.5 px-2 rounded-md bg-[#182030] hover:bg-[#202b40] text-slate-300 text-xs font-medium border border-[#20293a] transition"
-                      title="Pretest diagnóstico"
-                    >
-                      <Target className="w-3 h-3 text-slate-400" />
-                      <span>Pretest</span>
-                    </button>
-
-                    <button
-                      onClick={() => onStartTopicMicroLesson && onStartTopicMicroLesson(topic.id)}
-                      className="inline-flex items-center justify-center space-x-1.5 py-1.5 px-2 rounded-md bg-[#182030] hover:bg-[#202b40] text-slate-300 text-xs font-medium border border-[#20293a] transition"
-                      title="Micro-lección con recuperación primero (lectura → recuerdo → revelado)"
-                    >
-                      <BookOpen className="w-3 h-3 text-indigo-400" />
-                      <span>Micro-lección</span>
+                      Otras formas de practicar →
                     </button>
                   </div>
                 </div>
@@ -446,134 +397,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <Plus className="w-5 h-5" />
               </div>
               <h3 className="text-xs font-semibold text-slate-200">
-                Importar o Crear Nuevo Tema
+                Añadir tema
               </h3>
               <p className="text-[11px] text-slate-400 mt-1 max-w-xs">
-                Carga texto legal o PDF para extraer proposiciones atómicas y generar reactivos de discriminación.
+                Añade un tema desde texto legal o PDF. La app genera las preguntas.
               </p>
             </div>
           )}
         </div>
       </div>
 
-      {/* 4. Secondary Drills (Interleaved, Error Studio, Sniper, Pretest) */}
-      <div className="pt-6 border-t border-[#20293a] space-y-4">
-        <div>
-          <h2 className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">
-            Modalidades Complementarias de Entrenamiento
-          </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Intercalación entre bloques temáticos, calibración táctica bajo penalización y diagnóstico a ciegas.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* A. Bloque Intercalado Global */}
-          <div className="bg-[#121722] border border-[#20293a] rounded-md p-4 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-1.5 text-xs text-slate-400">
-                <Shuffle className="w-4 h-4 text-blue-400" />
-                <span className="font-mono text-[11px]">Multitema</span>
-              </div>
-              <h3 className="text-xs font-bold text-slate-100">Bloque Intercalado</h3>
-              <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
-                Mezcla reactivos de todos los temas sin etiquetas para entrenar discriminación pura.
-              </p>
-            </div>
-            <button
-              onClick={onStartInterleaved}
-              className="mt-3 w-full flex items-center justify-center space-x-1.5 py-1.5 px-2.5 rounded bg-[#182030] hover:bg-[#202b40] text-slate-200 text-xs font-medium border border-[#20293a] transition"
-            >
-              <span>Configurar</span>
-              <ArrowRight className="w-3 h-3" />
-            </button>
-          </div>
-
-          {/* B. Taller de Reparación */}
-          <div className="bg-[#121722] border border-[#20293a] rounded-md p-4 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-1.5 text-xs text-slate-400">
-                <AlertOctagon className="w-4 h-4 text-rose-400" />
-                <span className="font-mono text-[11px] text-rose-400 tabular-nums font-semibold">
-                  {openErrors.length} abiertos
-                </span>
-              </div>
-              <h3 className="text-xs font-bold text-slate-100">Taller de Errores</h3>
-              <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
-                Repara los conceptos confusos y las trampas en las que caíste con alta confianza.
-              </p>
-            </div>
-            <button
-              onClick={onGoToErrors}
-              className="mt-3 w-full flex items-center justify-center space-x-1.5 py-1.5 px-2.5 rounded bg-[#182030] hover:bg-[#202b40] text-rose-300 text-xs font-medium border border-[#20293a] transition"
-            >
-              <span>Reparar fallos</span>
-              <ArrowRight className="w-3 h-3" />
-            </button>
-          </div>
-
-          {/* C. Drill Sniper */}
-          <div className="bg-[#121722] border border-[#20293a] rounded-md p-4 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-1.5 text-xs text-slate-400">
-                <Crosshair className="w-4 h-4 text-blue-400" />
-                <span className="font-mono text-[11px]">Penalización</span>
-              </div>
-              <h3 className="text-xs font-bold text-slate-100">Drill Sniper</h3>
-              <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
-                Trampas numéricas y abstención táctica bajo baremo oficial de penalización.
-              </p>
-            </div>
-            <div className="mt-3 flex items-center gap-1.5">
-              <select
-                value={selectedBaremoPenalty}
-                onChange={(e) => setSelectedBaremoPenalty(parseFloat(e.target.value))}
-                className="bg-[#0c0f17] border border-[#20293a] text-slate-300 text-[10px] rounded px-1.5 py-1 focus:outline-none font-mono"
-              >
-                {BAREMOS.map((b) => (
-                  <option key={b.id} value={b.penaltyPerError} className="bg-[#121722]">
-                    {b.shortLabel}
-                  </option>
-                ))}
-              </select>
-              <button
-                onClick={() =>
-                  onStartSniper &&
-                  onStartSniper({
-                    subType: activeSniperTab,
-                    count: sniperCount,
-                    baremoPenalty: selectedBaremoPenalty,
-                  })
-                }
-                className="flex-1 flex items-center justify-center space-x-1 py-1 px-2 rounded bg-[#182030] hover:bg-[#202b40] text-blue-400 text-xs font-medium border border-[#20293a] transition"
-              >
-                <span>Drill ({sniperCount})</span>
-              </button>
-            </div>
-          </div>
-
-          {/* D. Pretest Diagnóstico Global */}
-          <div className="bg-slate-900 border border-slate-800 rounded-md p-4 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-1.5 text-xs text-slate-400">
-                <Target className="w-4 h-4 text-slate-400" />
-                <span className="font-mono text-[11px]">Diagnóstico</span>
-              </div>
-              <h3 className="text-xs font-bold text-slate-100">Pretest Global</h3>
-              <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
-                Evaluación a ciegas para identificar lagunas antes del estudio pormenorizado.
-              </p>
-            </div>
-            <button
-              onClick={onStartPretest}
-              className="mt-3 w-full flex items-center justify-center space-x-1.5 py-1.5 px-2.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition"
-            >
-              <span>Iniciar test</span>
-              <ArrowRight className="w-3 h-3" />
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
