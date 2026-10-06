@@ -39,9 +39,9 @@ const now = '2026-03-01T10:00:00Z';
 
 export const seedTopicTema3: Topic = {
   id: TOPIC,
-  name: 'Seguridad Social - Tema 3: La afiliacion y la inscripcion a la Seguridad Social',
+  name: 'Tema 3 Especifico - La afiliacion y la inscripcion a la Seguridad Social',
   description:
-    'Afiliacion e inscripcion: caracteres de la afiliacion, NUSS/CCC, altas, bajas y variaciones de datos, convenio especial, clases de alta, particularidades, actos indebidos e impugnaciones.',
+    'BLOQUE ESPECIFICO (ES). Afiliacion e inscripcion: caracteres de la afiliacion, NUSS/CCC, altas, bajas y variaciones de datos, convenio especial, clases de alta, particularidades, actos indebidos e impugnaciones.',
   source_file: 'TEMA 3 ESPECIFICO.pdf',
   status: 'active',
   created_at: now,
@@ -823,20 +823,20 @@ export const seedItemsTema3: Item[] = [
     },
     distractors: [
       {
-        text: '30 días naturales anteriores al previsto inicio.',
+        text: '30 días naturales anteriores al inicio previsto.',
         trap_type: 'numeric_substitution',
         explanation: 'Incorrecto. La ventana es de 60 días naturales, no de 30.',
         condition_if_correct: 'Si el plazo refundido fuera de 30 días naturales.',
       },
       {
-        text: '90 días naturales anteriores al previsto inicio.',
+        text: '90 días naturales anteriores al inicio previsto.',
         trap_type: 'temporal_confusion',
         explanation:
           'Incorrecto. Los 90 días naturales son la ventana de efectos retroactivos del convenio especial, no la antelación máxima del alta.',
         condition_if_correct: 'Si se preguntara por la ventana de solicitud del convenio especial.',
       },
       {
-        text: '15 días hábiles anteriores al previsto inicio.',
+        text: '15 días hábiles anteriores al inicio previsto.',
         trap_type: 'temporal_confusion',
         explanation: 'Incorrecto. El plazo se mide en días naturales, no hábiles.',
         condition_if_correct: 'Si el cómputo estuviera expresado en días hábiles.',
@@ -856,27 +856,27 @@ export const seedItemsTema3: Item[] = [
     stem: 'Las solicitudes de baja y de variaciones de datos de los trabajadores en el Régimen de Seguridad Social deben presentarse dentro del plazo de:',
     prompt_before_options: 'Distingue primero el artículo: ¿art. 28 o art. 32.3 del Reglamento?',
     correct: {
-      text: 'Seis días naturales siguientes al cese o a la variación.',
+      text: 'Seis días naturales siguientes al cese en el trabajo o a la variación producida.',
       explanation:
         'El art. 32.3.2 RIA, modificado por el RD 643/2026, de 29 de julio, amplía a seis días naturales el plazo para las solicitudes de baja y de variaciones de datos de los trabajadores.',
     },
     distractors: [
       {
-        text: 'Tres días naturales siguientes al cese o a la variación.',
+        text: 'Tres días naturales siguientes al cese en el trabajo o a la variación producida.',
         trap_type: 'numeric_substitution',
         explanation:
           'Incorrecto. Fue el plazo anterior (pre-RD 643/2026) y sigue siendo el de la variación de datos de la AFILIACIÓN (art. 28 RIA), no el de baja y variación de datos del trabajador.',
         condition_if_correct: 'Si se preguntara por la variación de datos de la afiliación (art. 28 RIA) o por el régimen anterior al RD 643/2026.',
       },
       {
-        text: 'Diez días naturales siguientes al cese o a la variación.',
+        text: 'Diez días naturales siguientes al cese en el trabajo o a la variación producida.',
         trap_type: 'numeric_substitution',
         explanation:
           'Incorrecto. Los diez días naturales son la antelación para cambiar de entidad gestora o colaboradora (art. 17 RIA) y el plazo de subsanación.',
         condition_if_correct: 'Si se preguntara por el cambio de entidad gestora o por la subsanación.',
       },
       {
-        text: 'Quince días hábiles siguientes al cese o a la variación.',
+        text: 'Quince días hábiles siguientes al cese en el trabajo o a la variación producida.',
         trap_type: 'temporal_confusion',
         explanation: 'Incorrecto. El plazo es en días naturales y de seis días.',
         condition_if_correct: 'Si el cómputo estuviera en días hábiles y el plazo fuera de quince.',
@@ -894,27 +894,27 @@ export const seedItemsTema3: Item[] = [
     cluster_id: 'cluster_inscripcion_empresa',
     stem: 'El empresario comunica a la TGSS la variación de los datos consignados en su inscripción de empresa:',
     correct: {
-      text: 'En modelo oficial, dentro de los 3 días naturales siguientes.',
+      text: 'En modelo oficial, dentro de los 3 días naturales contados desde su producción.',
       explanation:
         'Conforme al art. 17 RIA, la comunicación de variaciones en los datos de la inscripción se efectúa en modelo oficial dentro de los tres días naturales desde que se produzcan.',
     },
     distractors: [
       {
-        text: 'En los 6 días naturales siguientes, por ser el plazo general de cualquier comunicación.',
+        text: 'En los 6 días naturales siguientes, por ser el plazo general de toda comunicación.',
         trap_type: 'temporal_confusion',
         explanation:
           'Incorrecto. Los seis días son el plazo de baja y variación de datos de los trabajadores (art. 32.3), no de los datos de la inscripción del empresario.',
         condition_if_correct: 'Si se preguntara por la variación de datos de un trabajador.',
       },
       {
-        text: 'Con una antelación de 10 días naturales a su efecto.',
+        text: 'Con una antelación de 10 días naturales respecto de su efectividad.',
         trap_type: 'temporal_confusion',
         explanation:
           'Incorrecto. La antelación de diez días se reserva al cambio de entidad gestora o colaboradora.',
         condition_if_correct: 'Si la variación afectase a la entidad gestora o colaboradora.',
       },
       {
-        text: 'Dentro del mes siguiente al de la variación.',
+        text: 'Dentro del mes natural siguiente al de la variación producida.',
         trap_type: 'numeric_substitution',
         explanation: 'Incorrecto. El plazo es de tres días naturales.',
         condition_if_correct: 'Si el plazo legal fuera de un mes.',
@@ -932,25 +932,25 @@ export const seedItemsTema3: Item[] = [
     cluster_id: 'cluster_inscripcion_empresa',
     stem: 'El cambio de entidad gestora o colaboradora para la protección de contingencias profesionales exige presentar el documento acreditativo de la nueva opción y la comunicación del cese de la anterior:',
     correct: {
-      text: 'Con una antelación de 10 días naturales a su efecto.',
+      text: 'Con una antelación de 10 días naturales a la fecha de su efectividad.',
       explanation:
         'El art. 17 RIA exige presentar el documento y la comunicación del cese de la anterior con diez días naturales de antelación a la efectividad del cambio de entidad gestora o colaboradora.',
     },
     distractors: [
       {
-        text: 'En los 3 días naturales siguientes al cambio.',
+        text: 'En los 3 días naturales siguientes al que se produzca el cambio.',
         trap_type: 'temporal_confusion',
         explanation: 'Incorrecto. Ese es el plazo general de variación, pero aquí se exige antelación, no plazo posterior.',
         condition_if_correct: 'Si no se tratara de un cambio de entidad gestoras o colaboradora.',
       },
       {
-        text: 'En los 6 días naturales siguientes al cambio.',
+        text: 'En los 6 días naturales siguientes al que se produzca el cambio.',
         trap_type: 'temporal_confusion',
         explanation: 'Incorrecto. Los seis días son de baja y variación de datos de trabajadores.',
         condition_if_correct: 'Si se preguntara por baja o variación de datos del trabajador.',
       },
       {
-        text: 'Con un mes de antelación a su efectividad.',
+        text: 'Con un plazo de un mes de antelación a su efectividad.',
         trap_type: 'numeric_substitution',
         explanation: 'Incorrecto. La antelación exigida es de diez días naturales.',
         condition_if_correct: 'Si la antelación legal fuera de un mes.',
@@ -968,26 +968,26 @@ export const seedItemsTema3: Item[] = [
     cluster_id: 'cluster_inscripcion_empresa',
     stem: 'La extinción de la empresa o el cese temporal o definitivo de su actividad se comunica a la TGSS:',
     correct: {
-      text: 'Dentro de los 3 días naturales siguientes.',
+      text: 'Dentro de los 3 días naturales siguientes a aquel en que se produzca.',
       explanation:
         'El art. 18 RIA obliga a comunicar la extinción de la empresa o el cese de su actividad en modelo oficial dentro de los tres días naturales siguientes.',
     },
     distractors: [
       {
-        text: 'Dentro de los 6 días naturales siguientes.',
+        text: 'Dentro de los 6 días naturales siguientes a aquel en que se produzca.',
         trap_type: 'numeric_substitution',
         explanation:
           'Incorrecto. Los seis días son de baja de trabajadores y de sucesión de titularidad, no del cese de la actividad de la empresa.',
         condition_if_correct: 'Si se preguntara por baja de trabajador o sucesión de titularidad.',
       },
       {
-        text: 'Dentro de los 10 días naturales siguientes.',
+        text: 'Dentro de los 10 días naturales siguientes a aquel en que se produzca.',
         trap_type: 'numeric_substitution',
         explanation: 'Incorrecto. El plazo de cese de empresa es de tres días naturales.',
         condition_if_correct: 'Si el plazo legal fuera de diez días.',
       },
       {
-        text: 'En los 5 días hábiles siguientes.',
+        text: 'En los 5 días hábiles siguientes a aquel en que se produzca.',
         trap_type: 'temporal_confusion',
         explanation:
           'Incorrecto. Los cinco días hábiles son la duración mínima del cese para que se extinga la cobertura de los documentos de asociación, no el plazo de comunicación.',
@@ -1005,25 +1005,25 @@ export const seedItemsTema3: Item[] = [
     cluster_id: 'cluster_inscripcion_empresa',
     stem: 'Cambia la titularidad de una empresa sin formalizar el cambio. La inscripción de la sucesora y su anotación en el Registro de Empresarios deben efectuarse en el plazo de:',
     correct: {
-      text: 'Dentro de los 6 días naturales siguientes a la sucesión.',
+      text: 'Seis días naturales siguientes a aquel en que se produzca la sucesión.',
       explanation:
         'El art. 19 RIA establece que la inscripción de la sucesora y la anotación en el Registro de Empresarios deben solicitarse dentro de los seis días naturales siguientes a la sucesión.',
     },
     distractors: [
       {
-        text: 'Dentro de los 3 días naturales siguientes a la sucesión.',
+        text: 'Tres días naturales siguientes a aquel en que se produzca la sucesión.',
         trap_type: 'numeric_substitution',
         explanation: 'Incorrecto. Tres días son para el cese de la actividad, no para la sucesión de titularidad.',
         condition_if_correct: 'Si se preguntara por cese o extinción de la actividad.',
       },
       {
-        text: 'Dentro de los 10 días naturales siguientes a la sucesión.',
+        text: 'Diez días naturales siguientes a aquel en que se produzca la sucesión.',
         trap_type: 'numeric_substitution',
         explanation: 'Incorrecto. El plazo de sucesión es de seis días naturales.',
         condition_if_correct: 'Si el plazo legal fuera de diez días.',
       },
       {
-        text: 'Dentro del mes siguiente a la sucesión.',
+        text: 'Un mes siguiente a aquel en que se produzca la sucesión de titularidad.',
         trap_type: 'numeric_substitution',
         explanation: 'Incorrecto. El plazo es de seis días naturales.',
         condition_if_correct: 'Si el plazo legal fuera de un mes.',
@@ -1183,27 +1183,27 @@ export const seedItemsTema3: Item[] = [
     cluster_id: 'cluster_plazos_efectos_altas',
     stem: 'Una baja presentada fuera de plazo: la obligación de cotizar no se extingue hasta el día en que:',
     correct: {
-      text: 'La TGSS conozca el cese.',
+      text: 'La TGSS conozca el cese en el trabajo.',
       explanation:
         'En las bajas fuera de plazo no se extingue la obligación de cotizar hasta el día en que la TGSS conozca el cese en el trabajo o la terminación de la situación determinante de la inclusión.',
     },
     distractors: [
       {
-        text: 'Se presentó la solicitud de baja.',
+        text: 'Se presentase la solicitud de baja ante la TGSS.',
         trap_type: 'partial_rule_accuracy',
         explanation:
           'Incorrecto. Ni la mera solicitud ni el reconocimiento de la baja extinguen la obligación de cotizar mientras continúe la prestación.',
         condition_if_correct: 'Si la baja se hubiera presentado en plazo.',
       },
       {
-        text: 'Tuvo lugar el cese real.',
+        text: 'Se hubiera producido el cese real del trabajo.',
         trap_type: 'partial_rule_accuracy',
         explanation:
           'Incorrecto. El.game cesa real es la fecha de efectos de la baja EN PLAZO; fuera de plazo la cotización subsiste hasta que la TGSS conoce el cese, y el interesado puede probarlo.',
         condition_if_correct: 'Si la baja se hubiera presentado en plazo.',
       },
       {
-        text: 'Termine el mes del cese.',
+        text: 'Termine el mes natural en que se produzca el cese.',
         trap_type: 'temporal_confusion',
         explanation: 'Incorrecto. No hay un corte mensual; rige el conocimiento del cese por la TGSS.',
         condition_if_correct: 'Si la norma estableciera un corte al cierre de mes.',
@@ -1220,26 +1220,26 @@ export const seedItemsTema3: Item[] = [
     cluster_id: 'cluster_plazos_efectos_altas',
     stem: 'Tras una actuación de la ITSS promovida a instancia de un tercero o por un requerimiento expreso de una entidad, el alta de oficio practicada retrotrae sus efectos a:',
     correct: {
-      text: 'La fecha de la denuncia, queja o petición expresa.',
+      text: 'La fecha en que se produjo la denuncia, queja o petición expresa.',
       explanation:
         'Cuando el alta de oficio deriva de actuación de la ITSS, los efectos se retrotraen a la fecha de la actuación inspectora, salvo que ésta hubiera sido promovida por orden superior, a instancia de las entidades gestoras o como consecuencia de denuncia, queja o petición expresa, en cuyo caso retrotraen a la fecha en que se produjeron.',
     },
     distractors: [
       {
-        text: 'La fecha en que se llevó a cabo la actuación inspectora.',
+        text: 'La fecha en que se llevó a cabo la actuación inspectora de la TGSS.',
         trap_type: 'rule_exception_swap',
         explanation:
           'Incorrecto. Esa es la regla general, pero el enunciado activa la excepción de denuncia, queja o petición expresa.',
         condition_if_correct: 'Si la actuación inspectora no se hubiera promovido por denuncia, queja o petición expresa.',
       },
       {
-        text: 'La fecha de inicio de la actividad.',
+        text: 'La fecha de inicio de la actividad laboral del trabajador.',
         trap_type: 'partial_rule_accuracy',
         explanation: 'Incorrecto. Es la fecha de efectos del alta en plazo, no de la de oficio.',
         condition_if_correct: 'Si se tratara de un alta presentada en plazo.',
       },
       {
-        text: 'El día siguiente a la resolución que la declara.',
+        text: 'El día siguiente al de la resolución que la declara indebida.',
         trap_type: 'temporal_confusion',
         explanation: 'Incorrecto. Los efectos se retrotraen, no se desplazan al día siguiente.',
         condition_if_correct: 'Si los efectos fueran desde el día siguiente a la resolución.',
@@ -1256,25 +1256,25 @@ export const seedItemsTema3: Item[] = [
     cluster_id: 'cluster_convenio_especial',
     stem: 'Para suscribir el convenio especial se requiere, en la fecha de solicitud, haber cubierto un período de cotización de:',
     correct: {
-      text: '1.080 días en los 12 años anteriores a la baja.',
+      text: '1.080 días cotizados en los 12 años inmediatamente anteriores a la baja.',
       explanation:
         'Es necesario tener cubierto, en la fecha de solicitud, un período de 1.080 días de cotización al Sistema de la Seguridad Social en los 12 años inmediatamente anteriores a la baja en el Régimen de que se trate.',
     },
     distractors: [
       {
-        text: '720 días cotizados en los 10 años anteriores a la baja.',
+        text: '720 días cotizados en los 10 años inmediatamente anteriores a la baja.',
         trap_type: 'numeric_substitution',
         explanation: 'Incorrecto. La carencia es de 1.080 días en 12 años.',
         condition_if_correct: 'Si la carencia fuera de 720 días en 10 años.',
       },
       {
-        text: '1.080 días cotizados en los 15 años anteriores a la baja.',
+        text: '1.080 días cotizados en los 15 años inmediatamente anteriores a la baja.',
         trap_type: 'numeric_substitution',
         explanation: 'Incorrecto. La ventana es de 12 años, no de 15.',
         condition_if_correct: 'Si la ventana legal fuera de 15 años.',
       },
       {
-        text: '1.800 días cotizados en los 12 años anteriores a la baja.',
+        text: '1.800 días cotizados en los 12 años inmediatamente anteriores a la baja.',
         trap_type: 'numeric_substitution',
         explanation: 'Incorrecto. La carencia es de 1.080 días, no de 1.800.',
         condition_if_correct: 'Si la carencia fuera de 1.800 días.',
@@ -1291,26 +1291,26 @@ export const seedItemsTema3: Item[] = [
     cluster_id: 'cluster_convenio_especial',
     stem: 'El convenio especial, si su solicitud se presenta dentro de los 90 días naturales siguientes al cese, surtirá efectos desde:',
     correct: {
-      text: 'El día siguiente al de la baja en el Régimen.',
+      text: 'El día siguiente a aquel en que produjo efectos la baja en el Régimen.',
       explanation:
         'Dentro de los 90 días naturales siguientes a la fecha del cese, el convenio especial surtirá efectos desde el día siguiente a aquel en que haya producido efectos la baja, pudiendo el suscriptor optar por la fecha de presentación.',
     },
     distractors: [
       {
-        text: 'La fecha de presentación de la solicitud.',
+        text: 'La fecha de presentación de la solicitud ante la TGSS correspondiente.',
         trap_type: 'partial_rule_accuracy',
         explanation:
           'Incorrecto. Dentro de los 90 días la fecha de efectos por defecto es el día siguiente a la baja; la fecha de presentación solo opera si el suscriptor opta expresamente por ella.',
         condition_if_correct: 'Si el suscriptor hubiera optado expresamente por la fecha de solicitud.',
       },
       {
-        text: 'El día siguiente al de la presentación de la solicitud.',
+        text: 'El día siguiente al de la presentación de la solicitud ante la TGSS.',
         trap_type: 'temporal_confusion',
         explanation: 'Incorrecto. El dies a quo es el día siguiente a la BAJA, no a la solicitud.',
         condition_if_correct: 'Si los efectos comenzaran al día siguiente de la solicitud.',
       },
       {
-        text: 'La fecha del cese en la actividad.',
+        text: 'La fecha en que se produjo el cese en la actividad laboral.',
         trap_type: 'temporal_confusion',
         explanation: 'Incorrecto. El convenio comienza el día siguiente a la baja, no el mismo día del cese.',
         condition_if_correct: 'Si los efectos coincidieran con el día del cese.',
@@ -1327,26 +1327,26 @@ export const seedItemsTema3: Item[] = [
     cluster_id: 'cluster_convenio_especial',
     stem: 'Si la TGSS no dicta resolución sobre la solicitud de convenio especial en el plazo de 3 meses, se entiende:',
     correct: {
-      text: 'Estimada por silencio positivo.',
+      text: 'Estimada por silencio administrativo positivo.',
       explanation:
         'La notificación sobre la procedencia de celebrar el convenio especial debe producirse dentro de los 3 meses siguientes, considerándose la falta de resolución expresa como estimación por silencio administrativo positivo.',
     },
     distractors: [
       {
-        text: 'Desestimada por silencio negativo.',
+        text: 'Desestimada por silencio administrativo negativo.',
         trap_type: 'rule_exception_swap',
         explanation: 'Incorrecto. En el convenio especial el silencio es POSITIVO.',
         condition_if_correct: 'Si el procedimiento previera silencio negativo.',
       },
       {
-        text: 'Estimada a los 45 días.',
+        text: 'Estimada automáticamente al cumplirse los 45 días.',
         trap_type: 'numeric_substitution',
         explanation:
           'Incorrecto. Los 45 días son el plazo de resolución en otras materias de la TGSS; el convenio especial tiene plazo propio de 3 meses.',
         condition_if_correct: 'Si se aplicara el plazo general de 45 días de la TGSS.',
       },
       {
-        text: 'Hay que reiniciar el procedimiento.',
+        text: 'Necesita la iniciación de un nuevo procedimiento.',
         trap_type: 'overbroad_statement',
         explanation: 'Incorrecto. El silencio positivo no obliga a reiniciar nada.',
         condition_if_correct: 'Si el silencio fuera negativo y hubiera que volver a solicitarlo.',
@@ -1361,27 +1361,27 @@ export const seedItemsTema3: Item[] = [
   buildMcq({
     id: 'item-t3-16',
     cluster_id: 'cluster_convenio_especial',
-    stem: 'El convenio especial se extingue por falta de abono de las cuotas correspondientes a:',
+    stem: 'El convenio especial se extingue por falta de abono de las cuotas correspondientes a (salvo causa justificada de fuerza mayor):',
     correct: {
-      text: '3 mensualidades consecutivas o 5 alternas.',
+      text: '3 mensualidades consecutivas o 5 alternativas.',
       explanation:
         'El convenio especial se extingue por falta de abono de las cuotas correspondientes a tres mensualidades consecutivas o a cinco alternativas, salvo causa justificada de fuerza mayor.',
     },
     distractors: [
       {
-        text: '2 mensualidades consecutivas o 4 alternas.',
+        text: '2 mensualidades consecutivas o 4 alternativas.',
         trap_type: 'numeric_substitution',
         explanation: 'Incorrecto. El umbral legal es 3 consecutivas o 5 alternas.',
         condition_if_correct: 'Si el umbral fuera de dos y cuatro.',
       },
       {
-        text: '3 mensualidades consecutivas o 6 alternas.',
+        text: '3 mensualidades consecutivas o 6 alternativas.',
         trap_type: 'numeric_substitution',
         explanation: 'Incorrecto. Son cinco alternas, no seis.',
         condition_if_correct: 'Si el umbral de alternas fuera de seis.',
       },
       {
-        text: '6 mensualidades consecutivas o 9 alternas.',
+        text: '6 mensualidades consecutivas o 9 alternativas.',
         trap_type: 'numeric_substitution',
         explanation: 'Incorrecto. El umbral es bastante menor: 3/5.',
         condition_if_correct: 'Si el umbral fuera de seis y nueve.',
@@ -1434,27 +1434,27 @@ export const seedItemsTema3: Item[] = [
     confusion_pair_id: 'pair_convenio_suspension_vs_extincion',
     stem: 'Quien suscribe el convenio especial inicia una actividad que le da de alta en un régimen cuya base de cotización es INFERIOR a la del convenio. El convenio:',
     correct: {
-      text: 'Queda suspendido, salvo voluntad expresa.',
+      text: 'Queda suspendido, salvo que el suscriptor manifieste expresamente otra voluntad.',
       explanation:
         'El convenio especial queda suspendido durante los períodos de actividad que determinen un encuadramiento con base inferior a la del convenio, salvo que el suscriptor manifieste expresamente su voluntad de que se extinga o de que siga vigente.',
     },
     distractors: [
       {
-        text: 'Se extingue automáticamente.',
+        text: 'Se extingue de inmediato, sin posibilidad de manifestación del suscriptor.',
         trap_type: 'rule_exception_swap',
         explanation:
           'Incorrecto. La extinción automática opera con base IGUAL o SUPERIOR; con base inferior el convenio se suspende.',
         condition_if_correct: 'Si la base del nuevo alta fuera igual o superior a la del convenio.',
       },
       {
-        text: 'Continúa sin cambios y el trabajador cotiza en ambos régimenes sin más efectos.',
+        text: 'Continúa sin cambios y el trabajador cotiza en ambos regímenes a la vez.',
         trap_type: 'partial_rule_accuracy',
         explanation:
           'Incorrecto. Con base inferior el convenio se suspende (salvo voluntad expresa), no se mantiene inalterado.',
         condition_if_correct: 'Si el convenio especial siguiera vigente por decisión expresa del suscriptor.',
       },
       {
-        text: 'Se extingue solo si existe pluriempleo.',
+        text: 'Se extingue solo cuando concurra pluriempleo o pluriactividad.',
         trap_type: 'wrong_legal_object',
         explanation:
           'Incorrecto. El pluriempleo es justamente el supuesto en que NO se extingue por alta con base igual o superior.',
@@ -1472,26 +1472,26 @@ export const seedItemsTema3: Item[] = [
     cluster_id: 'cluster_convenio_especial',
     stem: 'La suspensión del convenio especial por inicio de actividad con base inferior, notificada a la TGSS dentro del plazo de 10 días naturales siguientes a la reanudación, produce efectos desde:',
     correct: {
-      text: 'El día anterior a la incorporación.',
+      text: 'El día anterior al de la incorporación al trabajo.',
       explanation:
         'Si estas circunstancias de suspensión se notifican a la TGSS dentro del plazo de los 10 días naturales siguientes a la reanudación de la actividad, producirán efectos desde el día anterior al de la incorporación al trabajo.',
     },
     distractors: [
       {
-        text: 'La fecha de la comunicación a la TGSS.',
+        text: 'La fecha en que se efectuó la comunicación a la TGSS.',
         trap_type: 'rule_exception_swap',
         explanation:
           'Incorrecto. Esa fecha solo opera si se notificara FUERA del plazo de 10 días; dentro de plazo los efectos van al día anterior a la incorporación.',
         condition_if_correct: 'Si la notificación se efectuara fuera del plazo de 10 días naturales.',
       },
       {
-        text: 'El día siguiente al de la incorporación.',
+        text: 'El día siguiente al de la incorporación al trabajo.',
         trap_type: 'temporal_confusion',
         explanation: 'Incorrecto. Es el día ANTERIOR a la incorporación, no el siguiente.',
         condition_if_correct: 'Si los efectos fueran desde el día siguiente a la incorporación.',
       },
       {
-        text: 'El día de la incorporación al trabajo.',
+        text: 'El día en que se produjo la incorporación al trabajo.',
         trap_type: 'temporal_confusion',
         explanation: 'Incorrecto. Los efectos se adelantan un día: el anterior a la incorporación.',
         condition_if_correct: 'Si los efectos coincidieran con el día de la incorporación.',
@@ -1508,25 +1508,25 @@ export const seedItemsTema3: Item[] = [
     cluster_id: 'cluster_convenio_especial',
     stem: 'Los cambios de bases de cotización del convenio especial posteriores a su suscripción deben efectuarse:',
     correct: {
-      text: 'Antes del 1 de octubre, con efectos el 1 de enero.',
+      text: 'Antes del día 1 de octubre, con efectos desde el 1 de enero siguiente.',
       explanation:
         'Los cambios de bases de cotización posteriores a la suscripción del convenio deberán efectuarse antes del día 1 de octubre de cada año y tendrán efectos desde el día 1 de enero del año siguiente.',
     },
     distractors: [
       {
-        text: 'Antes del 1 de julio, con efectos desde el 1 de octubre.',
+        text: 'Antes del día 1 de julio, con efectos desde el 1 de octubre siguiente.',
         trap_type: 'temporal_confusion',
         explanation: 'Incorrecto. El corte es el 1 de octubre y los efectos el 1 de enero siguiente.',
         condition_if_correct: 'Si el corte fuera el 1 de julio con efectos el 1 de octubre.',
       },
       {
-        text: 'En cualquier momento, con efectos al mes siguiente.',
+        text: 'En cualquier momento del año, con efectos desde el mes siguiente.',
         trap_type: 'overbroad_statement',
         explanation: 'Incorrecto. El cambio está sujeto a una ventana anual concreta.',
         condition_if_correct: 'Si el cambio pudiera hacerse en cualquier momento.',
       },
       {
-        text: 'Solo pueden efectuarse en el momento de suscribir el convenio.',
+        text: 'Solo en el momento exacto de suscribir el convenio especial.',
         trap_type: 'overbroad_statement',
         explanation: 'Incorrecto. El cambio de base es posible también con posterioridad, dentro de la ventana anual.',
         condition_if_correct: 'Si el cambio solo fuera posible al suscribir.',
@@ -1581,27 +1581,27 @@ export const seedItemsTema3: Item[] = [
     confusion_pair_id: 'pair_alta_presunta_vs_presuncion_laboralidad',
     stem: 'La presunción de alta en contingencias como accidentes de trabajo y enfermedades profesionales o desempleo, cuando el alta no se ha tramitado, es una presunción:',
     correct: {
-      text: 'Iuris et de iure, sin prueba en contra.',
+      text: 'Iuris et de iure, que no admite prueba en contra.',
       explanation:
         'Frente al incumplimiento del alta, la ley establece la presunción iuris et de iure (de pleno derecho) de la existencia efectiva del alta a efectos de las contingencias señaladas, aplicándose el principio de automaticidad de las prestaciones.',
     },
     distractors: [
       {
-        text: 'Iuris tantum, que admite prueba en contra.',
+        text: 'Iuris tantum, que admite prueba en contrario por el empresario.',
         trap_type: 'absolute_relative_confusion',
         explanation:
           'Incorrecto. La presunción de alta es iuris et de iure; la iuris tantum es la presunción de laboralidad del ET.',
         condition_if_correct: 'Si se tratara de la presunción de laboralidad.',
       },
       {
-        text: 'Una ficción sin efectos prestacionales.',
+        text: 'Una ficción jurídica carente de efectos sobre las prestaciones.',
         trap_type: 'conceptual_merger',
         explanation:
           'Incorrecto. La presunción de alta produce automaticidad de las prestaciones; no es una ficción sin efectos.',
         condition_if_correct: 'Si la presunción no tuviera efectos prestacionales.',
       },
       {
-        text: 'Iuris tantum salvo en desempleo.',
+        text: 'Iuris tantum, salvo respecto de la contingencia de desempleo.',
         trap_type: 'absolute_relative_confusion',
         explanation: 'Incorrecto. La categoría iuris tantum no corresponde a la presunción de alta en ninguna contingencia.',
         condition_if_correct: 'Si la presunción fuera iuris tantum con una excepción en desempleo.',
@@ -1655,25 +1655,25 @@ export const seedItemsTema3: Item[] = [
     cluster_id: 'cluster_afiliacion_caracteres',
     stem: '¿Cuál de las siguientes NO es una característica de la afiliación a la Seguridad Social (art. 6 RIA)?',
     correct: {
-      text: 'Es temporal.',
+      text: 'Es temporal y renovable en cada régimen.',
       explanation:
         'La afiliación es obligatoria, única y general, se extiende a toda la vida, es exclusiva y constituye título jurídico. Es vitalicia, NO temporal ni renovable por regímenes.',
     },
     distractors: [
       {
-        text: 'Es obligatoria.',
+        text: 'Es obligatoria para todos los incluidos.',
         trap_type: 'true_but_irrelevant',
         explanation: 'Incorrecto como respuesta: la afiliación ES obligatoria.',
         condition_if_correct: 'Si el enunciado pidiera un carácter que no tiene.',
       },
       {
-        text: 'Es única y general.',
+        text: 'Es única y general para todo el Sistema.',
         trap_type: 'true_but_irrelevant',
         explanation: 'Incorrecto como respuesta: la afiliación ES única y general.',
         condition_if_correct: 'Si el enunciado pidiera un carácter que no tiene.',
       },
       {
-        text: 'Es exclusiva.',
+        text: 'Es exclusiva frente a otros regímenes.',
         trap_type: 'true_but_irrelevant',
         explanation: 'Incorrecto como respuesta: la afiliación ES exclusiva.',
         condition_if_correct: 'Si el enunciado pidiera un carácter que no tiene.',
@@ -1728,27 +1728,27 @@ export const seedItemsTema3: Item[] = [
     cluster_id: 'cluster_inscripcion_empresa',
     stem: 'Los documentos de asociación y de cobertura de contingencias de la empresa, una vez formalizados:',
     correct: {
-      text: '1 año, último día del mes, prórroga automática.',
+      text: 'Vigencia de 1 año, vencimiento el último día del mes y prórroga automática.',
       explanation:
         'Los documentos formalizados mantienen su vigencia por el período de 1 año, debiendo coincidir su vencimiento con el último día del mes, y se entienden prorrogados automáticamente salvo denuncia en contrario.',
     },
     distractors: [
       {
-        text: 'Duran 1 año y vencen siempre el 31 de diciembre.',
+        text: 'Vigencia de 1 año, vencimiento el 31 de diciembre de cada año.',
         trap_type: 'temporal_confusion',
         explanation:
           'Incorrecto. El vencimiento coincide con el último día del MES en que se formalizaron, no necesariamente el 31 de diciembre.',
         condition_if_correct: 'Si el documento se hubiera formalizado en diciembre.',
       },
       {
-        text: 'Duran 2 años y solo se prorrogan de forma expresa.',
+        text: 'Vigencia de 2 años, vencimiento a fin de año y prórroga automática.',
         trap_type: 'numeric_substitution',
         explanation:
           'Incorrecto. La vigencia es de 1 año y la prórroga es automática salvo denuncia.',
         condition_if_correct: 'Si la vigencia fuera de 2 años con prórroga expresa.',
       },
       {
-        text: 'Son indefinidos mientras la empresa exista.',
+        text: 'Vigencia indefinida mientras la empresa exista y no se extinga.',
         trap_type: 'overbroad_statement',
         explanation:
           'Incorrecto. Rige el sistema de vigencia de 1 año con prórroga automática.',
@@ -1766,27 +1766,27 @@ export const seedItemsTema3: Item[] = [
     cluster_id: 'cluster_particularidades',
     stem: 'En el cambio de destino de un funcionario incluido en el campo de aplicación del Régimen General, las altas y bajas surtirán efectos, respectivamente:',
     correct: {
-      text: 'Alta el día 1 del mes siguiente; baja el último día del mes.',
+      text: 'El alta el día 1 del mes siguiente al cese y la baja el último día del mes del cese.',
       explanation:
         'En los casos de cambio de destino, las altas surtirán efectos desde el día primero del mes siguiente al cese y las bajas desde el último día del mes en que se produzca el cese.',
     },
     distractors: [
       {
-        text: 'Ambas desde el día 1 del mes siguiente al cese.',
+        text: 'Ambas, el alta y la baja, desde el día 1 del mes siguiente al del cese.',
         trap_type: 'partial_rule_accuracy',
         explanation:
           'Incorrecto. La baja va desde el último día del mes del cese, no desde el día 1 del mes siguiente.',
         condition_if_correct: 'Si ambas fechas coincidieran con el día 1 del mes siguiente.',
       },
       {
-        text: 'El alta desde el día del cese y la baja desde el día siguiente.',
+        text: 'El alta desde el día mismo del cese y la baja desde el día siguiente al mismo.',
         trap_type: 'partial_rule_accuracy',
         explanation:
           'Incorrecto. Los efectos se sitúan en los bordes del mes (fin de mes / inicio de mes), no en días consecutivos.',
         condition_if_correct: 'Si los efectos fueran en días consecutivos al cese.',
       },
       {
-        text: 'El alta el día siguiente al cese y la baja el día del cese.',
+        text: 'El alta el día siguiente al cese y la baja el mismo día en que aquél.',
         trap_type: 'partial_rule_accuracy',
         explanation:
           'Incorrecto. Ni el alta es el día siguiente ni la baja el día del cese; van al cierre y apertura de mes.',
@@ -1840,27 +1840,27 @@ export const seedItemsTema3: Item[] = [
     confusion_pair_id: 'pair_baja_indeada_causa_grave_vs_ordinaria',
     stem: 'Una baja es declarada indebida por una causa distinta de las estrictamente graves (no lesiona derechos fundamentales, no hay incompetencia, etc.). El trabajador se considera en alta desde:',
     correct: {
-      text: 'Desde el inicio del procedimiento declaratorio.',
+      text: 'El inicio del procedimiento administrativo que declaró indebida la baja, subsistiendo la cotización.',
       explanation:
         'Cuando la baja sea declarada indebida por cualquier otra causa distinta de las expresamente enumeradas, el trabajador será considerado en alta desde que se iniciase el procedimiento administrativo que la declaró indebida, subsistiendo la obligación de cotizar durante dicho período.',
     },
     distractors: [
       {
-        text: 'La fecha en que concurrió la causa grave.',
+        text: 'La fecha en que concurrió la causa grave que motivó la declaración, con obligación de cotizar.',
         trap_type: 'rule_exception_swap',
         explanation:
           'Incorrecto. Esa fecha corresponde a las bajas declaradas indebidas por causa GRAVE; el enunciado excluye expresamente esos supuestos.',
         condition_if_correct: 'Si la baja se hubiera declarado indebida por causa grave.',
       },
       {
-        text: 'La fecha de la resolución que la declaró indebida.',
+        text: 'La fecha de la resolución que declaró indebida la baja, con obligación de cotizar.',
         trap_type: 'temporal_confusion',
         explanation:
           'Incorrecto. El alta se retrotrae al inicio del procedimiento, no a la fecha de la resolución.',
         condition_if_correct: 'Si el alta comenzara con la resolución.',
       },
       {
-        text: 'La fecha de la baja originaria.',
+        text: 'La fecha de la baja originaria, una vez que la resolución ha devenido firme.',
         trap_type: 'partial_rule_accuracy',
         explanation: 'Incorrecto. Esa es la fecha en que se produjo el cese, no la del alta retroactiva.',
         condition_if_correct: 'Si el alta se retrotrajera a la fecha de la baja.',
@@ -1877,27 +1877,27 @@ export const seedItemsTema3: Item[] = [
     cluster_id: 'cluster_actos_indebidos_impugnaciones',
     stem: 'Se practica un alta indebida en un régimen, existiendo otro distinto en cuyo campo de aplicación está incluida la persona afectada. Ese alta:',
     correct: {
-      text: 'Válida hasta la resolución, con cómputo recíproco de cotizaciones.',
+      text: 'Es válida hasta la resolución o, en su defecto, hasta el último día del mes de su notificación, con cómputo recíproco.',
       explanation:
         'El alta indebida en un Régimen de personas incluidas en el campo de aplicación de otro Régimen distinto será válida hasta la fecha que se fije en la resolución que la declare indebida y, en su defecto, hasta el último día del mes de su notificación; las cotizaciones se computan recíprocamente con las del Régimen de inclusión procedente.',
     },
     distractors: [
       {
-        text: 'Se repone la situación anterior y las cotizaciones no surtiren efecto alguno.',
+        text: 'Se repone la situación existente anterior al alta y las cotizaciones no surtiren efecto alguno en el sistema.',
         trap_type: 'wrong_legal_object',
         explanation:
           'Incorrecto. Eso es lo que ocurre cuando la persona NO debe figurar en ningún régimen; aquí sí existe otro régimen de inclusión y hay cómputo recíproco.',
         condition_if_correct: 'Si la persona no debiera estar de alta en ningún régimen.',
       },
       {
-        text: 'Es nula desde el origen y se devuelven todas las cuotas ingresadas.',
+        text: 'Es nula desde el propio origen y se devuelven íntegramente todas las cuotas ingresadas por ella.',
         trap_type: 'overbroad_statement',
         explanation:
           'Incorrecto. Aquí el alta no es nula desde el origen: es válida hasta el límite indicado y computa recíprocamente.',
         condition_if_correct: 'Si el alta fuera nula de pleno derecho.',
       },
       {
-        text: 'Es válida únicamente durante 3 meses.',
+        text: 'Es válida únicamente durante un período de 3 meses, tras el cual queda automáticamente sin efecto.',
         trap_type: 'numeric_substitution',
         explanation:
           'Incorrecto. No hay un plazo de tres meses; el límite es la fecha de la resolución o el último día del mes de notificación.',

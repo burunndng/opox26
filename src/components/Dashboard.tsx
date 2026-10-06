@@ -29,6 +29,7 @@ import {
   BAREMOS,
 } from '../types.ts';
 import { AnalyticsStrip } from './AnalyticsStrip.tsx';
+import { getTopicBadge } from '../utils/topicBadge.ts';
 import { useAuth } from '../context/AuthContext.tsx';
 
 interface DashboardProps {
@@ -331,10 +332,20 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 className="bg-[#121722] border border-[#20293a] hover:border-slate-700 rounded-lg p-5 flex flex-col justify-between transition-colors"
               >
                 <div>
-                  {/* Metadata line without candy pills */}
+                  {/* Metadata line: materia + explicit bloque marker */}
                   <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
-                    <span className="font-mono text-[11px] text-blue-400 font-medium uppercase tracking-wider">
-                      {topic.id.includes('tema_7') ? 'Seguridad Social' : topic.id.includes('tema_1') ? 'Derecho Constitucional' : 'Temario General'}
+                    <span className="flex items-center gap-1.5">
+                      <span className="font-mono text-[11px] text-blue-400 font-medium uppercase tracking-wider">
+                        {getTopicBadge(topic).label}
+                      </span>
+                      {getTopicBadge(topic).marker && (
+                        <span
+                          title="Bloque especifico"
+                          className="font-mono text-[10px] font-bold uppercase tracking-wider text-amber-300 bg-amber-400/10 border border-amber-400/30 rounded px-1.5 py-0.5"
+                        >
+                          {getTopicBadge(topic).marker}
+                        </span>
+                      )}
                     </span>
                     <span className="font-mono text-[11px] text-slate-400 tabular-nums">
                       {stats.total} reactivos
