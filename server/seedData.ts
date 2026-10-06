@@ -7,6 +7,14 @@ import {
   seedAtomsTema1,
   seedItemsTema1,
 } from './seedDataTema1.ts';
+import {
+  seedTopicTema3,
+  seedSourceChunksTema3,
+  seedClustersTema3,
+  seedConfusionPairsTema3,
+  seedAtomsTema3,
+  seedItemsTema3,
+} from './seedDataTema3.ts';
 
 export const seedTopic: Topic = {
   "id": "topic_seguridad_social_tema_7",
@@ -18,7 +26,7 @@ export const seedTopic: Topic = {
   "updated_at": "2026-03-01T10:00:00Z"
 };
 
-export const seedTopics: Topic[] = [seedTopic, seedTopicTema1];
+export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3];
 
 const seedSourceChunksTema7: SourceChunk[] = [
   {
@@ -68,7 +76,11 @@ const seedSourceChunksTema7: SourceChunk[] = [
   }
 ];
 
-export const seedSourceChunks: SourceChunk[] = [...seedSourceChunksTema7, ...seedSourceChunksTema1];
+export const seedSourceChunks: SourceChunk[] = [
+  ...seedSourceChunksTema7,
+  ...seedSourceChunksTema1,
+  ...seedSourceChunksTema3,
+];
 
 const seedClustersTema7: Cluster[] = [
   {
@@ -178,7 +190,7 @@ const seedClustersTema7: Cluster[] = [
   }
 ];
 
-export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1];
+export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3];
 
 const seedConfusionPairsTema7: ConfusionPair[] = [
   {
@@ -403,7 +415,11 @@ const seedConfusionPairsTema7: ConfusionPair[] = [
   }
 ];
 
-export const seedConfusionPairs: ConfusionPair[] = [...seedConfusionPairsTema7, ...seedConfusionPairsTema1];
+export const seedConfusionPairs: ConfusionPair[] = [
+  ...seedConfusionPairsTema7,
+  ...seedConfusionPairsTema1,
+  ...seedConfusionPairsTema3,
+];
 
 const seedAtomsTema7: Atom[] = [
   {
@@ -1114,7 +1130,7 @@ const seedAtomsTema7: Atom[] = [
   }
 ];
 
-export const seedAtoms: Atom[] = [...seedAtomsTema7, ...seedAtomsTema1];
+export const seedAtoms: Atom[] = [...seedAtomsTema7, ...seedAtomsTema1, ...seedAtomsTema3];
 
 const seedItemsTema7: Item[] = [
   {
@@ -6398,4 +6414,5 @@ function rebalanceCanonicalMcqOptions(items: Item[]): Item[] {
 export const seedItems: Item[] = rebalanceCanonicalMcqOptions([
   ...seedItemsTema7,
   ...seedItemsTema1,
+  ...seedItemsTema3,
 ]);
