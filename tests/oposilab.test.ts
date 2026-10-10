@@ -548,7 +548,12 @@ describe('OposiLab Cognitive Engine Test Suite', () => {
     };
 
     const modeAOptsD = getModeAOptions(itemWithCorrectD as Item);
-    assert.equal(modeAOptsD.length, 3, 'Mode A must return exactly 3 options');
+    assert.equal(modeAOptsD.length, 4, 'Mode A must keep all 4 exam-style options');
+    assert.deepEqual(
+      modeAOptsD.map((o) => o.id),
+      ['A', 'B', 'C', 'D'],
+      'Mode A must preserve the original option order'
+    );
     const correctInD = modeAOptsD.find((o) => o.id === 'D');
     assert.ok(correctInD, 'Option D MUST be present in Mode A gentle check options');
     assert.equal(correctInD?.is_correct, true, 'Option D must be marked is_correct');
@@ -567,7 +572,7 @@ describe('OposiLab Cognitive Engine Test Suite', () => {
     };
 
     const modeAOptsB = getModeAOptions(itemWithCorrectB as Item);
-    assert.equal(modeAOptsB.length, 3, 'Must return 3 options');
+    assert.equal(modeAOptsB.length, 4, 'Must keep all 4 options');
     const correctInB = modeAOptsB.find((o) => o.id === 'B');
     assert.ok(correctInB, 'Option B must be present');
     assert.equal(correctInB?.is_correct, true);

@@ -18,9 +18,9 @@ const questionBank: Question[] = [
     rationale: 'La regla general exige conjuntamente asistencia sanitaria de la Seguridad Social e impedimento para el trabajo. No requiere hospitalización ni declaración empresarial.',
   },
   {
-    stem: 'La duración máxima ordinaria del subsidio de incapacidad temporal es de:',
+    stem: '¿Cuál es la duración máxima del subsidio por incapacidad temporal?',
     options: ['545 días naturales', '365 días naturales', '360 días naturales', '730 días naturales'], answer: 'A', legal: 'Arts. 169 y 174 TRLGSS',
-    rationale: 'La IT ordinaria dura 365 días y admite prórroga de 180: máximo del subsidio, 545 días naturales.',
+    rationale: 'La IT ordinaria dura 365 días y admite prórroga de 180: el máximo del subsidio es de 545 días naturales. Los 730 días son el límite conjunto de IT más prolongación por demora de calificación, no la duración del subsidio.',
   },
   {
     stem: 'La prórroga de la incapacidad temporal por otros 180 días procede cuando se presuma que, durante ese periodo, la persona:',
@@ -48,9 +48,9 @@ const questionBank: Question[] = [
     rationale: 'La interrupción del embarazo es contingencia común salvo que derive de AT o EP; no exige cotización. El subsidio nace al día siguiente y el día de baja se paga como salario íntegro.',
   },
   {
-    stem: 'En relación con la situación especial vinculada al final del embarazo:',
-    options: ['Comienza cuando la trabajadora cumple 39 años, no al alcanzar una semana de gestación concreta', 'Comienza el día primero de la semana 39 y su subsidio se abona desde el día siguiente a la baja hasta la fecha del parto', 'Tiene una cuantía del 100 % de la base reguladora, sin aplicar el porcentaje ordinario de la contingencia común', 'No exige condición de alta o asimilada al alta para acceder al subsidio de incapacidad temporal'], answer: 'B', legal: 'Arts. 169, 172 y 173 TRLGSS; art. 178.1 TRLGSS',
-    rationale: 'Comienza el primer día de la semana trigésima novena; el subsidio se abona desde la baja hasta el parto y nace el día siguiente a la baja.',
+    stem: 'En la situación especial de gestación a partir del día primero de la semana 39, el subsidio por incapacidad temporal se abona:',
+    options: ['Desde el día siguiente a la baja hasta la fecha del parto, y el día de la baja lo paga la empresa con salario íntegro', 'Desde el día de la baja hasta la fecha del parto, a cargo de la Seguridad Social', 'Desde el día 4 de baja, abonando la empresa los días 4 a 15 inclusive', 'Desde el día siguiente a la baja, pero con cuantía del 100 % de la base reguladora'], answer: 'A', legal: 'Arts. 169, 172 y 173 TRLGSS; art. 178.1 TRLGSS',
+    rationale: 'La situación comienza el primer día de la semana trigésima novena. El día de la baja se remunera como salario íntegro por la empresa y el subsidio se abona desde el día siguiente hasta la fecha del parto. La cuantía es la regla general de contingencias comunes.',
   },
   {
     stem: 'La situación especial por donación de órganos o tejidos comprende:',
@@ -72,10 +72,10 @@ const questionBank: Question[] = [
     options: ['90 días dentro de los dos años anteriores', '180 días dentro de los cinco años inmediatamente anteriores al hecho causante', '180 días dentro de los cinco años anteriores a la fecha de alta en la empresa', '360 días dentro de los diez años anteriores a la baja'], answer: 'B', legal: 'Art. 172 TRLGSS',
     rationale: 'La enfermedad común exige 180 días cotizados dentro de los cinco años inmediatamente anteriores al hecho causante.',
   },
-  {
-    stem: '¿Cuál de las siguientes situaciones NO exige periodo mínimo de cotización previa?',
-    options: ['Enfermedad común', 'Accidente no laboral', 'Gestación desde la semana 39', 'Enfermedad común de una trabajadora que cotiza como responsable del pago'], answer: 'B', legal: 'Art. 172 TRLGSS; art. 178.1 TRLGSS',
-    rationale: 'El accidente, sea o no de trabajo, no exige periodo mínimo. La enfermedad común sí exige 180 días y semana 39 requiere la cotización del art. 178.1.',
+{
+    stem: '¿Cuál de las siguientes situaciones de incapacidad temporal NO exige periodo mínimo de cotización previa?',
+    options: ['Enfermedad común', 'Accidente no laboral', 'Gestación desde la semana 39', 'Enfermedad común de una persona que cotiza como responsable del pago'], answer: 'B', legal: 'Art. 172 TRLGSS; art. 178.1 TRLGSS',
+    rationale: 'El accidente, sea o no de trabajo, no exige periodo mínimo. En cambio, la enfermedad común exige 180 días en cinco años, la gestación desde la semana 39 exige la cotización del art. 178.1 TRLGSS, y quien cotiza como responsable del pago debe estar además al corriente de sus obligaciones.',
   },
   {
     stem: 'Cuando se exige periodo mínimo de cotización, la cotización por horas extraordinarias:',
@@ -118,9 +118,9 @@ const questionBank: Question[] = [
     rationale: 'Se computan todas las bases de cotización acreditadas en pluriempleo, respetando el tope máximo vigente.',
   },
   {
-    stem: 'En los trabajadores a tiempo parcial, la base reguladora se determina, con carácter general:',
-    options: ['Con la base del último mes completo, dividida entre 30', 'Solo con las bases de los días laborables efectivamente trabajados', 'Con la base mínima de jornada completa, aunque el contrato sea a tiempo parcial', 'Sumando las bases acreditadas desde la última alta, hasta un máximo de tres meses, y dividiendo entre los días naturales del periodo'], answer: 'D', legal: 'Guía visual Tema 8, base reguladora de tiempo parcial',
-    rationale: 'La fórmula general suma las bases acreditadas desde la última alta, con máximo de tres meses, y divide entre los días naturales del periodo; el subsidio se abona por días naturales.',
+    stem: 'Para los trabajadores a tiempo parcial, la base reguladora y el abono de la prestación se determinan así:',
+    options: ['Suma de las bases acreditadas desde la última alta laboral, con un máximo de tres meses inmediatamente anteriores al mes previo al hecho causante, entre los días naturales del periodo; el abono es por todos los días naturales de incapacidad', 'Base del último mes completo dividida entre 30 días, con abono por los días laborables trabajados', 'Solo las bases de los días efectivamente cotizados en el mes anterior a la baja, con abono por días naturales', 'Suma de las bases de los tres meses siguientes a la baja, entre los días naturales del periodo, con abono por días naturales'], answer: 'A', legal: 'Guía visual Tema 8, base reguladora de tiempo parcial',
+    rationale: 'La base reguladora del tiempo parcial resulta de dividir la suma de las bases acreditadas desde la última alta laboral, con un máximo de tres meses inmediatamente anteriores al mes previo al del hecho causante, entre los días naturales comprendidos en el periodo. La prestación económica se abona durante todos los días naturales en que se mantenga la incapacidad.',
   },
   {
     stem: 'En enfermedad común o accidente no laboral, la cuantía reglamentaria es:',
@@ -173,9 +173,9 @@ const questionBank: Question[] = [
     rationale: '365 marca la duración ordinaria; 545 agota el subsidio; 730 limita conjuntamente la IT y prolongación por demora de calificación de IP.',
   },
   {
-    stem: 'Antes de cumplirse 365 días de IT:',
-    options: ['Solo puede emitir partes el servicio público de salud', 'El INSS carece de toda competencia médica', 'La mutua sustituye al facultativo del servicio público de salud en las contingencias comunes', 'El servicio público de salud, mutuas y empresas colaboradoras pueden emitir partes en sus ámbitos, y el INSS puede emitir alta médica a todos los efectos e iniciar el expediente de incapacidad permanente'], answer: 'D', legal: 'Art. 170 TRLGSS; RD 625/2014',
-    rationale: 'Antes de 365 días, los sujetos competentes emiten partes en sus ámbitos; el INSS puede emitir alta médica a todos los efectos e iniciar expediente de IP.',
+stem: 'Hasta el cumplimiento de los 365 días de duración de la incapacidad temporal, el INSS ejerce, a través de su inspección médica, las mismas competencias que el servicio público de salud para:',
+    options: ['Emitir un alta médica a todos los efectos y considerar que existe recaída en un mismo proceso', 'Emitir los partes ordinarios de baja y confirmación en el ámbito de las contingencias comunes', 'Declarar la extinción del derecho al subsidio antes de que se agote la duración máxima', 'Sustituir al servicio público de salud en el control médico ordinario del proceso'], answer: 'A', legal: 'Art. 170 TRLGSS',
+    rationale: 'Hasta los 365 días, el INSS ejerce a través de su inspección médica las mismas competencias que la inspección del servicio público de salud para emitir un alta médica a todos los efectos y para considerar que existe recaída en un mismo proceso. Los partes ordinarios de baja, confirmación y alta corresponden al servicio público de salud y, en su ámbito, a mutuas y empresas colaboradoras.',
   },
   {
     stem: 'Agotados los 365 días, la inspección médica del INSS es la única competente para emitir:',
@@ -338,9 +338,9 @@ const questionBank: Question[] = [
     rationale: 'Agotados 545 días debe examinarse necesariamente el estado de la persona y calificarse la IP en un máximo de 90 días naturales.',
   },
   {
-    stem: 'Si se demora la calificación de incapacidad permanente por existir expectativa de recuperación o mejora:',
-    options: ['La demora puede acordarse verbalmente y prolongar indefinidamente la IT', 'Requiere resolución expresa del INSS, propuesta del Equipo de Valoración, comunicación telemática a la empresa y audiencia previa a la mutua durante 7 días hábiles si cubre la contingencia; el conjunto de IT y prolongación no puede superar 730 días naturales', 'La empresa puede demorar la calificación durante dos años', 'El límite conjunto se fija en 545 días más 180 días de recaída'], answer: 'B', legal: 'Art. 174 TRLGSS',
-    rationale: 'La demora requiere resolución expresa del INSS y el procedimiento descrito; el conjunto de IT y prolongación no puede superar 730 días naturales.',
+    stem: 'Agotados los 545 días, ¿cuándo puede demorarse la calificación de incapacidad permanente y con qué límite?',
+    options: ['Si continua la necesidad de tratamiento médico por expectativa de recuperación o mejora con vistas a la reincorporación, sin que IT más prolongación supere los 730 días naturales', 'Siempre que el trabajador lo solicite, hasta un máximo de 730 días naturales', 'Si el INSS lo estima oportuno, sin límite temporal siempre que persista la incapacidad', 'Solo durante 90 días naturales, sin posibilidad de prórroga'], answer: 'A', legal: 'Art. 174 TRLGSS',
+    rationale: 'La calificación puede demorarse cuando continúa la necesidad de tratamiento médico por la expectativa de recuperación o mejora con vistas a la reincorporación laboral, sin que los días de IT más los de prolongación de sus efectos superen los 730 días naturales. Exige resolución expresa del INSS, comunicada telemáticamente a la empresa, a propuesta del EVI y previa audiencia de la mutua por siete días hábiles si la contingencia está cubierta por ella. Durante los períodos de 90 días y de demora no subsistirá la obligación de cotizar.',
   },
   {
     stem: 'Cuando el alta propone el reconocimiento de una prestación de larga duración, ¿qué efecto tiene sobre la IT?',
@@ -348,9 +348,9 @@ const questionBank: Question[] = [
     rationale: 'El alta con propuesta de IP extingue la IT y da paso a prolongación de efectos económicos hasta que se notifique la resolución de IP.',
   },
   {
-    stem: 'En un reconocimiento posterior a una IT extinguida, ¿qué regla temporal rige y cuándo cabe retroacción?',
-    options: ['Los efectos coinciden siempre con la fecha del alta médica', 'Se retrotraen siempre al día de la baja inicial', 'Coinciden con la fecha de la resolución; si la pensión reconocida es superior a lo percibido por prolongación de efectos, aquellos se retrotraen al día siguiente de la extinción de la IT', 'No puede producirse retroactividad en ningún caso'], answer: 'C', legal: 'Art. 174 TRLGSS (según guía visual Tema 8)',
-    rationale: 'La guía formula como regla que los efectos coinciden con la resolución, con retroacción al día siguiente de la extinción si la pensión supera lo percibido; advierte contrastar el supuesto complejo antes de aplicarlo.',
+    stem: 'En la prolongación de efectos económicos, ¿desde cuándo surten efectos la incapacidad permanente reconocida y cuándo se retrotraen?',
+    options: ['Desde la fecha de la resolución de la entidad gestora, salvo que la prestación reconocida sea superior a la percibida por prolongación, en cuyo caso se retrotraen al día siguiente a la extinción de la IT', 'Siempre desde la fecha del alta médica que extinguish la incapacidad temporal', 'Desde la fecha de la resolución, sin posibilidad de retroacción en ningún caso', 'Desde el día siguiente a la baja médica inicial en todos los supuestos'], answer: 'A', legal: 'Art. 174 TRLGSS',
+    rationale: 'En la prolongación de efectos económicos, los efectos de la incapacidad permanente reconocida coinciden con la fecha de la resolución de la entidad gestora. Solo si la prestación reconocida es superior a la que venía percibiendo en concepto de prolongación de efectos se retrotraen al día siguiente al de extinción de la incapacidad temporal.',
   },
   {
     stem: 'Si la misma o similar patología reaparece antes de que transcurran 180 días desde la denegación de incapacidad permanente:',
@@ -358,9 +358,9 @@ const questionBank: Question[] = [
     rationale: 'El INSS puede iniciar por una sola vez un nuevo proceso dentro de los 180 días si aprecia posible recuperación, con baja a efectos exclusivos de la prestación económica.',
   },
   {
-    stem: 'Si tras una resolución médica se conserva el contrato mediante adaptación razonable o traslado a otro puesto, ¿qué sucede con la prestación?',
-    options: ['La pensión se extinguirá definitivamente desde el alta médica', 'La pensión se mantendrá íntegramente, aunque el puesto sea incompatible', 'La prestación de incapacidad permanente quedará suspendida durante el desempeño del puesto adaptado o del otro puesto incompatible con su percepción', 'La suspensión solo puede acordarla el servicio público de salud'], answer: 'C', legal: 'Art. 198 TRLGSS',
-    rationale: 'En el supuesto descrito por la guía, la pensión queda suspendida mientras se desempeñe el puesto adaptado o el otro puesto incompatible con su percepción.',
+    stem: 'Una incapacidad permanente en grados de total, absoluta o gran invalidez no extingue la relación laboral porque la empresa adapta razonablemente el trabajo o destina a la persona a otra función. ¿Qué efecto tiene sobre la prestación de incapacidad permanente?',
+    options: ['Se suspende durante el desempeño del puesto adaptado o de otro incompatible con la pensión', 'Se extingue desde el alta médica, aunque la relación laboral se mantenga por la adaptación del puesto', 'Se mantiene íntegra mientras la persona ocupe el puesto, aunque resulte incompatible con la pensión que correspondería', 'Se reduce a la mitad mientras se ocupe el puesto adaptado, sin llegar a suspenderse'], answer: 'A', legal: 'Art. 198 TRLGSS; art. 49.1.n) ET',
+    rationale: 'Cuando la declaración de incapacidad permanente en los grados de total, absoluta o gran incapacidad no determina la extinción de la relación laboral por la adaptación razonable, necesaria y adecuada del puesto o por haber destinado a la persona trabajadora a otro puesto, la prestación de incapacidad permanente se suspende durante el desempeño de ese puesto adaptado o de otro incompatible con la percepción de la pensión.',
   },
 ];
 
@@ -376,7 +376,7 @@ const clusterByItem = (index: number): string => {
 const conciseCorrectAnswers: Record<number, string> = {
   5: 'Prórroga ordinaria de la propia IT.',
   7: 'Común; subsidio al día siguiente; empresa paga íntegra la baja.',
-  8: 'Desde el día 1 de semana 39; subsidio al día siguiente hasta el parto.',
+  8: 'Día siguiente a la baja hasta el parto; la baja, salario íntegro empresarial.',
   9: 'Preparación, ingreso y recuperación hasta alta por curación.',
   12: '180 días en los cinco años previos al hecho causante.',
   10: 'Sin carencia; 100 % de base común desde el día de baja.',
@@ -384,7 +384,7 @@ const conciseCorrectAnswers: Record<number, string> = {
   15: '1,4 días por día cotizado, con tope mensual del mes efectivo.',
   18: 'Los días del mes cotizado.',
   21: 'Todas las bases, con el tope máximo vigente.',
-  22: 'Bases desde alta (máx. 3 meses) / días naturales.',
+  22: 'Bases desde la última alta (máx. 3 meses previos) / días naturales del periodo; abono por días naturales.',
   23: '60 % días 4-20; 75 % desde día 21.',
   25: 'AT/EP: 75 %; donación: 100 % de base común.',
   26: 'Sin subsidio días 1-3; empresa abona del 4 al 15.',
@@ -393,7 +393,7 @@ const conciseCorrectAnswers: Record<number, string> = {
   30: 'Misma o similar patología en 180 días naturales desde efectos del alta.',
   31: 'Proceso nuevo: no genera recaída ni suma al máximo o prórroga.',
   32: '365: IT ordinaria; 545: subsidio máximo; 730: IT más demora de IP.',
-  33: 'INSS: alta e inicio de IP; SPS/mutuas: partes en su ámbito.',
+  33: 'Emitir alta médica a todos los efectos y considerar que existe recaída en un mismo proceso.',
   34: 'INSS: altas, IP y nuevas bajas similares en 180 días.',
   35: 'Al cumplir 365: cesan partes; SPS avisa al INSS (máximo, día hábil siguiente).',
   37: '4-7-7 días naturales: trabajador, servicio de salud e INSS.',
@@ -421,11 +421,11 @@ const conciseCorrectAnswers: Record<number, string> = {
   62: 'Hasta alta o extinción, incluida la prolongación económica.',
   64: 'INSS decide nueva baja similar en 180 días; IT completa máximo 545.',
   65: 'Examen obligatorio; calificación de IP en 90 días naturales.',
-  66: 'Resolución expresa del INSS; tope conjunto de 730 días.',
+  66: 'Si continúa el tratamiento médico por recuperación o mejora; IT + prolongación ≤ 730 días.',
   67: 'Extingue IT; prolonga efectos económicos hasta resolución de IP.',
-  68: 'Resolución; si supera lo cobrado, retroacción desde extinción.',
+  68: 'Desde la resolución; si supera lo percibido, retroacción al día siguiente a la extinción.',
   69: 'Una nueva baja económica si el INSS prevé recuperación.',
-  70: 'Pensión suspendida mientras se desempeñe el puesto incompatible.',
+  70: 'Se suspende durante el desempeño del puesto adaptado o de otro incompatible con la pensión.',
 };
 
 function trapForOption(text: string, correct: string): TrapType {

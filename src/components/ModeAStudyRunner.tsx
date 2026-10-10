@@ -26,30 +26,19 @@ export interface ModeAStudyRunnerProps {
 }
 
 /**
- * Helper to select exactly 3 options for Mode A gentle check,
- * guaranteeing the correct answer is always present and never dropped.
+ * Mode A presents the item exactly as the exam does: the full four-option
+ * MCQ, in the original order, with the keyed option marked for scoring only.
+ * Earlier versions dropped one distractor to build a "gentle" three-option
+ * question; that silently changed the item being tested, so all options are
+ * now kept.
  */
 export function getModeAOptions(item: Item): MCQOption[] {
   if (item.options && item.options.length > 0) {
-    const correctOpt = item.options.find(
-      (o) => o.is_correct || (Boolean(item.correct_answer) && o.id === item.correct_answer)
-    );
-    const distractors = item.options.filter(
-      (o) => !o.is_correct && (!item.correct_answer || o.id !== item.correct_answer)
-    );
-
-    if (correctOpt) {
-      // Pick up to 2 distractors to create a gentle 3-option MCQ
-      const chosenDistractors = distractors.slice(0, 2);
-      const combined = [correctOpt, ...chosenDistractors];
-      // Keep original order by id (e.g. A, B, C)
-      combined.sort((a, b) => a.id.localeCompare(b.id));
-      return combined.map((opt) => ({
-        ...opt,
-        is_correct:
-          opt.is_correct || (Boolean(item.correct_answer) && opt.id === item.correct_answer),
-      }));
-    }
+    return item.options.map((opt) => ({
+      ...opt,
+      is_correct:
+        opt.is_correct || (Boolean(item.correct_answer) && opt.id === item.correct_answer),
+    }));
   }
 
   // Fallback options
@@ -76,6 +65,49 @@ export function getModeAOptions(item: Item): MCQOption[] {
   ];
 }
 
+export interface ModeAFeedback {
+  isCorrect: boolean;
+  correctOption?: MCQOption;
+  selectedOption?: MCQOption;
+  legalBasis: string;
+  rule: string;
+  application: string;
+  cue: string;
+  /** Why the learner's chosen option fails, when the seed explains it. */
+  selectedOptionExplanation?: string;
+}
+
+/**
+ * Builds the post-answer explanation. Every block is distinct on purpose:
+ * the rule states the norm, the application resolves the stem, and the cue is
+ * the short retrieval key. A distractor explanation is never presented as a
+ * worked example.
+ */
+export function buildModeAFeedback(item: Item, selectedOptionId: string | null): ModeAFeedback {
+  const options = getModeAOptions(item);
+  const correctOption = options.find((o) => o.is_correct);
+  const selectedOption = options.find((o) => o.id === selectedOptionId);
+  const rule = item.rule_statement || item.why_correct || '';
+  const application = item.why_correct && item.why_correct !== rule ? item.why_correct : '';
+  const cue = item.corrective_rule && item.corrective_rule !== rule ? item.corrective_rule : '';
+
+  const selectedOptionExplanation =
+    selectedOption && !selectedOption.is_correct
+      ? item.distractor_analysis?.[selectedOption.id] ?? selectedOption.explanation
+      : undefined;
+
+  return {
+    isCorrect: Boolean(selectedOption?.is_correct),
+    correctOption,
+    selectedOption,
+    legalBasis: item.legal_basis || 'Base legal',
+    rule,
+    application,
+    cue,
+    selectedOptionExplanation,
+  };
+}
+
 export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
   item,
   currentIndex,
@@ -89,76 +121,29 @@ export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
   onCompleted,
   onExit,
 }) => {
-  // Mode A has two stages: 'read' (Rule + Worked Example + Hint) and 'check' (Gentle verification)
-  const [stage, setStage] = useState<'read' | 'check'>('read');
+  // Mode A is a single attempt-first step: the question is answered before any
+  // normative material is shown, so the response is genuine retrieval.
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [checkedResult, setCheckedResult] = useState<boolean | null>(null);
-  const [hasFailedPrevious, setHasFailedPrevious] = useState(false);
+  const [showRulePanel, setShowRulePanel] = useState(false);
 
   // Reset state whenever a new item is presented in the batch queue
   React.useEffect(() => {
-    setStage('read');
     setSelectedOption(null);
-    setCheckedResult(null);
-    setHasFailedPrevious(false);
+    setShowRulePanel(false);
   }, [item.id]);
 
   const effectiveIndex = queueIndex ?? currentIndex ?? 0;
   const effectiveTotal = queueTotal ?? totalItems ?? 1;
 
-  // Fallbacks for rule statement
-  const ruleText = item.rule_statement || item.why_correct || item.stem;
-
-  // Rich fallback chain for worked example:
-  // 1. First entry of distractor_analysis
-  // 2. item.why_correct (if distinct from ruleText)
-  // 3. item.corrective_rule
-  // 4. Contextual legal application based on stem & legal basis
-  const workedExample = useMemo(() => {
-    if (item.distractor_analysis && Object.keys(item.distractor_analysis).length > 0) {
-      const firstAnalysis = Object.values(item.distractor_analysis)[0];
-      if (firstAnalysis && firstAnalysis.trim().length > 0) return firstAnalysis;
-    }
-    if (item.why_correct && item.why_correct !== ruleText) {
-      return `Aplicación de la regla: ${item.why_correct}`;
-    }
-    if (item.corrective_rule) {
-      return `Criterio de resolución práctica: ${item.corrective_rule}`;
-    }
-    const truncatedStem =
-      item.stem.length > 120 ? `${item.stem.slice(0, 117)}...` : item.stem;
-    return `Ejemplo práctico de aplicación para ${item.legal_basis || 'la norma regulada'}: Ante el supuesto de hecho regulado ("${truncatedStem}"), la subsunción jurídica exige verificar minuciosamente los requisitos y plazos tasados en el precepto sin alterar el régimen general aplicable.`;
-  }, [item, ruleText]);
-
-  // Rich fallback chain for hint (átomo discriminador):
-  // 1. condition_if_distractor_correct first entry
-  // 2. corrective_rule
-  // 3. First option with explanation
-  // 4. Contextual discriminative hint
-  const hintText = useMemo(() => {
-    if (
-      item.condition_if_distractor_correct &&
-      Object.keys(item.condition_if_distractor_correct).length > 0
-    ) {
-      const firstCondition = Object.values(item.condition_if_distractor_correct)[0];
-      if (firstCondition && firstCondition.trim().length > 0) return firstCondition;
-    }
-    if (item.corrective_rule) {
-      return `Pista discriminadora clave: ${item.corrective_rule}`;
-    }
-    const optWithExpl = item.options?.find((o) => !o.is_correct && o.explanation);
-    if (optWithExpl?.explanation) {
-      return `Atención a la trampa conceptual: ${optWithExpl.explanation}`;
-    }
-    return `Átomo discriminador / Pista clave (${item.legal_basis || 'Base legal'}): Presta especial atención al sujeto legalmente obligado, la naturaleza imperativa del plazo y la literalidad exacta exigida en la norma.`;
-  }, [item]);
-
-  // Gentle check options: guarantee correct option is always present and picked with 2 distractors
   const options = useMemo(() => getModeAOptions(item), [item]);
+  const feedback = useMemo(
+    () => buildModeAFeedback(item, selectedOption),
+    [item, selectedOption]
+  );
+  const checkedResult = selectedOption !== null ? feedback.isCorrect : null;
 
-  const handleSelectOption = (optId: string, isCorrect: boolean) => {
+  const handleSelectOption = (optId: string) => {
     setSelectedOption(optId);
-    setCheckedResult(isCorrect);
   };
 
   const handleAdvanceModeA = (success: boolean) => {
@@ -186,7 +171,7 @@ export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
             </span>
           )}
           <span className="inline-flex items-center px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[11px] font-mono">
-            {stage === 'read' ? 'Paso 1/2: Codificación' : 'Paso 2/2: Chequeo'}
+            Chequeo previo sin penalización
           </span>
           {uniqueTotalCount !== undefined && uniquePassedCount !== undefined && (
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-mono">
@@ -230,90 +215,29 @@ export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
           </div>
         )}
 
-        {stage === 'read' ? (
-          <>
-            {/* Reinforcement Notice if user looped back after failing gentle check */}
-            {hasFailedPrevious && (
-              <div className="p-4 bg-amber-500/15 border border-amber-500/40 rounded-xl text-amber-200 text-xs sm:text-sm flex items-start space-x-3 animate-fadeIn">
-                <RotateCcw className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-semibold text-amber-300">Bucle de Refuerzo Activo</p>
-                  <p className="text-xs text-amber-200/80 mt-0.5 leading-relaxed">
-                    Has fallado el chequeo suave previo. Relee minuciosamente la norma y el átomo discriminador para
-                    identificar con precisión el elemento clave antes de reintentar.
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* Step 1: Never open cold — Present rule first, then worked example, then hint */}
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2 text-xs font-mono uppercase tracking-wider text-sky-400">
-                <Shield className="w-4 h-4" />
-                <span>Norma y Principio Jurídico ({item.legal_basis || 'Base Legal'})</span>
-              </div>
-              <div className="p-4 sm:p-5 bg-sky-950/20 border border-sky-800/30 rounded-xl text-slate-100 text-base font-legal-serif leading-relaxed">
-                {ruleText}
-              </div>
-            </div>
-
-            {/* Worked Example */}
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2 text-xs font-mono uppercase tracking-wider text-emerald-400">
-                <CheckCircle2 className="w-4 h-4" />
-                <span>Ejemplo Práctico Guiado (Worked Example)</span>
-              </div>
-              <div className="p-4 bg-emerald-950/20 border border-emerald-800/30 rounded-xl text-slate-300 text-sm leading-relaxed">
-                {workedExample}
-              </div>
-            </div>
-
-            {/* Scaffold Hard: Hint / Átomo Discriminador inline and visible by default */}
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2 text-xs font-mono uppercase tracking-wider text-amber-400">
-                <Lightbulb className="w-4 h-4" />
-                <span>Átomo Discriminador / Pista Clave</span>
-              </div>
-              <div className="p-4 bg-amber-950/20 border border-amber-800/30 rounded-xl text-amber-200/90 text-xs sm:text-sm leading-relaxed">
-                {hintText}
-              </div>
-            </div>
-
-            <div className="pt-4 flex justify-end">
-              <button
-                onClick={() => setStage('check')}
-                className="px-6 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold text-sm transition flex items-center space-x-2 shadow-md cursor-pointer"
-              >
-                <span>Comprender y pasar al chequeo suave</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </>
-        ) : (
-          <>
-            {/* Step 2: Gentle Check (Lowest cognitive load: 3-Option MCQ with single-element distractor violation) */}
+        <>
+            {/* Attempt first: no rule, no rationale and no example are shown before the choice */}
             <div className="space-y-3">
               <span className="text-xs font-mono uppercase tracking-wider text-sky-400">
-                Calentamiento (Modo A)
+                Chequeo previo (Modo A)
               </span>
               <h2 className="text-lg font-bold text-white font-legal-serif">{item.stem}</h2>
               <p className="text-xs text-slate-400">
-                Selecciona la opción correcta tras haber leído la norma y el ejemplo guiado. (Cada distractor
-                viola un solo elemento de la regla).
+                Responde primero. Después te muestro la regla aplicable, su aplicación a este supuesto y por qué
+                falla la alternativa que hayas elegido.
               </p>
             </div>
 
             <div className="space-y-3 pt-2">
               {options.map((opt: MCQOption) => {
                 const isSelected = selectedOption === opt.id;
-                const isCorrectOpt =
-                  opt.is_correct || (Boolean(item.correct_answer) && opt.id === item.correct_answer);
+                const isCorrectOpt = opt.is_correct;
 
                 let btnStyle = 'bg-slate-900 border-slate-800 text-slate-300 hover:border-sky-700';
                 if (selectedOption !== null) {
                   if (isCorrectOpt) {
                     btnStyle = 'bg-emerald-950/40 border-emerald-500 text-emerald-200';
-                  } else if (isSelected && !isCorrectOpt) {
+                  } else if (isSelected) {
                     btnStyle = 'bg-rose-950/40 border-rose-500 text-rose-200';
                   }
                 }
@@ -322,7 +246,7 @@ export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
                   <button
                     key={opt.id}
                     disabled={selectedOption !== null}
-                    onClick={() => handleSelectOption(opt.id, Boolean(isCorrectOpt))}
+                    onClick={() => handleSelectOption(opt.id)}
                     className={`w-full text-left p-4 rounded-xl border transition flex items-start space-x-3 cursor-pointer ${btnStyle}`}
                   >
                     <span className="font-mono font-bold text-xs px-2 py-1 rounded bg-slate-800 text-slate-300 shrink-0">
@@ -330,11 +254,6 @@ export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
                     </span>
                     <div className="flex-1 text-sm">
                       <p>{opt.text}</p>
-                      {selectedOption !== null && opt.explanation && (
-                        <p className="text-xs text-slate-400 mt-2 pt-2 border-t border-slate-800">
-                          {opt.explanation}
-                        </p>
-                      )}
                     </div>
                   </button>
                 );
@@ -342,52 +261,84 @@ export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
             </div>
 
             {selectedOption !== null && (
-              <div className="pt-4 space-y-4 border-t border-sky-900/30">
-                <div className="p-4 rounded-xl border text-xs sm:text-sm leading-relaxed space-y-2.5 bg-slate-900/60 border-slate-800">
-                  {checkedResult ? (
-                    <div className="text-emerald-400 font-semibold flex items-center space-x-2">
-                      <Check className="w-4 h-4 shrink-0 text-emerald-400" />
-                      <span>¡Correcto! Átomo codificado con éxito en la memoria.</span>
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      <div className="text-rose-400 font-semibold flex items-center space-x-2">
+              <div className="pt-4 space-y-4 border-t border-sky-900/30 animate-fadeIn">
+                {/* 1. Outcome */}
+                <div
+                  className={`p-4 rounded-xl border text-xs sm:text-sm leading-relaxed ${
+                    checkedResult
+                      ? 'bg-emerald-950/25 border-emerald-800 text-emerald-200'
+                      : 'bg-rose-950/25 border-rose-900/50 text-rose-200'
+                  }`}
+                >
+                  <div className="flex items-center space-x-2 font-semibold">
+                    {checkedResult ? (
+                      <>
+                        <Check className="w-4 h-4 shrink-0 text-emerald-400" />
+                        <span>Correcto.</span>
+                      </>
+                    ) : (
+                      <>
                         <AlertTriangle className="w-4 h-4 shrink-0 text-rose-400" />
-                        <span>Respuesta incorrecta: el modelo mental aún no está fijado.</span>
-                      </div>
-                      {(() => {
-                        const correctOpt = options.find(
-                          (o) => o.is_correct || o.id === item.correct_answer
-                        );
-                        const selectedOptObj = options.find((o) => o.id === selectedOption);
-                        return (
-                          <div className="p-3 bg-rose-950/20 border border-rose-900/40 rounded-lg text-slate-300 text-xs space-y-1.5">
-                            {correctOpt && (
-                              <p>
-                                <strong className="text-emerald-400 font-mono">
-                                  Opción correcta ({correctOpt.id}):
-                                </strong>{' '}
-                                {correctOpt.text}
-                              </p>
-                            )}
-                            {selectedOptObj?.explanation && (
-                              <p className="text-slate-400">
-                                <strong className="text-amber-400">Fallo detectado:</strong>{' '}
-                                {selectedOptObj.explanation}
-                              </p>
-                            )}
-                            <p className="text-sky-300 pt-1 border-t border-slate-800">
-                              <strong>Regla jurídica:</strong> {ruleText}
-                            </p>
-                            <p className="text-amber-300/90 text-[11px] pt-1 font-mono">
-                              🔁 Pregunta devuelta al calentamiento: volverás a responderla antes del simulacro.
-                            </p>
-                          </div>
-                        );
-                      })()}
-                    </div>
+                        <span>
+                          Incorrecto. La opción correcta es la{' '}
+                          <span className="font-mono">{feedback.correctOption?.id}</span>.
+                        </span>
+                      </>
+                    )}
+                  </div>
+                  {feedback.correctOption && (
+                    <p className="mt-2 text-slate-200">
+                      <strong className="font-mono text-emerald-400">
+                        {feedback.correctOption.id}:
+                      </strong>{' '}
+                      {feedback.correctOption.text}
+                    </p>
                   )}
                 </div>
+
+                {/* 2. Application of the rule to this specific item */}
+                {(feedback.rule || feedback.application) && (
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2 text-xs font-mono uppercase tracking-wider text-sky-400">
+                      <Shield className="w-4 h-4" />
+                      <span>Regla y aplicación al supuesto ({feedback.legalBasis})</span>
+                    </div>
+                    <div className="p-4 bg-sky-950/20 border border-sky-800/30 rounded-xl text-slate-200 text-sm leading-relaxed space-y-2">
+                      {feedback.rule && (
+                        <p className="font-legal-serif text-slate-100">{feedback.rule}</p>
+                      )}
+                      {feedback.application && (
+                        <p className="text-slate-300">{feedback.application}</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* 3. Why the chosen distractor fails */}
+                {feedback.selectedOptionExplanation && (
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2 text-xs font-mono uppercase tracking-wider text-amber-400">
+                      <AlertTriangle className="w-4 h-4" />
+                      <span>Por qué falla la opción {feedback.selectedOption?.id}</span>
+                    </div>
+                    <div className="p-4 bg-amber-950/20 border border-amber-800/30 rounded-xl text-amber-100/90 text-xs sm:text-sm leading-relaxed">
+                      {feedback.selectedOptionExplanation}
+                    </div>
+                  </div>
+                )}
+
+                {/* 4. Discriminating cue, distinct from the explanation above */}
+                {feedback.cue && (
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2 text-xs font-mono uppercase tracking-wider text-emerald-400">
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>Átomo discriminador para el repaso</span>
+                    </div>
+                    <div className="p-4 bg-emerald-950/20 border border-emerald-800/30 rounded-xl text-emerald-100/90 text-xs sm:text-sm leading-relaxed">
+                      {feedback.cue}
+                    </div>
+                  </div>
+                )}
 
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
                   <div className="text-[11px] text-slate-400 font-mono">
@@ -410,15 +361,12 @@ export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
                     ) : (
                       <>
                         <button
-                          onClick={() => {
-                            setHasFailedPrevious(true);
-                            setStage('read');
-                          }}
+                          onClick={() => setShowRulePanel((prev) => !prev)}
                           className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs sm:text-sm transition flex items-center space-x-1.5 cursor-pointer border border-slate-700"
-                          title="Volver a leer la norma y el ejemplo guiado antes de continuar"
+                          title="Mostrar u ocultar la cita de la norma y la pista de repaso"
                         >
                           <BookOpen className="w-3.5 h-3.5" />
-                          <span>Revisar Norma</span>
+                          <span>{showRulePanel ? 'Ocultar norma' : 'Ver norma y pista'}</span>
                         </button>
                         <button
                           onClick={() => handleAdvanceModeA(false)}
@@ -432,11 +380,30 @@ export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
                     )}
                   </div>
                 </div>
+
+                {showRulePanel && (
+                  <div className="space-y-2 animate-fadeIn">
+                    <div className="flex items-center space-x-2 text-xs font-mono uppercase tracking-wider text-amber-400">
+                      <Lightbulb className="w-4 h-4" />
+                      <span>Referencia normativa</span>
+                    </div>
+                    <div className="p-4 bg-amber-950/20 border border-amber-800/30 rounded-xl text-amber-100/90 text-xs sm:text-sm leading-relaxed space-y-1">
+                      <p>
+                        <strong className="font-mono">{feedback.legalBasis}</strong>
+                      </p>
+                      {feedback.rule && <p>{feedback.rule}</p>}
+                      {feedback.cue && (
+                        <p>
+                          <strong>Pista:</strong> {feedback.cue}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </>
-        )}
-      </div>
+        </div>
     </div>
   );
 };
