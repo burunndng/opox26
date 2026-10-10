@@ -14,6 +14,7 @@ import type { Topic } from '../types';
  */
 const TOPIC_BADGES: Array<{ match: string; subject: string; block?: 'Especifico' }> = [
   { match: 'seguridad_social_tema_3', subject: 'Seguridad Social', block: 'Especifico' },
+  { match: 'seguridad_social_tema_8', subject: 'Seguridad Social', block: 'Especifico' },
   { match: 'seguridad_social_tema_7', subject: 'Seguridad Social' },
   { match: 'constitucion_tema_1', subject: 'Derecho Constitucional' },
 ];

@@ -15,6 +15,13 @@ import {
   seedAtomsTema3,
   seedItemsTema3,
 } from './seedDataTema3.ts';
+import {
+  seedTopicTema8,
+  seedSourceChunksTema8,
+  seedClustersTema8,
+  seedConfusionPairsTema8,
+} from './seedDataTema8Meta.ts';
+import { seedItemsTema8 } from './seedDataTema8Items.ts';
 
 export const seedTopic: Topic = {
   "id": "topic_seguridad_social_tema_7",
@@ -26,7 +33,7 @@ export const seedTopic: Topic = {
   "updated_at": "2026-03-01T10:00:00Z"
 };
 
-export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3];
+export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8];
 
 const seedSourceChunksTema7: SourceChunk[] = [
   {
@@ -80,6 +87,7 @@ export const seedSourceChunks: SourceChunk[] = [
   ...seedSourceChunksTema7,
   ...seedSourceChunksTema1,
   ...seedSourceChunksTema3,
+  ...seedSourceChunksTema8,
 ];
 
 const seedClustersTema7: Cluster[] = [
@@ -190,7 +198,7 @@ const seedClustersTema7: Cluster[] = [
   }
 ];
 
-export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3];
+export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3, ...seedClustersTema8];
 
 const seedConfusionPairsTema7: ConfusionPair[] = [
   {
@@ -419,6 +427,7 @@ export const seedConfusionPairs: ConfusionPair[] = [
   ...seedConfusionPairsTema7,
   ...seedConfusionPairsTema1,
   ...seedConfusionPairsTema3,
+  ...seedConfusionPairsTema8,
 ];
 
 const seedAtomsTema7: Atom[] = [
@@ -6415,4 +6424,5 @@ export const seedItems: Item[] = rebalanceCanonicalMcqOptions([
   ...seedItemsTema7,
   ...seedItemsTema1,
   ...seedItemsTema3,
+  ...seedItemsTema8,
 ]);
