@@ -131,10 +131,16 @@ OPTION_TEXT_OVERRIDES = {
         "C": "Anulabilidad automática de los actos, sin posibilidad de convalidación, al tratarse de un vicio grave",
         "D": "Ninguna, porque la abstención es una facultad del empleado público y no un deber jurídico",
     },
+    10: {
+        "D": "Teleológico",
+    },
     11: {
         "A": "Por escrito, en soporte papel, salvo que la ley exija forma verbal, por ser el papel el medio ordinario de constancia",
         "B": "Verbalmente, con constancia escrita posterior en el expediente, bastando la firma del titular en la diligencia",
         "C": "Por escrito, en todo caso y sin excepción alguna, cualquiera que sea la naturaleza o el contenido del acto",
+    },
+    13: {
+        "B": "Por razón de jerarquía, aunque la incompetencia sea evidente",
     },
     15: {
         "A": "Solo los que infringen una norma con rango de Ley, incluidos sus reglamentos de desarrollo",
@@ -162,7 +168,7 @@ OPTION_TEXT_OVERRIDES = {
         "C": "Debe incluir la motivación completa conforme al régimen común del art. 35 de la Ley 39/2015, sin remisión alguna a la convocatoria",
     },
     26: {
-        "A": "Solo la parte dispositiva, si el acto es favorable al interesado, por resultar lo decidido suficientemente expresivo",
+        "A": "Solo la parte dispositiva, si el acto es favorable al interesado, por resultar lo decidido suficientemente expresivo y no exigir mayor detalle",
         "C": "Solo la mención de los recursos judiciales, ya que los administrativos son potestativos y no requieren indicación expresa",
         "D": "Un resumen de los fundamentos jurídicos y de la parte dispositiva, sin mención de los recursos ni del órgano competente",
     },
@@ -196,18 +202,18 @@ OPTION_TEXT_OVERRIDES = {
     },
     39: {
         "A": "Diez días naturales contados desde la defunción, conforme al plazo general de comunicación al órgano competente",
-        "B": "Quince días naturales desde la efectividad de la sucesión, computados sin excluir sábados ni festivos",
+        "B": "Quince días naturales desde la efectividad de la sucesión, computados sin excluir sábados ni festivos ni días inhábiles",
         "C": "Un mes desde la inscripción de la defunción en el Registro Civil, por analogía con otros plazos de comunicación",
     },
     41: {
         "B": "Todas las unidades de la Administración, con independencia de sus funciones, ya que toda unidad forma parte del organigrama",
-        "C": "Solo los órganos colegiados de la Administración General del Estado, por tener competencias decisorias propias",
+        "C": "Solo los órganos colegiados de la Administración General del Estado, por tener competencias decisorias propias y potestad para dictar actos definitivos",
         "D": "Los servicios que prestan únicamente asistencia material, sin efectos frente a terceros, aunque gestionen medios personales",
     },
     42: {
         "A": "Aprobación previa del Consejo de Estado, por tratarse de la creación de un órgano administrativo de nueva planta",
         "C": "Informe favorable de la Intervención General de la Administración del Estado, al exigirse control financiero previo",
-        "D": "Un mínimo de tres personas adscritas a sus funciones, para garantizar su operatividad y continuidad",
+        "D": "Un mínimo de tres personas adscritas a sus funciones, para garantizar su operatividad y continuidad en el ejercicio de sus competencias",
     },
     43: {
         "A": "No existe otro en otra Administración que desarrolle funciones similares, con independencia de cual sea",

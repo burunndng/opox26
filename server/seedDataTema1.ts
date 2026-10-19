@@ -816,7 +816,7 @@ export const seedItemsTema1: Item[] = [
       },
       {
         id: 'C',
-        text: 'La retroactividad obligatoria de todas las normas de Derecho procesal y laboral.',
+        text: 'La retroactividad obligatoria de todas las normas de Derecho procesal y laboral, sin excepción alguna.',
         is_correct: false,
         trap_type: 'factual_misapplication',
         explanation: 'El artículo 9.3 no establece la retroactividad obligatoria general de normas procesales o laborales.',

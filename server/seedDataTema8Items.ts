@@ -39,7 +39,7 @@ const questionBank: Question[] = [
   },
   {
     stem: 'En la menstruación incapacitante secundaria:',
-    options: ['Se exigen 180 días de cotización en los cinco años anteriores', 'El subsidio nace el día 4 de baja y lo abona la empresa', 'Se percibe el 100 % de la base reguladora desde el nacimiento del derecho', 'No se exige periodo mínimo de cotización y el subsidio nace el día de la baja'], answer: 'D', legal: 'Arts. 169, 172 y 173 TRLGSS',
+    options: ['Se exigen 180 días de cotización en los cinco años anteriores', 'El subsidio nace el día 4 de baja y lo abona la empresa con cargo a cuotas', 'Se percibe el 100 % de la base reguladora desde el nacimiento del derecho', 'No se exige periodo mínimo de cotización y el subsidio nace el día de la baja'], answer: 'D', legal: 'Arts. 169, 172 y 173 TRLGSS',
     rationale: 'La menstruación incapacitante secundaria no exige cotización mínima y el subsidio a cargo de la Seguridad Social nace el mismo día de la baja.',
   },
   {
@@ -89,7 +89,7 @@ const questionBank: Question[] = [
   },
   {
     stem: 'Respecto de la suspensión colectiva del trabajo y el subsidio temporal, es correcto afirmar que:',
-    options: ['Toda IT iniciada antes de la huelga queda automáticamente suspendida', 'Si la contingencia nace durante la huelga, el derecho subsiste durante toda ella', 'Si la IT ya se había iniciado antes de la huelga, la prestación económica no se suspende', 'La huelga parcial impide siempre el nacimiento de la contingencia'], answer: 'C', legal: 'Art. 165 TRLGSS; guía visual Tema 8, apartado de huelga',
+    options: ['Toda IT iniciada antes de la huelga queda automáticamente suspendida hasta el fin del conflicto', 'Si la contingencia nace durante la huelga, el derecho subsiste durante toda ella', 'Si la IT ya se había iniciado antes de la huelga, la prestación económica no se suspende', 'La huelga parcial impide siempre el nacimiento de la contingencia'], answer: 'C', legal: 'Art. 165 TRLGSS; guía visual Tema 8, apartado de huelga',
     rationale: 'Si la IT ya se había iniciado antes de la huelga, la prestación económica no se suspende; una contingencia nacida durante huelga tiene tratamiento distinto.',
   },
   {
@@ -179,7 +179,7 @@ stem: 'Hasta el cumplimiento de los 365 días de duración de la incapacidad tem
   },
   {
     stem: 'Agotados los 365 días, la inspección médica del INSS es la única competente para emitir:',
-    options: ['Únicamente el alta por curación', 'Altas por curación, mejoría, propuesta de incapacidad permanente o incomparecencia, y nueva baja por la misma o similar patología dentro de los 180 días naturales posteriores', 'Partes de baja y confirmación ordinarios', 'Solo la resolución administrativa de extinción del derecho'], answer: 'B', legal: 'Art. 170 TRLGSS',
+    options: ['Únicamente el alta por curación del trabajador', 'Altas por curación, mejoría, propuesta de incapacidad permanente o incomparecencia, y nueva baja por la misma o similar patología dentro de los 180 días naturales posteriores', 'Partes de baja y confirmación ordinarios', 'Solo la resolución administrativa de extinción del derecho'], answer: 'B', legal: 'Art. 170 TRLGSS',
     rationale: 'Después de 365 días, el INSS concentra en exclusiva las altas, propuestas de IP y nuevas bajas por similar patología en los 180 días siguientes.',
   },
   {
@@ -254,7 +254,7 @@ stem: 'Hasta el cumplimiento de los 365 días de duración de la incapacidad tem
   },
   {
     stem: 'Si una mutua considera que una persona en contingencia común puede no estar impedida para el trabajo:',
-    options: ['Emite directamente un alta médica efectiva', 'Deniega administrativamente la prestación sin intervención facultativa', 'Comunica la extinción directamente a la empresa y cesa el pago', 'Formula una propuesta motivada de alta, con informes y pruebas, que se traslada a la inspección médica del servicio público de salud'], answer: 'D', legal: 'RD 625/2014',
+    options: ['Emite directamente un alta médica efectiva sin propuesta previa a la inspección', 'Deniega administrativamente la prestación sin intervención facultativa', 'Comunica la extinción directamente a la empresa y cesa el pago', 'Formula una propuesta motivada de alta, con informes y pruebas, que se traslada a la inspección médica del servicio público de salud'], answer: 'D', legal: 'RD 625/2014',
     rationale: 'En contingencias comunes la mutua formula propuesta motivada de alta, acompañada de informes y pruebas, dirigida a la inspección médica del servicio de salud.',
   },
   {
@@ -284,7 +284,7 @@ stem: 'Hasta el cumplimiento de los 365 días de duración de la incapacidad tem
   },
   {
     stem: 'Si una IT se abonó como contingencia común y posteriormente se declara profesional, cuando la contingencia profesional esté cubierta por mutua:',
-    options: ['La mutua abona a la persona las diferencias a su favor, reintegra a la entidad gestora la prestación abonada y al servicio público de salud el coste asistencial', 'La entidad gestora conserva íntegramente lo abonado', 'La empresa debe asumir las diferencias sin compensación', 'No se produce ajuste económico alguno'], answer: 'A', legal: 'Art. 6 RD 1430/2009',
+    options: ['La mutua abona a la persona las diferencias a su favor, reintegra a la entidad gestora la prestación abonada y al servicio público de salud el coste asistencial', 'La entidad gestora conserva íntegramente lo abonado', 'La empresa debe asumir las diferencias sin compensación', 'No se produce ajuste económico alguno entre las partes intervinientes'], answer: 'A', legal: 'Art. 6 RD 1430/2009',
     rationale: 'Declarada profesional la contingencia y cubierta por mutua, esta abona las diferencias favorables a la persona y reintegra prestación y coste asistencial a las entidades correspondientes.',
   },
   {
@@ -314,7 +314,7 @@ stem: 'Hasta el cumplimiento de los 365 días de duración de la incapacidad tem
   },
   {
     stem: 'En la IT de una persona jubilada parcial:',
-    options: ['La empresa está obligada a pagar durante los 545 días', 'La prestación se abona a través de la mutua de contingencias comunes', 'El pago se efectúa directamente por la entidad gestora o colaboradora', 'No existe derecho a prestación económica por IT'], answer: 'C', legal: 'Art. 82 TRLGSS; guía visual Tema 8, pago directo',
+    options: ['La empresa está obligada a pagar durante los 545 días de duración máxima', 'La prestación se abona a través de la mutua de contingencias comunes', 'El pago se efectúa directamente por la entidad gestora o colaboradora', 'No existe derecho a prestación económica por IT'], answer: 'C', legal: 'Art. 82 TRLGSS; guía visual Tema 8, pago directo',
     rationale: 'La IT de personas jubiladas parcialmente es uno de los supuestos de pago directo por la entidad gestora o colaboradora.',
   },
   {
@@ -339,7 +339,7 @@ stem: 'Hasta el cumplimiento de los 365 días de duración de la incapacidad tem
   },
   {
     stem: 'Agotados los 545 días, ¿cuándo puede demorarse la calificación de incapacidad permanente y con qué límite?',
-    options: ['Si continua la necesidad de tratamiento médico por expectativa de recuperación o mejora con vistas a la reincorporación, sin que IT más prolongación supere los 730 días naturales', 'Siempre que el trabajador lo solicite, hasta un máximo de 730 días naturales', 'Si el INSS lo estima oportuno, sin límite temporal siempre que persista la incapacidad', 'Solo durante 90 días naturales, sin posibilidad de prórroga'], answer: 'A', legal: 'Art. 174 TRLGSS',
+    options: ['Si continua la necesidad de tratamiento médico por expectativa de recuperación o mejora con vistas a la reincorporación, sin que IT más prolongación supere los 730 días naturales', 'Siempre que el trabajador lo solicite, hasta un máximo de 730 días naturales', 'Si el INSS lo estima oportuno, sin límite temporal siempre que persista la incapacidad', 'Solo durante 90 días naturales, sin posibilidad de prórroga por el INSS'], answer: 'A', legal: 'Art. 174 TRLGSS',
     rationale: 'La calificación puede demorarse cuando continúa la necesidad de tratamiento médico por la expectativa de recuperación o mejora con vistas a la reincorporación laboral, sin que los días de IT más los de prolongación de sus efectos superen los 730 días naturales. Exige resolución expresa del INSS, comunicada telemáticamente a la empresa, a propuesta del EVI y previa audiencia de la mutua por siete días hábiles si la contingencia está cubierta por ella. Durante los períodos de 90 días y de demora no subsistirá la obligación de cotizar.',
   },
   {

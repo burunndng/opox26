@@ -1371,7 +1371,7 @@ const seedItemsTema7: Item[] = [
       },
       {
         "id": "B",
-        "text": "A los cinco años contados desde el reconocimiento del derecho.",
+        "text": "A los cinco años contados desde el reconocimiento del derecho a la prestación.",
         "is_correct": false,
         "trap_type": "conceptual_merger",
         "explanation": "Incorrecto. Si se confundiese con la prescripción del derecho sustantivo a la pensión.",
