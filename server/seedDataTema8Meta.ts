@@ -5,9 +5,9 @@ const now = '2026-03-01T10:00:00Z';
 
 export const seedTopicTema8: Topic = {
   id: TOPIC,
-  name: 'Tema 8 Especifico - Incapacidad temporal',
+  name: 'Tema 8 Específico - Incapacidad temporal',
   description:
-    'BLOQUE ESPECIFICO (ES). Incapacidad temporal: concepto y situaciones especiales, base reguladora y nacimiento del derecho, competencias y control medico, extincion y determinacion de contingencia.',
+    'BLOQUE ESPECÍFICO (ES). Incapacidad temporal: concepto y situaciones especiales, base reguladora y nacimiento del derecho, competencias y control médico, extinción y determinación de contingencia.',
   source_file: 'Tema 8 - Incapacidad temporal - Guía visual de estudio.md',
   status: 'active',
   created_at: now,

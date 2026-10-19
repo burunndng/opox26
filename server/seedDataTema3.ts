@@ -39,9 +39,9 @@ const now = '2026-03-01T10:00:00Z';
 
 export const seedTopicTema3: Topic = {
   id: TOPIC,
-  name: 'Tema 3 Especifico - La afiliacion y la inscripcion a la Seguridad Social',
+  name: 'Tema 3 Específico - La afiliación y la inscripción a la Seguridad Social',
   description:
-    'BLOQUE ESPECIFICO (ES). Afiliacion e inscripcion: caracteres de la afiliacion, NUSS/CCC, altas, bajas y variaciones de datos, convenio especial, clases de alta, particularidades, actos indebidos e impugnaciones.',
+    'BLOQUE ESPECÍFICO (ES). Afiliación e inscripción: caracteres de la afiliación, NUSS/CCC, altas, bajas y variaciones de datos, convenio especial, clases de alta, particularidades, actos indebidos e impugnaciones.',
   source_file: 'TEMA 3 ESPECIFICO.pdf',
   status: 'active',
   created_at: now,
@@ -295,7 +295,7 @@ export const seedClustersTema3: Cluster[] = [
   {
     id: 'cluster_afiliacion_caracteres',
     topic_id: TOPIC,
-    name: 'Afiliacion: caracteres, NUSS y formas de promover',
+    name: 'Afiliación: caracteres, NUSS y formas de promover',
     type: 'conceptual',
     priority: 'critical',
     description:
@@ -304,7 +304,7 @@ export const seedClustersTema3: Cluster[] = [
   {
     id: 'cluster_inscripcion_empresa',
     topic_id: TOPIC,
-    name: 'Inscripcion de empresas: CCC, documentos y plazos',
+    name: 'Inscripción de empresas: CCC, documentos y plazos',
     type: 'procedural',
     priority: 'critical',
     description:
@@ -322,7 +322,7 @@ export const seedClustersTema3: Cluster[] = [
   {
     id: 'cluster_convenio_especial',
     topic_id: TOPIC,
-    name: 'Convenio especial: requisitos, efectos, coberturas y extincion',
+    name: 'Convenio especial: requisitos, efectos, coberturas y extinción',
     type: 'exception',
     priority: 'critical',
     description:
@@ -1412,13 +1412,13 @@ export const seedItemsTema3: Item[] = [
       {
         text: 'Incapacidad permanente por enfermedad común.',
         trap_type: 'true_but_irrelevant',
-        explanation: 'Incorrecto como respuesta: SÍ está cubierta por el convenio especial.',
+        explanation: 'Incorrecto como respuesta: la incapacidad permanente SÍ está cubierta por el convenio especial.',
         condition_if_correct: 'Si el enunciado pidiera una contingencia cubierta.',
       },
       {
         text: 'Muerte y supervivencia por accidente no laboral.',
         trap_type: 'true_but_irrelevant',
-        explanation: 'Incorrecto como respuesta: SÍ está cubierta por el convenio especial.',
+        explanation: 'Incorrecto como respuesta: la muerte y supervivencia SÍ están cubiertas por el convenio especial.',
         condition_if_correct: 'Si el enunciado pidiera una contingencia cubierta.',
       },
     ],
@@ -1812,19 +1812,19 @@ export const seedItemsTema3: Item[] = [
       {
         text: '24 horas.',
         trap_type: 'numeric_substitution',
-        explanation: 'Incorrecto. La ventana es hasta las 12 horas del día de inicio.',
+        explanation: 'Incorrecto. El límite es a las 12 horas del día de inicio; 24 horas lo ampliaría indebidamente.',
         condition_if_correct: 'Si la ventana fuera de 24 horas.',
       },
       {
         text: '18 horas.',
         trap_type: 'numeric_substitution',
-        explanation: 'Incorrecto. La ventana es hasta las 12 horas.',
+        explanation: 'Incorrecto. El límite es a las 12 horas del día de inicio; 18 horas no está previsto.',
         condition_if_correct: 'Si la ventana fuera de 18 horas.',
       },
       {
         text: '8 horas.',
         trap_type: 'numeric_substitution',
-        explanation: 'Incorrecto. La ventana es hasta las 12 horas.',
+        explanation: 'Incorrecto. El límite es a las 12 horas del día de inicio; 8 horas no está previsto.',
         condition_if_correct: 'Si la ventana fuera de 8 horas.',
       },
     ],

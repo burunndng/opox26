@@ -270,6 +270,23 @@ OPTION_TEXT_OVERRIDES = {
     },
 }
 
+# Source explanations that were terse/filler ("Idem.", bare numeric restatements)
+# replaced with explicit corrections (item -> option -> text).
+EXPLANATION_OVERRIDES = {
+    5: {
+        "C": "Criterio de efectos sobre el interesado, no sobre las situaciones jurídicas.",
+        "D": "Igual criterio que «de gravamen»: efectos sobre el interesado, no sobre las situaciones jurídicas.",
+    },
+    25: {
+        "C": "El plazo es de diez días; quince no figura en la norma.",
+        "D": "El plazo es de diez días; cinco no figura en la norma.",
+    },
+    30: {
+        "B": "El plazo de rechazo tácito es de diez días naturales; cinco no está previsto.",
+        "D": "El plazo es de diez días naturales; un mes no está previsto.",
+    },
+}
+
 ARTICLE_PREFIX = re.compile(
     r"^(?:Arts?\.\s*[0-9][0-9A-Za-z.]*(?:\s*(?:,|y)\s*(?:arts?\.\s*)?[0-9][0-9A-Za-z.]*)*"
     r"\s*(?:de la Ley \d+/\d+|RD 203/2021)?"
@@ -376,8 +393,9 @@ def ts_escape(value: str) -> str:
     )
 
 
-def build_options(options, traps, correct_letter, overrides=None):
+def build_options(options, traps, correct_letter, overrides=None, explanations=None):
     overrides = overrides or {}
+    explanations = explanations or {}
     trap_by_letter = {letter: (codes, text) for letter, codes, text in traps}
     enriched = []
     for option in options:
@@ -389,7 +407,7 @@ def build_options(options, traps, correct_letter, overrides=None):
         if not option["is_correct"]:
             codes, explanation = trap_by_letter[option["id"]]
             entry["trap_type"] = TRAP_CODE_TO_TYPE[codes[0]]
-            entry["explanation"] = explanation
+            entry["explanation"] = explanations.get(option["id"], explanation)
         enriched.append(entry)
     return enriched
 
@@ -398,20 +416,22 @@ def build_enrichment(entries):
     enrichment = {}
     for number, data in entries.items():
         traps = data["traps"]
+        explanations = EXPLANATION_OVERRIDES.get(number, {})
         mapped = []
         for _, codes, _ in traps:
             mapped_type = TRAP_CODE_TO_TYPE[codes[0]]
             if mapped_type not in mapped:
                 mapped.append(mapped_type)
-        enrichment[number] = {
+        entry = {
             "correct_answer": data["correct"],
             "legal_basis": LEGAL_BASIS[number],
             "rule_statement": data["rule"],
             "corrective_rule": data["pista"],
-            "distractor_analysis": {letter: text for letter, _, text in traps},
+            "distractor_analysis": {letter: explanations.get(letter, text) for letter, _, text in traps},
             "trap_types": mapped,
-            "trap_by_letter": {letter: text for letter, _, text in traps},
+            "trap_by_letter": {letter: explanations.get(letter, text) for letter, _, text in traps},
         }
+        enrichment[number] = entry
     return enrichment
 
 
@@ -449,6 +469,7 @@ def update_sqlite(entries, enrichment):
             entries[number]["traps"],
             data["correct_answer"],
             OPTION_TEXT_OVERRIDES.get(number),
+            EXPLANATION_OVERRIDES.get(number),
         )
         con.execute(
             """UPDATE items
@@ -504,6 +525,7 @@ def regenerate_seed(entries, enrichment):
             entries[number]["traps"],
             data["correct_answer"],
             OPTION_TEXT_OVERRIDES.get(number),
+            EXPLANATION_OVERRIDES.get(number),
         )
 
         option_literals = []
@@ -576,6 +598,7 @@ def update_json_copy(entries, enrichment):
             entries[number]["traps"],
             info["correct_answer"],
             OPTION_TEXT_OVERRIDES.get(number),
+            EXPLANATION_OVERRIDES.get(number),
         )
         updated += 1
     if updated != 61:
