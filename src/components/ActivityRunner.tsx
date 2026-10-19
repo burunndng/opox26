@@ -56,6 +56,7 @@ import { ModeAStudyRunner } from './ModeAStudyRunner.tsx';
 import { PretestDiagnosticMap } from './PretestDiagnosticMap.tsx';
 import { SessionHeatMap } from './SessionHeatMap.tsx';
 import { optionIdAtPosition, optionOrderSeed, orderOptions } from '../utils/optionOrder.ts';
+import { trapLabelEs } from '../utils/trapLabels.ts';
 
 const EMPTY_OPTION_CHOICES: Array<{
   id: string;
@@ -1597,27 +1598,26 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               </span>
             </div>
 
-            {/* Level 1 Hint: Legal reference & distinction cue */}
+            {/* Level 1 Hint: legal basis + the retrieval cue, or the opening of the rule */}
             {hintLevel >= 1 && (
               <div className="space-y-1">
                 <span className="font-semibold text-slate-300">1. Criterio discriminador & Base Legal:</span>
                 <p className="text-slate-400 pl-3 border-l-2 border-amber-600 leading-relaxed">
                   {currentItem.legal_basis ? `Regulado en: ${currentItem.legal_basis}. ` : ''}
                   {currentItem.corrective_rule ||
-                    currentItem.rule_statement?.slice(0, 140) + '...' ||
-                    'Distingue cuidadosamente entre las reglas generales y sus excepciones temporales o cuantitativas.'}
+                    (currentItem.rule_statement && currentItem.rule_statement.length > 160
+                      ? `${currentItem.rule_statement.slice(0, 160).trimEnd()}…`
+                      : currentItem.rule_statement || '')}
                 </p>
               </div>
             )}
 
-            {/* Level 2 Hint: Proposition excerpt */}
-            {hintLevel >= 2 && (
+            {/* Level 2 Hint: the norm verbatim, for retrieval before answering */}
+            {hintLevel >= 2 && (currentItem.why_correct || currentItem.rule_statement) && (
               <div className="space-y-1 pt-2 border-t border-[#20293a]">
                 <span className="font-semibold text-slate-300">2. Fragmento Atómico Clave:</span>
                 <p className="text-slate-400 pl-3 border-l-2 border-blue-500 leading-relaxed italic">
-                  {currentItem.why_correct
-                    ? currentItem.why_correct.slice(0, 160) + '...'
-                    : 'Revisa la distinción entre plazos anuales y cómputos desde el hecho causante.'}
+                  {currentItem.why_correct || currentItem.rule_statement}
                 </p>
               </div>
             )}
@@ -2371,53 +2371,64 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
             {/* Legal Basis & Rule Statement */}
             <div className="bg-[#0c0f17] p-4 rounded-md border border-[#20293a] space-y-2">
-              <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center justify-between gap-3 text-xs">
                 <span className="font-bold uppercase tracking-wider text-blue-400 font-mono">
                   Base Legal & Regla Positiva
                 </span>
-                <span className="font-mono text-slate-400">{currentItem.legal_basis}</span>
+                <span className="font-mono text-slate-400 text-right">{currentItem.legal_basis}</span>
               </div>
               <p className="text-sm font-semibold text-slate-200">
                 {currentItem.rule_statement || currentItem.why_correct}
               </p>
-              {currentItem.why_correct && (
-                <p className="text-xs text-slate-400 leading-relaxed pt-1">
-                  {currentItem.why_correct}
-                </p>
-              )}
+              {currentItem.why_correct &&
+                currentItem.why_correct !== currentItem.rule_statement && (
+                  <p className="text-xs text-slate-400 leading-relaxed pt-1">
+                    {currentItem.why_correct}
+                  </p>
+                )}
             </div>
 
-            {/* Corrective Rule takeaway */}
+            {/* Retrieval cue: shown only when the item carries a real one */}
             {currentItem.corrective_rule && (
               <div className="p-3 bg-[#121722] border border-[#20293a] rounded-md text-xs">
-                <span className="font-bold text-blue-400">Regla mnemotécnica correctiva: </span>
+                <span className="font-bold text-blue-400">Pista clave: </span>
                 <span className="text-slate-300">{currentItem.corrective_rule}</span>
               </div>
             )}
 
-            {/* Distractor Analysis Breakdown */}
-            {currentItem.options && currentItem.options.length > 0 && (
-              <div className="space-y-2">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
-                  Desglose de Trampas en los Distractores
-                </h4>
+            {/* Distractor feedback: only rendered when the item actually explains why each option fails */}
+            {(() => {
+              const distractors = (currentItem.options ?? []).filter(
+                (opt) => !opt.is_correct && (opt.explanation?.trim() || opt.trap_type),
+              );
+              if (distractors.length === 0) return null;
+              return (
                 <div className="space-y-2">
-                  {currentItem.options
-                    .filter((o) => !o.is_correct)
-                    .map((opt) => (
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
+                    Por qué fallan las demás opciones
+                  </h4>
+                  <div className="space-y-2">
+                    {distractors.map((opt) => (
                       <div
                         key={opt.id}
-                        className="p-3 bg-[#0c0f17] border border-[#20293a] rounded-md text-xs space-y-1"
+                        className="p-3 bg-[#0c0f17] border border-[#20293a] rounded-md text-xs space-y-1.5"
                       >
-                        <div className="flex items-center space-x-2">
-                          <span className="font-bold text-slate-300">
-                            Opción {labelForOptionId(displayedOptions, opt.id)}:
-                          </span>
-                          <span className="text-rose-400 font-mono text-[11px]">
-                            Trampa: {opt.trap_type || 'distractor'}
-                          </span>
+                        <div className="flex items-start justify-between gap-3">
+                          <p className="text-slate-200 font-medium leading-snug">
+                            <span className="font-bold text-slate-300">
+                              {labelForOptionId(displayedOptions, opt.id)}.
+                            </span>{' '}
+                            {opt.text}
+                          </p>
+                          {opt.trap_type && (
+                            <span className="shrink-0 rounded border border-rose-900/60 bg-rose-950/30 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-rose-300">
+                              {trapLabelEs(opt.trap_type)}
+                            </span>
+                          )}
                         </div>
-                        <p className="text-slate-400">{opt.explanation}</p>
+                        {opt.explanation && (
+                          <p className="text-slate-400 leading-relaxed">{opt.explanation}</p>
+                        )}
                         {opt.condition_if_correct && (
                           <p className="text-slate-500 text-[11px] italic">
                             Sería correcto si: {opt.condition_if_correct}
@@ -2425,9 +2436,11 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                         )}
                       </div>
                     ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              );
+            })()}
+
 
             {/* Next Item CTA */}
             <div className="flex items-center justify-between pt-2">

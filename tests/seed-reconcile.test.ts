@@ -61,11 +61,12 @@ function runProbe(dir: string, mode: string, itemId?: string): SeedState {
 describe('Boot reconciliation for untouched seed items (isolated)', () => {
   after(() => fs.rmSync(isolatedRoot, { recursive: true, force: true }));
 
-  test('R1: fresh database seeds 219 practice-eligible items and no drafts', () => {
+  test('R1: fresh database seeds 280 practice-eligible items and no drafts', () => {
     const state = runProbe(freshCaseDir('fresh'), 'snapshot');
-    // 113 core items + 30 Tema 3 (afiliación e inscripción) items + 70 Tema 8 (incapacidad temporal) items + 6 retrieval/pretest items.
-    assert.equal(state.seedCount, 219, '113 core items plus 30 Tema 3 items plus 70 Tema 8 items plus 6 retrieval/pretest items are seeded');
-    assert.equal(state.eligibleCount, 219);
+    // 113 core items + 30 Tema 3 (afiliación e inscripción) items + 70 Tema 8 (incapacidad temporal) items
+    // + 61 Tema 15 (acto administrativo) items + 6 retrieval/pretest items.
+    assert.equal(state.seedCount, 280, '113 core items plus 30 Tema 3 items plus 70 Tema 8 items plus 61 Tema 15 items plus 6 retrieval/pretest items are seeded');
+    assert.equal(state.eligibleCount, 280);
     assert.deepEqual(state.draftIds, []);
   });
 

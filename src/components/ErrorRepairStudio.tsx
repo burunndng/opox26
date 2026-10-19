@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { ErrorLog, Item } from '../types.ts';
 import { api } from '../api.ts';
+import { trapLabelEs } from '../utils/trapLabels.ts';
 
 interface ErrorRepairStudioProps {
   errors: ErrorLog[];
@@ -85,7 +86,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
       md += `### Fallo #${idx + 1}: ${item?.stem || 'Pregunta'}\n`;
       md += `- **Base Legal:** ${err.legal_basis || item?.legal_basis || 'TRLGSS'}\n`;
       md += `- **Taxonomía:** ${err.error_type_code || 'E5'} | Confianza al responder: ${err.confidence}/3 ${err.confidence === 3 ? '⚠️ [CONFIDENT-WRONG]' : ''}\n`;
-      if (err.trap_type) md += `- **Trampa Psicométrica:** ${err.trap_type}\n`;
+      if (err.trap_type) md += `- **Trampa Psicométrica:** ${trapLabelEs(err.trap_type)}\n`;
       md += `- **Regla Correctiva:** ${err.corrective_rule || item?.corrective_rule || item?.why_correct}\n`;
       md += `\n---\n\n`;
     });
@@ -242,7 +243,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
 
                     {err.trap_type && (
                       <span className="text-[10px] px-2 py-0.5 rounded bg-rose-500/10 text-rose-300 border border-rose-500/20">
-                        Trampa: {err.trap_type}
+                        Trampa: {trapLabelEs(err.trap_type)}
                       </span>
                     )}
 
@@ -367,7 +368,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
                           </span>
                           {err.trap_type && (
                             <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 text-[10px]">
-                              {err.trap_type}
+                              {trapLabelEs(err.trap_type)}
                             </span>
                           )}
                         </div>

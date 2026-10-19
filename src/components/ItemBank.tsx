@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Item, Cluster, ConfusionPair, ItemType, QualityWarning, JevItemAuditResult } from '../types.ts';
 import { api } from '../api.ts';
+import { trapLabelEs } from '../utils/trapLabels.ts';
 
 interface ItemBankProps {
   items: Item[];
@@ -268,7 +269,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
                               : 'bg-slate-950 text-slate-400 border border-slate-800'
                           }`}
                         >
-                          {o.id}: {o.is_correct ? 'Correcta' : o.trap_type || 'Distractor'}
+                          {o.id}: {o.is_correct ? 'Correcta' : o.trap_type ? trapLabelEs(o.trap_type) : 'Distractor'}
                         </span>
                       ))}
                     </div>
@@ -356,9 +357,13 @@ export const ItemBank: React.FC<ItemBankProps> = ({
                       Opción {opt.id} {opt.is_correct && '✓ [CORRECTA]'}
                     </div>
                     <div>{opt.text}</div>
-                    {!opt.is_correct && (
+                    {!opt.is_correct && (opt.trap_type || opt.explanation) && (
                       <div className="mt-1 text-[11px] text-slate-400">
-                        <span className="text-rose-400 font-medium">Trampa: {opt.trap_type}. </span>
+                        {opt.trap_type && (
+                          <span className="text-rose-400 font-medium">
+                            {trapLabelEs(opt.trap_type)}.{' '}
+                          </span>
+                        )}
                         {opt.explanation}
                       </div>
                     )}

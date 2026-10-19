@@ -9,6 +9,18 @@ const SPANISH_STOPWORDS = new Set([
   'indica', 'señala', 'respecto', 'según', 'siguiente', 'siguientes', 'pregunta', 'caso'
 ]);
 
+const CITATION_TOKENS = new Set([
+  'art', 'arts', 'articulo', 'articulos', 'apdo', 'apartado', 'apartados',
+  'ley', 'rd', 'real', 'decreto', 'ce', 'trlgss', 'lgss', 'lpac',
+]);
+
+const DISTINCTIVE_NUMBER_WORDS = new Set([
+  'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez',
+  'once', 'doce', 'trece', 'catorce', 'quince', 'dieciseis', 'veinte', 'treinta',
+  'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa', 'cien',
+  'ciento', 'mil', 'millon', 'millones',
+]);
+
 export interface PedagogicalDiagnostic {
   score: number; // 0 - 100
   rating: 'excelente' | 'bueno' | 'necesita_revision' | 'critico';
@@ -82,7 +94,8 @@ export function detectAnswerInStem(item: Partial<Item>): {
   const stem = item.stem || '';
   if (!stem.trim()) return { detected: false, leakedPhrases: [] };
 
-  const normStem = normalizeText(stem);
+  const collapseTimes = (text: string) => text.replace(/(\d{1,2})[:.](\d{2})\b/g, '$1$2');
+  const normStem = normalizeText(collapseTimes(stem));
   const stemWords = normStem.split(' ').filter(Boolean);
 
   let correctAnswerText = '';
@@ -99,7 +112,7 @@ export function detectAnswerInStem(item: Partial<Item>): {
     return { detected: false, leakedPhrases: [] };
   }
 
-  const normAnswer = normalizeText(correctAnswerText);
+  const normAnswer = normalizeText(collapseTimes(correctAnswerText));
   const answerWords = normAnswer.split(' ').filter(Boolean);
 
   const leakedPhrases: string[] = [];
@@ -111,13 +124,33 @@ export function detectAnswerInStem(item: Partial<Item>): {
     }
   }
 
-  // Check n-grams of 2-3 words from correct answer appearing verbatim in the stem
+  // Check n-grams of 2-4 words from the correct answer appearing verbatim in the stem.
+  // A phrase only counts as a leak when it carries distinctive content: either a
+  // quantitative datum, or three-plus words with at least two content tokens.
+  // Pure citations ("art. 39.3") and functional/topical bigrams ("del acto",
+  // "a disposición", "ejercicio de") are echo, not answer leakage.
   if (answerWords.length >= 2) {
     const answerNgrams = extractNgrams(answerWords, 2, 4);
     for (const phrase of answerNgrams) {
-      if (normStem.includes(phrase) && !leakedPhrases.includes(phrase)) {
-        leakedPhrases.push(phrase);
-      }
+      if (!normStem.includes(phrase) || leakedPhrases.includes(phrase)) continue;
+
+      const phraseWords = phrase.split(' ');
+      const isCitationOnly = phraseWords.every(
+        (word) => SPANISH_STOPWORDS.has(word) || CITATION_TOKENS.has(word) || /^\d+$/.test(word),
+      );
+      if (isCitationOnly) continue;
+
+      const contentTokens = phraseWords.filter(
+        (word) => word.length >= 4 && !SPANISH_STOPWORDS.has(word) && !/^\d+$/.test(word),
+      );
+      const hasDistinctiveNumeral = phraseWords.some(
+        (word) => /^\d+$/.test(word) || DISTINCTIVE_NUMBER_WORDS.has(word),
+      );
+      const isLeak = hasDistinctiveNumeral
+        ? contentTokens.length >= 1
+        : contentTokens.length >= 2 && phraseWords.length >= 3;
+
+      if (isLeak) leakedPhrases.push(phrase);
     }
   }
 
