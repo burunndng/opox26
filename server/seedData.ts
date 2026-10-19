@@ -3717,6 +3717,8 @@ const seedItemsTema7: Item[] = [
       "concept_a": "Prescripción",
       "concept_b": "Caducidad de prestaciones",
       "prompt_cue": "Identifica la diferencia angular de régimen jurídico entre Prescripción y Caducidad de prestaciones.",
+      "mini_case": "Un pensionista deja transcurrir catorce meses sin cobrar las mensualidades ya reconocidas; al reclamar el abono atrasado, la entidad gestora aprecia la extinción del derecho al percibo de las mensualidades más antiguas. ¿Qué figura jurídica opera?",
+      "mini_case_answer": "B",
       "rows": [
         {
           "criterion": "Objeto sobre el que recae",
@@ -3744,6 +3746,7 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
+    "correct_answer": "B",
     "legal_basis": "Art. 53 y 54 TRLGSS",
     "rule_statement": "Régimen de discriminación positiva y negativa amparado en Art. 53 y 54 TRLGSS.",
     "why_correct": "Análisis cruzado riguroso según Art. 53 y 54 TRLGSS.",
@@ -3769,6 +3772,8 @@ const seedItemsTema7: Item[] = [
       "concept_a": "Prescripción",
       "concept_b": "Retroactividad económica",
       "prompt_cue": "Identifica la diferencia angular de régimen jurídico entre Prescripción y Retroactividad económica.",
+      "mini_case": "María solicita una pensión en marzo de 2026 por un hecho causante de 2020; la entidad reconoce la prestación, pero fija los efectos económicos con una retroacción máxima de tres meses desde la solicitud. ¿Qué figura limita los atrasos abonables?",
+      "mini_case_answer": "B",
       "rows": [
         {
           "criterion": "Finalidad jurídica",
@@ -3784,6 +3789,7 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
+    "correct_answer": "B",
     "legal_basis": "Art. 53.1 TRLGSS",
     "rule_statement": "Régimen de discriminación positiva y negativa amparado en Art. 53.1 TRLGSS.",
     "why_correct": "Análisis cruzado riguroso según Art. 53.1 TRLGSS.",
@@ -3809,6 +3815,8 @@ const seedItemsTema7: Item[] = [
       "concept_a": "Caducidad de tanto alzado",
       "concept_b": "Caducidad de periódicas",
       "prompt_cue": "Identifica la diferencia angular de régimen jurídico entre Caducidad de tanto alzado y Caducidad de periódicas.",
+      "mini_case": "A Lucía se le notifica el 10 de junio la concesión de una indemnización de pago único; trece meses después reclama su abono sin haber presentado escrito alguno. ¿Qué plazo de extinción ha operado?",
+      "mini_case_answer": "A",
       "rows": [
         {
           "criterion": "Tipo de abono",
@@ -3824,6 +3832,7 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
+    "correct_answer": "A",
     "legal_basis": "Art. 54 TRLGSS",
     "rule_statement": "Régimen de discriminación positiva y negativa amparado en Art. 54 TRLGSS.",
     "why_correct": "Análisis cruzado riguroso según Art. 54 TRLGSS.",
@@ -3849,6 +3858,8 @@ const seedItemsTema7: Item[] = [
       "concept_a": "Automaticidad absoluta",
       "concept_b": "Automaticidad relativa",
       "prompt_cue": "Identifica la diferencia angular de régimen jurídico entre Automaticidad absoluta y Automaticidad relativa.",
+      "mini_case": "Pablo sufre un accidente de trabajo el primer día de su nuevo empleo, antes de que la empresa lo haya dado de alta. ¿Qué régimen de automaticidad ampara la prestación?",
+      "mini_case_answer": "A",
       "rows": [
         {
           "criterion": "Contingencias amparadas",
@@ -3864,6 +3875,7 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
+    "correct_answer": "A",
     "legal_basis": "Decreto 21 abril 1966 y Art. 167 TRLGSS",
     "rule_statement": "Régimen de discriminación positiva y negativa amparado en Decreto 21 abril 1966 y Art. 167 TRLGSS.",
     "why_correct": "Análisis cruzado riguroso según Decreto 21 abril 1966 y Art. 167 TRLGSS.",
@@ -3889,6 +3901,8 @@ const seedItemsTema7: Item[] = [
       "concept_a": "Coeficiente 1,5 (Fijo-discontinuo)",
       "concept_b": "Coeficiente 1,4 (Contratos <= 5 días)",
       "prompt_cue": "Identifica la diferencia angular de régimen jurídico entre Coeficiente 1,5 (Fijo-discontinuo) y Coeficiente 1,4 (Contratos <= 5 días).",
+      "mini_case": "Un trabajador fijo-discontinuo acumula 180 días trabajados a lo largo de las campañas del año; la empresa debe cotizar aplicando un coeficiente multiplicador sobre los días cotizados con tope anual de días naturales. ¿Qué coeficiente procede?",
+      "mini_case_answer": "A",
       "rows": [
         {
           "criterion": "Coeficiente multiplicador",
@@ -3904,6 +3918,7 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
+    "correct_answer": "A",
     "legal_basis": "Art. 247 y 249 bis TRLGSS",
     "rule_statement": "Régimen de discriminación positiva y negativa amparado en Art. 247 y 249 bis TRLGSS.",
     "why_correct": "Análisis cruzado riguroso según Art. 247 y 249 bis TRLGSS.",
@@ -3929,6 +3944,8 @@ const seedItemsTema7: Item[] = [
       "concept_a": "Contrato corto (<= 5 días)",
       "concept_b": "Contrato a tiempo parcial estándar",
       "prompt_cue": "Identifica la diferencia angular de régimen jurídico entre Contrato corto (<= 5 días) y Contrato a tiempo parcial estándar.",
+      "mini_case": "Sergio firma un contrato a tiempo parcial de seis meses a razón de cuatro horas diarias. ¿Le resulta aplicable el multiplicador 1,4 previsto para contrataciones muy cortas?",
+      "mini_case_answer": "B",
       "rows": [
         {
           "criterion": "Aplicación del multiplicador 1,4",
@@ -3944,6 +3961,7 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
+    "correct_answer": "B",
     "legal_basis": "Art. 248 y 249 bis TRLGSS",
     "rule_statement": "Régimen de discriminación positiva y negativa amparado en Art. 248 y 249 bis TRLGSS.",
     "why_correct": "Análisis cruzado riguroso según Art. 248 y 249 bis TRLGSS.",
@@ -3969,6 +3987,8 @@ const seedItemsTema7: Item[] = [
       "concept_a": "Inembargabilidad de pensión",
       "concept_b": "Exención tributaria en IRPF",
       "prompt_cue": "Identifica la diferencia angular de régimen jurídico entre Inembargabilidad de pensión y Exención tributaria en IRPF.",
+      "mini_case": "Una deuda civil conduce al embargo de la pensión de jubilación de Ana; la ejecución respeta íntegramente el tramo equivalente al SMI. ¿Qué institución está operando?",
+      "mini_case_answer": "A",
       "rows": [
         {
           "criterion": "Ámbito de protección",
@@ -3984,6 +4004,7 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
+    "correct_answer": "A",
     "legal_basis": "Art. 44 TRLGSS y Art. 7 Ley 35/2006",
     "rule_statement": "Régimen de discriminación positiva y negativa amparado en Art. 44 TRLGSS y Art. 7 Ley 35/2006.",
     "why_correct": "Análisis cruzado riguroso según Art. 44 TRLGSS y Art. 7 Ley 35/2006.",
@@ -4009,6 +4030,8 @@ const seedItemsTema7: Item[] = [
       "concept_a": "Recargo por falta de medidas",
       "concept_b": "Responsabilidad por falta de aseguramiento",
       "prompt_cue": "Identifica la diferencia angular de régimen jurídico entre Recargo por falta de medidas y Responsabilidad por falta de aseguramiento.",
+      "mini_case": "La empresa no aseguró a un trabajador que sufre después un accidente de trabajo; la entidad gestora abona la prestación y reclama a la empresa el coste íntegro o su capital coste. ¿Qué responsabilidad se exige?",
+      "mini_case_answer": "B",
       "rows": [
         {
           "criterion": "Asegurabilidad",
@@ -4024,6 +4047,7 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
+    "correct_answer": "B",
     "legal_basis": "Art. 164 y 167 TRLGSS",
     "rule_statement": "Régimen de discriminación positiva y negativa amparado en Art. 164 y 167 TRLGSS.",
     "why_correct": "Análisis cruzado riguroso según Art. 164 y 167 TRLGSS.",
@@ -4049,6 +4073,8 @@ const seedItemsTema7: Item[] = [
       "concept_a": "INSS (Entidad Gestora)",
       "concept_b": "TGSS (Servicio Común)",
       "prompt_cue": "Identifica la diferencia angular de régimen jurídico entre INSS (Entidad Gestora) y TGSS (Servicio Común).",
+      "mini_case": "El trabajador presenta la solicitud de una pensión contributiva de incapacidad permanente. ¿Qué organismo asume su reconocimiento y pago?",
+      "mini_case_answer": "A",
       "rows": [
         {
           "criterion": "Naturaleza jurídica",
@@ -4064,6 +4090,7 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
+    "correct_answer": "A",
     "legal_basis": "Art. 66 y 74 TRLGSS",
     "rule_statement": "Régimen de discriminación positiva y negativa amparado en Art. 66 y 74 TRLGSS.",
     "why_correct": "Análisis cruzado riguroso según Art. 66 y 74 TRLGSS.",
@@ -4089,6 +4116,8 @@ const seedItemsTema7: Item[] = [
       "concept_a": "Falta de alta",
       "concept_b": "Falta de cotización (descubierto)",
       "prompt_cue": "Identifica la diferencia angular de régimen jurídico entre Falta de alta y Falta de cotización (descubierto).",
+      "mini_case": "Un trabajador está formalmente dado de alta, pero la empresa mantiene cuotas impagadas cuando sobreviene una enfermedad común durante el descubierto. ¿Qué situación concurre?",
+      "mini_case_answer": "B",
       "rows": [
         {
           "criterion": "Situación jurídica del trabajador",
@@ -4104,6 +4133,7 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
+    "correct_answer": "B",
     "legal_basis": "Art. 166 y 167 TRLGSS",
     "rule_statement": "Régimen de discriminación positiva y negativa amparado en Art. 166 y 167 TRLGSS.",
     "why_correct": "Análisis cruzado riguroso según Art. 166 y 167 TRLGSS.",
@@ -4129,6 +4159,8 @@ const seedItemsTema7: Item[] = [
       "concept_a": "Responsabilidad solidaria (art. 42 ET)",
       "concept_b": "Responsabilidad subsidiaria (art. 168 TRLGSS)",
       "prompt_cue": "Identifica la diferencia angular de régimen jurídico entre Responsabilidad solidaria (art. 42 ET) y Responsabilidad subsidiaria (art. 168 TRLGSS).",
+      "mini_case": "Dentro del año siguiente a la finalización de una contrata se reclama al comitente el pago de deudas salariales del contratista, sin necesidad de acreditar la insolvencia de este. ¿Qué tipo de responsabilidad se activa?",
+      "mini_case_answer": "A",
       "rows": [
         {
           "criterion": "Presupuesto de exigibilidad",
@@ -4144,6 +4176,7 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
+    "correct_answer": "A",
     "legal_basis": "Art. 42 ET y Art. 168 TRLGSS",
     "rule_statement": "Régimen de discriminación positiva y negativa amparado en Art. 42 ET y Art. 168 TRLGSS.",
     "why_correct": "Análisis cruzado riguroso según Art. 42 ET y Art. 168 TRLGSS.",
@@ -4169,6 +4202,8 @@ const seedItemsTema7: Item[] = [
       "concept_a": "Prestación contributiva",
       "concept_b": "Prestación no contributiva",
       "prompt_cue": "Identifica la diferencia angular de régimen jurídico entre Prestación contributiva y Prestación no contributiva.",
+      "mini_case": "Se reconoce una pensión a un solicitante que no ha cotizado nunca y que acredita carecer de rentas o ingresos suficientes. ¿Qué clase de prestación se le concede?",
+      "mini_case_answer": "B",
       "rows": [
         {
           "criterion": "Requisito de cotización previa",
@@ -4184,6 +4219,7 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
+    "correct_answer": "B",
     "legal_basis": "Art. 15 y 363 TRLGSS",
     "rule_statement": "Régimen de discriminación positiva y negativa amparado en Art. 15 y 363 TRLGSS.",
     "why_correct": "Análisis cruzado riguroso según Art. 15 y 363 TRLGSS.",
@@ -4209,6 +4245,8 @@ const seedItemsTema7: Item[] = [
       "concept_a": "Incapacidad Temporal",
       "concept_b": "Incapacidad Permanente",
       "prompt_cue": "Identifica la diferencia angular de régimen jurídico entre Incapacidad Temporal y Incapacidad Permanente.",
+      "mini_case": "Agotado el plazo de incapacidad temporal, los informes médicos describen secuelas definitivas que reducen la capacidad laboral de forma previsiblemente permanente. ¿Qué situación se califica?",
+      "mini_case_answer": "B",
       "rows": [
         {
           "criterion": "Duración de la situación",
@@ -4224,6 +4262,7 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
+    "correct_answer": "B",
     "legal_basis": "Arts. 170, 174 y 193 TRLGSS",
     "rule_statement": "Régimen de discriminación positiva y negativa amparado en los Arts. 170, 174 y 193 TRLGSS.",
     "why_correct": "Análisis cruzado riguroso según los Arts. 170, 174 y 193 TRLGSS.",
@@ -4249,6 +4288,8 @@ const seedItemsTema7: Item[] = [
       "concept_a": "Inembargabilidad del SMI",
       "concept_b": "Escala de embargo de la LEC",
       "prompt_cue": "Identifica la diferencia angular de régimen jurídico entre Inembargabilidad del SMI y Escala de embargo de la LEC.",
+      "mini_case": "La ejecución civil alcanza un salario que excede del SMI en 2.000 euros; el juzgado aplica sobre el exceso los tramos porcentuales previstos legalmente. ¿Qué regla está aplicando?",
+      "mini_case_answer": "B",
       "rows": [
         {
           "criterion": "Porcentaje aplicable",
@@ -4264,6 +4305,7 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
+    "correct_answer": "B",
     "legal_basis": "Art. 44 TRLGSS y Art. 607 LEC",
     "rule_statement": "Régimen de discriminación positiva y negativa amparado en Art. 44 TRLGSS y Art. 607 LEC.",
     "why_correct": "Análisis cruzado riguroso según Art. 44 TRLGSS y Art. 607 LEC.",
@@ -4289,6 +4331,8 @@ const seedItemsTema7: Item[] = [
       "concept_a": "Pago voluntario de cuotas previo",
       "concept_b": "Pago extemporáneo posterior al hecho causante",
       "prompt_cue": "Identifica la diferencia angular de régimen jurídico entre Pago voluntario de cuotas previo y Pago extemporáneo posterior al hecho causante.",
+      "mini_case": "La empresa regulariza cinco días antes del hecho causante las cuotas de un periodo en descubierto, de modo que la situación queda saneada al sobrevenir la enfermedad común. ¿Qué efectos tiene ese pago sobre la carencia?",
+      "mini_case_answer": "A",
       "rows": [
         {
           "criterion": "Momento del abono",
@@ -4304,6 +4348,7 @@ const seedItemsTema7: Item[] = [
         }
       ]
     },
+    "correct_answer": "A",
     "legal_basis": "Art. 165 TRLGSS",
     "rule_statement": "Régimen de discriminación positiva y negativa amparado en Art. 165 TRLGSS.",
     "why_correct": "Análisis cruzado riguroso según Art. 165 TRLGSS.",
@@ -5150,22 +5195,26 @@ const seedItemsTema7: Item[] = [
           {
             "id": "A",
             "text": "Porque el art. 167.2 TRLGSS exige estar en alta o asimilada para que la gestora anticipe la prestación por contingencias comunes.",
-            "is_correct": true
+            "is_correct": true,
+            "explanation": "Esa es la regla: en contingencias comunes la automaticidad es relativa y exige alta o situación asimilada (art. 167.2 TRLGSS); la gestora anticipa y después repite contra el empresario."
           },
           {
             "id": "B",
             "text": "Porque el Decreto de 1966 solo prevé la automaticidad absoluta para contingencias profesionales y desempleo.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "La automaticidad absoluta, que opera incluso sin alta, se reserva a contingencias profesionales y desempleo; no ampara a las contingencias comunes."
           },
           {
             "id": "C",
             "text": "Porque la Seguridad Social nunca asume anticipos de contingencias comunes en ningún caso.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "Falso: la gestora anticipa la prestación y luego repite frente al empresario incumplidor; el trabajador no queda desamparado."
           },
           {
             "id": "D",
             "text": "Porque la Inspección de Trabajo debe calificar el descubierto previamente con acta de liquidación.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "La automaticidad no depende del pago previo de cuotas patronales, sino de la situación de alta o asimilada del trabajador."
           }
         ]
       }
@@ -5223,22 +5272,26 @@ const seedItemsTema7: Item[] = [
           {
             "id": "A",
             "text": "Porque según el art. 54.2 TRLGSS el cobro de cada mensualidad periódica caduca al año de su respectivo vencimiento.",
-            "is_correct": true
+            "is_correct": true,
+            "explanation": "Correcto: el art. 54.2 TRLGSS fija que el derecho al percibo de cada mensualidad periódica caduca al año de su respectivo vencimiento."
           },
           {
             "id": "B",
             "text": "Porque la prescripción del art. 53 borra el reconocimiento inicial.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "Confunde la prescripción del derecho al reconocimiento (5 años, art. 53) con la caducidad del percibo de cada mensualidad (1 año, art. 54)."
           },
           {
             "id": "C",
             "text": "Porque el art. 53.1 solo permite retrotraer tres meses en solicitudes iniciales.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "La pensión no se pierde hacia el futuro: solo caducan las mensualidades no cobradas que superan un año de antigüedad."
           },
           {
             "id": "D",
             "text": "Porque la caducidad requiere intimación judicial expresa del deudor.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "La caducidad de las prestaciones se aprecia de oficio y no requiere intimación judicial previa del deudor."
           }
         ]
       }
@@ -5296,22 +5349,26 @@ const seedItemsTema7: Item[] = [
           {
             "id": "A",
             "text": "Porque el recargo tiene una función preventiva y sancionadora directa sobre el infractor (art. 164.2 TRLGSS).",
-            "is_correct": true
+            "is_correct": true,
+            "explanation": "Correcto: el art. 164.2 TRLGSS declara inasegurable el recargo porque cumple una función preventiva y sancionadora directa sobre el empresario infractor."
           },
           {
             "id": "B",
             "text": "Porque las compañías de seguros privadas tienen prohibido operar en el ramo de accidentes de trabajo.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "La póliza suscrita antes del siniestro no legitima el recargo: cualquier pacto o seguro que pretenda cubrirlo es nulo de pleno derecho."
           },
           {
             "id": "C",
             "text": "Porque el recargo de prestaciones solo se aplica cuando no existe seguro básico de accidentes.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "No existe reparto legal entre aseguradora y empresa: el recargo es inasegurable en su integridad, sin límites del 30%."
           },
           {
             "id": "D",
             "text": "Porque el importe del recargo se ingresa en el Tesoro Público y no va al trabajador.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "La nulidad del pacto es objetiva; no depende de autorización alguna de la mutua colaboradora."
           }
         ]
       }
@@ -5369,22 +5426,26 @@ const seedItemsTema7: Item[] = [
           {
             "id": "A",
             "text": "El art. 249 bis TRLGSS para contratos temporales de duración igual o inferior a cinco días.",
-            "is_correct": true
+            "is_correct": true,
+            "explanation": "Correcto: el art. 249 bis TRLGSS prevé el coeficiente 1,4 por día trabajado, con tope de los días naturales del mes, para contratos de duración igual o inferior a cinco días."
           },
           {
             "id": "B",
             "text": "El art. 247 TRLGSS aplicable al régimen de trabajadores fijos-discontinuos.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "El coeficiente 1,5 con tope anual es la regla del art. 247 TRLGSS para trabajadores fijos-discontinuos, no para el contrato corto."
           },
           {
             "id": "C",
             "text": "La regla general de contratación a tiempo parcial del art. 248 TRLGSS.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "Los cuatro días se computan con el multiplicador 1,4: no quedan sin coeficiente adicional."
           },
           {
             "id": "D",
             "text": "La Ley de Presupuestos Generales del Estado exclusivamente para personal interino.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "No se trata de un recargo de cotización del 40%, sino de un multiplicador de los días de cotización."
           }
         ]
       }
@@ -5442,22 +5503,26 @@ const seedItemsTema7: Item[] = [
           {
             "id": "A",
             "text": "En el art. 44 TRLGSS y art. 607 LEC, que declaran inembargable el salario o pensión que no exceda del SMI.",
-            "is_correct": true
+            "is_correct": true,
+            "explanation": "Correcto: el SMI es inembargable (art. 44 TRLGSS) y sobre el exceso se aplica la escala porcentual del art. 607 LEC."
           },
           {
             "id": "B",
             "text": "En la exención de rentas de inserción del art. 7 de la Ley del IRPF.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "Solo es embargable el exceso sobre el SMI y conforme a la escala de la LEC; la deuda líquida no permite embargar la cuantía íntegra."
           },
           {
             "id": "C",
             "text": "En el carácter indisponible del derecho a la Seguridad Social del art. 3 TRLGSS.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "El umbral protector es el SMI, no el IPREM, y nunca se embarga el 50% de la cuantía íntegra de la pensión."
           },
           {
             "id": "D",
             "text": "En la prohibición constitucional de embargar bienes del patrimonio de la Seguridad Social.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "Las pensiones no son absolutamente inembargables: el exceso sobre el SMI responde de las deudas según la escala legal."
           }
         ]
       }
@@ -5515,22 +5580,26 @@ const seedItemsTema7: Item[] = [
           {
             "id": "A",
             "text": "Convalida la situación de estar al corriente y permite causar la prestación solicitada (art. 47 TRLGSS).",
-            "is_correct": true
+            "is_correct": true,
+            "explanation": "Correcto: el requerimiento concede 30 días naturales para regularizar; quien paga dentro del plazo queda al corriente y salva el derecho a la prestación."
           },
           {
             "id": "B",
             "text": "Exonera al autónomo del pago de los recargos de mora e intereses devengados.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "El pago tardío regulariza la situación, pero no exonera de los recargos e intereses de demora devengados."
           },
           {
             "id": "C",
             "text": "Determina la concesión automática de un aplazamiento a 5 años sin garantías.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "No existe aplazamiento automático alguno: la invitación al pago solo permite regularizar dentro de los 30 días concedidos."
           },
           {
             "id": "D",
             "text": "Transforma la pensión en no contributiva a cargo del Estado.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "Regularizar fuera de plazo no transforma una prestación contributiva en no contributiva a cargo del Estado."
           }
         ]
       }
@@ -5588,22 +5657,26 @@ const seedItemsTema7: Item[] = [
           {
             "id": "A",
             "text": "Determina la caducidad del aplazamiento y la apertura inmediata de la vía de apremio por la totalidad (art. 23.4 TRLGSS).",
-            "is_correct": true
+            "is_correct": true,
+            "explanation": "Correcto: el impago de un solo plazo determina la caducidad del aplazamiento y la apertura inmediata de la vía de apremio por la totalidad (art. 23.4 TRLGSS)."
           },
           {
             "id": "B",
             "text": "Otorga automáticamente una prórroga de gracia de 6 meses.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "No hay prórroga de gracia automática: el impago de un plazo hace caducar el beneficio y ejecuta la deuda restante."
           },
           {
             "id": "C",
             "text": "Únicamente devenga un interés de demora del 2% sobre la cuota impagada.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "La consecuencia no es un simple interés del 2%: se exige la totalidad de la deuda por vía de apremio."
           },
           {
             "id": "D",
             "text": "Requiere una nueva resolución motivada del Ministro de Inclusión.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "La TGSS resuelve conforme a la normativa recaudatoria; no interviene el titular del Ministerio en la ejecución."
           }
         ]
       }
@@ -5661,22 +5734,26 @@ const seedItemsTema7: Item[] = [
           {
             "id": "A",
             "text": "Es una presunción iuris tantum que solo puede desvirtuarse probando la falta de vinculación lesiva laboral.",
-            "is_correct": true
+            "is_correct": true,
+            "explanation": "Correcto: la presunción del art. 156.3 TRLGSS es iuris tantum y solo se desvirtúa acreditando que la lesión no guarda relación con el trabajo."
           },
           {
             "id": "B",
             "text": "Es una presunción iuris et de iure que no admite prueba en contrario bajo ningún concepto.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "No es una presunción iuris et de iure: admite prueba en contrario sobre la falta de vinculación laboral de la lesión."
           },
           {
             "id": "C",
             "text": "No tiene valor probatorio hasta que no recaiga sentencia firme del Juzgado de lo Social.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "La presunción opera desde el inicio y desplaza la carga de la prueba; no exige sentencia firme previa."
           },
           {
             "id": "D",
             "text": "Depende de que el trabajador no hubiera solicitado una baja voluntaria previa.",
-            "is_correct": false
+            "is_correct": false,
+            "explanation": "Una eventual baja voluntaria anterior no condiciona el juego de la presunción de laboralidad del art. 156.3."
           }
         ]
       }

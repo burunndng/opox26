@@ -102,6 +102,15 @@ function optionLabelAtPosition(position: number): string {
   return String.fromCharCode(65 + position);
 }
 
+function normalizeClozeValue(value?: string): string {
+  return (value || '')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ');
+}
+
 function labelForOptionId(options: Array<{ id: string }>, optionId?: string | null): string {
   if (!optionId) return '';
   const position = options.findIndex((option) => option.id === optionId);
@@ -293,6 +302,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
   // Cloze state
   const [clozeInput, setClozeInput] = useState('');
+  const [clozeInputs, setClozeInputs] = useState<Record<string, string>>({});
 
   // Spot error state
   const [spotSelectedSpan, setSpotSelectedSpan] = useState<string | null>(null);
@@ -435,13 +445,97 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
       : currentItem?.item_type === 'fact_variant'
         ? orderedFactVariantOptions
         : orderedItemOptions;
-  const correctAnswerId =
-    currentItem?.item_type === 'two_tier'
-      ? tier1SourceOptions.find((option) => option.is_correct)?.id ?? currentItem.correct_answer
-      : currentItem?.correct_answer;
-  const correctAnswerLabel = hasPositionalOptionShortcuts
-    ? labelForOptionId(displayedOptions, correctAnswerId)
-    : correctAnswerId ?? '';
+
+  const displayedStem = useMemo(() => {
+    if (!currentItem) return '';
+    if (currentItem.item_type !== 'cloze') return currentItem.stem;
+    const template =
+      currentItem.cloze_data?.template_text || currentItem.cloze_data?.text_with_clozes || '';
+    let stem = currentItem.stem || '';
+    if (template && stem.includes(template)) {
+      stem = stem.replace(template, '');
+    }
+    stem = stem.replace(/\{\{c\d+::.*?\}\}/g, '[ … ]');
+    return stem.trim().replace(/[:：]\s*$/, '').trim();
+  }, [currentItem]);
+
+  const expectedAnswerSummary = useMemo(() => {
+    if (!currentItem) return '';
+
+    if (currentItem.item_type === 'cloze') {
+      const blanks = currentItem.cloze_data?.blanks ?? [];
+      const blankAnswers = blanks
+        .map((blank) => blank.correct_answer || blank.answer || blank.target)
+        .filter((value): value is string => Boolean(value));
+      if (blankAnswers.length > 0) return blankAnswers.join(' · ');
+      const raw =
+        currentItem.cloze_data?.template_text ||
+        currentItem.cloze_data?.text_with_clozes ||
+        currentItem.stem;
+      const markerAnswers = [...raw.matchAll(/\{\{c\d+::(.*?)\}\}/g)].map((match) => match[1]);
+      return markerAnswers.join(' · ') || evaluation?.expectedDisplay || '';
+    }
+
+    if (currentItem.item_type === 'contrast_card') {
+      const data = currentItem.contrast_data;
+      const answer = (currentItem.correct_answer || data?.mini_case_answer || 'A').toUpperCase();
+      const concept = answer === 'B' ? data?.concept_b : data?.concept_a;
+      return concept ? `Se aplica ${concept}` : evaluation?.expectedDisplay || '';
+    }
+
+    if (currentItem.item_type === 'number_sort') {
+      return 'la asociación correcta de todos los conceptos';
+    }
+
+    if (currentItem.item_type === 'spot_error') {
+      const data = currentItem.spot_error_data;
+      if (data?.erroneous_span && data?.corrected_text) {
+        return `«${data.erroneous_span}» → «${data.corrected_text}»`;
+      }
+      return currentItem.correct_answer || evaluation?.expectedDisplay || '';
+    }
+
+    if (currentItem.item_type === 'two_tier') {
+      const tier1Correct = tier1SourceOptions.find((option) => option.is_correct);
+      const tier2Correct = tier2SourceOptions.find((option) => option.is_correct);
+      const parts = [tier1Correct?.text, tier2Correct?.text].filter(Boolean);
+      return parts.join(' — Justificación: ') || evaluation?.expectedDisplay || '';
+    }
+
+    if (currentItem.item_type === 'exception_tree') {
+      const data = currentItem.exception_tree_data;
+      const testCase = data?.test_cases?.[0];
+      const walk = (node: any): Array<{ id: string; label: string }> => {
+        if (!node) return [];
+        const children = node.children || [];
+        if (children.length === 0) return [{ id: node.id, label: node.label }];
+        return children.flatMap(walk);
+      };
+      const leaf = walk(data?.root_rule || data?.root_node).find(
+        (candidate) => candidate.id === testCase?.correct_leaf_id
+      );
+      return leaf?.label || evaluation?.expectedDisplay || '';
+    }
+
+    if (currentItem.item_type === 'fact_variant') {
+      const variant = currentItem.fact_variant_data?.variants?.[0];
+      return (
+        variant?.correct_outcome || variant?.expected_outcome || evaluation?.expectedDisplay || ''
+      );
+    }
+
+    const correctOption =
+      currentItem.options?.find((option) => option.is_correct) ??
+      currentItem.options?.find((option) => option.id === currentItem.correct_answer);
+    if (!correctOption?.text) return evaluation?.expectedDisplay || '';
+    return `${labelForOptionId(displayedOptions, correctOption.id)}. ${correctOption.text}`;
+  }, [
+    currentItem,
+    displayedOptions,
+    tier1SourceOptions,
+    tier2SourceOptions,
+    evaluation,
+  ]);
 
   useEffect(() => {
     runnerItemsRef.current = runnerItems;
@@ -586,6 +680,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
     setSelectedTrapType(null);
     setSelectedErrorCode(null);
     setClozeInput('');
+    setClozeInputs({});
     setSpotSelectedSpan(null);
     setSpotCorrectionInput('');
     setNumberSortMatches({});
@@ -788,6 +883,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
       {
         selectedOption,
         clozeInput,
+        clozeInputs,
         numberSortMatches,
         spotSelectedSpanId: spotSelectedSpan,
         userReasoning,
@@ -800,7 +896,9 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
       item_id: currentItem.id,
       activity_type: currentItem.item_type,
       user_response:
-        clozeInput || selectedOption || spotSelectedSpan || JSON.stringify(numberSortMatches),
+        currentItem.item_type === 'cloze' && Object.keys(clozeInputs).length > 0
+          ? JSON.stringify(clozeInputs)
+          : clozeInput || selectedOption || spotSelectedSpan || JSON.stringify(numberSortMatches),
       generated_answer_before_options: generatedAnswer,
       selected_option: selectedOption || undefined,
       reasoning_response: userReasoning || undefined,
@@ -1553,9 +1651,11 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
         )}
 
         {/* Question Stem */}
-        <h2 className="text-lg sm:text-xl font-semibold text-slate-100 font-legal-serif leading-relaxed tracking-normal mb-6">
-          {currentItem.stem}
-        </h2>
+        {displayedStem && (
+          <h2 className="text-lg sm:text-xl font-semibold text-slate-100 font-legal-serif leading-relaxed tracking-normal mb-6">
+            {displayedStem}
+          </h2>
+        )}
 
         {/* Hint System Action Button (Visible during cover / answering stages) */}
         {stage !== 'feedback' && (
@@ -1738,82 +1838,127 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
         {/* ---------------------------------------------------- */}
         {/* 2. CLOZE / TEXTO MUTILADO VIEW */}
         {/* ---------------------------------------------------- */}
-        {currentItem.item_type === 'cloze' && (
-          <div className="space-y-6">
-            {/* Statement with blanks highlighted */}
-            <div className="p-5 bg-slate-950 rounded-xl border border-slate-800 text-base leading-relaxed text-slate-200">
-              {(() => {
-                const raw = currentItem.cloze_data?.text_with_clozes || currentItem.cloze_data?.template_text || '';
-                const parts = raw.split(/(\{\{c\d+::.*?\}\})/g);
-                return parts.map((part, i) => {
-                  const m = part.match(/\{\{c\d+::(.*?)\}\}/);
-                  if (m) {
+        {currentItem.item_type === 'cloze' && (() => {
+          const raw =
+            currentItem.cloze_data?.text_with_clozes ||
+            currentItem.cloze_data?.template_text ||
+            currentItem.stem ||
+            '';
+          const markerSpecs = [...raw.matchAll(/\{\{(c\d+)::(.*?)\}\}/g)].map((match) => ({
+            id: match[1],
+            answer: match[2],
+          }));
+          const blanksMeta = currentItem.cloze_data?.blanks ?? [];
+          const metaFor = (id: string, index: number) =>
+            blanksMeta.find(
+              (blank, blankIndex) =>
+                (blank.id ?? `c${(blank.index ?? blankIndex) + 1}`) === id
+            ) ?? blanksMeta[index];
+          const hasMarkers = markerSpecs.length > 0;
+          const hasOptions = (currentItem.options?.length ?? 0) > 0;
+          const allFilled =
+            hasMarkers &&
+            markerSpecs.every((spec) => (clozeInputs[spec.id] ?? '').trim().length > 0);
+          const parts = raw.split(/(\{\{c\d+::.*?\}\})/g);
+
+          return (
+            <div className="space-y-6">
+              {/* Statement with inline blanks */}
+              <div className="p-5 bg-slate-950 rounded-xl border border-slate-800 text-base leading-relaxed text-slate-200">
+                {parts.map((part, i) => {
+                  const match = part.match(/\{\{(c\d+)::(.*?)\}\}/);
+                  if (match) {
+                    const [, blankId, blankAnswer] = match;
+                    if (stage === 'feedback' || hasOptions) {
+                      return (
+                        <span
+                          key={i}
+                          className="inline-block px-2 py-0.5 bg-indigo-900/50 border border-indigo-600/60 rounded text-indigo-300 font-mono text-sm mx-1"
+                        >
+                          {stage === 'feedback' ? blankAnswer : '[ … ]'}
+                        </span>
+                      );
+                    }
                     return (
-                      <span key={i} className="inline-block px-2 py-0.5 bg-indigo-900/50 border border-indigo-600/60 rounded text-indigo-300 font-mono text-sm mx-1">
-                        {stage === 'feedback' ? m[1] : '[ … ]'}
-                      </span>
+                      <input
+                        key={i}
+                        type="text"
+                        value={clozeInputs[blankId] ?? ''}
+                        disabled={stage !== 'answering'}
+                        onChange={(event) =>
+                          setClozeInputs((previous) => ({
+                            ...previous,
+                            [blankId]: event.target.value,
+                          }))
+                        }
+                        onKeyDown={(event) => {
+                          if (event.key === 'Enter' && allFilled) setStage('confidence');
+                        }}
+                        placeholder="…"
+                        aria-label={`Hueco ${blankId}`}
+                        className="inline-block w-28 mx-1 px-2 py-0.5 bg-slate-900 border border-indigo-700/70 rounded text-indigo-200 font-mono text-sm focus:outline-none focus:border-indigo-400 disabled:opacity-70"
+                      />
                     );
                   }
                   return <span key={i}>{part}</span>;
-                });
-              })()}
-            </div>
+                })}
+              </div>
 
-            {/* Exact Phrasing Discrimination (chips): no free-text typing */}
-            {stage === 'answering' && (() => {
-              // Build chip options: from item.options if present, otherwise derive from cloze blanks
-              const chipOpts = currentItem.options && currentItem.options.length > 0
-                ? orderedItemOptions
-                : (() => {
-                    const rawText = currentItem.cloze_data?.template_text || currentItem.cloze_data?.text_with_clozes || '';
-                    const regex = /\{\{c\d+::(.*?)\}\}/g;
-                    const targets: string[] = [];
-                    let m;
-                    while ((m = regex.exec(rawText)) !== null) { targets.push(m[1]); }
-                    return [];
-                  })();
-
-              if (chipOpts.length > 0) {
-                return (
-                  <div className="space-y-3">
-                    <p className="text-xs font-semibold text-slate-300">
-                      Selecciona la redacción jurídica exacta del término o plazo que falta:
-                    </p>
-                    <div className="grid grid-cols-1 gap-2.5">
-                      {chipOpts.map((opt, index) => {
-                        const isSelected = selectedOption === opt.id;
-                        return (
-                          <button
-                            key={opt.id}
-                            disabled={stage !== 'answering'}
-                            onClick={() => handleSubmitOption(opt.id)}
-                            className={`w-full text-left p-3.5 rounded-md border transition flex items-start space-x-3 ${
-                              isSelected
-                                ? 'bg-[#182030] border-indigo-500 text-white ring-1 ring-indigo-500'
-                                : 'bg-[#0c0f17] border-[#20293a] hover:border-indigo-500/60 text-slate-200'
-                            }`}
-                          >
-                            <span className="w-6 h-6 rounded bg-[#182030] border border-[#2b374c] flex items-center justify-center text-xs font-bold shrink-0 text-slate-300 font-mono">
-                              {optionLabelAtPosition(index)}
-                            </span>
-                            <span className="flex-1 text-sm leading-relaxed font-mono">{opt.text}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                    {/* Blank option */}
-                    <button
-                      onClick={handleBlankSubmit}
-                      className="flex items-center space-x-2 px-3.5 py-2 rounded-md bg-[#121722] hover:bg-[#182030] text-slate-400 hover:text-slate-200 border border-[#20293a] text-xs font-medium transition"
-                    >
-                      <span>Dejar en Blanco (0 pts) · [<kbd>B</kbd>]</span>
-                    </button>
+              {/* Exact Phrasing Discrimination (chips) when options exist */}
+              {stage === 'answering' && hasOptions && (
+                <div className="space-y-3">
+                  <p className="text-xs font-semibold text-slate-300">
+                    Selecciona la redacción jurídica exacta del término o plazo que falta:
+                  </p>
+                  <div className="grid grid-cols-1 gap-2.5">
+                    {orderedItemOptions.map((opt, index) => {
+                      const isSelected = selectedOption === opt.id;
+                      return (
+                        <button
+                          key={opt.id}
+                          disabled={stage !== 'answering'}
+                          onClick={() => handleSubmitOption(opt.id)}
+                          className={`w-full text-left p-3.5 rounded-md border transition flex items-start space-x-3 ${
+                            isSelected
+                              ? 'bg-[#182030] border-indigo-500 text-white ring-1 ring-indigo-500'
+                              : 'bg-[#0c0f17] border-[#20293a] hover:border-indigo-500/60 text-slate-200'
+                          }`}
+                        >
+                          <span className="w-6 h-6 rounded bg-[#182030] border border-[#2b374c] flex items-center justify-center text-xs font-bold shrink-0 text-slate-300 font-mono">
+                            {optionLabelAtPosition(index)}
+                          </span>
+                          <span className="flex-1 text-sm leading-relaxed font-mono">{opt.text}</span>
+                        </button>
+                      );
+                    })}
                   </div>
-                );
-              }
+                  <button
+                    onClick={handleBlankSubmit}
+                    className="flex items-center space-x-2 px-3.5 py-2 rounded-md bg-[#121722] hover:bg-[#182030] text-slate-400 hover:text-slate-200 border border-[#20293a] text-xs font-medium transition"
+                  >
+                    <span>Dejar en Blanco (0 pts) · [<kbd>B</kbd>]</span>
+                  </button>
+                </div>
+              )}
 
-              // Fallback: plain text input (only when no options exist)
-              return (
+              {/* Inline blanks: confirm when every gap is filled */}
+              {stage === 'answering' && hasMarkers && !hasOptions && (
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <span className="text-[11px] text-slate-400">
+                    Completa todos los huecos. Pulsa <kbd>Enter</kbd> para comprobar.
+                  </span>
+                  <button
+                    onClick={() => setStage('confidence')}
+                    disabled={!allFilled}
+                    className="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold disabled:opacity-50"
+                  >
+                    Comprobar Respuesta
+                  </button>
+                </div>
+              )}
+
+              {/* Fallback: plain text input when the item has no cloze markers */}
+              {stage === 'answering' && !hasMarkers && (
                 <div className="space-y-3">
                   <label className="text-xs font-semibold text-slate-300">
                     Escribe el término o plazo jurídico exacto que falta:
@@ -1823,8 +1968,10 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                       type="text"
                       disabled={stage !== 'answering'}
                       value={clozeInput}
-                      onChange={(e) => setClozeInput(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === 'Enter' && clozeInput.trim()) setStage('confidence'); }}
+                      onChange={(event) => setClozeInput(event.target.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter' && clozeInput.trim()) setStage('confidence');
+                      }}
                       placeholder="ej: 5 años, 3 meses, 1 año..."
                       className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 disabled:opacity-50"
                       autoFocus
@@ -1838,93 +1985,187 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                     </button>
                   </div>
                 </div>
-              );
-            })()}
-          </div>
-        )}
+              )}
+
+              {/* Per-gap remediation */}
+              {stage === 'feedback' && hasMarkers && (
+                <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
+                    Corrección de huecos
+                  </h4>
+                  <div className="space-y-2.5">
+                    {markerSpecs.map((spec, index) => {
+                      const meta = metaFor(spec.id, index);
+                      const expected = meta?.correct_answer || meta?.answer || meta?.target || spec.answer;
+                      const expectedTargets = [expected, ...(meta?.synonyms ?? [])]
+                        .filter((value): value is string => Boolean(value))
+                        .map(normalizeClozeValue);
+                      const userValue = clozeInputs[spec.id] ?? '';
+                      const normalizedUser = normalizeClozeValue(userValue);
+                      const blankCorrect =
+                        normalizedUser.length > 0 &&
+                        expectedTargets.some(
+                          (target) =>
+                            target === normalizedUser ||
+                            (normalizedUser.length >= 3 && target.includes(normalizedUser))
+                        );
+                      return (
+                        <div
+                          key={spec.id}
+                          className="rounded border border-[#20293a] bg-[#0c0f17] p-3 text-xs space-y-1.5"
+                        >
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-mono text-slate-500">{spec.id}</span>
+                            <span className="font-semibold text-emerald-300">{expected}</span>
+                            {userValue && (
+                              <span className={blankCorrect ? 'text-emerald-400' : 'text-rose-400'}>
+                                Tu respuesta: «{userValue}»
+                              </span>
+                            )}
+                            {blankCorrect ? (
+                              <span className="rounded border border-emerald-800/70 bg-emerald-950/40 px-1.5 py-0.5 text-[10px] font-mono uppercase text-emerald-300">
+                                Correcto
+                              </span>
+                            ) : (
+                              <span className="rounded border border-rose-900/60 bg-rose-950/30 px-1.5 py-0.5 text-[10px] font-mono uppercase text-rose-300">
+                                Revisar
+                              </span>
+                            )}
+                            {meta?.trap_type_if_missed && (
+                              <span className="rounded border border-rose-900/60 bg-rose-950/30 px-1.5 py-0.5 text-[10px] font-mono uppercase tracking-wide text-rose-300">
+                                {trapLabelEs(meta.trap_type_if_missed)}
+                              </span>
+                            )}
+                          </div>
+                          {meta?.explanation && (
+                            <p className="text-slate-400 leading-relaxed">{meta.explanation}</p>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* ---------------------------------------------------- */}
         {/* 3. CONTRAST CARD VIEW */}
         {/* ---------------------------------------------------- */}
-        {currentItem.item_type === 'contrast_card' && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 bg-indigo-950/30 border border-indigo-900/50 rounded-xl">
-                <h4 className="font-bold text-indigo-300 text-sm">
-                  {currentItem.contrast_data?.concept_a}
-                </h4>
-                <p className="text-xs text-slate-400 mt-1">Concepto A</p>
-              </div>
-              <div className="p-4 bg-amber-950/30 border border-amber-900/50 rounded-xl">
-                <h4 className="font-bold text-amber-300 text-sm">
-                  {currentItem.contrast_data?.concept_b}
-                </h4>
-                <p className="text-xs text-slate-400 mt-1">Concepto B</p>
-              </div>
-            </div>
+        {currentItem.item_type === 'contrast_card' && (() => {
+          const data = currentItem.contrast_data;
+          const rows = (
+            data?.comparison_fields ??
+            data?.rows ??
+            data?.matrix_rows ??
+            []
+          ).map((row: any) => ({
+            label: row.label ?? row.criterion ?? '',
+            valueA: row.value_a ?? row.concept_a_val ?? '',
+            valueB: row.value_b ?? row.concept_b_val ?? '',
+            trapNote: row.trap_note ?? '',
+          }));
+          const expectedAnswer = (
+            currentItem.correct_answer ||
+            data?.mini_case_answer ||
+            'A'
+          ).toUpperCase();
+          const correctConcept = expectedAnswer === 'B' ? data?.concept_b : data?.concept_a;
+          const casePrompt = data?.mini_case || data?.prompt_cue;
 
-            {stage === 'answering' && (
-              <div className="space-y-3">
-                <p className="text-xs font-semibold text-slate-300">
-                  Caso práctico: {currentItem.contrast_data?.mini_case}
-                </p>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    disabled={stage !== 'answering'}
-                    onClick={() => {
-                      setSelectedOption('A');
-                      setStage('confidence');
-                    }}
-                    className="p-3 bg-slate-950 border border-slate-800 hover:border-indigo-500 rounded-lg text-xs font-semibold text-slate-200 disabled:opacity-50"
-                  >
-                    Se aplica {currentItem.contrast_data?.concept_a}
-                  </button>
-                  <button
-                    disabled={stage !== 'answering'}
-                    onClick={() => {
-                      setSelectedOption('B');
-                      setStage('confidence');
-                    }}
-                    className="p-3 bg-slate-950 border border-slate-800 hover:border-amber-500 rounded-lg text-xs font-semibold text-slate-200 disabled:opacity-50"
-                  >
-                    Se aplica {currentItem.contrast_data?.concept_b}
-                  </button>
+          return (
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 bg-indigo-950/30 border border-indigo-900/50 rounded-xl">
+                  <h4 className="font-bold text-indigo-300 text-sm">{data?.concept_a}</h4>
+                  <p className="text-xs text-slate-400 mt-1">Concepto A</p>
+                </div>
+                <div className="p-4 bg-amber-950/30 border border-amber-900/50 rounded-xl">
+                  <h4 className="font-bold text-amber-300 text-sm">{data?.concept_b}</h4>
+                  <p className="text-xs text-slate-400 mt-1">Concepto B</p>
                 </div>
               </div>
-            )}
 
-            {stage === 'feedback' && currentItem.contrast_data && (
-              <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
-                <h4 className="text-xs font-bold text-white uppercase">Matriz de Discriminación</h4>
-                <div className="space-y-2 text-xs">
-                  {(
-                    currentItem.contrast_data.comparison_fields ||
-                    currentItem.contrast_data.rows?.map((r) => ({
-                      label: r.criterion,
-                      value_a: r.value_a,
-                      value_b: r.value_b,
-                    })) ||
-                    currentItem.contrast_data.matrix_rows?.map((r) => ({
-                      label: r.criterion,
-                      value_a: r.value_a,
-                      value_b: r.value_b,
-                    })) ||
-                    []
-                  ).map((f, i) => (
-                    <div
-                      key={i}
-                      className="grid grid-cols-3 gap-2 py-1.5 border-b border-slate-850"
+              {stage === 'answering' && (
+                <div className="space-y-3">
+                  <p className="text-xs font-semibold text-slate-300">
+                    {casePrompt ? `Caso práctico: ${casePrompt}` : '¿Qué concepto se aplica?'}
+                  </p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      disabled={stage !== 'answering'}
+                      onClick={() => {
+                        setSelectedOption('A');
+                        setStage('confidence');
+                      }}
+                      className="p-3 bg-slate-950 border border-slate-800 hover:border-indigo-500 rounded-lg text-xs font-semibold text-slate-200 disabled:opacity-50"
                     >
-                      <span className="font-medium text-slate-400">{f.label}</span>
-                      <span className="text-indigo-300">{f.value_a}</span>
-                      <span className="text-amber-300">{f.value_b}</span>
-                    </div>
-                  ))}
+                      Se aplica {data?.concept_a}
+                    </button>
+                    <button
+                      disabled={stage !== 'answering'}
+                      onClick={() => {
+                        setSelectedOption('B');
+                        setStage('confidence');
+                      }}
+                      className="p-3 bg-slate-950 border border-slate-800 hover:border-amber-500 rounded-lg text-xs font-semibold text-slate-200 disabled:opacity-50"
+                    >
+                      Se aplica {data?.concept_b}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+
+              {stage === 'feedback' && data && (
+                <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h4 className="text-xs font-bold text-white uppercase">Matriz de Discriminación</h4>
+                    {correctConcept && (
+                      <span className="rounded border border-emerald-800/70 bg-emerald-950/40 px-2 py-0.5 text-[11px] font-semibold text-emerald-300">
+                        Caso resuelto: se aplica {correctConcept}
+                      </span>
+                    )}
+                  </div>
+
+                  {rows.length > 0 ? (
+                    <div className="space-y-2 text-xs">
+                      <div className="grid grid-cols-3 gap-2 pb-1 text-[10px] font-mono uppercase tracking-wider text-slate-500">
+                        <span>Criterio</span>
+                        <span>A · {data.concept_a}</span>
+                        <span>B · {data.concept_b}</span>
+                      </div>
+                      {rows.map((row, index) => (
+                        <div key={index} className="border-b border-slate-850 pb-2 last:border-b-0">
+                          <div className="grid grid-cols-3 gap-2 py-1">
+                            <span className="font-medium text-slate-400">{row.label}</span>
+                            <span className="text-indigo-300">{row.valueA}</span>
+                            <span className="text-amber-300">{row.valueB}</span>
+                          </div>
+                          {row.trapNote && (
+                            <p className="text-[11px] italic text-amber-400/80">
+                              Trampa típica: {row.trapNote}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-slate-400">
+                      Repasa los rasgos diferenciales de cada concepto antes de continuar.
+                    </p>
+                  )}
+
+                  {data.distinguishing_criteria && (
+                    <p className="border-t border-slate-800 pt-2 text-xs leading-relaxed text-slate-300">
+                      {data.distinguishing_criteria}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* ---------------------------------------------------- */}
         {/* 4. NUMBER / DEADLINE SORTING DRILL */}
@@ -1969,27 +2210,50 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                     if (!value) return;
                     setNumberSortMatches((prev) => ({ ...prev, [pair.id]: value }));
                   }}
-                  className="p-3 bg-slate-950 border border-slate-800 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                  className="p-3 bg-slate-950 border border-slate-800 rounded-lg space-y-1.5"
                 >
-                  <span className="text-xs text-slate-200 font-medium flex-1">{pair.concept}</span>
-                  <select
-                    disabled={stage !== 'answering'}
-                    value={numberSortMatches[pair.id] || ''}
-                    onChange={(e) =>
-                      setNumberSortMatches((prev) => ({
-                        ...prev,
-                        [pair.id]: e.target.value,
-                      }))
-                    }
-                    className="bg-slate-900 border border-slate-700 text-xs text-white rounded px-2.5 py-1.5 focus:outline-none disabled:opacity-50"
-                  >
-                    <option value="">-- Seleccionar valor --</option>
-                    {(currentItem.number_sort_data?.items || []).map((o) => (
-                      <option key={o.id} value={o.correct_value}>
-                        {o.correct_value}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <span className="text-xs text-slate-200 font-medium flex-1">{pair.concept}</span>
+                    <select
+                      disabled={stage !== 'answering'}
+                      value={numberSortMatches[pair.id] || ''}
+                      onChange={(e) =>
+                        setNumberSortMatches((prev) => ({
+                          ...prev,
+                          [pair.id]: e.target.value,
+                        }))
+                      }
+                      className="bg-slate-900 border border-slate-700 text-xs text-white rounded px-2.5 py-1.5 focus:outline-none disabled:opacity-50"
+                    >
+                      <option value="">-- Seleccionar valor --</option>
+                      {(currentItem.number_sort_data?.items || []).map((o) => (
+                        <option key={o.id} value={o.correct_value}>
+                          {o.correct_value}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  {stage === 'feedback' && (() => {
+                    const chosen = numberSortMatches[pair.id];
+                    const isRight = chosen === pair.correct_value;
+                    return (
+                      <div className="flex flex-wrap items-center gap-2 text-[11px]">
+                        <span
+                          className={`rounded border px-1.5 py-0.5 font-mono uppercase tracking-wide ${
+                            isRight
+                              ? 'border-emerald-800/70 bg-emerald-950/40 text-emerald-300'
+                              : 'border-rose-900/60 bg-rose-950/30 text-rose-300'
+                          }`}
+                        >
+                          {isRight ? 'Correcto' : `Correcta: ${pair.correct_value}`}
+                        </span>
+                        {!isRight && chosen && (
+                          <span className="text-rose-400">Tu respuesta: {chosen}</span>
+                        )}
+                        {pair.category && <span className="text-slate-500">{pair.category}</span>}
+                      </div>
+                    );
+                  })()}
                 </div>
               ))}
             </div>
@@ -2075,9 +2339,17 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
               {/* Correction in feedback */}
               {stage === 'feedback' && corrected && (
-                <div className="p-3 bg-emerald-950/30 border border-emerald-700/40 rounded-lg text-xs text-emerald-300">
-                  <span className="font-bold">Corrección jurídica: </span>"{corrected}"
-                  {explanation && <p className="mt-1 text-slate-400">{explanation}</p>}
+                <div className="p-3 bg-emerald-950/30 border border-emerald-700/40 rounded-lg text-xs text-emerald-300 space-y-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-bold">Corrección jurídica: </span>
+                    <span>"{corrected}"</span>
+                    {spotData?.trap_type && (
+                      <span className="rounded border border-rose-900/60 bg-rose-950/30 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-rose-300">
+                        {trapLabelEs(spotData.trap_type)}
+                      </span>
+                    )}
+                  </div>
+                  {explanation && <p className="text-slate-400">{explanation}</p>}
                 </div>
               )}
 
@@ -2173,6 +2445,46 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                   </div>
                 </div>
               ) : null}
+
+              {stage === 'feedback' && (() => {
+                const tier1Correct = t1Options.find((option) => option.is_correct);
+                const tier2Correct = t2Options.find((option) => option.is_correct);
+                const chosenTier2 = t2Options.find((option) => option.id === userReasoning);
+                return (
+                  <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
+                      Corrección del diagnóstico
+                    </h4>
+                    {tier1Correct && (
+                      <p className="text-slate-200">
+                        <span className="font-semibold text-indigo-300">Nivel 1 · Decisión correcta: </span>
+                        {tier1Correct.text}
+                      </p>
+                    )}
+                    {chosenTier2 && (
+                      <p className={chosenTier2.is_correct ? 'text-emerald-300' : 'text-rose-300'}>
+                        <span className="font-semibold">Tu justificación (Nivel 2): </span>
+                        {chosenTier2.text}
+                      </p>
+                    )}
+                    {tier2Correct && (
+                      <p className="text-slate-200">
+                        <span className="font-semibold text-purple-300">Justificación correcta: </span>
+                        {tier2Correct.text}
+                      </p>
+                    )}
+                    {tier2Correct?.explanation && (
+                      <p className="text-slate-400 leading-relaxed">{tier2Correct.explanation}</p>
+                    )}
+                    {chosenTier2 && !chosenTier2.is_correct && chosenTier2.explanation && (
+                      <p className="border-t border-slate-800 pt-2 text-slate-400 leading-relaxed">
+                        <span className="font-semibold text-rose-300">Por qué tu opción no encaja: </span>
+                        {chosenTier2.explanation}
+                      </p>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
           );
         })()}
@@ -2182,25 +2494,37 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
         {/* ---------------------------------------------------- */}
         {(currentItem.item_type === 'exception_tree' ||
           currentItem.item_type === 'fact_variant') && (() => {
+          const isFactVariant = currentItem.item_type === 'fact_variant';
+          const treeData = currentItem.exception_tree_data;
+          const testCase = treeData?.test_cases?.[0];
+          const walkTree = (node: any): Array<{ id: string; label: string; rule_text?: string; legal_basis?: string }> => {
+            if (!node) return [];
+            const children = node.children || [];
+            if (children.length === 0) {
+              return [
+                {
+                  id: node.id,
+                  label: node.label,
+                  rule_text: node.rule_text,
+                  legal_basis: node.legal_basis,
+                },
+              ];
+            }
+            return children.flatMap(walkTree);
+          };
+          const factData = currentItem.fact_variant_data;
+          const variant = factData?.variants?.[0];
+          const baseCase = factData?.base_case;
+
           // Synthesize answer options from polymorphic data when top-level options is empty
           let opts: Array<{ id: string; text: string }> =
-            currentItem.item_type === 'fact_variant'
-              ? orderedFactVariantOptions
-              : currentItem.options || [];
+            isFactVariant ? orderedFactVariantOptions : currentItem.options || [];
 
-          if (opts.length === 0 && currentItem.item_type === 'exception_tree') {
-            const cases = currentItem.exception_tree_data?.test_cases || [];
-            // Gather leaf node labels from root tree
-            const walk = (node: any): Array<{ id: string; label: string }> => {
-              if (!node) return [];
-              const children = node.children || [];
-              if (children.length === 0) return [{ id: node.id, label: node.label }];
-              return children.flatMap(walk);
-            };
-            const leaves = walk(currentItem.exception_tree_data?.root_rule || currentItem.exception_tree_data?.root_node);
-            opts = leaves.map((l) => ({ id: l.id, text: l.label }));
+          if (opts.length === 0 && !isFactVariant) {
+            const cases = treeData?.test_cases || [];
+            const leaves = walkTree(treeData?.root_rule || treeData?.root_node);
+            opts = leaves.map((leaf) => ({ id: leaf.id, text: leaf.label }));
             if (opts.length === 0 && cases.length > 0) {
-              // Last resort: map cases as binary yes/no
               opts = [
                 { id: 'A', text: 'Sí, se aplica la regla general' },
                 { id: 'B', text: 'No, opera la excepción legal' },
@@ -2209,8 +2533,48 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
             }
           }
 
+          const correctLeaf = testCase
+            ? walkTree(treeData?.root_rule || treeData?.root_node).find(
+                (leaf) => leaf.id === testCase.correct_leaf_id
+              )
+            : undefined;
+
           return (
             <div className="space-y-4">
+              {isFactVariant && (baseCase || variant) && stage !== 'feedback' && (
+                <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-2">
+                  <div>
+                    <span className="font-bold uppercase tracking-wider text-indigo-300 font-mono">
+                      Supuesto base
+                    </span>
+                    <p className="mt-1 text-slate-200 leading-relaxed">{baseCase?.scenario}</p>
+                    {baseCase?.question && (
+                      <p className="mt-1 text-slate-400 italic">{baseCase.question}</p>
+                    )}
+                  </div>
+                  {variant && (
+                    <div className="border-t border-slate-800 pt-2">
+                      <span className="font-bold uppercase tracking-wider text-amber-300 font-mono">
+                        Variante · hecho que cambia
+                      </span>
+                      <p className="mt-1 text-slate-200 leading-relaxed">{variant.changed_fact}</p>
+                      {variant.new_scenario && variant.new_scenario !== variant.changed_fact && (
+                        <p className="mt-1 text-slate-400 leading-relaxed">{variant.new_scenario}</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {!isFactVariant && testCase?.scenario && stage !== 'feedback' && (
+                <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs">
+                  <span className="font-bold uppercase tracking-wider text-indigo-300 font-mono">
+                    Caso a resolver
+                  </span>
+                  <p className="mt-1 text-slate-200 leading-relaxed">{testCase.scenario}</p>
+                </div>
+              )}
+
               {stage === 'answering' && (
                 <div className="grid grid-cols-1 gap-3">
                   {opts.map((opt, index) => (
@@ -2221,11 +2585,68 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                       className="w-full text-left p-3.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-indigo-500 text-xs text-slate-200 flex items-center space-x-3 disabled:opacity-50"
                     >
                       <span className="w-5 h-5 rounded bg-slate-800 flex items-center justify-center font-bold shrink-0">
-                        {currentItem.item_type === 'fact_variant' ? optionLabelAtPosition(index) : opt.id}
+                        {isFactVariant ? optionLabelAtPosition(index) : index + 1}
                       </span>
                       <span>{opt.text}</span>
                     </button>
                   ))}
+                </div>
+              )}
+
+              {!isFactVariant && stage === 'feedback' && testCase && (
+                <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-2">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
+                    Resolución del árbol
+                  </h4>
+                  <p className="text-slate-200">
+                    <span className="font-semibold text-indigo-300">Caso: </span>
+                    {testCase.scenario}
+                  </p>
+                  {correctLeaf && (
+                    <p className="text-emerald-300">
+                      <span className="font-semibold">Rama correcta: </span>
+                      {correctLeaf.label}
+                    </p>
+                  )}
+                  {correctLeaf?.rule_text && (
+                    <p className="text-slate-300 leading-relaxed">{correctLeaf.rule_text}</p>
+                  )}
+                  {testCase.explanation && (
+                    <p className="text-slate-400 leading-relaxed">{testCase.explanation}</p>
+                  )}
+                  {correctLeaf?.legal_basis && (
+                    <p className="font-mono text-[11px] text-slate-500">{correctLeaf.legal_basis}</p>
+                  )}
+                </div>
+              )}
+
+              {isFactVariant && stage === 'feedback' && variant && (
+                <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-2">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
+                    Efecto del cambio fáctico
+                  </h4>
+                  <p className="text-slate-200">
+                    <span className="font-semibold text-amber-300">Hecho que cambia: </span>
+                    {variant.changed_fact}
+                  </p>
+                  <p className="text-emerald-300">
+                    <span className="font-semibold">Consecuencia correcta: </span>
+                    {variant.correct_outcome || variant.expected_outcome}
+                  </p>
+                  {variant.explanation && (
+                    <p className="text-slate-400 leading-relaxed">{variant.explanation}</p>
+                  )}
+                  {baseCase?.correct_outcome && (
+                    <p className="border-t border-slate-800 pt-2 text-slate-300">
+                      <span className="font-semibold text-indigo-300">Supuesto base: </span>
+                      {baseCase.correct_outcome}
+                    </p>
+                  )}
+                  {(variant.legal_basis || baseCase?.legal_rule) && (
+                    <p className="font-mono text-[11px] text-slate-500">
+                      {variant.legal_basis || baseCase?.legal_rule}
+                    </p>
+                  )}
                 </div>
               )}
             </div>
@@ -2310,8 +2731,8 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                       <div className="text-xs text-slate-300 mt-0.5">
                         Decisión táctica de examen: Has evitado una penalización de{' '}
                         <strong className="text-amber-400">-{baremoPenalty.toFixed(2)} pts</strong> al no
-                        arriesgar a ciegas. La opción correcta era la{' '}
-                        <strong>{correctAnswerLabel}</strong>.
+                        arriesgar a ciegas. La respuesta correcta era:{' '}
+                        <strong>{expectedAnswerSummary}</strong>.
                       </div>
                     </div>
                   </div>
@@ -2336,7 +2757,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                       <span>
                         {isCorrect
                           ? '¡Respuesta Correcta!'
-                          : `Incorrecto · La opción correcta es la ${correctAnswerLabel}`}
+                          : `Incorrecto · Respuesta correcta: ${expectedAnswerSummary}`}
                       </span>
                       <span className="text-xs px-2 py-0.5 rounded font-mono font-bold bg-slate-900 border border-slate-750">
                         {isCorrect ? '+1.00 pt' : `-${baremoPenalty.toFixed(2)} pts`}

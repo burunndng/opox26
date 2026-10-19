@@ -918,6 +918,39 @@ export const seedItemsTema1: Item[] = [
     item_type: 'cloze',
     stem: 'En el procedimiento ordinario de reforma constitucional (artículo 167), los proyectos deberán ser aprobados por una mayoría de {{c1::3/5}} de cada una de las Cámaras. La reforma será sometida a referéndum potestativo cuando lo soliciten {{c2::1/10}} de los miembros de cualquiera de las Cámaras dentro de los {{c3::15 días naturales}} siguientes a su aprobación.',
     options: [],
+    cloze_data: {
+      template_text:
+        'En el procedimiento ordinario de reforma constitucional (artículo 167), los proyectos deberán ser aprobados por una mayoría de {{c1::3/5}} de cada una de las Cámaras. La reforma será sometida a referéndum potestativo cuando lo soliciten {{c2::1/10}} de los miembros de cualquiera de las Cámaras dentro de los {{c3::15 días naturales}} siguientes a su aprobación.',
+      blanks: [
+        {
+          id: 'c1',
+          index: 1,
+          correct_answer: '3/5',
+          explanation:
+            'El art. 167.1 CE exige que el proyecto sea aprobado por mayoría de tres quintos de cada una de las Cámaras.',
+          trap_type_if_missed: 'numeric_substitution',
+          synonyms: ['tres quintos', '3 quintos', 'mayoría de 3/5'],
+        },
+        {
+          id: 'c2',
+          index: 2,
+          correct_answer: '1/10',
+          explanation:
+            'El referéndum potestativo se activa si lo solicita una décima parte de los miembros de cualquiera de las Cámaras (art. 167.3 CE).',
+          trap_type_if_missed: 'numeric_substitution',
+          synonyms: ['una décima parte', 'la décima parte', 'un décimo'],
+        },
+        {
+          id: 'c3',
+          index: 3,
+          correct_answer: '15 días naturales',
+          explanation:
+            'La solicitud de referéndum debe formularse dentro de los quince días naturales siguientes a la aprobación de la reforma (art. 167.3 CE).',
+          trap_type_if_missed: 'temporal_confusion',
+          synonyms: ['15 dias naturales', 'quince días naturales', '15 días', 'quince dias'],
+        },
+      ],
+    },
     correct_answer: '3/5 | 1/10 | 15 días naturales',
     legal_basis: 'Art. 167 CE',
     rule_statement: 'El Art. 167 exige 3/5 de cada Cámara y referéndum facultativo a petición de 1/10 de miembros en 15 días naturales.',
@@ -940,6 +973,36 @@ export const seedItemsTema1: Item[] = [
     item_type: 'cloze',
     stem: 'La Constitución Española de 1978 cuenta con un total de {{c1::169}} artículos, {{c2::4}} disposiciones adicionales y {{c3::9}} disposiciones transitorias.',
     options: [],
+    cloze_data: {
+      template_text:
+        'La Constitución Española de 1978 cuenta con un total de {{c1::169}} artículos, {{c2::4}} disposiciones adicionales y {{c3::9}} disposiciones transitorias.',
+      blanks: [
+        {
+          id: 'c1',
+          index: 1,
+          correct_answer: '169',
+          explanation: 'La Constitución de 1978 consta de 169 artículos, distribuidos en un título preliminar y diez títulos.',
+          trap_type_if_missed: 'numeric_substitution',
+          synonyms: ['ciento sesenta y nueve'],
+        },
+        {
+          id: 'c2',
+          index: 2,
+          correct_answer: '4',
+          explanation: 'La Constitución tiene cuatro disposiciones adicionales.',
+          trap_type_if_missed: 'numeric_substitution',
+          synonyms: ['cuatro'],
+        },
+        {
+          id: 'c3',
+          index: 3,
+          correct_answer: '9',
+          explanation: 'La Constitución tiene nueve disposiciones transitorias.',
+          trap_type_if_missed: 'numeric_substitution',
+          synonyms: ['nueve'],
+        },
+      ],
+    },
     correct_answer: '169 | 4 | 9',
     legal_basis: 'Estructura CE 1978',
     rule_statement: 'La CE 1978 tiene 169 artículos, 4 adicionales, 9 transitorias, 1 derogatoria y 1 final.',
@@ -964,7 +1027,44 @@ export const seedItemsTema1: Item[] = [
     item_type: 'contrast_card',
     stem: '¿Qué criterio distingue sustancialmente el Procedimiento Ordinario (Art. 167) del Procedimiento Agravado de Reforma (Art. 168)?',
     options: [],
-    correct_answer: 'Quórum exigido (3/5 vs 2/3), disolución de Cortes (no vs preceptiva) y naturaleza del referéndum (facultativo a petición de 1/10 en 15 días vs preceptivo y vinculante).',
+    contrast_data: {
+      concept_a: 'Procedimiento ordinario (Art. 167)',
+      concept_b: 'Procedimiento agravado (Art. 168)',
+      prompt_cue:
+        'Se pretende reformar el artículo 132 CE (potestad originaria del Estado sobre bienes de dominio público). ¿Qué cauce procedimental resulta aplicable?',
+      mini_case:
+        'Se pretende reformar el artículo 132 CE, sobre la potestad originaria del Estado para establecer los bienes de dominio público. ¿Qué procedimiento de reforma resulta aplicable?',
+      mini_case_answer: 'A',
+      distinguishing_criteria:
+        'El art. 167 regula el cauce ordinario: mayoría de 3/5 de cada Cámara, sin disolución de Cortes y referéndum potestativo a petición de 1/10 de miembros en 15 días naturales. El art. 168 reserva el cauce agravado a cuatro materias tasadas (Título Preliminar, Sección 1ª del Cap. II del Título I, Corona y revisión total): exige 2/3 de cada Cámara, disolución automática de las Cortes y referéndum obligatorio y vinculante.',
+      rows: [
+        {
+          criterion: 'Materias reservadas',
+          concept_a_val: 'Materias residuales no reservadas expresamente al art. 168.',
+          concept_b_val: 'Título Preliminar, Sección 1ª del Cap. II del Título I, Título II (Corona) o revisión total.',
+          trap_note: 'Creer que todo el Título I queda blindado por el art. 168: solo lo está la Sección 1ª (arts. 15-29).',
+        },
+        {
+          criterion: 'Mayoría exigida',
+          concept_a_val: '3/5 de cada una de las Cámaras.',
+          concept_b_val: '2/3 de cada Cámara, y 2/3 de las nuevas Cámaras tras la disolución de Cortes.',
+          trap_note: 'Intercambiar los quórums: el 3/5 pertenece al 167 y el 2/3 al 168.',
+        },
+        {
+          criterion: 'Disolución de Cortes',
+          concept_a_val: 'No se disuelven las Cámaras.',
+          concept_b_val: 'Las Cortes se disuelven obligatoriamente tras la aprobación.',
+          trap_note: 'Trasladar al 167 la disolución automática, que solo opera en el 168.',
+        },
+        {
+          criterion: 'Referéndum',
+          concept_a_val: 'Potestativo: puede solicitarse por 1/10 de miembros de cualquiera de las Cámaras dentro de los 15 días naturales siguientes.',
+          concept_b_val: 'Obligatorio y vinculante: la reforma se somete siempre a referéndum del cuerpo electoral.',
+          trap_note: 'Creer que el referéndum del 167 es obligatorio; solo lo es en el 168.',
+        },
+      ],
+    },
+    correct_answer: 'A',
     legal_basis: 'Arts. 167 y 168 CE',
     rule_statement: 'El Art. 167 se aplica a materias residuales con mayoría de 3/5 y referéndum potestativo. El Art. 168 se aplica a Título Preliminar, Sección 1ª Cap. II Título I, Corona o revisión total con 2/3, disolución de Cortes y referéndum obligatorio.',
     why_correct: 'Diferenciación estructural entre la reforma ordinaria y agravada.',
@@ -986,7 +1086,44 @@ export const seedItemsTema1: Item[] = [
     item_type: 'contrast_card',
     stem: '¿Qué diferencia a los Valores Superiores (Art. 1.1 CE) de los Principios del Ordenamiento Jurídico (Art. 9.3 CE)?',
     options: [],
-    correct_answer: 'Los Valores Superiores (Art. 1.1) son 4 metas axiológicas fundamentales del Estado (Libertad, Justicia, Igualdad, Pluralismo Político). Los Principios del Art. 9.3 son 7 garantías normativas del funcionamiento del Estado de Derecho (Legalidad, Jerarquía, Publicidad, Irretroactividad, Seguridad Jurídica, Responsabilidad, Interdicción de la Arbitrariedad).',
+    contrast_data: {
+      concept_a: 'Valores superiores (Art. 1.1 CE)',
+      concept_b: 'Principios del ordenamiento jurídico (Art. 9.3 CE)',
+      prompt_cue:
+        'Una disposición reglamentaria pretende aplicarse de forma retroactiva a situaciones ya consumadas, afectando a la seguridad jurídica. ¿Qué categoría constitucional se está vulnerando de forma directa?',
+      mini_case:
+        'Una disposición reglamentaria pretende aplicarse retroactivamente a situaciones ya consumadas, generando inseguridad jurídica. ¿Qué categoría constitucional resulta directamente vulnerada?',
+      mini_case_answer: 'B',
+      distinguishing_criteria:
+        'Los valores superiores del art. 1.1 son cuatro metas axiológicas que fundamentan el orden político y jurídico (libertad, justicia, igualdad y pluralismo político) y operan como criterios hermenéuticos. Los principios del art. 9.3 son siete garantías estructurales del Estado de Derecho, de exigencia inmediata ante los tribunales.',
+      rows: [
+        {
+          criterion: 'Naturaleza',
+          concept_a_val: 'Cuatro valores axiológicos que fundamentan el orden político y jurídico.',
+          concept_b_val: 'Siete garantías normativas que aseguran el funcionamiento del Estado de Derecho.',
+          trap_note: 'Invertir la naturaleza: los valores fundamentan; los principios garantizan.',
+        },
+        {
+          criterion: 'Contenido',
+          concept_a_val: 'Libertad, justicia, igualdad y pluralismo político (L-J-I-P).',
+          concept_b_val: 'Legalidad, jerarquía normativa, publicidad, irretroactividad, seguridad jurídica, responsabilidad e interdicción de la arbitrariedad.',
+          trap_note: 'Mezclar listas: el pluralismo político es valor (art. 1.1), no principio del art. 9.3.',
+        },
+        {
+          criterion: 'Función',
+          concept_a_val: 'Metas axiológicas que orientan la interpretación de todo el ordenamiento.',
+          concept_b_val: 'Reglas de garantía exigibles que vinculan a los poderes públicos.',
+          trap_note: 'Atribuir a los valores del art. 1.1 la exigibilidad directa que corresponde al art. 9.3.',
+        },
+        {
+          criterion: 'Ubicación sistemática',
+          concept_a_val: 'Título Preliminar, artículo 1.1.',
+          concept_b_val: 'Título Preliminar, artículo 9.3.',
+          trap_note: 'Ambos están en el Título Preliminar: lo que los separa no es la ubicación, sino su naturaleza y función.',
+        },
+      ],
+    },
+    correct_answer: 'B',
     legal_basis: 'Arts. 1.1 y 9.3 CE',
     rule_statement: 'Art. 1.1 = Valores superiores. Art. 9.3 = Garantías y principios del ordenamiento jurídico.',
     why_correct: 'Diferenciación entre valores sustantivos y principios de seguridad formal.',
@@ -1010,6 +1147,42 @@ export const seedItemsTema1: Item[] = [
     item_type: 'number_sort',
     stem: 'Empareja cada hito o norma constitucional histórica con su año o fecha exacta:',
     options: [],
+    number_sort_data: {
+      title: 'Cronología constitucional española',
+      instruction: 'Asocia cada texto constitucional con su año de promulgación.',
+      items: [
+        {
+          id: '1',
+          concept: 'Constitución de Cádiz ("La Pepa")',
+          correct_value: '1812',
+          category: 'Texto constitucional',
+        },
+        {
+          id: '2',
+          concept: 'Estatuto Real de Martínez de la Rosa',
+          correct_value: '1834',
+          category: 'Texto constitucional',
+        },
+        {
+          id: '3',
+          concept: 'Primera constitución democrática',
+          correct_value: '1869',
+          category: 'Texto constitucional',
+        },
+        {
+          id: '4',
+          concept: 'Constitución de la II República',
+          correct_value: '1931',
+          category: 'Texto constitucional',
+        },
+        {
+          id: '5',
+          concept: 'Constitución actual',
+          correct_value: '1978',
+          category: 'Texto constitucional',
+        },
+      ],
+    },
     correct_answer: '1812: Constitución de Cádiz ("La Pepa") | 1869: Primera constitución democrática | 1931: Constitución de la II República | 1978: Constitución actual | 1834: Estatuto Real de Martínez de la Rosa',
     legal_basis: 'Historia Constitucional Española',
     rule_statement: 'Cronología constitucional española: 1812, 1834, 1837, 1845, 1869, 1876, 1931, 1978.',
@@ -1034,6 +1207,16 @@ export const seedItemsTema1: Item[] = [
     item_type: 'spot_error',
     stem: 'Localiza el error en la siguiente proposición jurídica: "La iniciativa de reforma constitucional corresponde al Gobierno, al Congreso, al Senado, a las Asambleas de las Comunidades Autónomas y a los ciudadanos mediante iniciativa popular de 500.000 firmas."',
     options: [],
+    spot_error_data: {
+      full_statement:
+        'La iniciativa de reforma constitucional corresponde al Gobierno, al Congreso, al Senado, a las Asambleas de las Comunidades Autónomas y a los ciudadanos mediante iniciativa popular de 500.000 firmas.',
+      erroneous_span: 'y a los ciudadanos mediante iniciativa popular de 500.000 firmas',
+      corrected_text:
+        'La iniciativa popular está excluida: la reforma constitucional solo puede iniciarse por el Gobierno, el Congreso, el Senado y las Asambleas de las Comunidades Autónomas',
+      explanation:
+        'El art. 166 CE remite a los apartados 1 y 2 del art. 87 CE y excluye expresamente su apartado 3: la iniciativa popular de 500.000 firmas no cabe en la reforma constitucional.',
+      trap_type: 'conceptual_merger',
+    },
     correct_answer: 'Error: "y a los ciudadanos mediante iniciativa popular de 500.000 firmas". Corrección: La iniciativa popular está expresamente prohibida en la reforma constitucional (Art. 166 en relación con Art. 87.3 CE).',
     legal_basis: 'Arts. 166 y 87.3 CE',
     rule_statement: 'La iniciativa de reforma constitucional excluye a la iniciativa popular.',
@@ -1075,6 +1258,48 @@ export const seedItemsTema1: Item[] = [
         condition_if_correct: 'Si fuera un derecho de los arts. 15 a 29.',
       },
     ],
+    two_tier_data: {
+      tier1: {
+        prompt: 'Una reforma que pretenda modificar el derecho de propiedad privada (artículo 33 CE, ubicado en la Sección 2ª del Capítulo II del Título I) se tramitará por:',
+        options: [
+          { id: 'A', text: 'El procedimiento ordinario del artículo 167 CE.', is_correct: true },
+          { id: 'B', text: 'El procedimiento agravado del artículo 168 CE.', is_correct: false },
+        ],
+      },
+      tier2: {
+        prompt: '¿Cuál es la razón jurídica por la que procede ese cauce de reforma?',
+        options: [
+          {
+            id: 'A',
+            text: 'Porque el art. 33 está en la Sección 2ª del Capítulo II del Título I y la reserva agravada del art. 168.1 solo alcanza a la Sección 1ª (arts. 15 a 29).',
+            is_correct: true,
+            explanation:
+              'La protección agravada del art. 168.1 se limita a la Sección 1ª del Capítulo II del Título I; los derechos de la Sección 2ª (arts. 30 a 38) se reforman por el cauce ordinario del art. 167.',
+          },
+          {
+            id: 'B',
+            text: 'Porque el art. 168 solo protege el Título Preliminar y la Corona, de modo que el resto del Título I queda siempre en el art. 167.',
+            is_correct: false,
+            explanation:
+              'Es incompleta: el art. 168.1 protege además la Sección 1ª del Capítulo II del Título I y la revisión total, no solo el Título Preliminar y la Corona.',
+          },
+          {
+            id: 'C',
+            text: 'Porque cualquier reforma del Título I exige referéndum obligatorio, pero su tramitación parlamentaria sigue el art. 167.',
+            is_correct: false,
+            explanation:
+              'Confunde cauces: la reforma de la Sección 2ª no exige referéndum obligatorio, que es exclusivo del procedimiento agravado del art. 168.',
+          },
+          {
+            id: 'D',
+            text: 'Porque el art. 33 puede reformarse por ley orgánica ordinaria sin sujetarse a los arts. 167 y 168.',
+            is_correct: false,
+            explanation:
+              'Toda revisión constitucional, sea cual sea la materia, debe seguir alguno de los dos cauces de los arts. 167 y 168.',
+          },
+        ],
+      },
+    },
     correct_answer: 'A',
     legal_basis: 'Arts. 33, 167 y 168.1 CE',
     rule_statement: 'La reforma de la Sección 2ª del Cap. II del Título I (arts. 30 a 38) sigue el procedimiento ordinario del 167.',
@@ -1099,10 +1324,67 @@ export const seedItemsTema1: Item[] = [
     cluster_id: 'cluster_ce_reforma_procedimientos',
     confusion_pair_id: 'pair_art167_vs_art168',
     item_type: 'fact_variant',
-    stem: 'Laboratorio de Casos de Reforma Constitucional: Analiza el cauce procedimental exigible ante los siguientes supuestos de reforma:',
+    stem: 'Laboratorio de Casos de Reforma Constitucional: Analiza el cauce procedimental exigible ante el supuesto de reforma planteado:',
     options: [],
-    correct_answer: 'Caso Base (Modificar art. 135 estabilidad presupuestaria) -> Art. 167 (Ordinario). Variante 1 (Modificar art. 15 derecho a la vida) -> Art. 168 (Agravado Sección 1ª). Variante 2 (Modificar art. 57 sucesión de la Corona) -> Art. 168 (Agravado Título II). Variante 3 (Modificar art. 140 autonomía municipal) -> Art. 167 (Ordinario).',
-    legal_basis: 'Arts. 167 y 168 CE',
+    fact_variant_data: {
+      base_case: {
+        scenario:
+          'Se propone reformar el artículo 135 CE para introducir una regla de estabilidad presupuestaria más estricta.',
+        question: '¿Qué cauce de reforma constitucional debe seguirse?',
+        correct_outcome:
+          'Procedimiento ordinario del art. 167 CE: mayoría de 3/5 de cada Cámara y referéndum potestativo.',
+        legal_rule:
+          'El art. 135 está en la Sección 2ª del Capítulo II del Título I y no activa la reserva agravada del art. 168.',
+      },
+      variants: [
+        {
+          id: 'v1',
+          changed_fact:
+            'El objeto de la reforma deja de ser el art. 135 y pasa a ser el artículo 15 CE (derecho a la vida).',
+          new_scenario:
+            'Se propone reformar el artículo 15 CE, ubicado en la Sección 1ª del Capítulo II del Título I.',
+          expected_outcome:
+            'Procedimiento agravado del art. 168 CE: 2/3 de cada Cámara, disolución de Cortes y referéndum obligatorio y vinculante.',
+          correct_outcome:
+            'Procedimiento agravado del art. 168 CE: 2/3 de cada Cámara, disolución de Cortes y referéndum obligatorio y vinculante.',
+          outcome_changes: true,
+          explanation:
+            'El art. 15 pertenece a la Sección 1ª del Capítulo II del Título I, materialmente blindada por el art. 168.1: el cambio de hecho desplaza el cauce del 167 al 168.',
+          legal_basis: 'Arts. 15, 167 y 168.1 CE',
+        },
+        {
+          id: 'v2',
+          changed_fact:
+            'El objeto de la reforma pasa a ser el artículo 57 CE (sucesión en la Corona).',
+          new_scenario: 'Se propone reformar el artículo 57 CE, integrado en el Título II (De la Corona).',
+          expected_outcome:
+            'Procedimiento agravado del art. 168 CE: la Corona está expresamente protegida.',
+          correct_outcome:
+            'Procedimiento agravado del art. 168 CE: la Corona está expresamente protegida.',
+          outcome_changes: true,
+          explanation:
+            'El Título II (art. 168.1) figura entre las materias reservadas al procedimiento agravado, por lo que el cambio también altera el resultado.',
+          legal_basis: 'Arts. 57 y 168.1 CE',
+        },
+        {
+          id: 'v3',
+          changed_fact:
+            'El objeto de la reforma pasa a ser el artículo 140 CE (autonomía municipal).',
+          new_scenario:
+            'Se propone reformar el artículo 140 CE, ubicado en el Título VIII (Organización territorial del Estado).',
+          expected_outcome:
+            'Procedimiento ordinario del art. 167 CE: la materia no activa el art. 168.',
+          correct_outcome:
+            'Procedimiento ordinario del art. 167 CE: la materia no activa el art. 168.',
+          outcome_changes: false,
+          explanation:
+            'El art. 140 está fuera de las materias blindadas por el art. 168.1, de modo que el cauce no varía respecto del supuesto base.',
+          legal_basis: 'Arts. 140 y 167 CE',
+        },
+      ],
+    },
+    correct_answer: 'A',
+    legal_basis: 'Arts. 15, 57, 135, 140, 167 y 168 CE',
     rule_statement: 'Discriminación sistemática entre artículos sometidos al 167 y artículos sometidos al 168.',
     why_correct: 'Aplicación contextualizada de la reserva material de reforma constitucional.',
     distractor_analysis: {},

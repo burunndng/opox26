@@ -3,6 +3,7 @@ import { Item, ConfidenceLevel } from '../types.ts';
 export type ResponsePayload = {
   selectedOption?: string | null;
   clozeInput?: string;
+  clozeInputs?: Record<string, string>;
   numberSortMatches?: Record<string, string>;
   spotSelectedSpanId?: string | null;
   userReasoning?: string | null;
@@ -74,7 +75,51 @@ export function evaluateItem(
         break;
       }
 
-      // 2. Cloze input evaluation
+      // 2. Multi-blank evaluation (one input per cloze gap)
+      const rawText = item.cloze_data?.template_text || item.cloze_data?.text_with_clozes || '';
+      const markerAnswers = new Map<string, string>();
+      const regex = /\{\{(c\d+)::(.*?)\}\}/g;
+      let markerMatch;
+      while ((markerMatch = regex.exec(rawText)) !== null) {
+        markerAnswers.set(markerMatch[1], markerMatch[2]);
+      }
+
+      if (response.clozeInputs && Object.keys(response.clozeInputs).length > 0) {
+        const entries = (item.cloze_data?.blanks ?? []).map((b, index) => {
+          const id = b.id || `c${(b.index ?? index) + 1}`;
+          return {
+            id,
+            answer: b.correct_answer || b.answer || b.target || markerAnswers.get(id) || '',
+            synonyms: b.synonyms ?? [],
+          };
+        });
+        const resolvedEntries = entries.length > 0
+          ? entries
+          : [...markerAnswers.entries()].map(([id, answer]) => ({ id, answer, synonyms: [] as string[] }));
+
+        const results = resolvedEntries.map((entry) => {
+          const userVal = normalizeStr(response.clozeInputs![entry.id]);
+          const targets = [entry.answer, ...entry.synonyms]
+            .filter((value): value is string => Boolean(value))
+            .map(normalizeStr)
+            .filter((value) => value.length > 0);
+          return targets.some((target) => target === userVal || (userVal.length >= 3 && target.includes(userVal)));
+        });
+
+        correct = resolvedEntries.length > 0 && results.every(Boolean);
+        if (!correct) {
+          const userValues = resolvedEntries.map((entry) => normalizeStr(response.clozeInputs![entry.id]));
+          if (userValues.some((value) => /\d+/.test(value)) && resolvedEntries.some((entry) => /\d+/.test(entry.answer))) {
+            errorCode = 'E6';
+          } else {
+            errorCode = confidence === 3 ? 'E8' : 'E1';
+          }
+        }
+        expectedDisplay = resolvedEntries.map((entry) => entry.answer).filter(Boolean).join(' · ');
+        break;
+      }
+
+      // 3. Legacy single-input evaluation
       const userVal = normalizeStr(response.clozeInput);
       const validTargets: string[] = [];
 
@@ -82,12 +127,10 @@ export function evaluateItem(
       if (item.cloze_data?.target_answer) validTargets.push(normalizeStr(item.cloze_data.target_answer));
 
       // Extract {{cN::answer}} targets from template
-      const rawText = item.cloze_data?.template_text || item.cloze_data?.text_with_clozes || '';
-      const regex = /\{\{c\d+::(.*?)\}\}/g;
-      let match;
-      while ((match = regex.exec(rawText)) !== null) {
-        if (match[1]) {
-          validTargets.push(normalizeStr(match[1]));
+      regex.lastIndex = 0;
+      while ((markerMatch = regex.exec(rawText)) !== null) {
+        if (markerMatch[2]) {
+          validTargets.push(normalizeStr(markerMatch[2]));
         }
       }
 
@@ -96,6 +139,7 @@ export function evaluateItem(
           if (b.answer) validTargets.push(normalizeStr(b.answer));
           if (b.correct_answer) validTargets.push(normalizeStr(b.correct_answer));
           if (b.target) validTargets.push(normalizeStr(b.target));
+          for (const synonym of b.synonyms ?? []) validTargets.push(normalizeStr(synonym));
         }
       }
 
