@@ -14,6 +14,7 @@ import {
   seedConfusionPairsTema3,
   seedAtomsTema3,
   seedItemsTema3,
+  seedItemsTema3Extras,
 } from './seedDataTema3.ts';
 import {
   seedTopicTema8,
@@ -6509,4 +6510,5 @@ export const seedItems: Item[] = rebalanceCanonicalMcqOptions([
   ...seedItemsTema3,
   ...seedItemsTema8,
   ...seedItemsTema15,
+  ...seedItemsTema3Extras,
 ]);

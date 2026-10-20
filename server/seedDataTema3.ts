@@ -3,7 +3,8 @@
  * "La afiliacion y la inscripcion a la Seguridad Social".
  *
  * SOURCE OF TRUTH: slides `TEMA 3 ESPECIFICO.pdf` (D. Miguel Angel Munoz Ariza),
- * plus the normative instruments cited on those slides:
+ * plus the course materials `TEST 3.1.pdf`, `NORMATIVA.pdf`, `RECURSOS.pdf` and
+ * `CLASES DE ALTA.pdf`, and the normative instruments cited on those slides:
  *   - RD 84/1996 (RIA), incl. art. 32.3.2 as amended by RD 643/2026, de 29 de julio
  *   - RDLeg 8/2015 (TRLGSS)
  *   - Orden TAS/2865/2003 (Convenio Especial)
@@ -288,7 +289,47 @@ export const seedSourceChunksTema3: SourceChunk[] = [
       'En estas materias la TGSS tiene que dictar resolucion en el plazo maximo de 45 dias. Estos actos podran ser impugnados en la forma, plazos y demas condiciones establecidos en la legislacion comun: recurso de alzada (un mes, resolucion en tres meses, desestimacion por silencio), recurso potestativo de reposicion (un mes, resolucion en un mes) y recurso extraordinario de revision.',
     summary: 'Resolucion de la TGSS en 45 dias; recursos de alzada, reposicion y extraordinario de revision de la LPAC.',
     order_index: 24,
+  },  {
+    id: 'chunk_tema3_25',
+    topic_id: TOPIC,
+    page_number: 1,
+    article_reference: 'ET arts. 1.1 y 1.3; LETA art. 1.1; LGSS arts. 7, 15, 138 y 141 a 148',
+    raw_text:
+      'NORMATIVA: trabajador por cuenta ajena (art. 1 ET), trabajador por cuenta propia (art. 1.2 LETA), empresario (art. 1.2 ET), afiliacion (arts. 7 y 15 LGSS), inscripcion de empresas (art. 138 LGSS), afiliacion, cotizacion y recaudacion (Titulo I, Capitulo III LGSS), RIA y convenio especial (Orden TAS/2865/2003).',
+    summary: 'Marco normativo basico: conceptos de trabajador y empresario, afiliacion, inscripcion y convenio especial.',
+    order_index: 25,
   },
+  {
+    id: 'chunk_tema3_26',
+    topic_id: TOPIC,
+    page_number: 1,
+    article_reference: 'TEST 3.1 (10 preguntas)',
+    raw_text:
+      'TEST 3.1: relacion laboral del art. 1.1 ET; empleado del hogar como relacion laboral especial; consejeros excluidos; definicion de trabajador autonomo del art. 1.1 LETA; inscripcion previa del empresario; contenido del Capitulo II del Titulo II LGSS; responsabilidad de la cuota obrera; sujetos obligados en pluriempleo; ajuste de bases por tope maximo; norma que aprueba el SMI.',
+    summary: 'Diez preguntas de repaso sobre conceptos basicos, inscripcion, cotizacion y SMI.',
+    order_index: 26,
+  },
+  {
+    id: 'chunk_tema3_27',
+    topic_id: TOPIC,
+    page_number: 1,
+    article_reference: 'Ley 39/2015, arts. 121 a 126; Ley 29/1998',
+    raw_text:
+      'RECURSOS: alzada ante el superior jerarquico (1 mes; resolucion en 3 meses; silencio desestimatorio); reposicion potestativa ante el mismo organo (1 mes; resolucion en 1 mes); revision de actos firmes (4 anos por error de hecho; 3 meses por las demas causas; silencio desestimatorio); contencioso-administrativo tras la resolucion expresa o presunta de la reposicion.',
+    summary: 'Regimen de los recursos administrativos y acceso a la jurisdiccion contencioso-administrativa.',
+    order_index: 27,
+  },
+  {
+    id: 'chunk_tema3_28',
+    topic_id: TOPIC,
+    page_number: 1,
+    article_reference: 'Art. 166 TRLGSS',
+    raw_text:
+      'CLASES DE ALTA: alta real (actividad iniciada y alta tramitada); alta asimilada (desempleo, excedencia forzosa o por cuidado de hijos, inactividad de temporada, convenio especial; no es total y se limita a las contingencias y al alcance que se determine); alta presunta o de pleno derecho (accidentes de trabajo, enfermedades profesionales, desempleo y asistencia sanitaria por enfermedad comun, maternidad, riesgo durante el embarazo y accidente no laboral); alta especial (huelga y cierre patronal).',
+    summary: 'Alta real, asimilada, presunta y especial: supuestos, alcance y contingencias.',
+    order_index: 28,
+  },
+
 ];
 
 export const seedClustersTema3: Cluster[] = [
@@ -354,7 +395,25 @@ export const seedClustersTema3: Cluster[] = [
     priority: 'high',
     description:
       'Efectos de afiliacion, alta, baja, formalizacion y variacion indebidas (arts. 57 a 62 RIA) y recursos de alzada, reposicion y extraordinario de revision.',
+  },  {
+    id: 'cluster_conceptos_basicos_laborales',
+    topic_id: TOPIC,
+    name: 'Conceptos basicos: trabajo por cuenta ajena y propia, empresario y exclusiones',
+    type: 'conceptual',
+    priority: 'high',
+    description:
+      'Art. 1 ET (relacion laboral y exclusiones, incluidos los consejeros), art. 1 LETA (trabajador autonomo), art. 1.2 ET (empresario) y regimen de relaciones laborales especiales como el servicio domestico.',
   },
+  {
+    id: 'cluster_cotizacion_sujetos_tope',
+    topic_id: TOPIC,
+    name: 'Cotizacion: sujetos responsables, pluriempleo, tope maximo y SMI',
+    type: 'procedural',
+    priority: 'high',
+    description:
+      'Arts. 141, 142, 147 y 148 TRLGSS: sujetos obligados y responsable del pago, cuota obrera, pluriempleo y ajuste al tope maximo; art. 27 ET: aprobacion anual del SMI por Real Decreto.',
+  },
+
 ];
 
 export const seedConfusionPairsTema3: ConfusionPair[] = [
@@ -441,7 +500,21 @@ export const seedConfusionPairsTema3: ConfusionPair[] = [
     legal_basis_b: 'Art. 61.2 RIA',
     severity: 'high',
     status: 'validated',
+  },  {
+    id: 'pair_alzada_vs_reposicion',
+    topic_id: TOPIC,
+    concept_a: 'Recurso de alzada',
+    concept_b: 'Recurso potestativo de reposicion',
+    discriminating_cue:
+      'La alzada se interpone ante el superior jerarquico contra actos que NO ponen fin a la via administrativa (1 mes; resolucion en 3 meses; silencio desestimatorio). La reposicion se interpone potestativamente ante el MISMO organo contra actos que SI ponen fin a la via (1 mes; resolucion en 1 mes).',
+    common_trap:
+      'Invertir el organo ante el que se interpone o el plazo de resolucion, y creer que la reposicion es obligatoria antes de acudir a la jurisdiccion.',
+    legal_basis_a: 'Arts. 121 y 122 Ley 39/2015',
+    legal_basis_b: 'Arts. 123 y 124 Ley 39/2015',
+    severity: 'high',
+    status: 'validated',
   },
+
 ];
 
 export const seedAtomsTema3: Atom[] = [
@@ -741,7 +814,73 @@ export const seedAtomsTema3: Atom[] = [
     tags: ['extincion_empresa', '3_dias', 'sucesion', '6_dias', 'solidaridad'],
     difficulty: 3,
     status: 'validated',
+  },  {
+    id: 'atom-t3-28',
+    topic_id: TOPIC,
+    atom_type: 'definition',
+    text: 'La relacion laboral del art. 1.1 ET es personal, voluntaria, retribuida, por cuenta ajena y dependiente, prestada dentro del ambito de organizacion y direccion de otra persona.',
+    legal_basis: 'Art. 1.1 ET',
+    cluster_id: 'cluster_conceptos_basicos_laborales',
+    tags: ['relacion_laboral', 'cuenta_ajena', 'dependencia', 'voluntariedad'],
+    difficulty: 1,
+    status: 'validated',
   },
+  {
+    id: 'atom-t3-29',
+    topic_id: TOPIC,
+    atom_type: 'exception',
+    text: 'El mero desempeno del cargo de consejero o administrador societario queda excluido del ambito del ET (art. 1.3.c) y tampoco cumple la definicion de trabajador autonomo del art. 1.1 LETA, que exige actuar por cuenta propia y fuera del ambito de direccion de otra persona.',
+    legal_basis: 'Art. 1.3.c) ET; art. 1.1 LETA',
+    cluster_id: 'cluster_conceptos_basicos_laborales',
+    tags: ['consejeros', 'exclusion', 'LETA', 'cuenta_propia'],
+    difficulty: 3,
+    status: 'validated',
+  },
+  {
+    id: 'atom-t3-30',
+    topic_id: TOPIC,
+    atom_type: 'legal_effect',
+    text: 'El empresario es el sujeto responsable del cumplimiento de la obligacion de cotizar e ingresa tanto sus aportaciones como las de sus trabajadores. En pluriempleo, el tope maximo se aplica al conjunto de las bases y tanto empresarios como trabajador deben comunicar la situacion.',
+    legal_basis: 'Arts. 141, 142 y 148 TRLGSS; art. 41.2 RIA',
+    cluster_id: 'cluster_cotizacion_sujetos_tope',
+    tags: ['cuota_obrera', 'empresario', 'pluriempleo', 'tope_maximo'],
+    difficulty: 3,
+    status: 'validated',
+  },
+  {
+    id: 'atom-t3-31',
+    topic_id: TOPIC,
+    atom_type: 'deadline',
+    text: 'El recurso de alzada se interpone en el plazo de un mes ante el superior jerarquico y debe resolverse y notificarse en tres meses; transcurridos estos, se entiende desestimado.',
+    legal_basis: 'Arts. 121 y 122 Ley 39/2015',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    tags: ['alzada', 'un_mes', 'tres_meses', 'silencio_desestimatorio'],
+    difficulty: 2,
+    status: 'validated',
+  },
+  {
+    id: 'atom-t3-32',
+    topic_id: TOPIC,
+    atom_type: 'deadline',
+    text: 'La reposicion se interpone en un mes ante el mismo organo y se resuelve en un mes; la revision se interpone en cuatro anos por error de hecho y en tres meses por las demas causas, con silencio desestimatorio a los tres meses.',
+    legal_basis: 'Arts. 123, 124 y 126 Ley 39/2015',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    tags: ['reposicion', 'revision', 'plazos', 'cuatro_anos', 'tres_meses'],
+    difficulty: 3,
+    status: 'validated',
+  },
+  {
+    id: 'atom-t3-33',
+    topic_id: TOPIC,
+    atom_type: 'classification',
+    text: 'El art. 166 TRLGSS regula las situaciones asimiladas al alta (con alcance limitado a determinadas contingencias), el alta presunta o de pleno derecho (AT, EP, desempleo y asistencia sanitaria por enfermedad comun, maternidad y accidente no laboral) y el alta especial durante la huelga y el cierre patronal.',
+    legal_basis: 'Art. 166 TRLGSS',
+    cluster_id: 'cluster_clases_alta',
+    tags: ['alta_asimilada', 'alta_presunta', 'alta_especial', 'contingencias'],
+    difficulty: 3,
+    status: 'validated',
+  },
+
 ];
 
 /**
@@ -1909,5 +2048,682 @@ export const seedItemsTema3: Item[] = [
     corrective_rule: 'Alta indebida: si hay otro régimen → cómputo recíproco; si no hay ningún régimen → reposición y cuotas sin efecto.',
     difficulty: 4,
     cognitive_operations: ['exception_detection', 'calibrated_decision'],
+  }),
+];
+
+/**
+ * Ampliacion del banco con el TEST 3.1 y los resumenes de NORMATIVA, RECURSOS
+ * y CLASES DE ALTA. Se mantiene en una exportacion separada y se concatena al
+ * final de seedItems para no alterar la posicion canonica de las opciones de
+ * los items ya existentes de Tema 8 y Tema 15.
+ */
+export const seedItemsTema3Extras: Item[] = [
+  buildMcq({
+    id: 'item-t3-31',
+    cluster_id: 'cluster_conceptos_basicos_laborales',
+    stem: 'Según el artículo 1.1 del texto refundido de la Ley del Estatuto de los Trabajadores, la relación laboral se caracteriza, entre otros rasgos, por ser:',
+    correct: {
+      text: 'Personal, voluntaria, retribuida y dependiente.',
+      explanation:
+        'El art. 1.1 ET exige una prestación voluntaria, retribuida, por cuenta ajena y dentro del ámbito de organización y dirección de otra persona, que se resume en personal, voluntaria, retribuida y dependiente.',
+    },
+    distractors: [
+      {
+        text: 'Personal, habitual y retribuida, sin exigencia de dependencia.',
+        trap_type: 'partial_rule_accuracy',
+        explanation: 'Incorrecto. Omite la voluntariedad y, sobre todo, la dependencia o sujeción al ámbito de organización del empresario.',
+        condition_if_correct: 'Si la relación laboral no exigiera dependencia.',
+      },
+      {
+        text: 'Personal, con ánimo de lucro e independiente del empleador.',
+        trap_type: 'conceptual_merger',
+        explanation: 'Incorrecto. Describe rasgos propios del trabajo autónomo, no de la relación laboral por cuenta ajena.',
+        condition_if_correct: 'Si se preguntara por el trabajador autónomo de la LETA.',
+      },
+      {
+        text: 'Voluntaria, retribuida y ajena, pero no dependiente.',
+        trap_type: 'familiar_wording_trap',
+        explanation: 'Incorrecto. La dependencia es nota esencial; sin ella no hay relación laboral del art. 1.1 ET.',
+        condition_if_correct: 'Si la ley excluyera la dependencia de la definición.',
+      },
+    ],
+    legal_basis: 'Art. 1.1 ET (RDLeg 2/2015)',
+    rule_statement: 'La relación laboral es personal, voluntaria, retribuida, por cuenta ajena y dependiente.',
+    corrective_rule:
+      'Fórmula del art. 1.1 ET: voluntaria, retribuida, por cuenta ajena y dependiente. Si falta la dependencia, no es laboral ordinaria.',
+    difficulty: 1,
+    cognitive_operations: ['generative_retrieval', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t3-32',
+    cluster_id: 'cluster_conceptos_basicos_laborales',
+    stem: '¿Qué consideración legal tiene la relación de un empleado del hogar?',
+    correct: {
+      text: 'Relación laboral de carácter especial.',
+      explanation:
+        'La disposición adicional primera del ET y el RD 1620/2011 configuran el servicio doméstico como relación laboral de carácter especial.',
+    },
+    distractors: [
+      {
+        text: 'Relación mercantil sujeta al Código de Comercio.',
+        trap_type: 'conceptual_merger',
+        explanation: 'Incorrecto. El servicio doméstico no es una relación mercantil, sino una relación laboral especial.',
+        condition_if_correct: 'Si el empleado del hogar actuara como empresario mercantil.',
+      },
+      {
+        text: 'Relación laboral ordinaria incluida en el Estatuto de los Trabajadores.',
+        trap_type: 'overbroad_statement',
+        explanation: 'Incorrecto. Es laboral, pero especial; no se rige por el régimen común del ET.',
+        condition_if_correct: 'Si no existiera la relación laboral especial del servicio doméstico.',
+      },
+      {
+        text: 'Relación administrativa propia del personal al servicio de la Administración.',
+        trap_type: 'factual_misapplication',
+        explanation: 'Incorrecto. La relación administrativa se reserva al personal funcionario o estatutario.',
+        condition_if_correct: 'Si el empleador fuera una Administración pública y la relación se rigiera por normas administrativas.',
+      },
+    ],
+    legal_basis: 'Disposición adicional primera ET; RD 1620/2011',
+    rule_statement: 'La relación de los empleados del hogar es una relación laboral de carácter especial.',
+    corrective_rule: 'Empleado del hogar: relación laboral especial, no ordinaria ni mercantil.',
+    difficulty: 1,
+    cognitive_operations: ['generative_retrieval', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t3-33',
+    cluster_id: 'cluster_conceptos_basicos_laborales',
+    stem: 'El mero desempeño de funciones consejeras o de administración en una sociedad:',
+    correct: {
+      text: 'Queda excluido de la consideración de actividad por cuenta ajena y por cuenta propia.',
+      explanation:
+        'El art. 1.3.c) ET excluye la actividad que se limite al mero desempeño del cargo de consejero o administrador; tampoco encaja en la definición de trabajador autónomo del art. 1.1 LETA.',
+    },
+    distractors: [
+      {
+        text: 'Se encuadra en la Ley 20/2007, de 11 de julio, del Estatuto del trabajo autónomo.',
+        trap_type: 'conceptual_merger',
+        explanation: 'Incorrecto. El consejero no actúa por cuenta propia dentro del ámbito de la LETA.',
+        condition_if_correct: 'Si el consejero desarrollara una actividad económica propia al margen del cargo.',
+      },
+      {
+        text: 'Se encuadra en el texto refundido de la Ley del Estatuto de los Trabajadores.',
+        trap_type: 'wrong_legal_object',
+        explanation: 'Incorrecto. El art. 1.3.c) ET excluye expresamente el mero desempeño del cargo.',
+        condition_if_correct: 'Si existiera dependencia y ajenidad más allá del cargo societario.',
+      },
+      {
+        text: 'Queda incluido en el Régimen General como trabajador por cuenta ajena asimilado.',
+        trap_type: 'factual_misapplication',
+        explanation: 'Incorrecto. La exclusión del ET impide el encuadramiento como trabajador por cuenta ajena.',
+        condition_if_correct: 'Si se demostrara una relación laboral distinta de la mera función consejera.',
+      },
+    ],
+    legal_basis: 'Art. 1.3.c) ET; art. 1.1 LETA',
+    rule_statement: 'El mero desempeño de funciones de consejero o administrador queda fuera del ET y de la LETA.',
+    corrective_rule: 'Consejero por el mero cargo: ni trabajador por cuenta ajena ni autónomo.',
+    difficulty: 3,
+    cognitive_operations: ['micro_discrimination', 'exception_detection'],
+  }),
+  buildMcq({
+    id: 'item-t3-34',
+    cluster_id: 'cluster_conceptos_basicos_laborales',
+    stem: 'Según el artículo 1.1 de la Ley 20/2007, del Estatuto del trabajo autónomo, tienen consideración de trabajadores autónomos quienes realizan una actividad:',
+    correct: {
+      text: 'Habitual, personal, directa, por cuenta propia y fuera del ámbito de dirección ajena.',
+      explanation:
+        'El art. 1.1 LETA exige actividad habitual, personal, directa, por cuenta propia y fuera del ámbito de dirección y organización de otra persona, a título lucrativo.',
+    },
+    distractors: [
+      {
+        text: 'Remunerada, dependiente y personal dentro del ámbito de organización del empresario.',
+        trap_type: 'conceptual_merger',
+        explanation: 'Incorrecto. La dependencia y la integración en la organización ajena definen el trabajo por cuenta ajena.',
+        condition_if_correct: 'Si se preguntara por el trabajador del art. 1.1 ET.',
+      },
+      {
+        text: 'Habitual, independiente y directa, aunque la actividad se preste por cuenta ajena.',
+        trap_type: 'partial_rule_accuracy',
+        explanation: 'Incorrecto. La LETA exige actuar por cuenta propia; la ajenidad excluye el encuadramiento como autónomo.',
+        condition_if_correct: 'Si la LETA admitiera el trabajo por cuenta ajena.',
+      },
+      {
+        text: 'Por cuenta propia, dependiente y con ánimo de lucro, sin exigencia de habitualidad.',
+        trap_type: 'partial_rule_accuracy',
+        explanation: 'Incorrecto. La habitualidad es un requisito y la dependencia es incompatible con la definición.',
+        condition_if_correct: 'Si la ley no exigiera habitualidad ni independencia.',
+      },
+    ],
+    legal_basis: 'Art. 1.1 LETA (Ley 20/2007)',
+    rule_statement: 'El trabajador autónomo realiza de forma habitual, personal, directa y por cuenta propia una actividad lucrativa fuera del ámbito de dirección ajeno.',
+    corrective_rule: 'LETA: habitual + personal + directa + por cuenta propia + fuera de organización ajena.',
+    difficulty: 2,
+    cognitive_operations: ['generative_retrieval', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t3-35',
+    cluster_id: 'cluster_inscripcion_empresa',
+    stem: 'Como requisito previo e indispensable a la iniciación de sus actividades, el empresario solicitará su:',
+    correct: {
+      text: 'Inscripción en el Régimen General de la Seguridad Social.',
+      explanation:
+        'El art. 138 TRLGSS y el art. 16 RIA exigen la inscripción del empresario como requisito previo e indispensable, que produce su primer y principal CCC.',
+    },
+    distractors: [
+      {
+        text: 'Afiliación de la propia empresa al Sistema de la Seguridad Social.',
+        trap_type: 'conceptual_merger',
+        explanation: 'Incorrecto. La afiliación corresponde a las personas físicas; la empresa se inscribe.',
+        condition_if_correct: 'Si se preguntara por la afiliación del trabajador.',
+      },
+      {
+        text: 'Obtención del Número de Afiliación (NAF) del empresario.',
+        trap_type: 'wrong_legal_object',
+        explanation: 'Incorrecto. El NAF identifica a la persona física afiliada, no a la empresa.',
+        condition_if_correct: 'Si se preguntara por el identificador del trabajador.',
+      },
+      {
+        text: 'Alta conjunta de la empresa y de todos sus trabajadores en la TGSS.',
+        trap_type: 'overbroad_statement',
+        explanation: 'Incorrecto. La inscripción de la empresa no equivale al alta de cada trabajador.',
+        condition_if_correct: 'Si la norma permitiera un alta colectiva única.',
+      },
+    ],
+    legal_basis: 'Art. 138 TRLGSS; art. 16 RIA',
+    rule_statement: 'El empresario debe inscribirse antes de iniciar su actividad; la inscripción produce su primer CCC.',
+    corrective_rule: 'Empresa: inscripción (CCC). Persona: afiliación (NUSS/NAF).',
+    difficulty: 1,
+    cognitive_operations: ['generative_retrieval', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t3-36',
+    cluster_id: 'cluster_inscripcion_empresa',
+    stem: 'El Capítulo II del Título II del texto refundido de la Ley General de la Seguridad Social regula:',
+    correct: {
+      text: 'Inscripción de empresas y normas sobre afiliación, cotización y recaudación.',
+      explanation:
+        'El Capítulo II del Título II del TRLGSS se dedica a la inscripción de empresas y a las normas sobre afiliación, cotización y recaudación en el Régimen General.',
+    },
+    distractors: [
+      {
+        text: 'Aspectos comunes de la acción protectora y prestaciones del Régimen General.',
+        trap_type: 'true_but_irrelevant',
+        explanation: 'Incorrecto. La acción protectora se regula en otro capítulo del mismo Título II.',
+        condition_if_correct: 'Si se preguntara por el capítulo de la acción protectora.',
+      },
+      {
+        text: 'Normas generales en materia de prestaciones y revalorización de pensiones.',
+        trap_type: 'wrong_legal_object',
+        explanation: 'Incorrecto. Es materia de otros títulos y capítulos, no del Capítulo II del Título II.',
+        condition_if_correct: 'Si el capítulo se dedicara a prestaciones.',
+      },
+      {
+        text: 'Campo de aplicación del Régimen General y reglas de encuadramiento.',
+        trap_type: 'wrong_legal_object',
+        explanation: 'Incorrecto. El campo de aplicación se sitúa en el Capítulo I del Título II.',
+        condition_if_correct: 'Si se preguntara por el Capítulo I.',
+      },
+    ],
+    legal_basis: 'Título II, Capítulo II TRLGSS (arts. 138 y ss.)',
+    rule_statement: 'El Capítulo II del Título II TRLGSS regula la inscripción de empresas y las normas sobre afiliación, cotización y recaudación.',
+    corrective_rule: 'Título II: Cap. I campo de aplicación; Cap. II inscripción, afiliación, cotización y recaudación; Cap. III acción protectora.',
+    difficulty: 2,
+    cognitive_operations: ['generative_retrieval', 'institutional_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t3-37',
+    cluster_id: 'cluster_cotizacion_sujetos_tope',
+    stem: 'En el Régimen General, ¿quién responde ante la Tesorería General de la Seguridad Social del ingreso de la aportación que corresponde al trabajador?',
+    correct: {
+      text: 'La parte empleadora, que asume el pago de la cuota empresarial y de la cuota obrera.',
+      explanation:
+        'El art. 142.1 TRLGSS declara al empresario sujeto responsable de la obligación de cotizar e ingresará las aportaciones propias y las de sus trabajadores en su totalidad.',
+    },
+    distractors: [
+      {
+        text: 'La Tesorería General de la Seguridad Social, en uso de sus competencias recaudatorias.',
+        trap_type: 'wrong_competent_body',
+        explanation: 'Incorrecto. La TGSS recauda y controla, pero no es el sujeto obligado al pago de la cuota.',
+        condition_if_correct: 'Si se preguntara por el órgano recaudador.',
+      },
+      {
+        text: 'El propio trabajador, como sujeto obligado ante la Administración de la Seguridad Social.',
+        trap_type: 'conceptual_merger',
+        explanation: 'Incorrecto. El trabajador es titular de la cuota, pero el empresario responde de su ingreso.',
+        condition_if_correct: 'Si el trabajador ingresara directamente sus aportaciones.',
+      },
+      {
+        text: 'La mutua colaboradora, que recauda ambas cuotas y las ingresa en la TGSS.',
+        trap_type: 'wrong_competent_body',
+        explanation: 'Incorrecto. La mutua colabora en la gestión de contingencias, no recauda la cuota obrera.',
+        condition_if_correct: 'Si la mutua tuviera encomendada la recaudación de cuotas.',
+      },
+    ],
+    legal_basis: 'Arts. 141 y 142 TRLGSS',
+    rule_statement: 'El empresario es el sujeto responsable de cotizar e ingresa tanto la cuota empresarial como la obrera.',
+    corrective_rule: 'Cuota obrera: la descuenta y la ingresa el empresario, que responde de ella ante la TGSS.',
+    difficulty: 2,
+    cognitive_operations: ['micro_discrimination', 'institutional_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t3-38',
+    cluster_id: 'cluster_cotizacion_sujetos_tope',
+    stem: 'María compatibiliza dos empleos a jornada parcial, uno por la mañana en una asesoría y otro por la tarde en un bufete. En esta situación de pluriempleo, ¿quiénes son los sujetos obligados ante la TGSS?',
+    correct: {
+      text: 'Ambas empleadoras y la propia trabajadora.',
+      explanation:
+        'El art. 41.2 RIA obliga a los empresarios que conozcan el pluriempleo a comunicarlo y a los trabajadores a comunicar tal situación a los empresarios y a la TGSS; el art. 142 TRLGSS hace al empresario responsable de la cotización.',
+    },
+    distractors: [
+      {
+        text: 'La Tesorería General de la Seguridad Social, que asume de oficio la recaudación de ambas cuotas.',
+        trap_type: 'wrong_competent_body',
+        explanation: 'Incorrecto. La TGSS actúa de oficio en las actuaciones que procedan, pero no sustituye a los obligados.',
+        condition_if_correct: 'Si la TGSS fuera el sujeto pasivo de la obligación.',
+      },
+      {
+        text: 'Solo la empleadora de mayor antigüedad, que actúa como titular del CCC principal.',
+        trap_type: 'factual_misapplication',
+        explanation: 'Incorrecto. En pluriempleo cada empleadora mantiene sus obligaciones; no hay una empleadora principal.',
+        condition_if_correct: 'Si la norma designara un empresario principal para el pluriempleo.',
+      },
+      {
+        text: 'Únicamente la trabajadora, por ser quien conoce la suma de sus retribuciones.',
+        trap_type: 'hyper_narrow_statement',
+        explanation: 'Incorrecto. La trabajadora debe comunicar la situación, pero las empleadoras también son sujetos obligados.',
+        condition_if_correct: 'Si el pluriempleo solo generara deberes para el trabajador.',
+      },
+    ],
+    legal_basis: 'Arts. 141 y 142 TRLGSS; art. 41.2 RIA',
+    rule_statement: 'En pluriempleo, empresarios y trabajador deben comunicar la situación y el empresario responde de la cotización.',
+    corrective_rule: 'Pluriempleo: deber de comunicación de ambas empleadoras y del trabajador; cotización responsable en cada empleadora.',
+    difficulty: 3,
+    cognitive_operations: ['application', 'institutional_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t3-39',
+    cluster_id: 'cluster_cotizacion_sujetos_tope',
+    stem: 'En el supuesto anterior, María percibe 6.000 euros al mes y supera el tope máximo de cotización. ¿A quién corresponde solicitar el ajuste de sus bases de cotización?',
+    correct: {
+      text: 'Tanto a las empleadoras como a la trabajadora.',
+      explanation:
+        'El art. 148.2 TRLGSS aplica el tope máximo en pluriempleo y el art. 41.2 RIA impone a empresarios y trabajador el deber de comunicar la situación para que se practiquen las actuaciones de ajuste.',
+    },
+    distractors: [
+      {
+        text: 'A la TGSS, que practica el ajuste de oficio al detectar el exceso.',
+        trap_type: 'wrong_competent_body',
+        explanation: 'Incorrecto. La TGSS puede actuar de oficio, pero el deber de comunicar y solicitar el ajuste incumbe a los obligados.',
+        condition_if_correct: 'Si la TGSS fuera la única legitimada para instar el ajuste.',
+      },
+      {
+        text: 'En exclusiva a la empleadora, como responsable del pago de ambas cuotas.',
+        trap_type: 'hyper_narrow_statement',
+        explanation: 'Incorrecto. La trabajadora también está obligada a comunicar la situación de pluriempleo.',
+        condition_if_correct: 'Si el trabajador careciera de deber de comunicación.',
+      },
+      {
+        text: 'Únicamente a la trabajadora, por ser la única que conoce sus ingresos totales.',
+        trap_type: 'hyper_narrow_statement',
+        explanation: 'Incorrecto. Las empleadoras conocen sus retribuciones y también deben comunicar el pluriempleo.',
+        condition_if_correct: 'Si las empleadoras no tuvieran deber alguno de comunicación.',
+      },
+    ],
+    legal_basis: 'Art. 148.2 TRLGSS; art. 41.2 RIA',
+    rule_statement: 'El tope máximo se aplica al conjunto de bases en pluriempleo y empleadoras y trabajador deben comunicar la situación.',
+    corrective_rule: 'Tope máximo en pluriempleo: ajuste a instancia de empleadoras y trabajador, sin perjuicio de la actuación de oficio de la TGSS.',
+    difficulty: 3,
+    cognitive_operations: ['application', 'numeric_precision'],
+  }),
+  buildMcq({
+    id: 'item-t3-40',
+    cluster_id: 'cluster_cotizacion_sujetos_tope',
+    stem: '¿Con qué tipo de norma se aprueba anualmente la cuantía del Salario Mínimo Interprofesional?',
+    correct: {
+      text: 'Real Decreto acordado en Consejo de Ministros.',
+      explanation:
+        'El art. 27.1 ET atribuye al Gobierno la fijación anual del SMI, previa consulta a las organizaciones sindicales y asociaciones empresariales, que se instrumenta mediante Real Decreto.',
+    },
+    distractors: [
+      {
+        text: 'Ley Orgánica aprobada por las Cortes Generales.',
+        trap_type: 'wrong_legal_object',
+        explanation: 'Incorrecto. El SMI no se aprueba por ley orgánica.',
+        condition_if_correct: 'Si la Constitución reservara el SMI a ley orgánica.',
+      },
+      {
+        text: 'Ley ordinaria de acompañamiento de los Presupuestos.',
+        trap_type: 'wrong_legal_object',
+        explanation: 'Incorrecto. La ley de presupuestos puede fijar magnitudes, pero el SMI se aprueba por Real Decreto.',
+        condition_if_correct: 'Si el ET remitiera el SMI a una ley ordinaria.',
+      },
+      {
+        text: 'Orden Ministerial del Ministerio de Trabajo.',
+        trap_type: 'wrong_legal_object',
+        explanation: 'Incorrecto. La orden ministerial no es el instrumento previsto en el art. 27 ET.',
+        condition_if_correct: 'Si el ET atribuyera la competencia al ministro.',
+      },
+    ],
+    legal_basis: 'Art. 27 ET',
+    rule_statement: 'El Gobierno fija anualmente el SMI mediante Real Decreto, previa consulta a los interlocutores sociales.',
+    corrective_rule: 'SMI: Real Decreto del Gobierno, no ley ni orden ministerial.',
+    difficulty: 2,
+    cognitive_operations: ['generative_retrieval', 'institutional_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t3-41',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    confusion_pair_id: 'pair_alzada_vs_reposicion',
+    stem: 'El recurso de alzada se interpone ante el órgano superior jerárquico del que dictó el acto. ¿Cuáles son los plazos de interposición y de resolución?',
+    correct: {
+      text: 'Un mes para interponerlo y tres meses para dictar y notificar la resolución.',
+      explanation:
+        'El art. 121.1 Ley 39/2015 exige un mes para la interposición y el art. 122.2 fija tres meses para dictar y notificar; transcurridos, se entiende desestimado.',
+    },
+    distractors: [
+      {
+        text: 'Un mes para interponerlo y un mes para dictar y notificar la resolución.',
+        trap_type: 'numeric_substitution',
+        explanation: 'Incorrecto. Un mes es el plazo de resolución de la reposición, no de la alzada.',
+        condition_if_correct: 'Si se preguntara por el recurso de reposición.',
+      },
+      {
+        text: 'Tres meses para interponerlo y un mes para dictar y notificar la resolución.',
+        trap_type: 'temporal_confusion',
+        explanation: 'Incorrecto. Se invierten los plazos: un mes para interponer y tres para resolver.',
+        condition_if_correct: 'Si la ley hubiera invertido ambos plazos.',
+      },
+      {
+        text: 'Diez días para interponerlo y tres meses para dictar y notificar la resolución.',
+        trap_type: 'numeric_substitution',
+        explanation: 'Incorrecto. El plazo de interposición es de un mes; diez días es el de subsanación.',
+        condition_if_correct: 'Si la alzada se tramitara como un trámite de subsanación.',
+      },
+    ],
+    legal_basis: 'Arts. 121 y 122 Ley 39/2015',
+    rule_statement: 'Alzada: un mes para interponer y tres meses para resolver y notificar; silencio desestimatorio.',
+    corrective_rule: 'Alzada: 1 mes / 3 meses / silencio desestimatorio. Reposición: 1 mes / 1 mes.',
+    difficulty: 2,
+    cognitive_operations: ['generative_retrieval', 'numeric_precision'],
+  }),
+  buildMcq({
+    id: 'item-t3-42',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    stem: '¿Qué actos pueden recurrirse en alzada?',
+    correct: {
+      text: 'Los que no ponen fin a la vía administrativa, incluidos los actos de trámite que decidan el fondo, impidan continuar o causen indefensión o perjuicio irreparable.',
+      explanation:
+        'El art. 121.1 Ley 39/2015 incluye las resoluciones y los actos de trámite que decidan el fondo, determinen la imposibilidad de continuar, o produzcan indefensión o perjuicio irreparable, cuando no pongan fin a la vía administrativa.',
+    },
+    distractors: [
+      {
+        text: 'Solo las resoluciones expresas que ponen fin a la vía administrativa, ya que los actos de trámite y las meras comunicaciones quedan fuera de este recurso.',
+        trap_type: 'hyper_narrow_statement',
+        explanation: 'Incorrecto. La alzada se dirige precisamente contra actos que no ponen fin a la vía, incluidos ciertos actos de trámite.',
+        condition_if_correct: 'Si la alzada solo procediera contra actos definitivos.',
+      },
+      {
+        text: 'Los actos firmes en vía administrativa, cuando concurra alguna de las causas tasadas del artículo 125 de la Ley 39/2015, como el error de hecho.',
+        trap_type: 'conceptual_merger',
+        explanation: 'Incorrecto. Esos son los actos recurribles en revisión extraordinaria, no en alzada.',
+        condition_if_correct: 'Si se preguntara por el recurso extraordinario de revisión.',
+      },
+      {
+        text: 'Cualquier acto administrativo, incluidos los que ponen fin a la vía administrativa, sin necesidad de agotar la vía administrativa previa en ningún caso.',
+        trap_type: 'overbroad_statement',
+        explanation: 'Incorrecto. Los actos que ponen fin a la vía se impugnan por reposición o directamente ante la jurisdicción.',
+        condition_if_correct: 'Si la alzada fuera un recurso universal.',
+      },
+    ],
+    legal_basis: 'Art. 121.1 Ley 39/2015',
+    rule_statement: 'La alzada procede contra resoluciones y actos de trámite cualificados que no ponen fin a la vía administrativa.',
+    corrective_rule: 'Alzada: acto que NO pone fin a la vía. Reposición: acto que SÍ pone fin a la vía.',
+    difficulty: 3,
+    cognitive_operations: ['micro_discrimination', 'exception_detection'],
+  }),
+  buildMcq({
+    id: 'item-t3-43',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    confusion_pair_id: 'pair_alzada_vs_reposicion',
+    stem: 'El recurso potestativo de reposición se interpone:',
+    correct: {
+      text: 'Ante el mismo órgano que dictó el acto, en el plazo de un mes.',
+      explanation:
+        'El art. 123.1 Ley 39/2015 permite interponer potestativamente la reposición ante el mismo órgano que dictó el acto en el plazo de un mes.',
+    },
+    distractors: [
+      {
+        text: 'Ante el órgano superior jerárquico, en el plazo de un mes.',
+        trap_type: 'wrong_competent_body',
+        explanation: 'Incorrecto. La reposición se dirige al mismo órgano; la alzada, al superior jerárquico.',
+        condition_if_correct: 'Si se preguntara por el recurso de alzada.',
+      },
+      {
+        text: 'Ante el mismo órgano que dictó el acto, en el plazo de tres meses.',
+        trap_type: 'temporal_confusion',
+        explanation: 'Incorrecto. El plazo de interposición es de un mes; tres meses es el de resolución de la alzada.',
+        condition_if_correct: 'Si se preguntara por la resolución de la alzada.',
+      },
+      {
+        text: 'Ante el órgano superior jerárquico, en el plazo de tres meses.',
+        trap_type: 'wrong_competent_body',
+        explanation: 'Incorrecto. Confunde órgano y plazo con los de la alzada.',
+        condition_if_correct: 'Si la reposición se confundiera con la alzada.',
+      },
+    ],
+    legal_basis: 'Arts. 123 y 124 Ley 39/2015',
+    rule_statement: 'La reposición es potestativa, se interpone ante el mismo órgano y en el plazo de un mes.',
+    corrective_rule: 'Reposición: mismo órgano, 1 mes; resolución en 1 mes. Alzada: superior, 1 mes; resolución en 3 meses.',
+    difficulty: 2,
+    cognitive_operations: ['generative_retrieval', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t3-44',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    stem: 'Interpuesto un recurso de reposición, ¿cuándo puede acudirse a la jurisdicción contencioso-administrativa?',
+    correct: {
+      text: 'Cuando se resuelva expresamente o se produzca la desestimación presunta del recurso.',
+      explanation:
+        'El art. 123.2 Ley 39/2015 exige que la reposición se resuelva expresamente o se entienda desestimada por silencio antes de acudir a la jurisdicción.',
+    },
+    distractors: [
+      {
+        text: 'De forma inmediata, sin esperar a que la Administración resuelva el recurso.',
+        trap_type: 'exception_ignored',
+        explanation: 'Incorrecto. La interposición de la reposición suspende el acceso a la vía judicial hasta su resolución expresa o presunta.',
+        condition_if_correct: 'Si la reposición no tuviera efecto suspensivo.',
+      },
+      {
+        text: 'Solo cuando se haya resuelto expresamente y se haya notificado la resolución.',
+        trap_type: 'hyper_narrow_statement',
+        explanation: 'Incorrecto. También cabe acudir tras la desestimación presunta.',
+        condition_if_correct: 'Si el silencio no produjera desestimación.',
+      },
+      {
+        text: 'Cuando transcurran tres meses desde la interposición sin resolución expresa.',
+        trap_type: 'temporal_confusion',
+        explanation: 'Incorrecto. El plazo de resolución de la reposición es de un mes, no de tres.',
+        condition_if_correct: 'Si se tratara de la alzada.',
+      },
+    ],
+    legal_basis: 'Art. 123.2 Ley 39/2015',
+    rule_statement: 'No se acude a la jurisdicción hasta que la reposición se resuelva expresamente o se entienda desestimada.',
+    corrective_rule: 'Reposición: 1 mes para resolver; después, expresa o presuntamente desestimada, queda expedita la vía judicial.',
+    difficulty: 2,
+    cognitive_operations: ['application', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t3-45',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    stem: '¿Cuál es el plazo para interponer el recurso extraordinario de revisión según la causa invocada?',
+    correct: {
+      text: 'Cuatro años por error de hecho y tres meses por las demás causas.',
+      explanation:
+        'El art. 126.1 Ley 39/2015 fija cuatro años desde la notificación para el error de hecho y el art. 126.2 tres meses desde el conocimiento de los documentos o desde que la sentencia quedó firme para las demás causas.',
+    },
+    distractors: [
+      {
+        text: 'Cuatro años por cualquier causa, sin distinción entre error de hecho y demás supuestos.',
+        trap_type: 'exception_ignored',
+        explanation: 'Incorrecto. Los cuatro años solo rigen para el error de hecho; las demás causas tienen tres meses.',
+        condition_if_correct: 'Si la ley unificara el plazo en cuatro años.',
+      },
+      {
+        text: 'Tres meses por error de hecho y cuatro años por las demás causas.',
+        trap_type: 'rule_exception_swap',
+        explanation: 'Incorrecto. Invierte los plazos: cuatro años para el error de hecho y tres meses para lo demás.',
+        condition_if_correct: 'Si la ley hubiera invertido ambos plazos.',
+      },
+      {
+        text: 'Un mes por error de hecho y tres meses por las demás causas.',
+        trap_type: 'numeric_substitution',
+        explanation: 'Incorrecto. El error de hecho tiene cuatro años, no un mes.',
+        condition_if_correct: 'Si el error de hecho se equiparara al plazo de interposición de la alzada.',
+      },
+    ],
+    legal_basis: 'Art. 126.1 y 2 Ley 39/2015',
+    rule_statement: 'Revisión: cuatro años por error de hecho y tres meses por las demás causas.',
+    corrective_rule: 'Revisión: 4 años (error de hecho) / 3 meses (demás causas) / 3 meses de silencio desestimatorio.',
+    difficulty: 3,
+    cognitive_operations: ['generative_retrieval', 'numeric_precision'],
+  }),
+  buildMcq({
+    id: 'item-t3-46',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    stem: 'Transcurridos tres meses desde la interposición del recurso extraordinario de revisión sin resolución expresa, se entiende:',
+    correct: {
+      text: 'Desestimado, quedando expedita la vía contencioso-administrativa.',
+      explanation:
+        'El art. 126.3 Ley 39/2015 dispone que, transcurridos tres meses desde la interposición sin dictarse y notificarse la resolución, se entiende desestimado y queda expedita la vía jurisdiccional.',
+    },
+    distractors: [
+      {
+        text: 'Estimado por silencio positivo, sin necesidad de resolución expresa.',
+        trap_type: 'conceptual_merger',
+        explanation: 'Incorrecto. En la revisión el silencio es desestimatorio, no positivo.',
+        condition_if_correct: 'Si la ley hubiera configurado un silencio positivo.',
+      },
+      {
+        text: 'Desestimado, sin posibilidad de acudir a la vía judicial.',
+        trap_type: 'exception_ignored',
+        explanation: 'Incorrecto. La desestimación presunta deja expedita la vía contencioso-administrativa.',
+        condition_if_correct: 'Si el silencio clausurara toda vía de impugnación.',
+      },
+      {
+        text: 'Suspendido hasta que el órgano competente resuelva expresamente.',
+        trap_type: 'factual_misapplication',
+        explanation: 'Incorrecto. El silencio no suspende el recurso: lo entiende desestimado.',
+        condition_if_correct: 'Si la ley previera una suspensión indefinida por falta de resolución.',
+      },
+    ],
+    legal_basis: 'Art. 126.3 Ley 39/2015',
+    rule_statement: 'El silencio de tres meses en la revisión es desestimatorio y abre la vía contencioso-administrativa.',
+    corrective_rule: 'Revisión: silencio a los 3 meses = desestimación presunta + vía judicial expedita.',
+    difficulty: 2,
+    cognitive_operations: ['generative_retrieval', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t3-47',
+    cluster_id: 'cluster_clases_alta',
+    stem: 'Un trabajador inicia la actividad y la empresa cumple la obligación de comunicarlo a la TGSS dentro de plazo. ¿Qué clase de situación ostenta?',
+    correct: {
+      text: 'Alta real.',
+      explanation:
+        'El alta real se produce cuando, habiendo iniciado la actividad laboral, se cumple con la obligación de tramitar el alta.',
+    },
+    distractors: [
+      {
+        text: 'Alta asimilada.',
+        trap_type: 'conceptual_merger',
+        explanation: 'Incorrecto. La asimilada presupone el cese en la actividad y la conservación del alta para determinadas contingencias.',
+        condition_if_correct: 'Si se hubiera producido un cese temporal o definitivo con conservación del alta.',
+      },
+      {
+        text: 'Alta presunta o de pleno derecho.',
+        trap_type: 'conceptual_merger',
+        explanation: 'Incorrecto. La presunta opera cuando el empresario ha incumplido su obligación de tramitar el alta.',
+        condition_if_correct: 'Si la empresa no hubiera tramitado el alta.',
+      },
+      {
+        text: 'Alta especial.',
+        trap_type: 'conceptual_merger',
+        explanation: 'Incorrecto. La especial se reserva a los supuestos de huelga y cierre patronal.',
+        condition_if_correct: 'Si el trabajador estuviera en huelga o la empresa en cierre patronal.',
+      },
+    ],
+    legal_basis: 'Art. 165.1 TRLGSS; art. 32 RIA',
+    rule_statement: 'El alta real es la que se tramita al iniciarse la actividad laboral.',
+    corrective_rule: 'Alta real: actividad + alta tramitada. Asimilada: cese con conservación. Presunta: alta no tramitada. Especial: huelga o cierre.',
+    difficulty: 1,
+    cognitive_operations: ['generative_retrieval', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t3-48',
+    cluster_id: 'cluster_clases_alta',
+    stem: 'La asimilación al alta en los supuestos legalmente tipificados, como el desempleo o la excedencia forzosa:',
+    correct: {
+      text: 'No es total: se reconoce solo para las contingencias y con el alcance que cada caso determine.',
+      explanation:
+        'El art. 166.3 TRLGSS asimila determinados supuestos a la situación de alta para determinadas contingencias, con el alcance y condiciones que reglamentariamente se establezcan.',
+    },
+    distractors: [
+      {
+        text: 'Es total y equipara por completo la situación al alta real en todas las contingencias.',
+        trap_type: 'overbroad_statement',
+        explanation: 'Incorrecto. La asimilación no es total ni alcanza a todas las contingencias.',
+        condition_if_correct: 'Si la ley equiparara la asimilada al alta real sin limitaciones.',
+      },
+      {
+        text: 'Solo se reconoce a efectos de asistencia sanitaria y nunca de prestaciones económicas.',
+        trap_type: 'hyper_narrow_statement',
+        explanation: 'Incorrecto. La asimilación puede cubrir prestaciones económicas según el supuesto y su alcance.',
+        condition_if_correct: 'Si la norma limitara la asimilación a la asistencia sanitaria.',
+      },
+      {
+        text: 'Convierte la situación en alta presunta o de pleno derecho con automaticidad plena.',
+        trap_type: 'conceptual_merger',
+        explanation: 'Incorrecto. La alta presunta es una figura distinta, ligada al incumplimiento empresarial.',
+        condition_if_correct: 'Si el supuesto implicara falta de alta imputable al empresario.',
+      },
+    ],
+    legal_basis: 'Art. 166.3 TRLGSS',
+    rule_statement: 'La asimilación al alta se limita a las contingencias y al alcance que cada supuesto determine.',
+    corrective_rule: 'Asimilada: no es total; solo contingencias y alcance tasados. Presunta: por falta de alta, con automaticidad.',
+    difficulty: 3,
+    cognitive_operations: ['micro_discrimination', 'exception_detection'],
+  }),
+  buildMcq({
+    id: 'item-t3-49',
+    cluster_id: 'cluster_clases_alta',
+    stem: 'Cuando el empresario no ha tramitado el alta, la situación de alta presunta o de pleno derecho cubre, entre otras, las siguientes contingencias:',
+    correct: {
+      text: 'Accidentes de trabajo, enfermedades profesionales y desempleo, y asistencia sanitaria por enfermedad común, maternidad y accidente no laboral.',
+      explanation:
+        'El art. 166.4 TRLGSS considera a los trabajadores de pleno derecho en alta para accidentes de trabajo, enfermedades profesionales y desempleo, y a efectos de asistencia sanitaria por enfermedad común, maternidad y accidente no laboral; el art. 29.2 RIA añade el riesgo durante el embarazo.',
+    },
+    distractors: [
+      {
+        text: 'Todas las contingencias del sistema, incluidas la jubilación, la incapacidad permanente y la muerte y supervivencia.',
+        trap_type: 'overbroad_statement',
+        explanation: 'Incorrecto. La presunción no alcanza a todas las contingencias, sino a las expresamente previstas.',
+        condition_if_correct: 'Si la ley extendiera la presunción a todo el sistema.',
+      },
+      {
+        text: 'Solo accidentes de trabajo y enfermedades profesionales, con exclusión expresa del desempleo y de la asistencia sanitaria por enfermedad común.',
+        trap_type: 'hyper_narrow_statement',
+        explanation: 'Incorrecto. También cubre el desempleo y determinadas prestaciones sanitarias.',
+        condition_if_correct: 'Si la norma se limitara a las contingencias profesionales.',
+      },
+      {
+        text: 'Únicamente la asistencia sanitaria por enfermedad común, maternidad y accidente no laboral, sin cobertura de desempleo ni de riesgo durante el embarazo.',
+        trap_type: 'hyper_narrow_statement',
+        explanation: 'Incorrecto. La presunción también cubre desempleo, accidentes de trabajo y enfermedades profesionales.',
+        condition_if_correct: 'Si solo se protegiera la asistencia sanitaria.',
+      },
+    ],
+    legal_basis: 'Art. 166.4 TRLGSS; art. 29.2 RIA',
+    rule_statement: 'La alta presunta cubre AT, EP y desempleo, y asistencia sanitaria por enfermedad común, maternidad, riesgo durante el embarazo y accidente no laboral.',
+    corrective_rule: 'Alta presunta: AT, EP, desempleo + asistencia sanitaria (EC, maternidad, riesgo embarazo, accidente no laboral).',
+    difficulty: 3,
+    cognitive_operations: ['generative_retrieval', 'exception_detection'],
   }),
 ];
