@@ -907,9 +907,7 @@ Si generas átomos normativos, incluye un bloque json:oposilab_atoms:
         'OPOSILAB_OFFLINE=1: network disabled for tests/offline use'
       );
     }
-    const apiKey =
-      process.env.OPENROUTER_API_KEY ||
-      'sk-or-v1-REDACTED';
+    const apiKey = process.env.OPENROUTER_API_KEY || '';
     const targetModel = params.model || 'openrouter/free';
 
     const defaultSystem = `Eres el preparador de élite y diseñador instruccional psicométrico de OposiLab MCQ Trainer para oposiciones de la Administración Pública Española, especializado en el Texto Refundido de la Ley General de la Seguridad Social (TRLGSS).

@@ -20,7 +20,12 @@ import {
   deleteDoc,
   serverTimestamp,
 } from 'firebase/firestore';
-import firebaseConfig from '../firebase-applet-config.json';
+import rawFirebaseConfig from '../firebase-applet-config.json';
+
+const firebaseConfig = {
+  ...rawFirebaseConfig,
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || rawFirebaseConfig.apiKey,
+};
 
 // Initialize Firebase App
 export const app = initializeApp(firebaseConfig);

@@ -166,10 +166,7 @@ export class JevClient {
   private static readonly OPENROUTER_DECISIONS_URL = 'https://openrouter.ai/api/alpha/decisions';
 
   private static getApiKey(): string {
-    return (
-      process.env.OPENROUTER_API_KEY ||
-      'sk-or-v1-REDACTED'
-    );
+    return process.env.OPENROUTER_API_KEY || '';
   }
 
   /**
