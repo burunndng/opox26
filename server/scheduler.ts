@@ -265,8 +265,9 @@ export class InterleavingEngine {
       return { item, weight };
     });
 
-    // Shuffle with weighted randomness
-    scoredCandidates.sort((a, b) => b.weight * (0.8 + Math.random() * 0.4) - a.weight * (0.8 + Math.random() * 0.4));
+    // Deterministic weighted order (audit 2026-10-23): stable sort by weight
+    // (descending), tie-broken by item id, so identical inputs → identical blocks.
+    scoredCandidates.sort((a, b) => b.weight - a.weight || a.item.id.localeCompare(b.item.id));
 
     const foundationalTypes = ['cover_and_generate_mcq', 'cloze', 'retrieval_prompt', 'number_sort', 'pretest_item'];
     const challengingTypes = ['two_tier', 'spot_error', 'contrast_card', 'exception_tree', 'fact_variant'];
@@ -296,6 +297,15 @@ export class InterleavingEngine {
           ) {
             continue;
           }
+          if (
+            lastItem &&
+            secondLastItem &&
+            lastItem.item_type === secondLastItem.item_type &&
+            candidate.item_type === lastItem.item_type
+          ) {
+            // Avoid 3rd consecutive item of the same format when avoidable
+            continue;
+          }
           chosenIdx = i;
           break;
         }
@@ -315,13 +325,22 @@ export class InterleavingEngine {
             // Avoid 3rd consecutive from same cluster
             continue;
           }
+          if (
+            lastItem &&
+            secondLastItem &&
+            lastItem.item_type === secondLastItem.item_type &&
+            candidate.item_type === lastItem.item_type
+          ) {
+            // Avoid 3rd consecutive item of the same format when avoidable
+            continue;
+          }
           chosenIdx = i;
           break;
         }
       }
 
       if (chosenIdx === -1) {
-        // Fallback to first available
+        // Deterministic fallback: highest-ranked remaining item (constraints relaxed).
         chosenIdx = 0;
       }
 
