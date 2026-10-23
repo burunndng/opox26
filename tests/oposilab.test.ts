@@ -241,6 +241,9 @@ describe('OposiLab Cognitive Engine Test Suite', () => {
       activity_type: 'cloze',
       correct: true,
       confidence: 3,
+      // Graduation also requires a successful interleaved attempt (default setting),
+      // so this attempt records one to keep the scenario representative.
+      was_interleaved: true,
       time_to_answer_ms: 900,
     });
     assert.equal(res2.schedule.consecutive_correct_sessions, 2);
@@ -256,7 +259,7 @@ describe('OposiLab Cognitive Engine Test Suite', () => {
       time_to_answer_ms: 800,
     });
     assert.equal(res3.schedule.consecutive_correct_sessions, 3);
-    assert.equal(res3.schedule.state, 'graduated', 'Should graduate after 3 consecutive sessions in 2+ formats');
+    assert.equal(res3.schedule.state, 'graduated', 'Should graduate after 3 consecutive sessions in 2+ formats with an interleaved success');
 
     // Step 5: Confident-wrong lapse (confidence 3, wrong)
     const resLapse = db.recordAttempt({

@@ -577,7 +577,9 @@ class LocalDatabase {
     const activityType = attempt.activity_type;
     const usedHint = !!attempt.used_hint;
 
-    if (!sched.formats_completed.includes(activityType)) {
+    // A format counts as *completed* only on a successful attempt; failures and
+    // blanks must not earn format credit toward the "2 formats" graduation rule.
+    if (isCorrect && !sched.formats_completed.includes(activityType)) {
       sched.formats_completed.push(activityType);
     }
     sched.last_confidence = confidence;
@@ -669,18 +671,34 @@ class LocalDatabase {
         sched.interval_days = Math.max(30, Math.round(sched.interval_days * 1.8));
       }
 
-      // Check Graduation Criteria
-      // Criteria: >= 3 consecutive correct, >= 2 formats, confidence >= 2, unassisted attempt
+      // Check Graduation Criteria (rule flags come from app settings):
+      // >= 3 consecutive unassisted correct, >= 2 formats when required,
+      // confidence >= configured threshold, >= 1 successful interleaved
+      // attempt when required, never assisted by a hint.
+      const {
+        confidence_required_for_graduation,
+        require_two_formats_for_graduation,
+        require_interleaved_success_for_graduation,
+        graduating_interval,
+      } = this.getSettings();
+      const hadInterleavedSuccess = this.data.activityAttempts.some(
+        (a) => a.item_id === attempt.item_id && a.correct && a.was_interleaved
+      );
+      const meetsTwoFormats = !require_two_formats_for_graduation || sched.formats_completed.length >= 2;
+      const meetsInterleaved = !require_interleaved_success_for_graduation || hadInterleavedSuccess;
+      const meetsConfidence = confidence >= (confidence_required_for_graduation ?? 2);
+
       const meetsGraduation =
         !usedHint &&
         sched.consecutive_correct_sessions >= 3 &&
-        sched.formats_completed.length >= 2 &&
-        confidence >= 2;
+        meetsTwoFormats &&
+        meetsInterleaved &&
+        meetsConfidence;
 
       if (meetsGraduation && sched.state !== 'graduated' && sched.state !== 'maintenance') {
         sched.state = 'graduated';
         sched.graduated_at = new Date().toISOString();
-        sched.interval_days = Math.max(21, sched.interval_days);
+        sched.interval_days = Math.max(graduating_interval ?? 21, sched.interval_days);
       }
 
       sched.due_date = new Date(Date.now() + sched.interval_days * 24 * 3600 * 1000).toISOString();
