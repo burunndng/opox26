@@ -22,6 +22,19 @@ import {
   pdfImportInput,
   suggestAtomsInput,
   chunkSplitInput,
+  interleavedBlockInput,
+  savedSessionStateInput,
+  aiExtractSetInput,
+  aiExtractAtomsInput,
+  aiDraftItemInput,
+  aiChatInput,
+  jevDecisionsInput,
+  jevAuditItemInput,
+  jevDiagnoseAttemptInput,
+  jevClassifyAtomInput,
+  jevVerifyCascadeInput,
+  jevCompareInput,
+  backupInput,
 } from './src/schemas/index.ts';
 import { parsePdf, PdfImportError } from './server/pdfImport.ts';
 import { suggestAtoms, splitIntoChunks } from './server/heuristics.ts';
@@ -58,7 +71,7 @@ function countByType(suggestions: Array<{ atom_type: string }>): Record<string, 
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3000;
 
   app.use(express.json({ limit: '10mb' }));
 
@@ -278,7 +291,9 @@ async function startServer() {
   });
 
   app.post('/api/schedule/interleaved-block', (req, res) => {
-    const items = InterleavingEngine.generateBlock(req.body);
+    const body = validateBody(interleavedBlockInput, req.body, res);
+    if (body === undefined) return;
+    const items = InterleavingEngine.generateBlock(body as any);
     res.json(items);
   });
 
@@ -325,7 +340,9 @@ async function startServer() {
   });
 
   app.post('/api/sessions/save-state', (req, res) => {
-    db.setSavedSessionState(req.body);
+    const body = validateBody(savedSessionStateInput, req.body, res);
+    if (body === undefined) return;
+    db.setSavedSessionState(body);
     res.json({ success: true });
   });
 
@@ -343,12 +360,10 @@ async function startServer() {
 
   // AI Assistant Endpoints
   app.post('/api/ai/extract-set', async (req, res) => {
+    const body = validateBody(aiExtractSetInput, req.body, res);
+    if (body === undefined) return;
     try {
-      const { text, articleRef } = req.body;
-      if (!text || typeof text !== 'string') {
-        return res.status(400).json({ error: 'Text required' });
-      }
-      const setResult = await AiAssistant.extractFullSet(text, articleRef);
+      const setResult = await AiAssistant.extractFullSet(body.text, body.articleRef);
       res.json(setResult);
     } catch (err: any) {
       res.status(500).json({ error: err.message || 'AI set extraction failed' });
@@ -356,12 +371,10 @@ async function startServer() {
   });
 
   app.post('/api/ai/extract-atoms', async (req, res) => {
+    const body = validateBody(aiExtractAtomsInput, req.body, res);
+    if (body === undefined) return;
     try {
-      const { text } = req.body;
-      if (!text || typeof text !== 'string') {
-        return res.status(400).json({ error: 'Text required' });
-      }
-      const atoms = await AiAssistant.extractAtoms(text);
+      const atoms = await AiAssistant.extractAtoms(body.text);
       res.json(atoms);
     } catch (err: any) {
       res.status(500).json({ error: err.message || 'AI extraction failed' });
@@ -369,12 +382,10 @@ async function startServer() {
   });
 
   app.post('/api/ai/draft-item', async (req, res) => {
+    const body = validateBody(aiDraftItemInput, req.body, res);
+    if (body === undefined) return;
     try {
-      const { atom, itemType } = req.body;
-      if (!atom || !itemType) {
-        return res.status(400).json({ error: 'Atom and itemType required' });
-      }
-      const drafted = await AiAssistant.draftItem(atom, itemType);
+      const drafted = await AiAssistant.draftItem(body.atom as any, body.itemType as any);
       res.json(drafted);
     } catch (err: any) {
       res.status(500).json({ error: err.message || 'AI drafting failed' });
@@ -382,18 +393,16 @@ async function startServer() {
   });
 
   app.post('/api/ai/chat', async (req, res) => {
+    const body = validateBody(aiChatInput, req.body, res);
+    if (body === undefined) return;
     try {
-      const { messages, model, provider, enableWebSearch, systemInstruction, topicContext } = req.body;
-      if (!messages || !Array.isArray(messages) || messages.length === 0) {
-        return res.status(400).json({ error: 'Array of messages required' });
-      }
       const reply = await AiAssistant.chat({
-        messages,
-        model,
-        provider,
-        enableWebSearch,
-        systemInstruction,
-        topicContext,
+        messages: body.messages as any,
+        model: body.model,
+        provider: body.provider,
+        enableWebSearch: body.enableWebSearch,
+        systemInstruction: body.systemInstruction,
+        topicContext: body.topicContext,
       });
       res.json(reply);
     } catch (err: any) {
@@ -403,12 +412,10 @@ async function startServer() {
 
   // Jev (TypeSafe Decision Model on OpenRouter) Endpoints
   app.post('/api/jev/decisions', async (req, res) => {
+    const body = validateBody(jevDecisionsInput, req.body, res);
+    if (body === undefined) return;
     try {
-      const { state, questions, model } = req.body;
-      if (!state || !questions) {
-        return res.status(400).json({ error: 'state and questions are required' });
-      }
-      const decisions = await JevClient.makeDecisions({ state, questions, model });
+      const decisions = await JevClient.makeDecisions(body as any);
       res.json(decisions);
     } catch (err: any) {
       res.status(500).json({ error: err.message || 'Jev decision call failed' });
@@ -416,12 +423,10 @@ async function startServer() {
   });
 
   app.post('/api/jev/audit-item', async (req, res) => {
+    const body = validateBody(jevAuditItemInput, req.body, res);
+    if (body === undefined) return;
     try {
-      const { item, sourceNorm } = req.body;
-      if (!item) {
-        return res.status(400).json({ error: 'Item object required' });
-      }
-      const audit = await JevClient.auditItemQuality(item, sourceNorm);
+      const audit = await JevClient.auditItemQuality(body.item, body.sourceNorm, body.model);
       res.json(audit);
     } catch (err: any) {
       res.status(500).json({ error: err.message || 'Jev item audit failed' });
@@ -429,9 +434,11 @@ async function startServer() {
   });
 
   app.post('/api/jev/diagnose-attempt', async (req, res) => {
+    const body = validateBody(jevDiagnoseAttemptInput, req.body, res);
+    if (body === undefined) return;
     try {
-      const attemptData = req.body;
-      const diagnosis = await JevClient.diagnoseAttempt(attemptData);
+      const { model, ...attemptData } = body;
+      const diagnosis = await JevClient.diagnoseAttempt(attemptData as any, model);
       res.json(diagnosis);
     } catch (err: any) {
       res.status(500).json({ error: err.message || 'Jev attempt diagnosis failed' });
@@ -439,9 +446,11 @@ async function startServer() {
   });
 
   app.post('/api/jev/classify-atom', async (req, res) => {
+    const body = validateBody(jevClassifyAtomInput, req.body, res);
+    if (body === undefined) return;
     try {
-      const atomData = req.body;
-      const classification = await JevClient.classifyAtom(atomData);
+      const { model, ...atomData } = body;
+      const classification = await JevClient.classifyAtom(atomData as any, model);
       res.json(classification);
     } catch (err: any) {
       res.status(500).json({ error: err.message || 'Jev atom classification failed' });
@@ -449,18 +458,17 @@ async function startServer() {
   });
 
   app.post('/api/jev/verify-cascade', async (req, res) => {
+    const body = validateBody(jevVerifyCascadeInput, req.body, res);
+    if (body === undefined) return;
     try {
-      const { draftItem, sourceText } = req.body;
-      if (!draftItem || !sourceText) {
-        return res.status(400).json({ error: 'draftItem and sourceText required' });
-      }
-      const verification = await JevClient.verifyCascade(draftItem, sourceText);
+      const verification = await JevClient.verifyCascade(body.draftItem, body.sourceText, body.model);
       res.json(verification);
     } catch (err: any) {
       res.status(500).json({ error: err.message || 'Jev cascade verification failed' });
     }
   });
 
+  
   // Export / Import
   app.get('/api/export/backup', (req, res) => {
     res.setHeader('Content-Disposition', 'attachment; filename="oposilab-backup.json"');
@@ -469,8 +477,10 @@ async function startServer() {
   });
 
   app.post('/api/import/backup', (req, res) => {
+    const body = validateBody(backupInput, req.body, res);
+    if (body === undefined) return;
     try {
-      const success = db.restoreData(req.body);
+      const success = db.restoreData(body as any);
       res.json({ success });
     } catch (err: any) {
       res.status(400).json({ error: err.message || 'Invalid backup' });
