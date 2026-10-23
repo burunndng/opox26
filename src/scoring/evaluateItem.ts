@@ -41,7 +41,7 @@ export function evaluateItem(
   }
 
   let correct = false;
-  let errorCode = confidence === 3 ? 'E8' : 'E1';
+  let errorCode: string | undefined = confidence === 3 ? 'E8' : 'E1';
   let expectedDisplay =
     item.options?.find((o: any) => o.id === item.correct_answer)?.text ||
     item.correct_answer ||
@@ -103,7 +103,7 @@ export function evaluateItem(
             .filter((value): value is string => Boolean(value))
             .map(normalizeStr)
             .filter((value) => value.length > 0);
-          return targets.some((target) => target === userVal || (userVal.length >= 3 && target.includes(userVal)));
+          return userVal.length > 0 && targets.some((target) => target === userVal);
         });
 
         correct = resolvedEntries.length > 0 && results.every(Boolean);
@@ -143,7 +143,7 @@ export function evaluateItem(
         }
       }
 
-      correct = validTargets.length > 0 && validTargets.some((tgt) => tgt === userVal || (userVal.length >= 3 && tgt.includes(userVal)));
+      correct = userVal.length > 0 && validTargets.some((tgt) => tgt === userVal);
 
       if (!correct) {
         if (/\d+/.test(userVal) && validTargets.some((t) => /\d+/.test(t))) {
@@ -176,7 +176,7 @@ export function evaluateItem(
       if (items.length > 0) {
         let allMatch = true;
         for (const pair of items) {
-          if (!matches[pair.id] || matches[pair.id].trim() !== pair.correct_value.trim()) {
+          if (!matches[pair.id] || normalizeStr(matches[pair.id]) !== normalizeStr(pair.correct_value)) {
             allMatch = false;
             break;
           }
@@ -186,9 +186,10 @@ export function evaluateItem(
         const expectedMap = (item.options as any)?.expected_matches || {};
         const keys = Object.keys(expectedMap);
         if (keys.length > 0) {
-          correct = keys.every((k) => matches[k] === expectedMap[k]);
+          correct = keys.every((k) => normalizeStr(matches[k]) === normalizeStr(expectedMap[k]));
         } else {
-          correct = Object.keys(matches).length > 0;
+          const values = Object.values(matches);
+          correct = values.length > 0 && values.every((v) => normalizeStr(v).length > 0);
         }
       }
       if (!correct) errorCode = 'E6'; // wrong number/deadline/amount
@@ -202,7 +203,12 @@ export function evaluateItem(
       if (spotData?.erroneous_span) {
         const normSelected = normalizeStr(selected);
         const normErr = normalizeStr(spotData.erroneous_span);
-        correct = normSelected === normErr || normErr.includes(normSelected) || normSelected.includes(normErr);
+        // A selection is required: empty input must never satisfy `.includes('')`.
+        // Exact match always qualifies; chunks or sub-spans qualify only when the
+        // overlap is non-trivial (>= 3 chars).
+        const exact = normSelected.length > 0 && normSelected === normErr;
+        const overlapping = normSelected.length >= 3 && (normErr.includes(normSelected) || normSelected.includes(normErr));
+        correct = exact || overlapping;
         expectedDisplay = `Error legal: "${spotData.erroneous_span}" → Corrección: "${spotData.corrected_text || 'Regla correcta'}"`;
       } else if (spotData?.error_spans && spotData.error_spans.length > 0) {
         const found = spotData.error_spans.find((s: any) => s.id === selected || s.text === selected);
@@ -267,6 +273,11 @@ export function evaluateItem(
       correct = !!response.selectedOption && response.selectedOption === item.correct_answer;
       break;
     }
+  }
+
+  if (correct) {
+    // Hygiene: a successful attempt carries no failure diagnostic.
+    errorCode = undefined;
   }
 
   return {
