@@ -1,0 +1,134 @@
+[
+  {
+    "name": "cloze-substring-fragment-should-reject?",
+    "expected": "false",
+    "actual": "true",
+    "mismatch": true,
+    "detail": {
+      "correct": true,
+      "blank": false,
+      "expectedDisplay": "prescripción",
+      "errorCode": "E1"
+    }
+  },
+  {
+    "name": "cloze-exact",
+    "expected": "true",
+    "actual": "true",
+    "mismatch": false,
+    "detail": {
+      "correct": true,
+      "blank": false,
+      "expectedDisplay": "prescripción",
+      "errorCode": "E1"
+    }
+  },
+  {
+    "name": "spot-error-missing-selection-should-reject?",
+    "expected": "false",
+    "actual": "true",
+    "mismatch": true,
+    "detail": {
+      "correct": true,
+      "blank": false,
+      "expectedDisplay": "Error legal: \"plazo de 10 días\" → Corrección: \"Regla correcta\"",
+      "errorCode": "E1"
+    }
+  },
+  {
+    "name": "spot-error-correct-span",
+    "expected": "true",
+    "actual": "true",
+    "mismatch": false,
+    "detail": {
+      "correct": true,
+      "blank": false,
+      "expectedDisplay": "Error legal: \"plazo de 10 días\" → Corrección: \"Regla correcta\"",
+      "errorCode": "E1"
+    }
+  },
+  {
+    "name": "number-sort-accent-variant-should-accept?",
+    "expected": "true",
+    "actual": "false",
+    "mismatch": true,
+    "detail": {
+      "correct": false,
+      "blank": false,
+      "expectedDisplay": "Plazo: 30 días",
+      "errorCode": "E6"
+    }
+  },
+  {
+    "name": "number-sort-exact",
+    "expected": "true",
+    "actual": "true",
+    "mismatch": false,
+    "detail": {
+      "correct": true,
+      "blank": false,
+      "expectedDisplay": "Plazo: 30 días",
+      "errorCode": "E1"
+    }
+  },
+  {
+    "name": "number-sort-empty-matches-no-data",
+    "expected": "false",
+    "actual": "false",
+    "mismatch": false,
+    "detail": {
+      "correct": false,
+      "blank": false,
+      "expectedDisplay": "",
+      "errorCode": "E6"
+    }
+  },
+  {
+    "name": "two-tier-tier2-by-id",
+    "expected": "true",
+    "actual": "true",
+    "mismatch": false,
+    "detail": {
+      "correct": true,
+      "blank": false,
+      "expectedDisplay": "Nivel 1: [A] · Nivel 2: [R2]",
+      "errorCode": "E1"
+    }
+  },
+  {
+    "name": "cloze-legacy-substring-fragment-should-reject?",
+    "expected": "false",
+    "actual": "true",
+    "mismatch": true,
+    "detail": {
+      "correct": true,
+      "blank": false,
+      "expectedDisplay": "retroactividad",
+      "errorCode": "E1"
+    }
+  },
+  {
+    "name": "mcq-correct",
+    "expected": "true",
+    "actual": "true",
+    "mismatch": false,
+    "detail": {
+      "correct": true,
+      "blank": false,
+      "expectedDisplay": "B: ok",
+      "errorCode": "E1"
+    }
+  },
+  {
+    "name": "spot-error-keyboard-digit-no-span-should-reject?",
+    "expected": "false",
+    "actual": "true",
+    "mismatch": true,
+    "detail": {
+      "correct": true,
+      "blank": false,
+      "expectedDisplay": "Error legal: \"plazo de 10 días\" → Corrección: \"Regla correcta\"",
+      "errorCode": "E1"
+    }
+  }
+]

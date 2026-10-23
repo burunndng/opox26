@@ -1,0 +1,42 @@
+{
+  "runId": "run2",
+  "dataDir": "/tmp/oposilab-audit-2026-10-23/fresh-seed",
+  "items": 299,
+  "byType": {
+    "cover_and_generate_mcq": 210,
+    "cloze": 22,
+    "contrast_card": 17,
+    "number_sort": 11,
+    "spot_error": 11,
+    "two_tier": 9,
+    "exception_tree": 6,
+    "fact_variant": 7,
+    "retrieval_prompt": 4,
+    "pretest_item": 2
+  },
+  "byStatus": {
+    "validated": 299
+  },
+  "schedules": 299,
+  "attempts": 0,
+  "errorLogs": 0,
+  "figureStatus": 13,
+  "oneCorrectViolations": 0,
+  "positionBias": {
+    "0": 54,
+    "1": 53,
+    "2": 52,
+    "3": 52
+  },
+  "canonicalLetterBias": {
+    "0": 118,
+    "1": 32,
+    "2": 31,
+    "3": 30
+  },
+  "lengthFlags": 0,
+  "lengthFlagExamples": [],
+  "missingExplanation": 61,
+  "missingTrap": 67,
+  "mojibakeSuspicious": 0
+}

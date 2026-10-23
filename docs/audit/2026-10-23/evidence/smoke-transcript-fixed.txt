@@ -1,0 +1,51 @@
+=== SMOKE (FIXED, PORT=3210) START 2026-10-23T04:39:34+02:00 ===
+--- boot log tail ---
+  - `__dirname` (vite.config.ts:11:27). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+OposiLab server running on http://0.0.0.0:3210
+--- /api/health ---
+{"status":"ok","app":"OposiLab MCQ Trainer","time":"2026-10-23T02:39:37.000Z"}
+--- item counts ---
+items: 299
+Counter({'cover_and_generate_mcq': 210, 'cloze': 22, 'contrast_card': 17, 'number_sort': 11, 'spot_error': 11, 'two_tier': 9, 'fact_variant': 7, 'exception_tree': 6, 'retrieval_prompt': 4, 'pretest_item': 2})
+statuses: Counter({'validated': 299})
+--- [V1] POST /api/attempts {} (expect 400 zod) ---
+HTTP 400
+{"error":"Validación fallida","issues":[{"path":"item_id","code":"invalid_type","message":"Invalid input: expected string, received undefined"},{"path":"activity_type","code":"invalid_type","message"
+--- [V2] POST /api/sessions/save-state junk object (opaque by design -> expect 200) ---
+HTTP 200
+{"success":true}
+--- GET saved-state (opaque junk persisted by design?) ---
+{"__junk":"JUNK_MARKER_12345","nested":{"a":[1,2,3]}}
+--- [V3] POST /api/sessions/save-state array (expect 400) ---
+HTTP 400
+{"error":"Validación fallida","issues":[{"path":"","code":"invalid_type","message":"Invalid input: expected object, received array"}]}
+--- [V4] POST /api/schedule/interleaved-block garbage (expect 400) ---
+HTTP 400
+{"error":"Validación fallida","issues":[{"path":"blockSize","code":"invalid_type","message":"Invalid input: expected number, received string"},{"path":"includeNew","code":"invalid_type","message":"Invalid input: expected boolean, received string"},{"path":"activityTypes","code":"invalid_type","mess
+--- [V5] POST /api/import/backup invalid (expect 400) ---
+HTTP 400
+{"error":"Validación fallida","issues":[{"path":"topics","code":"invalid_type","message":"Invalid input: expected array, received string"},{"path":"items","code":"invalid_type","message":"Invalid inp
+--- [V6] POST /api/ai/chat bad messages (expect 400) ---
+HTTP 400
+{"error":"Validación fallida","issues":[{"path":"messages","code":"invalid_type","message":"Invalid input: expected array, received string"}]}
+--- [V7] POST /api/jev/compare {} (expect 400) ---
+HTTP 400
+{"error":"Validación fallida","issues":[{"path":"state","code":"invalid_union","message":"Invalid input"},{"path":"questions","code":"invalid_type","message":"Invalid input: expected record, received
+--- backup export -> import round trip ---
+backup keys: ['activityAttempts', 'atoms', 'clusters', 'confusionPairs', 'errorLogs', 'items', 'reviewSchedules', 'savedSessionState', 'sessions', 'settings', 'sourceChunks', 'topics', 'version']
+items in backup: 299 attempts: 0
+HTTP 200
+{"success":true}
+--- counts after re-import ---
+items after import: 299
+=== SECOND BOOT: production build (dist/server.cjs) PORT=3210 ===
+{"status":"ok","app":"OposiLab MCQ Trainer","time":"2026-10-23T02:39:38.588Z"}
+dist boot items: 299
+--- [V9] dist: interleaved-block garbage (expect 400) ---
+HTTP 400
+{"error":"Validación fallida","issues":[{"path":"blockSize","code":"invalid_type","message":"Invalid input: expected number, received string"}]}
+  - `__dirname` (vite.config.ts:11:27). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+OposiLab server running on http://0.0.0.0:3210
+=== SMOKE (FIXED) END 2026-10-23T04:39:38+02:00 ===

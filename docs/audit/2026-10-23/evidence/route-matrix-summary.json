@@ -1,0 +1,21 @@
+{
+  "total": 58,
+  "zod": 16,
+  "manual": 0,
+  "none": 42,
+  "bodyNoGuard": [
+    "POST /api/schedule/interleaved-block",
+    "POST /api/sessions/save-state",
+    "POST /api/ai/extract-set",
+    "POST /api/ai/extract-atoms",
+    "POST /api/ai/draft-item",
+    "POST /api/ai/chat",
+    "POST /api/jev/decisions",
+    "POST /api/jev/audit-item",
+    "POST /api/jev/diagnose-attempt",
+    "POST /api/jev/classify-atom",
+    "POST /api/jev/verify-cascade",
+    "POST /api/jev/compare",
+    "POST /api/import/backup"
+  ]
+}

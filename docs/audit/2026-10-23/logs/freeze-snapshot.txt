@@ -1,0 +1,59 @@
+== git rev ==
+71935c2b2e8dc322fab64b35aa399b5a04364e2b
+== branch ==
+main
+== status porcelain ==
+ M .env.example
+ M README.md
+ M implementation_plan.md
+ M server.ts
+ M server/jev.ts
+ M src/api.ts
+ M src/components/JevLabModal.tsx
+ M src/types.ts
+?? AGENTS.md
+?? docs/audit/
+?? docs/plans/2026-09-audit-hardening.md
+?? docs/plans/2026-10-10-mercury-decide-integration.md
+?? docs/plans/2026-10-23-exhaustive-audit.md
+?? fix_types.cjs
+?? patch_docs.cjs
+?? patch_jev.cjs
+?? patch_modal.cjs
+?? patch_server.cjs
+?? patch_src.cjs
+?? server/decisionsCompare.ts
+?? tests/decisions-compare.test.ts
+?? tests/decisions-model.test.ts
+== diff sha256 ==
+0bdd4d3ea75654057cb4c9203b6964cec8aa86ad5206db97f950e048a687e670  -
+== staged diff sha256 ==
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  -
+== untracked files with hashes ==
+0b15f9e545bccb67dd392a176c078ec6d4c6afb33a09dc84f80798b97fed7353  AGENTS.md
+ba28f6955e38b24dfe777180732d1ba185783009c91f2d56ca1eea53acda045f  docs/audit/2026-10-23/logs/freeze-snapshot.txt
+c4f2ca118db2d0b039b36bccc748b98437f2913099bfc2dc16e32ea9358628eb  docs/plans/2026-09-audit-hardening.md
+c4bbaba02b3aaf5287245c66b527f3a02b73ed47f910763f86a656a7c4211699  docs/plans/2026-10-10-mercury-decide-integration.md
+aba9c0fe154b61694dd3d187ef7d4c7a0e15c302860f58bfd8a36f2068eb7a25  docs/plans/2026-10-23-exhaustive-audit.md
+fd778c346bc11f3fa075fd622c3c66611ab8cd4548a117d2e3584a8f64f7ae84  fix_types.cjs
+5d2a49d4d77d66dc2f08e953d815835ed0c2f5222db70b348b60244160471605  patch_docs.cjs
+0209cd6e3573ce5a2c0045772bc87b2e3ae989134a6d5853a9de0bba080b2a4a  patch_jev.cjs
+3f9642d7289c725f72f9d082dcefd5f32f70f0c7a0afef7d88bcd5073f46c74d  patch_modal.cjs
+1f25055c282f02c5b61dae4b4de643b2ba5f3e241c985a02cf62dc7fdf4bd8b6  patch_server.cjs
+c82faf87b28705d88715b2d63d558f7cc481cf83ff823659ad1acca2cf2802eb  patch_src.cjs
+521f180083bd0775fc4e2f43160dab4b7b63bc467e05cf8a98b4d9eaf497fb10  server/decisionsCompare.ts
+f809f28a366aa875f679c9faa45c80e2bf1edf382bf59292d19ac93407fa007c  tests/decisions-compare.test.ts
+ddfd290490f0d6699e3e61b55344f3f938099c62e943f83785547e8a8238a47e  tests/decisions-model.test.ts
+== node/npm/os ==
+v24.19.0
+11.17.0
+Linux 7.1.13-200.fc44.x86_64 x86_64
+TZ=
+Fri 23 Oct 03:42:24 CEST 2026
+== data dir ==
+total 7844
+drwxr-xr-x. 1 ansimistrator ansimistrator      82 Sep 24 12:26 .
+drwxr-xr-x. 1 ansimistrator ansimistrator     736 Oct 20 18:32 ..
+-rw-r--r--. 1 ansimistrator ansimistrator 1429504 Oct 21 01:58 oposilab.db
+-rw-r--r--. 1 ansimistrator ansimistrator   32768 Oct 21 01:58 oposilab.db-shm
+-rw-r--r--. 1 ansimistrator ansimistrator 6563192 Oct 21 01:58 oposilab.db-wal

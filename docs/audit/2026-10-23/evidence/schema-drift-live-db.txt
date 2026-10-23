@@ -1,0 +1,5 @@
+# Live DB schema drift vs SCHEMA_SQL
+DB: /tmp/oposilab-audit-2026-10-23/live-db-copy/oposilab.db
+
+
+VERDICT: no drift (live DB matches expected columns for all known tables)

@@ -19,7 +19,7 @@
 
 ---
 
-## 1. Current State (verified 2026-09-23)
+## 1. Current State (verified 2026-09-23 · refreshed 2026-10-23)
 
 The app is a broad local-first prototype. The table distinguishes verified behavior from surfaces that still need focused verification; historical phase notes are not acceptance evidence.
 
@@ -27,13 +27,29 @@ The app is a broad local-first prototype. The table distinguishes verified behav
 |---|---|---|
 | Stack | Vite 8 + React 19 + Express 4 + TypeScript, `npm run dev` = `tsx server.ts` | `package.json` |
 | Persistence | SQLite exists; restart behavior now covered by an isolated two-boot regression test | `server/db.ts`, `tests/persistence.test.ts` |
-| Tests | Full suite (58 tests, 11 suites) green and fully isolated; `npm test` provably never touches the live DB | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
+| Tests | Full suite green and fully isolated — **183 tests / 40 suites** (2026-10-23, tras auditoría FIX 1–9); `npm test` provably never touches the live DB | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
 | Data model | Core types and SQLite tables exist; tag/join behavior and seed relationships need an audit | `src/types.ts`, `server/sqlite/connection.ts` |
 | Activity surfaces | Runner branches exist for the required formats; production scoring parity is the active P4 work | `src/components/ActivityRunner.tsx`, `src/scoring/evaluateItem.ts` |
 | Content pipeline | Text/PDF import and heuristic atom suggestions exist; validation eligibility and provenance need enforcement | `server/pdfImport.ts`, `server/heuristics.ts`, `ContentStudio.tsx` |
 | Scheduler | SRS and interleaving modules exist; due filters, format graduation, maintenance, and constraints need tests | `server/scheduler.ts`, `server/db.ts` |
 | Seed | Seed inventory exists; topic/source/status/link integrity is pending P3 | `server/seedData.ts`, `server/seedDataRetrieval.ts` |
 | Export/import | Exporters exist; structured import and exact note-field compatibility remain pending P6 | `server/exporter.ts`, `server.ts` |
+
+### 1.1 Hardening de auditoría — 2026-10-23
+
+Auditoría exhaustiva (freeze `71935c2`) + remediación FIX 1–9, verificada con `npm run lint`
+(limpio) y `npm test` (**183/183**, 40 suites). Informe: `docs/audit/2026-10-23/REPORT.md`.
+
+- **FIX 1–2 (S1)**: scorer endurecido (cloze exacto, spot_error sin selecciones triviales,
+  number_sort normalizado, errorCode limpio en aciertos) y guarda de teclado del runner
+  (dígitos solo en `contrast_card`).
+- **FIX 3–8 (S2)**: exportador Anki posicional (A/B/C/D) con fallbacks de campos; graduación SRS
+  con flags efectivos y crédito de formato solo en acierto; Zod en las 13 rutas antes sin validar;
+  scheduler determinista con límite de runs de formato; migraciones aditivas `ALTER TABLE` en
+  `server/sqlite/connection.ts`; `PORT` configurable y `engines >=22.5`.
+- **FIX 9**: smoke runtime en `PORT=3210` (dev + dist) con evidencia en
+  `docs/audit/2026-10-23/evidence/smoke-transcript-fixed.txt`; conteos de pruebas actualizados
+  en README y ACCEPTANCE.
 
 ---
 
@@ -52,8 +68,8 @@ The app is a broad local-first prototype. The table distinguishes verified behav
 - Drizzle ORM: **not adopted** (spec lists it as preferred, not required). Thin hand-rolled mappers + Zod validation cover the need.
 - Verified in this revision: focused restart tests pass 2/2 and `tsc --noEmit` is clean; the full suite remains pending safe isolation.
 
-### ADR-3: Add Zod for all API input validation (spec §6).
-- Server routes currently trust `req.body`. Zod schemas in `src/schemas/` shared by client & server; 400 responses with issue details.
+### ADR-3: Add Zod for all API input validation (spec §6). ✅ DONE (2026-10-23)
+- All body routes validate via a shared `validateBody` helper; the 13 routes that previously trusted `req.body` were wired with dedicated schemas (audit FIX 5, `tests/schema-contracts.test.ts`). Zod schemas in `src/schemas/` shared by client & server; 400 responses with issue details.
 
 ### ADR-4: node:test via tsx stays (not Vitest).
 - The test runner remains `node:test` through `tsx`; all suites must use isolated data directories before full-suite execution is trusted.
@@ -202,7 +218,7 @@ Confirmed in this work session:
 - `npm run lint` passes after the boot fix.
 - `tests/persistence.test.ts` passes 2/2 using a child-process probe and an isolated `OPOSILAB_DATA_DIR`; the live `data/oposilab.db` is not used.
 - `server/db.ts:112-190` now performs a full seed only when both topics and items are empty; existing data follows the additive merge path.
-- P2 complete: the full suite (58 tests) runs green in isolated temp databases with `OPOSILAB_OFFLINE=1` (no AI/Jev network); md5 of the live `data/oposilab.db` is unchanged across `npm test`. Two isolation bugs were found and fixed en route: (1) `server/db.ts` captured its DB path at import time, defeating env overrides, and (2) `server/db.ts` ran `db.init()` at module scope, seeding the default-path DB on mere import. Both are regression-guarded (P2.3) and the module now auto-initializes lazily on first access via a Proxy.
+- P2 complete: the full suite (58 tests *en esa revisión*; hoy **183** — ver §1.1) runs green in isolated temp databases with `OPOSILAB_OFFLINE=1` (no AI/Jev network); md5 of the live `data/oposilab.db` is unchanged across `npm test`. Two isolation bugs were found and fixed en route: (1) `server/db.ts` captured its DB path at import time, defeating env overrides, and (2) `server/db.ts` ran `db.init()` at module scope, seeding the default-path DB on mere import. Both are regression-guarded (P2.3) and the module now auto-initializes lazily on first access via a Proxy.
 - Deferred with their fixes: replacing inline scorer/SRS test reimplementations lands with the P4 production scorers; due-filter, daily-limit, and seed-integrity assertions land with the P3/P5 fixes they verify (kept green intentionally).
 
 Global constraints:
@@ -247,7 +263,7 @@ Global constraints:
 - Every suite now runs against a fresh temp `OPOSILAB_DATA_DIR`; verified by md5-checksumming the live DB across a full `npm test` run.
 - `server/db.ts` resolves its DB path lazily and no longer runs `db.init()` at module scope (the import-time seeding bug is guarded by test P2.3).
 - AI/Jev clients honor `OPOSILAB_OFFLINE=1` and use deterministic local fallbacks; no test can spend network credits.
-- Full suite green: 58 tests / 11 suites.
+- Full suite green: 58 tests / 11 suites *(rev 2026-09; hoy 183/40 — ver §1.1)*.
 
 **Verification:**
 - `npm test` (live `data/oposilab.db` md5 unchanged before/after)
