@@ -770,7 +770,10 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
             } else {
               handleSubmitOption(optionId);
             }
-          } else {
+          } else if (currentItem.item_type === 'contrast_card' && position <= 1) {
+            // Concept buttons are letter-labeled (A/B); map the digit to its label.
+            // Other non-positional formats (spot_error, number_sort, cloze without
+            // options, exception_tree) must not fabricate a selection from a digit.
             handleSubmitOption(String.fromCharCode(64 + position + 1));
           }
         }
