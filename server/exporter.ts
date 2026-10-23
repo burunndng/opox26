@@ -57,19 +57,26 @@ export class DataExporter {
     const mcqRows: string[] = [];
     const mcqItems = items.filter((i) => i.item_type === 'cover_and_generate_mcq');
     for (const item of mcqItems) {
+      // Positional labels (A/B/C…) so the exported card matches what the UI shows.
+      const optionLabel = (idx: number) => String.fromCharCode(65 + idx);
       const optionsText = (item.options || [])
-        .map((o) => `${o.id}) ${o.text}`)
+        .map((o, idx) => `${optionLabel(idx)}) ${o.text}`)
         .join('<br>');
+      const correctIdx = (item.options || []).findIndex(
+        (o) => o.is_correct || o.id === item.correct_answer
+      );
+      const correctDisplay = correctIdx >= 0 ? optionLabel(correctIdx) : item.correct_answer;
       const distractors = (item.options || [])
-        .filter((o) => !o.is_correct)
-        .map((o) => `<b>${o.id}</b> [${o.trap_type || 'distractor'}]: ${o.explanation}`)
+        .map((o, idx) => ({ o, idx }))
+        .filter(({ o }) => !o.is_correct)
+        .map(({ o, idx }) => `<b>${optionLabel(idx)}</b> [${o.trap_type || 'distractor'}]: ${o.explanation}`)
         .join('<br>');
 
       const fields = [
         item.stem.replace(/\t/g, ' '),
         (item.prompt_before_options || '').replace(/\t/g, ' '),
         optionsText,
-        item.correct_answer,
+        correctDisplay,
         item.legal_basis,
         item.why_correct,
         distractors,
@@ -84,7 +91,7 @@ export class DataExporter {
     const clozeRows: string[] = [];
     const clozeItems = items.filter((i) => i.item_type === 'cloze');
     for (const item of clozeItems) {
-      const clozeText = item.cloze_data?.text_with_clozes || item.stem;
+      const clozeText = item.cloze_data?.text_with_clozes || item.cloze_data?.template_text || item.stem;
       const fields = [
         clozeText.replace(/\t/g, ' '),
         item.legal_basis,
@@ -134,11 +141,16 @@ export class DataExporter {
     const spotRows: string[] = [];
     const spotItems = items.filter((i) => i.item_type === 'spot_error');
     for (const item of spotItems) {
-      const corrections = (item.spot_error_data?.error_spans || [])
+      const spot = item.spot_error_data;
+      const legacySpans = (spot?.error_spans || [])
         .map((e) => `Err: "${e.text}" ➔ Corregido: "${e.correction}" (${e.explanation})`)
         .join('<br>');
+      const singleSpan = spot?.erroneous_span
+        ? `Err: "${spot.erroneous_span}" ➔ Corregido: "${spot.corrected_text || ''}"`
+        : '';
+      const corrections = [singleSpan, legacySpans].filter(Boolean).join('<br>');
       const fields = [
-        item.spot_error_data?.statement || item.stem,
+        spot?.full_statement || spot?.statement || item.stem,
         corrections,
         item.legal_basis,
         item.corrective_rule,
