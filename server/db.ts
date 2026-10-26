@@ -162,9 +162,10 @@ class LocalDatabase {
         } else {
           const existing = this.data.atoms[existingIdx];
           let changed = false;
-          // Seed atoms have no attempt state, so seed-owned citation content
-          // (text + legal, alias keys legal/legal_basis map to one column on
-          // persist) always wins for seed atoms on boot.
+          // Seed atoms have no attempt state, so seed-owned content always
+          // wins for seed atoms on boot: citation text (alias keys legal /
+          // legal_basis map to one column on persist), provenance, status and
+          // difficulty.
           if (existing.text !== a.text) {
             existing.text = a.text;
             changed = true;
@@ -175,8 +176,17 @@ class LocalDatabase {
             existing.legal = seedLegal;
             changed = true;
           }
-          if (!existing.topic_id && a.topic_id) {
+          if (a.topic_id && existing.topic_id !== a.topic_id) {
             existing.topic_id = a.topic_id;
+            changed = true;
+          }
+          if (a.status && existing.status !== a.status) {
+            existing.status = a.status;
+            changed = true;
+          }
+          const seedDifficulty = a.difficulty ?? a.diff;
+          if (seedDifficulty !== undefined && (existing.difficulty ?? (existing as { diff?: number }).diff) !== seedDifficulty) {
+            existing.difficulty = seedDifficulty;
             changed = true;
           }
           if (changed) hasNewSeeds = true;

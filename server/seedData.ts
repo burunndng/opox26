@@ -427,6 +427,30 @@ const seedConfusionPairsTema7: ConfusionPair[] = [
     "legal_basis_b": "Art. 166 TRLGSS",
     "severity": "high",
     "status": "validated"
+  },
+  {
+    "id": "pair_carencia_cotizacion",
+    "concept_a": "Carencia del subsidio por nacimiento y cuidado de menor (graduada por edad)",
+    "concept_b": "Carencia ordinaria de cotización previa (independiente de la edad)",
+    "discriminating_cue": "En el nacimiento, Art. 178 TRLGSS gradúa la carencia según la edad en el hecho causante: menos de 21 años, sin carencia; de 21 a menos de 26 años, 90 días dentro de los 7 años anteriores o 180 en toda su vida laboral; 26 años o más, 180/7 años o 360 en vida laboral. Las demás prestaciones exigen su carencia propia sin graduación por edad (p. ej., art. 172.1 TRLGSS: 180 días dentro de los 5 años anteriores para la IT por contingencias comunes).",
+    "common_trap": "Aplicar la graduación por edad del art. 178 a la IT o a la jubilación, o intercambiar los pares de días (90/180 y 180/360) entre franjas de edad.",
+    "example_case": "Una trabajadora de 24 años causa derecho a nacimiento con 90 días cotizados en los 7 años anteriores; otra de 30 años exige 180/360 aunque se solicite la misma prestación.",
+    "legal_basis_a": "Art. 178 TRLGSS",
+    "legal_basis_b": "Art. 172 TRLGSS",
+    "severity": "critical",
+    "status": "validated"
+  },
+  {
+    "id": "pair_beneficios_parto",
+    "concept_a": "Primer año de excedencia por cuidado de hijo (cotización efectiva para todas las prestaciones)",
+    "concept_b": "Resto de la excedencia, hasta 3 años (cotización solo para determinadas prestaciones)",
+    "discriminating_cue": "El PRIMER año de excedencia por cuidado de hijo computa como cotización efectiva para todas las prestaciones del sistema; del segundo año en adelante y hasta un máximo de 3 años (art. 46.3 ET), solo computa para determinadas prestaciones (jubilación, incapacidad permanente, muerte y supervivencia e IT).",
+    "common_trap": "Extender la cotización «para todas las prestaciones» a los 3 años completos, o atribuir el cómputo ampliado a prestaciones fuera de la lista.",
+    "example_case": "Un padre en excedencia al segundo año solo afianza su carencia para jubilación o incapacidad permanente; durante el primer año, en cambio, computa también para otras prestaciones del sistema.",
+    "legal_basis_a": "Art. 237 TRLGSS",
+    "legal_basis_b": "Art. 46.3 ET",
+    "severity": "high",
+    "status": "validated"
   }
 ];
 
@@ -469,14 +493,14 @@ const seedAtomsTema7: Atom[] = [
   {
     "id": "atom-3",
     "type": "exception",
-    "text": "El derecho al reconocimiento de la pensión de jubilación y de incapacidad permanente es imprescriptible.",
-    "legal": "Art. 53.3 TRLGSS",
+    "text": "El derecho al reconocimiento de la pensión de jubilación es imprescriptible (la incapacidad permanente prescribe a los cinco años).",
+    "legal": "Art. 212 TRLGSS",
     "cluster": "cluster_prescripcion_caducidad",
     "pair": "pair_prescripcion_caducidad",
     "tags": [
       "imprescriptible",
       "jubilacion",
-      "incapacidad_permanente"
+      "prescripcion_5_años"
     ],
     "diff": 2
   },
@@ -1146,7 +1170,19 @@ const seedAtomsTema7: Atom[] = [
   }
 ];
 
-export const seedAtoms: Atom[] = [...seedAtomsTema7, ...seedAtomsTema1, ...seedAtomsTema3];
+export const seedAtoms: Atom[] = [
+  // Tema 7 legacy atoms carry neither topic_id, status nor the `difficulty`
+  // spelling; the mapping below fills provenance and mirrors the Tema 1/3
+  // normalized shape (see F10 in tests/seed-integrity.test.ts).
+  ...seedAtomsTema7.map((atom) => ({
+    ...atom,
+    topic_id: atom.topic_id ?? 'topic_seguridad_social_tema_7',
+    difficulty: atom.difficulty ?? atom.diff,
+    status: atom.status ?? 'validated',
+  })),
+  ...seedAtomsTema1,
+  ...seedAtomsTema3,
+];
 
 const seedItemsTema7: Item[] = [
   {

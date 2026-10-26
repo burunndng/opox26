@@ -1,6 +1,12 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { seedItems } from '../server/seedData.ts';
+import {
+  seedItems,
+  seedAtoms,
+  seedClusters,
+  seedConfusionPairs,
+  seedTopics,
+} from '../server/seedData.ts';
 import { seedItemsRetrieval } from '../server/seedDataRetrieval.ts';
 import type { Item } from '../src/types.ts';
 
@@ -177,5 +183,57 @@ describe('Seed-bank integrity', () => {
       .map((item) => item.id);
 
     assert.deepEqual(failures, [], `Missing figure status: ${failures.join(', ')}`);
+  });
+
+  test('F8: every cluster_id referenced in seed items and atoms exists in seedClusters', () => {
+    const clusterIds = new Set(seedClusters.map((cluster) => cluster.id));
+    const failures: string[] = [];
+
+    for (const item of allSeedItems) {
+      if (item.cluster_id && !clusterIds.has(item.cluster_id)) {
+        failures.push(`item ${item.id} -> ${item.cluster_id}`);
+      }
+    }
+    for (const atom of seedAtoms) {
+      const clusterId = atom.cluster_id ?? atom.cluster;
+      if (clusterId && !clusterIds.has(clusterId)) {
+        failures.push(`atom ${atom.id} -> ${clusterId}`);
+      }
+    }
+
+    assert.deepEqual(failures, [], `Dangling cluster references:\n${failures.join('\n')}`);
+  });
+
+  test('F9: every confusion_pair_id referenced in seed items and atoms exists in seedConfusionPairs', () => {
+    const pairIds = new Set(seedConfusionPairs.map((pair) => pair.id));
+    const failures: string[] = [];
+
+    for (const item of allSeedItems) {
+      if (item.confusion_pair_id && !pairIds.has(item.confusion_pair_id)) {
+        failures.push(`item ${item.id} -> ${item.confusion_pair_id}`);
+      }
+    }
+    for (const atom of seedAtoms) {
+      const pairId = atom.confusion_pair_id ?? atom.pair;
+      if (pairId && !pairIds.has(pairId)) {
+        failures.push(`atom ${atom.id} -> ${pairId}`);
+      }
+    }
+
+    assert.deepEqual(failures, [], `Dangling confusion-pair references:\n${failures.join('\n')}`);
+  });
+
+  test('F10: every seed atom has a known topic_id and a numeric difficulty', () => {
+    const topicIds = new Set(seedTopics.map((topic) => topic.id));
+    const failures = seedAtoms
+      .filter(
+        (atom) =>
+          !atom.topic_id ||
+          !topicIds.has(atom.topic_id) ||
+          typeof (atom.difficulty ?? atom.diff) !== 'number',
+      )
+      .map((atom) => atom.id);
+
+    assert.deepEqual(failures, [], `Atoms failing provenance/difficulty checks: ${failures.join(', ')}`);
   });
 });

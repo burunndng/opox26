@@ -80,7 +80,7 @@ const chunkMapper: TableMapper<SourceChunk> = {
 const atomMapper: TableMapper<Atom> = {
   name: 'atoms',
   columns: ['id', 'topic_id', 'source_chunk_id', 'text', 'atom_type', 'legal_basis', 'cluster_id', 'confusion_pair_id', 'tags', 'difficulty', 'figure_status', 'status', 'created_at', 'updated_at'],
-  toRow: (a) => [a.id, nul(a.topic_id), nul(a.source_chunk_id), a.text, nul(a.atom_type ?? a.type), nul(a.legal_basis ?? a.legal), nul(a.cluster_id ?? a.cluster), nul(a.confusion_pair_id ?? a.pair), j(a.tags ?? []), nul(a.difficulty), nul(a.figure_status), a.status ?? 'draft', nul(a.created_at), nul(a.updated_at)],
+  toRow: (a) => [a.id, nul(a.topic_id), nul(a.source_chunk_id), a.text, nul(a.atom_type ?? a.type), nul(a.legal_basis ?? a.legal), nul(a.cluster_id ?? a.cluster), nul(a.confusion_pair_id ?? a.pair), j(a.tags ?? []), nul(a.difficulty ?? a.diff), nul(a.figure_status), a.status ?? 'draft', nul(a.created_at), nul(a.updated_at)],
   fromRow: (r) => ({
     id: String(r.id), topic_id: str(r.topic_id), source_chunk_id: str(r.source_chunk_id),
     text: String(r.text), atom_type: str(r.atom_type) as Atom['atom_type'],
