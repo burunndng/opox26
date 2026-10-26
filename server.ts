@@ -7,7 +7,7 @@ import { SchedulingEngine, InterleavingEngine } from './server/scheduler.ts';
 import { DataExporter } from './server/exporter.ts';
 import { AiAssistant } from './server/ai.ts';
 import { JevClient } from './server/jev.ts';
-import { Item, AppSettings } from './src/types.ts';
+import { Item, AppSettings, QualityWarning } from './src/types.ts';
 import {
   topicInput,
   sourceChunkInput,
@@ -38,7 +38,7 @@ import {
 } from './src/schemas/index.ts';
 import { parsePdf, PdfImportError } from './server/pdfImport.ts';
 import { suggestAtoms, splitIntoChunks } from './server/heuristics.ts';
-import { buildValidationWarnings } from './server/validationWarnings.ts';
+import { buildValidationWarnings, getCriticalItemErrors, promotionGatePayload } from './server/validationWarnings.ts';
 
 /**
  * Validates req.body against a Zod schema. On failure responds 400 with an
@@ -261,6 +261,8 @@ async function startServer() {
   app.post('/api/items', (req, res) => {
     const body = validateBody(itemInput, req.body, res);
     if (body === undefined) return;
+    const gate = promotionGatePayload(body as Partial<Item>);
+    if (gate) return res.status(422).json(gate);
     const item = db.createItem(body as any);
     res.status(201).json(item);
   });
@@ -268,6 +270,14 @@ async function startServer() {
   app.put('/api/items/:id', (req, res) => {
     const body = validateBody(itemInput.partial(), req.body, res);
     if (body === undefined) return;
+    // When the patch carries a status, gate the MERGED item (stored state +
+    // patch) so partial updates cannot smuggle a promotion past a critical
+    // failure. Unknown ids keep falling through to the 404 in updateItem.
+    const gateTarget = body.status ? db.getItem(req.params.id) : undefined;
+    if (gateTarget) {
+      const gate = promotionGatePayload({ ...gateTarget, ...body } as Partial<Item>);
+      if (gate) return res.status(422).json(gate);
+    }
     const updated = db.updateItem(req.params.id, body as any);
     if (!updated) return res.status(404).json({ error: 'Item not found' });
     res.json(updated);

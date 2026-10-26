@@ -64,6 +64,9 @@ export const ItemBank: React.FC<ItemBankProps> = ({
   };
 
   const warningItemIds = new Set(warnings.map((w) => w.item_id));
+  const criticalItemIds = new Set(
+    warnings.filter((w) => w.severity === 'critical').map((w) => w.item_id),
+  );
 
   const filteredItems = items.filter((item) => {
     if (showWarningsOnly && !warningItemIds.has(item.id)) return false;
@@ -240,6 +243,17 @@ export const ItemBank: React.FC<ItemBankProps> = ({
                       </span>
                     )}
 
+                    {criticalItemIds.has(item.id) && (
+                      <span
+                        role="status"
+                        title="Avisos críticos (p. ej., sin base legal, sin opción correcta): corrige en Content Studio antes de validar."
+                        className="text-[10px] font-semibold px-2 py-0.5 rounded bg-rose-600/25 text-rose-300 border border-rose-700/60 flex items-center space-x-1"
+                      >
+                        <AlertTriangle className="w-3 h-3" />
+                        <span>Bloqueo crítico</span>
+                      </span>
+                    )}
+
                     {hasWarning && (
                       <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 flex items-center space-x-1">
                         <AlertTriangle className="w-3 h-3" />
@@ -297,7 +311,17 @@ export const ItemBank: React.FC<ItemBankProps> = ({
                   {item.status === 'draft' && (
                     <button
                       onClick={() => handleValidateItem(item)}
-                      className="px-3 py-1.5 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center space-x-1"
+                      disabled={criticalItemIds.has(item.id)}
+                      title={
+                        criticalItemIds.has(item.id)
+                          ? 'No se puede validar con avisos críticos: corrige primero (base legal, opción correcta…).'
+                          : 'Validar y promocionar el ítem'
+                      }
+                      className={`px-3 py-1.5 rounded-md text-white text-xs font-semibold flex items-center space-x-1 transition ${
+                        criticalItemIds.has(item.id)
+                          ? 'bg-emerald-900/60 opacity-50 cursor-not-allowed'
+                          : 'bg-emerald-600 hover:bg-emerald-500'
+                      }`}
                     >
                       <CheckCircle className="w-3.5 h-3.5" />
                       <span>Validar</span>
