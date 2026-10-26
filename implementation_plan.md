@@ -27,7 +27,7 @@ The app is a broad local-first prototype. The table distinguishes verified behav
 |---|---|---|
 | Stack | Vite 8 + React 19 + Express 4 + TypeScript, `npm run dev` = `tsx server.ts` | `package.json` |
 | Persistence | SQLite exists; restart behavior now covered by an isolated two-boot regression test | `server/db.ts`, `tests/persistence.test.ts` |
-| Tests | Full suite green and fully isolated — **183 tests / 40 suites** (2026-10-23, tras auditoría FIX 1–9); `npm test` provably never touches the live DB | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
+| Tests | Full suite green and fully isolated — **172 tests / 37 suites** (2026-10-26; la auditoría FIX 1–9 midió 183/40 con un WIP descartado después, ver §1.2); `npm test` provably never touches the live DB | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
 | Data model | Core types and SQLite tables exist; tag/join behavior and seed relationships need an audit | `src/types.ts`, `server/sqlite/connection.ts` |
 | Activity surfaces | Runner branches exist for the required formats; production scoring parity is the active P4 work | `src/components/ActivityRunner.tsx`, `src/scoring/evaluateItem.ts` |
 | Content pipeline | Text/PDF import and heuristic atom suggestions exist; validation eligibility and provenance need enforcement | `server/pdfImport.ts`, `server/heuristics.ts`, `ContentStudio.tsx` |
@@ -50,6 +50,19 @@ Auditoría exhaustiva (freeze `71935c2`) + remediación FIX 1–9, verificada co
 - **FIX 9**: smoke runtime en `PORT=3210` (dev + dist) con evidencia en
   `docs/audit/2026-10-23/evidence/smoke-transcript-fixed.txt`; conteos de pruebas actualizados
   en README y ACCEPTANCE.
+
+### 1.2 Re-medición tras descartar el WIP mercury-decide — 2026-10-26
+
+La medición del close-out (183/183, 40 suites) se hizo con un WIP no commiteado en el árbol
+(mercury-decide, ver `docs/audit/2026-10-23/REPORT.md` §«Pre-existing work»); ese WIP se
+descartó a posteriori y 11 pruebas en 3 suites nunca fueron parte del repo. Además, `c755ce3`
+(FIX 5) había commiteado las 4 rutas Jev de `server.ts` llamando a `JevClient` con un parámetro
+`model` que nunca llegó a `server/jev.ts` (era parte del WIP): `npm run lint` quedó con 4 errores
+TS2554 en HEAD. Las llamadas se restauraron a las firmas 1–2 argumentos de `JevClient`
+(`/api/jev/audit-item`, `diagnose-attempt`, `classify-atom`, `verify-cascade`).
+
+Recuento vigente: **172/172 en 37 suites**, `npm run lint` limpio. `REPORT.md` y sus logs se
+conservan como registro histórico (medidos con el WIP presente).
 
 ---
 
@@ -218,7 +231,7 @@ Confirmed in this work session:
 - `npm run lint` passes after the boot fix.
 - `tests/persistence.test.ts` passes 2/2 using a child-process probe and an isolated `OPOSILAB_DATA_DIR`; the live `data/oposilab.db` is not used.
 - `server/db.ts:112-190` now performs a full seed only when both topics and items are empty; existing data follows the additive merge path.
-- P2 complete: the full suite (58 tests *en esa revisión*; hoy **183** — ver §1.1) runs green in isolated temp databases with `OPOSILAB_OFFLINE=1` (no AI/Jev network); md5 of the live `data/oposilab.db` is unchanged across `npm test`. Two isolation bugs were found and fixed en route: (1) `server/db.ts` captured its DB path at import time, defeating env overrides, and (2) `server/db.ts` ran `db.init()` at module scope, seeding the default-path DB on mere import. Both are regression-guarded (P2.3) and the module now auto-initializes lazily on first access via a Proxy.
+- P2 complete: the full suite (58 tests *en esa revisión*; hoy **172** — ver §1.2) runs green in isolated temp databases with `OPOSILAB_OFFLINE=1` (no AI/Jev network); md5 of the live `data/oposilab.db` is unchanged across `npm test`. Two isolation bugs were found and fixed en route: (1) `server/db.ts` captured its DB path at import time, defeating env overrides, and (2) `server/db.ts` ran `db.init()` at module scope, seeding the default-path DB on mere import. Both are regression-guarded (P2.3) and the module now auto-initializes lazily on first access via a Proxy.
 - Deferred with their fixes: replacing inline scorer/SRS test reimplementations lands with the P4 production scorers; due-filter, daily-limit, and seed-integrity assertions land with the P3/P5 fixes they verify (kept green intentionally).
 
 Global constraints:
@@ -263,7 +276,7 @@ Global constraints:
 - Every suite now runs against a fresh temp `OPOSILAB_DATA_DIR`; verified by md5-checksumming the live DB across a full `npm test` run.
 - `server/db.ts` resolves its DB path lazily and no longer runs `db.init()` at module scope (the import-time seeding bug is guarded by test P2.3).
 - AI/Jev clients honor `OPOSILAB_OFFLINE=1` and use deterministic local fallbacks; no test can spend network credits.
-- Full suite green: 58 tests / 11 suites *(rev 2026-09; hoy 183/40 — ver §1.1)*.
+- Full suite green: 58 tests / 11 suites *(rev 2026-09; hoy 172/37 — ver §1.2)*.
 
 **Verification:**
 - `npm test` (live `data/oposilab.db` md5 unchanged before/after)

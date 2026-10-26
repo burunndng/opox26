@@ -27,7 +27,7 @@ npm run build                    # vite build + esbuild server bundle → dist/s
 
 - **The spec's stack is stale.** `docs/SPEC.md` says Next.js/Drizzle/better-sqlite3/Vitest. The implementation deliberately uses **Vite + React 19 + Express + `node:sqlite` + Zod + `node:test`** (rationale in README *Arquitectura*). Never migrate frameworks or add those deps "to match the spec".
 - **No full mock exams.** Deliberate methodological decision; do not add a mock-exam module.
-- **AI is optional.** Everything must work with no API keys. Keys (`GEMINI_API_KEY` / `OPENROUTER_API_KEY`) and the decisions-model default (`DECISIONS_MODEL`, fallback `inception/mercury-decide:free`) go in `.env` (see `.env.example`). `OPOSILAB_OFFLINE=1` forces local deterministic fallbacks for AI/Jev clients (tests use this to avoid network).
+- **AI is optional.** Everything must work with no API keys. Keys (`GEMINI_API_KEY` / `OPENROUTER_API_KEY`) go in `.env` (see `.env.example`). `OPOSILAB_OFFLINE=1` forces local deterministic fallbacks for AI/Jev clients (tests use this to avoid network).
 - **AI/heuristic-generated content always lands as `draft`**; only human validation promotes items to `active`.
 - Firebase Google sign-in sync is optional and opt-in; local SQLite stays the source of truth.
 

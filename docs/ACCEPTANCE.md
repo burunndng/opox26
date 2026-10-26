@@ -3,9 +3,10 @@
 Estado verificado en la última revisión. "Test" = prueba automatizada en `tests/`;
 "Manual" = comprobación con pasos concretos. Nada se declara funcionando sin evidencia.
 
-> Hardening de auditoría aplicado el 2026-10-23 (FIX 1–9): **183/183** pruebas en 40 suites;
-> validación Zod en las 13 rutas que no la tenían; migraciones aditivas de esquema; scorer,
-> SRS, scheduler y exportador endurecidos. Detalle en `docs/audit/2026-10-23/REPORT.md`.
+> Hardening de auditoría aplicado el 2026-10-23 (FIX 1–9); las llamadas Jev de `server.ts` se
+> realinearon con las firmas de `JevClient` el 2026-10-26 tras descartar su WIP no commiteado.
+> Recuento actual: **172/172** pruebas en 37 suites — la medición original de la auditoría
+> (183/40) incluía 11 pruebas en 3 suites de ese WIP. Detalle en `docs/audit/2026-10-23/REPORT.md`.
 
 | # | Criterio | Estado | Evidencia |
 |---|---|---|---|
@@ -30,7 +31,7 @@ Estado verificado en la última revisión. "Test" = prueba automatizada en `test
 | 19 | Analítica: clústeres débiles, pares, confident-wrong, errores numéricos | ✅ | Motor de analítica (heat maps, matrices, alertas) + `SessionHeatMap` — `tests/analytics.test.ts` D5–D10 |
 | 20 | Exportar a Anki y CSV | ✅ | `/api/export/anki`, `/api/export/csv-items`, `/api/export/csv-errors`, Quizlet, backup JSON — test 12; muestra real en `examples/anki_sample.tsv` |
 | 21 | Seed Tema 7 carga correctamente | ✅ | `server/seedData.ts` (100 ítems: 25/20/15/10/10/8/6/6) + `seedDataTema1.ts` + 6 de retrieval/pretest — test 1 |
-| 22 | Tests unitarios de scheduling, interleaving, validación, cloze, errores | ✅ | `tests/oposilab.test.ts` (1–19), `sqlite` (A1–A10), `pipeline` (B1–B10), `retrieval` (C11–C16), `analytics` (D1–D10), `eligibility` (E1–E4), `seed-integrity` (F1–F7), `queue-order` (G1–G7), `option-order` (O1–O5), `practice-pools` (P1–P6), `seed-reconcile` (R1–R4), `validation-warnings` (V1–V4), `scorer-hardening` (11), `srs-graduation` (G1–G4), `interleaving-hardening` (I1–I2), `schema-contracts` (14), `sqlite-migrations` (M1–M4) — **183/183** (2026-10-23) |
+| 22 | Tests unitarios de scheduling, interleaving, validación, cloze, errores | ✅ | `tests/oposilab.test.ts` (1–19), `sqlite` (A1–A10), `pipeline` (B1–B10), `retrieval` (C11–C16), `analytics` (D1–D10), `eligibility` (E1–E4), `seed-integrity` (F1–F7), `queue-order` (G1–G7), `option-order` (O1–O5), `practice-pools` (P1–P6), `seed-reconcile` (R1–R4), `validation-warnings` (V1–V4), `scorer-hardening` (11), `srs-graduation` (G1–G4), `interleaving-hardening` (I1–I2), `schema-contracts` (14), `sqlite-migrations` (M1–M4) — **172/172** (2026-10-26, tras retirar la medición del WIP mercury-decide descartado) |
 | 23 | README explica el uso | ✅ | `README.md` (español): instalación, base de datos, Content Studio, estudios, atajos, exportación, IA opcional, tests |
 | 24 | Cuantías 2026 verificadas en fuente oficial | ✅ | [BOE-A-2026-2548](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-2548) (RDL 3/2026, 3-feb): revalorización 2,7 %; tope 3.359,60 €/mes · 47.034,40 €/año; PNC 8.803,20 €/año en 14 pagas (RD 357/1991 art. 14.1); límites de ingresos 9.442,00 €/11.013,00 €. `figure_status` en 13 ítems del clúster `importes_2026` — `tests/seed-integrity.test.ts` F7 |
 | 25 | Práctica solo con contenido elegible y reconciliación de seeds | ✅ | Predicado compartido `isPracticeEligible` aplicado en `server/scheduler.ts` (due stats/cola/bloques) y en pools de cliente (`src/utils/practicePools.ts`, `src/utils/sniperFilter.ts`); metadatos de seeds sin intentos se reconcilian al arrancar — `tests/eligibility.test.ts` E1–E4, `tests/seed-reconcile.test.ts` R1–R4, `tests/practice-pools.test.ts` P1–P6 |
@@ -41,7 +42,7 @@ Estado verificado en la última revisión. "Test" = prueba automatizada en `test
 
 ## Pendientes declarados (fuera de alcance o diferido)
 
-- **Playwright E2E**: no implementado (no requerido como bloqueante; las 183 pruebas son unitarias/integración).
+- **Playwright E2E**: no implementado (no requerido como bloqueante; las 172 pruebas son unitarias/integración).
 - **Ejercicios de comprobación manual sin cobertura automática**: caminar por cada tipo de actividad en la UI (criterios 7–14 se validan por código + tests del scorer, no por E2E).
 - **`package.json` conserva el nombre `react-example`** (herencia del scaffold; sin efecto funcional).
 - **La suite original (`tests/oposilab.test.ts`) opera sobre la base real**; aíslala con `OPOSILAB_DATA_DIR` si conv practice en paralelo (recomendación del plan, fase de mantenimiento).
