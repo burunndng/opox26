@@ -27,7 +27,7 @@ The app is a broad local-first prototype. The table distinguishes verified behav
 |---|---|---|
 | Stack | Vite 8 + React 19 + Express 4 + TypeScript, `npm run dev` = `tsx server.ts` | `package.json` |
 | Persistence | SQLite exists; restart behavior now covered by an isolated two-boot regression test | `server/db.ts`, `tests/persistence.test.ts` |
-| Tests | Full suite green and fully isolated — **172 tests / 37 suites** (2026-10-26; la auditoría FIX 1–9 midió 183/40 con un WIP descartado después, ver §1.2); `npm test` provably never touches the live DB | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
+| Tests | Full suite green and fully isolated — **182 tests / 38 suites** (2026-10-26, tras P3-c; `npm test` provably never touches the live DB) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
 | Data model | Core types and SQLite tables exist; tag/join behavior and seed relationships need an audit | `src/types.ts`, `server/sqlite/connection.ts` |
 | Activity surfaces | Runner branches exist for the required formats; production scoring parity is the active P4 work | `src/components/ActivityRunner.tsx`, `src/scoring/evaluateItem.ts` |
 | Content pipeline | Text/PDF import and heuristic atom suggestions exist; validation eligibility and provenance need enforcement | `server/pdfImport.ts`, `server/heuristics.ts`, `ContentStudio.tsx` |
@@ -309,7 +309,7 @@ Global constraints:
 - Topic-specific content and micro-lessons find their linked atoms, clusters, and pairs.
 - Seed audits verify counts, links, status, option balance, and distractor metadata.
 
-**Completed slices (audit hardening, 2026-09):**
+**Completed slices:**
 
 - ✅ **P3-a — práctica solo con contenido elegible + reconciliación de seeds intactos:** predicado
   compartido `isPracticeEligible` aplicado en las colas SRS/intercalado (`server/scheduler.ts`) y en
@@ -322,10 +322,16 @@ Global constraints:
   diagnóstico pedagógico del banco completo en el endpoint de avisos y `figure_status` verificado
   contra BOE. Evidencia: `tests/option-order.test.ts` O1–O5, `tests/seed-integrity.test.ts` F1–F7,
   `tests/validation-warnings.test.ts` V1–V4.
+- ✅ **P3-c — puerta de calidad de validación y resolución de referencias de seeds:**
+  puerta estricta en `POST/PUT /api/items` que responde 422 si se intenta promocionar un ítem a
+  `validated` o `active` con avisos críticos (sin base legal, sin opción correcta, opciones duplicadas
+  o insuficientes); bloqueo y aviso visual en `ItemBank.tsx`; reparación de referencias de seeds
+  (reorientación de `cluster_ce_antecedentes` a `cluster_ce_historia_antecedentes`; definición de
+  `pair_carencia_cotizacion` y `pair_beneficios_parto` en Tema 7); normalización de `topic_id`,
+  `difficulty` y `status` en átomos legacy; soporte de `diff` en el mapper SQLite. Evidencia:
+  `tests/validation-gate.test.ts` W1–W7, `tests/seed-integrity.test.ts` F8–F10.
 
-**Still open in P3 (not completed):** quality-gating beyond the warnings endpoint, provenance/topic
-and source-chunk links for seeds, seed-reference repairs, and explicit human validation of generated
-content.
+**Status de P3:** ✅ COMPLETO.
 
 ### P4 — Correct the core activity loop
 
