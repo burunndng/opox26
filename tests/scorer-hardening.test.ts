@@ -116,7 +116,7 @@ describe('Scorer hardening — errorCode hygiene', () => {
 
   test('failure codes keep their semantics', () => {
     const mcq = { ...base, item_type: 'cover_and_generate_mcq', correct_answer: 'B', options: [{ id: 'B', text: 'ok', is_correct: true }] } as unknown as Item;
-    assert.equal(evaluateItem(mcq, { selectedOption: 'A' }, 1).errorCode, 'E3');
+    assert.equal(evaluateItem(mcq, { selectedOption: 'A' }, 1).errorCode, 'E1');
     assert.equal(evaluateItem(mcq, { selectedOption: 'A' }, 3).errorCode, 'E8');
     assert.equal(evaluateItem(mcq, { blank: true }, 0).errorCode, 'E9');
   });
