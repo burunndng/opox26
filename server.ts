@@ -426,7 +426,7 @@ async function startServer() {
     const body = validateBody(jevAuditItemInput, req.body, res);
     if (body === undefined) return;
     try {
-      const audit = await JevClient.auditItemQuality(body.item, body.sourceNorm, body.model);
+      const audit = await JevClient.auditItemQuality(body.item, body.sourceNorm);
       res.json(audit);
     } catch (err: any) {
       res.status(500).json({ error: err.message || 'Jev item audit failed' });
@@ -437,8 +437,8 @@ async function startServer() {
     const body = validateBody(jevDiagnoseAttemptInput, req.body, res);
     if (body === undefined) return;
     try {
-      const { model, ...attemptData } = body;
-      const diagnosis = await JevClient.diagnoseAttempt(attemptData as any, model);
+      const attemptData = body;
+      const diagnosis = await JevClient.diagnoseAttempt(attemptData as any);
       res.json(diagnosis);
     } catch (err: any) {
       res.status(500).json({ error: err.message || 'Jev attempt diagnosis failed' });
@@ -449,8 +449,8 @@ async function startServer() {
     const body = validateBody(jevClassifyAtomInput, req.body, res);
     if (body === undefined) return;
     try {
-      const { model, ...atomData } = body;
-      const classification = await JevClient.classifyAtom(atomData as any, model);
+      const atomData = body;
+      const classification = await JevClient.classifyAtom(atomData as any);
       res.json(classification);
     } catch (err: any) {
       res.status(500).json({ error: err.message || 'Jev atom classification failed' });
@@ -461,7 +461,7 @@ async function startServer() {
     const body = validateBody(jevVerifyCascadeInput, req.body, res);
     if (body === undefined) return;
     try {
-      const verification = await JevClient.verifyCascade(body.draftItem, body.sourceText, body.model);
+      const verification = await JevClient.verifyCascade(body.draftItem, body.sourceText);
       res.json(verification);
     } catch (err: any) {
       res.status(500).json({ error: err.message || 'Jev cascade verification failed' });
