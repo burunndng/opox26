@@ -16,7 +16,8 @@ export type TwoTierQuadrant =
   | 'Q4_Misconception';
 
 /**
- * Classifies a two-tier diagnostic attempt into one of four cognitive quadrants (spec §9.5).
+ * Classification of a two-tier diagnostic attempt into the four cognitive quadrants (spec §9.5).
+ * Repair routing lives in src/utils/repairRouting.ts (canonical `RepairRouting` type + `REPAIR_ROUTES`).
  */
 export function classifyTwoTierQuadrant(
   tier1Correct: boolean,

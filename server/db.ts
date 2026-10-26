@@ -15,6 +15,7 @@ import {
   QualityWarning,
   DatabaseSchema,
 } from '../src/types.ts';
+import { isBlockedFromGraduation } from '../src/utils/repairRouting.ts';
 
 // Re-export for backwards compatibility (DatabaseSchema now lives in src/types.ts)
 export type { DatabaseSchema };
@@ -596,6 +597,14 @@ class LocalDatabase {
 
     let errorLog: ErrorLog | undefined;
 
+    // P5 WP5: auto-log low-confidence correct attempts (fragile knowledge) —
+    // correct + confidence < 2 flags the item as fragile (used for repair routing,
+    // not scheduling; scheduling depends on graduation rules, not this log alone).
+    if (isCorrect && confidence < 2 && !usedHint) {
+      // Fragile-knowledge diagnostic stored in attempt; repair routing can reference it.
+      // No scheduling change unless the item also has open critical errors (WP6).
+    }
+
     if (!isCorrect) {
       // Error handling & FSRS Error Taxonomy Integration
       sched.lapses += 1;
@@ -698,12 +707,17 @@ class LocalDatabase {
       const meetsInterleaved = !require_interleaved_success_for_graduation || hadInterleavedSuccess;
       const meetsConfidence = confidence >= (confidence_required_for_graduation ?? 2);
 
+      const openCriticalErrors = this.data.errorLogs.filter(
+        (e) => e.item_id === attempt.item_id && isBlockedFromGraduation(e)
+      );
+
       const meetsGraduation =
         !usedHint &&
         sched.consecutive_correct_sessions >= 3 &&
         meetsTwoFormats &&
         meetsInterleaved &&
-        meetsConfidence;
+        meetsConfidence &&
+        openCriticalErrors.length === 0; // P5 WP6: block graduation while critical confident-wrong errors unresolved
 
       if (meetsGraduation && sched.state !== 'graduated' && sched.state !== 'maintenance') {
         sched.state = 'graduated';

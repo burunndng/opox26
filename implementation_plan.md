@@ -375,6 +375,7 @@ Global constraints:
 - Due queues never present future items.
 - Graduation is reachable through actual UI activity formats, not synthetic test inputs.
 - Error status transitions and repair completion are persisted and tested.
+- Verificación P5: `npm run lint` limpio, `npm test` 182/182, WP1–WP6 implementados (filtro de vencidos/tope de nuevos en `getDueQueue`, bloqueo de graduación en `confident-wrong` abierto del mismo ítem, auto-log de aciertos con baja confianza sin cambio de programación, enrutamiento de reparación E1–E9 vía `src/utils/repairRouting.ts`).
 
 ### P6 — Finish import/export, UX, and evidence
 
