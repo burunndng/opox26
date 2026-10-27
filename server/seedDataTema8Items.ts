@@ -204,7 +204,7 @@ stem: 'Hasta el cumplimiento de los 365 días de duración de la incapacidad tem
   },
   {
     stem: 'Durante la tramitación de la discrepancia, ¿qué sucede con la prestación y la colaboración?',
-    options: ['La prestación queda siempre suspendida desde la fecha del alta', 'Si el INSS reconsidera el alta, se reconoce la prórroga a todos los efectos; si la confirma, la IT solo se prorroga hasta la fecha de la última resolución', 'La empresa pierde automáticamente toda función de pago aunque existiera colaboración voluntaria', 'El periodo entre el alta y la adquisición de plenos efectos se considera prorrogada la IT; la reconsideración la reconoce a todos los efectos y la confirmación la limita hasta la última resolución, manteniéndose la colaboración en el pago'], answer: 'D', legal: 'Art. 170 TRLGSS',
+    options: ['La prestación queda siempre suspendida desde la fecha del alta', 'La IT se prorroga siempre hasta el día 545, cualquiera que sea la decisión del INSS', 'La empresa pierde automáticamente toda función de pago aunque existiera colaboración voluntaria', 'El periodo entre el alta y la adquisición de plenos efectos se considera prorrogada la IT; la reconsideración la reconoce a todos los efectos y la confirmación la limita hasta la última resolución, manteniéndose la colaboración en el pago'], answer: 'D', legal: 'Art. 170 TRLGSS',
     rationale: 'El periodo intermedio se considera prórroga de IT; la reconsideración la reconoce a todos los efectos y la confirmación la limita hasta la última resolución, manteniendo la colaboración en el pago.',
   },
   {
@@ -274,7 +274,7 @@ stem: 'Hasta el cumplimiento de los 365 días de duración de la incapacidad tem
   },
   {
     stem: 'Sobre los plazos para las actuaciones iniciales y las alegaciones:',
-    options: ['Las entidades disponen de 4 días hábiles y la persona trabajadora, si no inició el procedimiento, de 10 días hábiles', 'Todas las partes disponen de 15 días naturales', 'Las entidades disponen de 4 días hábiles improrrogables y la persona trabajadora, si no inició el procedimiento, de 10 días hábiles', 'El plazo es de 10 días hábiles para todas las personas y entidades'], answer: 'C', legal: 'Art. 6 RD 1430/2009',
+    options: ['Las entidades disponen de 10 días hábiles y la persona trabajadora, si no inició el procedimiento, de 4 días hábiles', 'Todas las partes disponen de 15 días naturales', 'Las entidades disponen de 4 días hábiles improrrogables y la persona trabajadora, si no inició el procedimiento, de 10 días hábiles', 'El plazo es de 10 días hábiles para todas las personas y entidades'], answer: 'C', legal: 'Art. 6 RD 1430/2009',
     rationale: 'Las entidades aportan antecedentes en 4 días hábiles improrrogables; la persona trabajadora dispone de 10 días hábiles si no inició el procedimiento.',
   },
   {
@@ -349,13 +349,13 @@ stem: 'Hasta el cumplimiento de los 365 días de duración de la incapacidad tem
   },
   {
     stem: 'En la prolongación de efectos económicos, ¿desde cuándo surten efectos la incapacidad permanente reconocida y cuándo se retrotraen?',
-    options: ['Desde la fecha de la resolución de la entidad gestora, salvo que la prestación reconocida sea superior a la percibida por prolongación, en cuyo caso se retrotraen al día siguiente a la extinción de la IT', 'Siempre desde la fecha del alta médica que extinguish la incapacidad temporal', 'Desde la fecha de la resolución, sin posibilidad de retroacción en ningún caso', 'Desde el día siguiente a la baja médica inicial en todos los supuestos'], answer: 'A', legal: 'Art. 174 TRLGSS',
+    options: ['Desde la fecha de la resolución de la entidad gestora, salvo que la prestación reconocida sea superior a la percibida por prolongación, en cuyo caso se retrotraen al día siguiente a la extinción de la IT', 'Siempre desde la fecha del alta médica que extingue la incapacidad temporal', 'Desde la fecha de la resolución, sin posibilidad de retroacción en ningún caso', 'Desde el día siguiente a la baja médica inicial en todos los supuestos'], answer: 'A', legal: 'Art. 174 TRLGSS',
     rationale: 'En la prolongación de efectos económicos, los efectos de la incapacidad permanente reconocida coinciden con la fecha de la resolución de la entidad gestora. Solo si la prestación reconocida es superior a la que venía percibiendo en concepto de prolongación de efectos se retrotraen al día siguiente al de extinción de la incapacidad temporal.',
   },
   {
     stem: 'Si la misma o similar patología reaparece antes de que transcurran 180 días desde la denegación de incapacidad permanente:',
-    options: ['Podrá iniciarse un nuevo proceso por una sola vez si el INSS considera que la persona puede recuperar su capacidad laboral; acordará la baja exclusivamente a efectos de la prestación económica por IT', 'No cabe ningún nuevo proceso en ningún caso', 'La mutua podrá iniciarlo las veces que estime oportuno', 'La persona tendrá derecho automático durante 545 días adicionales'], answer: 'A', legal: 'Art. 174 TRLGSS',
-    rationale: 'El INSS puede iniciar por una sola vez un nuevo proceso dentro de los 180 días si aprecia posible recuperación, con baja a efectos exclusivos de la prestación económica.',
+    options: ['Sí, por una sola vez, si el INSS considera que puede recuperar su capacidad laboral; acordará la baja exclusivamente a efectos de la prestación económica por IT', 'No cabe ningún nuevo proceso, ni siquiera si el INSS considera que puede recuperarse', 'La mutua puede iniciarlo tantas veces como estime oportuno dentro de ese plazo', 'La persona tendrá derecho automático a 545 días adicionales de subsidio de IT'], answer: 'A', legal: 'Art. 174 TRLGSS',
+    rationale: 'Antes de transcurridos los 180 días naturales desde la denegación de la incapacidad permanente podrá iniciarse un nuevo proceso de IT, por una sola vez, cuando el INSS considere que la persona puede recuperar su capacidad laboral; la baja se acuerda a efectos exclusivos de la prestación económica.',
   },
   {
     stem: 'Una incapacidad permanente en grados de total, absoluta o gran invalidez no extingue la relación laboral porque la empresa adapta razonablemente el trabajo o destina a la persona a otra función. ¿Qué efecto tiene sobre la prestación de incapacidad permanente?',
@@ -380,7 +380,7 @@ const conciseCorrectAnswers: Record<number, string> = {
   9: 'Preparación, ingreso y recuperación hasta alta por curación.',
   12: '180 días en los cinco años previos al hecho causante.',
   10: 'Sin carencia; 100 % de base común desde el día de baja.',
-  11: 'Situación protegida, alta/asimilada y cotización previa cuando proceda.',
+  11: 'Situación determinante, alta/asimilada y cotización previa cuando proceda.',
   15: '1,4 días por día cotizado, con tope mensual del mes efectivo.',
   18: 'Los días del mes cotizado.',
   21: 'Todas las bases, con el tope máximo vigente.',
@@ -424,7 +424,7 @@ const conciseCorrectAnswers: Record<number, string> = {
   66: 'Si continúa el tratamiento médico por recuperación o mejora; IT + prolongación ≤ 730 días.',
   67: 'Extingue IT; prolonga efectos económicos hasta resolución de IP.',
   68: 'Desde la resolución; si supera lo percibido, retroacción al día siguiente a la extinción.',
-  69: 'Una nueva baja económica si el INSS prevé recuperación.',
+  69: 'Sí, por una sola vez, si el INSS considera que puede recuperar su capacidad laboral.',
   70: 'Se suspende durante el desempeño del puesto adaptado o de otro incompatible con la pensión.',
 };
 

@@ -24,6 +24,13 @@ import {
 } from './seedDataTema8Meta.ts';
 import { seedItemsTema8 } from './seedDataTema8Items.ts';
 import {
+  seedTopicTema8IP,
+  seedSourceChunksTema8IP,
+  seedClustersTema8IP,
+  seedConfusionPairsTema8IP,
+} from './seedDataTema8IPMeta.ts';
+import { seedItemsTema8IP } from './seedDataTema8IP.ts';
+import {
   seedTopicTema15,
   seedSourceChunksTema15,
   seedItemsTema15,
@@ -39,7 +46,7 @@ export const seedTopic: Topic = {
   "updated_at": "2026-03-01T10:00:00Z"
 };
 
-export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8, seedTopicTema15];
+export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8, seedTopicTema8IP, seedTopicTema15];
 
 const seedSourceChunksTema7: SourceChunk[] = [
   {
@@ -94,6 +101,7 @@ export const seedSourceChunks: SourceChunk[] = [
   ...seedSourceChunksTema1,
   ...seedSourceChunksTema3,
   ...seedSourceChunksTema8,
+  ...seedSourceChunksTema8IP,
   ...seedSourceChunksTema15,
 ];
 
@@ -205,7 +213,7 @@ const seedClustersTema7: Cluster[] = [
   }
 ];
 
-export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3, ...seedClustersTema8];
+export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3, ...seedClustersTema8, ...seedClustersTema8IP];
 
 const seedConfusionPairsTema7: ConfusionPair[] = [
   {
@@ -459,6 +467,7 @@ export const seedConfusionPairs: ConfusionPair[] = [
   ...seedConfusionPairsTema1,
   ...seedConfusionPairsTema3,
   ...seedConfusionPairsTema8,
+  ...seedConfusionPairsTema8IP,
 ];
 
 const seedAtomsTema7: Atom[] = [
@@ -6547,4 +6556,8 @@ export const seedItems: Item[] = rebalanceCanonicalMcqOptions([
   ...seedItemsTema8,
   ...seedItemsTema15,
   ...seedItemsTema3Extras,
+  // Appended at the end on purpose: rebalanceCanonicalMcqOptions assigns the
+  // canonical correct-option position by index, so inserting Tema 8 (II) in
+  // the middle would reshuffle the stored option order of other topics.
+  ...seedItemsTema8IP,
 ]);
