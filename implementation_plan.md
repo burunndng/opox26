@@ -398,6 +398,7 @@ Global constraints:
 - Import/export round trips preserve item IDs, links, status, and feedback metadata.
 - A browser smoke flow covers import → validate → practice → feedback → restart persistence.
 - `npm run lint`, `npm test`, and `npm run build` pass from a clean checkout.
+- Verificación P6: import JSON/CSV de ítems implementado en `POST /api/import/items` (`server/importItems.ts` + `makeImportItemsHandler`) con validación por ítem (`itemInput`), detección de duplicados (id o stem+tema) y reporte de errores; 4 nuevas pruebas en `tests/oposilab.test.ts` (15, 15b, 15c, 15d); 186/182→186 tests verdes, lint limpio, build OK.
 
 ---
 

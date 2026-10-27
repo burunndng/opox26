@@ -39,27 +39,14 @@ import {
 import { parsePdf, PdfImportError } from './server/pdfImport.ts';
 import { suggestAtoms, splitIntoChunks } from './server/heuristics.ts';
 import { buildValidationWarnings, getCriticalItemErrors, promotionGatePayload } from './server/validationWarnings.ts';
+import {
+  validateBody,
+  makeImportItemsHandler,
+  parseItemsCsv,
+  parseCsvLine,
+} from './server/importItems.ts';
 
-/**
- * Validates req.body against a Zod schema. On failure responds 400 with an
- * issue list and returns undefined; on success returns the parsed data
- * (unknown keys preserved via .passthrough()).
- */
-function validateBody<S extends z.ZodTypeAny>(schema: S, body: unknown, res: express.Response): z.infer<S> | undefined {
-  const result = schema.safeParse(body);
-  if (!result.success) {
-    res.status(400).json({
-      error: 'Validación fallida',
-      issues: result.error.issues.map((i) => ({
-        path: i.path.join('.'),
-        code: i.code,
-        message: i.message,
-      })),
-    });
-    return undefined;
-  }
-  return result.data;
-}
+export { makeImportItemsHandler, parseItemsCsv, parseCsvLine, validateBody };
 
 /** Aggregates atom suggestions by inferred type for quick UI stats. */
 function countByType(suggestions: Array<{ atom_type: string }>): Record<string, number> {
@@ -496,6 +483,8 @@ async function startServer() {
       res.status(400).json({ error: err.message || 'Invalid backup' });
     }
   });
+
+  app.post('/api/import/items', makeImportItemsHandler(db));
 
   app.get('/api/export/anki', (req, res) => {
     const topicId = req.query.topic_id as string | undefined;

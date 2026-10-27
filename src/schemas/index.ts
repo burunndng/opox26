@@ -351,3 +351,16 @@ export const backupInput = z
     items: z.array(z.unknown()),
   })
   .passthrough();
+
+/** POST /api/import/items — JSON array of items or CSV text. */
+export const itemImportInput = z
+  .object({
+    items: z.array(z.record(z.string(), z.unknown())).optional(),
+    csvText: z.string().optional(),
+    topic_id: idLike.optional(), // default topic for items without one
+    skip_duplicates: z.boolean().optional().default(true),
+  })
+  .refine((v) => Boolean(v.items?.length) || Boolean(v.csvText?.trim()), {
+    message: 'Se requiere "items" (array) o "csvText" no vacío',
+  })
+  .passthrough();

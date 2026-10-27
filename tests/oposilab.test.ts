@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { db } from '../server/db.ts';
 import { SchedulingEngine, InterleavingEngine } from '../server/scheduler.ts';
 import { DataExporter } from '../server/exporter.ts';
+import { makeImportItemsHandler } from '../server/importItems.ts';
 import { Item, Atom, NumberSortItem } from '../src/types.ts';
 import { auditItemPedagogicalQuality } from '../src/utils/learningDesignValidator.ts';
 import { isolateDataDir } from './helpers/isolation.ts';
@@ -653,5 +654,71 @@ describe('OposiLab Cognitive Engine Test Suite', () => {
     const { currentStreak, maxStreak } = computeStreaks(sessionLogs);
     assert.equal(currentStreak, 2, 'Tail streak should be 2');
     assert.equal(maxStreak, 3, 'Best streak should be 3');
+  });
+
+  // 15. Import: JSON items — validation, duplicate skipping, CSV fallback
+  test('15. Import JSON items: imports valid, skips duplicates, rejects invalid', () => {
+    const beforeCount = db.getItems().length;
+    const handler = makeImportItemsHandler(db);
+
+    let captured: any = null;
+    const res: any = { json: (body: any) => { captured = body; return res; }, status: () => res };
+
+    handler({ body: { items: [
+      { topic_id: 'topic_tema_7', item_type: 'cover_and_generate_mcq', stem: '¿Nuevo ítem de prueba 1?' },
+      { topic_id: 'topic_tema_7', item_type: 'cover_and_generate_mcq', stem: '¿Nuevo ítem de prueba 1?' }, // duplicate stem
+      { stem: 'Sin tema válido ni stem... no', item_type: 'cover_and_generate_mcq' }, // missing topic_id, no default → invalid
+    ] }, skip_duplicates: true } as any, res);
+
+    assert.ok(captured, 'handler should respond');
+    assert.equal(captured.imported, 1, 'should import exactly 1 valid item');
+    assert.equal(captured.duplicates, 1, 'should skip 1 duplicate stem');
+    assert.equal(captured.errors, 1, 'should reject 1 invalid item (missing topic_id)');
+    assert.equal(db.getItems().length, beforeCount + 1, 'db should grow by 1');
+  });
+
+  test('15b. Import JSON items: duplicate id detection', () => {
+    const existing = db.getItems()[0];
+    const handler = makeImportItemsHandler(db);
+    let captured: any = null;
+    const res: any = { json: (body: any) => { captured = body; return res; }, status: () => res };
+
+    handler({ body: { items: [
+      { id: existing.id, topic_id: existing.topic_id, item_type: 'cover_and_generate_mcq', stem: 'Duplicado por id' },
+    ] }, skip_duplicates: true } as any, res);
+
+    assert.equal(captured.imported, 0, 'should not import duplicate id');
+    assert.equal(captured.duplicates, 1, 'should flag 1 duplicate by id');
+  });
+
+  test('15c. Import CSV items: parses quoted fields and respects headers', () => {
+    const beforeCount = db.getItems().length;
+    const handler = makeImportItemsHandler(db);
+    const csv = `ID,Tipo,Pregunta/Enunciado,Respuesta Correcta,Base Legal,Regla Correctiva,Dificultad,Estado
+CSV-1,cover_and_generate_mcq,"¿Pregunta con comas, sí o no?","Sí","Ley 1/2026","Regla X",3,active
+CSV-2,cloze,"Texto con ""comillas"" internas","respuesta","Ley 2","Regla Y",2,draft`;
+    let captured: any = null;
+    const res: any = { json: (body: any) => { captured = body; return res; }, status: () => res };
+
+    handler({ body: { csvText: csv, topic_id: 'topic_tema_7', skip_duplicates: true } } as any, res);
+
+    assert.equal(captured.imported, 2, 'should import 2 CSV items');
+    assert.equal(captured.errors, 0, 'should have 0 errors');
+    assert.equal(db.getItems().length, beforeCount + 2, 'db should grow by 2');
+
+    // Verify round-trip via exporter CSV contains the imported stem
+    const exported = DataExporter.exportItemsCsv('topic_tema_7');
+    assert.ok(exported.includes('¿Pregunta con comas, sí o no?'), 'exported CSV should contain imported stem');
+  });
+
+  test('15d. Import empty/invalid body: 400', () => {
+    const handler = makeImportItemsHandler(db);
+    let captured: any = null;
+    let statusCode = 200;
+    const res: any = { json: (body: any) => { captured = body; return res; }, status: (code: number) => { statusCode = code; return res; } };
+
+    handler({ body: {} } as any, res);
+    assert.equal(statusCode, 400, 'empty body should return 400');
+    assert.equal(captured.error, 'Validación fallida');
   });
 });
