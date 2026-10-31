@@ -7,10 +7,16 @@ import type { Item, MCQOption, TrapType, CognitiveOperation } from '../src/types
  *  - "Diaposiivas Tema 8 (ii) SS.pdf" (mazo de la academia),
  *  - "Supuesto Repaso T. 8 espec (II)" (casos de examen de la academia),
  *  - notas del profesor (algoritmo de resolución, BR ≠ importe, redondeo,
- *    contratos ≤5 días, superposición de 15 años, atrasos y art. 48.2 ET).
+ *    contratos ≤5 días, superposición de 15 años, atrasos y art. 48.2 ET),
+ *  - resúmenes de clase 21-10 pt1 y pt2 (incapacidad permanente): días
+ *    restantes de IT como cotizados para la carencia, HC sin alta en la
+ *    solicitud, transformación EC en jubilación vs profesional, 15 años como
+ *    requisito de alta (no carencia), cualificada 55/75 %, IPT + desempleo,
+ *    dictamen complementario, plazos 15/180, ponente INSS, IPA y art. 128,
+ *    plazo de revisión encadenado, reclamación previa vs Ley 39.
  *
- * Las cifras proceden de material de academia, no del BOE: en el test
- * imprimible figuran como "⚠️ fuente interna". No se usan importes anuales
+ * Las cifras proceden de material de academia y de los resúmenes de clase,
+ * no del BOE: figuran como "⚠️ fuente interna". No se usan importes anuales
  * (p. ej. la base mínima 2025 de la garantía de cuantía) para no arrastrar
  * cifras caducables a los enunciados.
  */
@@ -747,6 +753,216 @@ const questionBank: Question[] = [
       { text: 'Exclusivamente mientras la persona mantenga la relación laboral con la misma empresa', trap: 'hyper_narrow_statement', why: 'La regla habilita revisión con cualquier actividad por cuenta propia o ajena, no solo con la misma empresa.' },
     ],
     legal: 'Art. 200 TRLGSS',
+    cluster: 'cluster_ip_lpni_procedimiento',
+    difficulty: 4,
+  },
+  {
+    stem: 'Una persona causa incapacidad permanente tras extinguirse la IT antes del agotamiento (p. ej. día 400 de 545) con propuesta de IP. ¿Qué ocurre con los días de IT no consumidos?',
+    prompt: 'Relacione días restantes de IT con carencia de la IP.',
+    key: 'A',
+    correct: {
+      text: 'Se asimilan al alta y computan como cotizados para alcanzar la carencia exigible de la IP',
+      rule: 'Si la IT se extingue anticipadamente con propuesta de IP, los días restantes de IT se consideran asimilados al alta y computan como cotizados para la carencia exigible de la IP.',
+    },
+    distractors: [
+      { text: 'No computan: se pierden al extinguirse la IT y no cuentan para ningún requisito', trap: 'exception_ignored', why: 'Ignora que los días restantes de IT con propuesta de IP se asimilan al alta y computan para la carencia.' },
+      { text: 'Solo computan si el equipo de valoración de incapacidades lo propone expresamente', trap: 'conceptual_merger', why: 'El cómputo de los días restantes no depende de una propuesta del EVI, sino de la extinción de la IT con propuesta de IP.' },
+      { text: 'Solo cuentan si finalmente se reconoce la incapacidad permanente', trap: 'true_but_irrelevant', why: 'Los días computan para la elegibilidad (carencia) de la IP, independientemente del reconocimiento posterior.' },
+    ],
+    legal: 'Art. 195 TRLGSS',
+    cluster: 'cluster_ip_carencia_beneficiarios',
+    pair: 'pair_ip_carencia_edad',
+    difficulty: 4,
+  },
+  {
+    stem: 'Una persona causa incapacidad permanente absoluta sin estar en alta ni asimilada y sin IT previa. ¿Cuándo se entiende producido el hecho causante?',
+    prompt: 'Sin IT previa y sin alta, el hecho causante se ancla a la solicitud.',
+    key: 'C',
+    correct: {
+      text: 'En la fecha de la solicitud de la incapacidad permanente',
+      rule: 'Cuando no existe IT previa ni situación de alta, el hecho causante de la incapacidad absoluta o gran invalidez se sitúa en la fecha de la solicitud.',
+    },
+    distractors: [
+      { text: 'En la fecha del dictamen-propuesta del equipo de valoración de incapacidades', trap: 'wrong_start_date', why: 'El dictamen del EVI fija el hecho causante cuando no existe IT previa, pero con acceso desde no alta el anclaje es la solicitud.' },
+      { text: 'En la fecha de la resolución del director provincial del INSS', trap: 'temporal_confusion', why: 'La resolución fija los efectos económicos, no el hecho causante.' },
+      { text: 'En la fecha del reconocimiento médico inicial', trap: 'partial_rule_accuracy', why: 'No es un momento jurídicamente relevante para el hecho causante de la IP.' },
+    ],
+    legal: 'Art. 208 TRLGSS',
+    cluster: 'cluster_ip_nacimiento_revision_extincion',
+    pair: 'pair_ip_hc_vs_efectos',
+    difficulty: 4,
+  },
+  {
+    stem: 'Al alcanzar la edad de jubilación, ¿qué ocurre con la pensión de incapacidad permanente según la contingencia de origen?',
+    prompt: 'Distinga enfermedad común de contingencia profesional.',
+    key: 'D',
+    correct: {
+      text: 'Enfermedad común se transforma en jubilación; profesional (AT/EP) continúa como IP',
+      rule: 'La IP derivada de enfermedad común se transforma en pensión de jubilación al alcanzar la edad; la derivada de contingencia profesional (accidente de trabajo o enfermedad profesional) continúa como pensión de incapacidad permanente.',
+    },
+    distractors: [
+      { text: 'Siempre se transforma en jubilación, con independencia de la contingencia de origen', trap: 'overbroad_statement', why: 'Solo la contingencia común se transforma; la profesional continúa como IP.' },
+      { text: 'Nunca se transforma; continúa como incapacidad permanente en todos los casos', trap: 'conceptual_merger', why: 'Confunde ambas contingencias; la de enfermedad común sí se transforma.' },
+      { text: 'Solo se transforma si la persona acredita el período de carencia exigido', trap: 'exception_ignored', why: 'La transformación depende de la contingencia de origen, no de la carencia.' },
+    ],
+    legal: 'Art. 208 TRLGSS',
+    cluster: 'cluster_ip_nacimiento_revision_extincion',
+    difficulty: 4,
+  },
+  {
+    stem: 'Sin alta ni asimilada, una persona de incapacidad absoluta o gran invalidez acredita 15 años cotizados. ¿Para qué requisito sirven esos 15 años?',
+    prompt: 'Separe el cajón del alta del cajón de la carencia.',
+    key: 'B',
+    correct: {
+      text: 'Completan el requisito de alta, no el de carencia',
+      rule: 'Los quince años de cotización sustituyen el requisito de estar en alta o asimilada al alta, pero no sustituyen el requisito de carencia propio de la enfermedad común.',
+    },
+    distractors: [
+      { text: 'Sustituyen la carencia de 180 días exigida para la incapacidad temporal', trap: 'exception_ignored', why: 'Los 15 años completan el alta, no la carencia; son cajones distintos.' },
+      { text: 'Exigen acreditar al menos 10 años cotizados antes del hecho causante', trap: 'numeric_substitution', why: 'Ni el cómputo de 10 años ni la referencia al hecho causante corresponden a esta regla.' },
+      { text: 'Son un requisito solo para la incapacidad permanente parcial', trap: 'partial_rule_accuracy', why: 'Los 15 años operan para la absoluta y gran invalidez sin alta, no para la parcial.' },
+    ],
+    legal: 'Art. 195.5 TRLGSS',
+    cluster: 'cluster_ip_carencia_beneficiarios',
+    pair: 'pair_ip_carencia_edad',
+    difficulty: 4,
+  },
+  {
+    stem: 'Una persona con IP total cualificada (75 %) encuentra empleo. ¿Qué ocurre con el porcentaje aplicado a su pensión?',
+    prompt: 'El porcentaje puede bajar al 55 % y volver al 75 %.',
+    key: 'A',
+    correct: {
+      text: 'Al trabajar vuelve al 55 %; si pierde el empleo y cumple requisitos, vuelve al 75 %',
+      rule: 'Mientras trabaja, la total cualificada se percibe al 55 %; si pierde el empleo y sigue cumpliendo los requisitos legales (55 años o más, falta de preparación y circunstancias del mercado), vuelve al 75 %.',
+    },
+    distractors: [
+      { text: 'Queda fijado en el 75 % de forma permanente, aunque la persona trabaje', trap: 'overbroad_statement', why: 'Mientras trabaje, el porcentaje es el 55 %, no el 75 %.' },
+      { text: 'Queda reducido al 55 % de forma definitiva, sin posibilidad de volver al 75 %', trap: 'partial_rule_accuracy', why: 'Si pierde el empleo y sigue cumpliendo requisitos, vuelve al 75 %.' },
+      { text: 'Baja al 100 % de la base reguladora mientras dure el nuevo empleo', trap: 'wrong_legal_object', why: 'El 100 % corresponde a la absoluta y gran invalidez, no a la total cualificada.' },
+    ],
+    legal: 'Art. 196.2 TRLGSS',
+    cluster: 'cluster_ip_base_reguladora_cuantia',
+    pair: 'pair_ip_total_vs_absoluta',
+    difficulty: 4,
+  },
+  {
+    stem: '¿Es compatible la pensión de incapacidad permanente total con el desempleo?',
+    prompt: 'Examine el supuesto de pérdida involuntaria del nuevo empleo.',
+    key: 'C',
+    correct: {
+      text: 'Sí, si la persona pierde el nuevo empleo de forma involuntaria',
+      rule: 'La pensión de incapacidad permanente total es compatible con el desempleo si la persona pierde ese nuevo empleo de forma involuntaria.',
+    },
+    distractors: [
+      { text: 'Nunca es compatible con ninguna prestación de desempleo', trap: 'overbroad_statement', why: 'Es compatible cuando se pierde el nuevo empleo de forma involuntaria.' },
+      { text: 'Solo si la persona tiene al menos 55 años y cesó voluntariamente', trap: 'exception_ignored', why: 'La edad y la voluntariedad no son requisitos de esta compatibilidad.' },
+      { text: 'Solo cuando se mantiene el porcentaje del 75 %', trap: 'partial_rule_accuracy', why: 'La compatibilidad con el desempleo no depende del porcentaje aplicado a la pensión.' },
+    ],
+    legal: 'Art. 198 TRLGSS',
+    cluster: 'cluster_ip_nacimiento_revision_extincion',
+    difficulty: 4,
+  },
+  {
+    stem: 'Si el INSS considera que debe cambiarse el dictamen, ¿qué documento complementario se emite tras evaluar las alegaciones?',
+    prompt: 'Secuencia: dictamen, alegaciones, posible dictamen complementario, resolución.',
+    key: 'D',
+    correct: {
+      text: 'Emite un dictamen-propuesta complementario tras las alegaciones',
+      rule: 'Si tras las alegaciones la Dirección Provincial entiende que debe cambiarse el dictamen-propuesta, se elabora un dictamen-propuesta complementario que absorba y tenga en cuenta esas alegaciones.',
+    },
+    distractors: [
+      { text: 'Resuelve directamente sin necesidad de un nuevo dictamen', trap: 'exception_ignored', why: 'No puede apartarse del dictamen sin emitir el complementario correspondiente.' },
+      { text: 'Desestima las alegaciones y mantiene el dictamen inicial sin cambios', trap: 'factual_misapplication', why: 'Ignora la posibilidad de modificar el dictamen tras las alegaciones.' },
+      { text: 'Devuelve el expediente al EVI sin posibilidad de modificación', trap: 'hyper_narrow_statement', why: 'El INSS no está obligado a devolverlo al EVI; puede emitir el dictamen complementario.' },
+    ],
+    legal: 'Arts. 195 y RD 1300/1995',
+    cluster: 'cluster_ip_lpni_procedimiento',
+    difficulty: 4,
+  },
+  {
+    stem: '¿Cuáles son los plazos de alegaciones del interesado y de observación por enfermedad profesional en el procedimiento de incapacidad permanente?',
+    prompt: 'Dos plazos diferentes: 15 y 180 días.',
+    key: 'B',
+    correct: {
+      text: '15 días para alegaciones y 180 días de observación médica',
+      rule: 'El interesado dispone de 15 días para alegar; en enfermedad profesional el periodo de observación médica es de 180 días.',
+    },
+    distractors: [
+      { text: '10 días para alegaciones y 90 días de observación', trap: 'numeric_substitution', why: 'Intercambia plazos: son 15 y 180, no 10 y 90.' },
+      { text: '30 días para alegaciones y 180 días de observación', trap: 'numeric_substitution', why: 'El plazo de alegaciones es de 15 días, no de 30.' },
+      { text: '15 días para alegaciones y 90 días de observación', trap: 'numeric_substitution', why: 'El plazo de observación médica en enfermedad profesional es de 180 días, no de 90.' },
+    ],
+    legal: 'Art. 6 RD 1300/1995',
+    cluster: 'cluster_ip_lpni_procedimiento',
+    difficulty: 4,
+  },
+  {
+    stem: '¿Quién es el ponente del dictamen-propuesta del equipo de valoración de incapacidades (EVI)?',
+    prompt: 'Separe el facultativo que informa de la mutua y del servicio de salud de la comunidad autónoma.',
+    key: 'A',
+    correct: {
+      text: 'Un facultativo médico del INSS',
+      rule: 'El ponente del dictamen-propuesta es un facultativo médico del INSS, no el médico de la mutua ni el del servicio de salud de la comunidad autónoma.',
+    },
+    distractors: [
+      { text: 'El médico de la mutua colaboradora', trap: 'wrong_competent_body', why: 'La mutua gestiona el pago, pero no elabora el dictamen-propuesta del EVI.' },
+      { text: 'El médico del servicio de salud de la comunidad autónoma', trap: 'wrong_competent_body', why: 'El servicio de salud no es competente para el dictamen-propuesta de incapacidad permanente.' },
+      { text: 'El médico de la empresa del interesado', trap: 'wrong_competent_body', why: 'La empresa no interviene en la valoración médica de la incapacidad permanente.' },
+    ],
+    legal: 'RD 1300/1995',
+    cluster: 'cluster_ip_lpni_procedimiento',
+    pair: 'pair_ip_declaracion_vs_pago',
+    difficulty: 3,
+  },
+  {
+    stem: '¿Es compatible la incapacidad permanente absoluta con una actividad lucrativa?',
+    prompt: 'Con carácter general no, salvo la excepción del art. 128 LGSS.',
+    key: 'D',
+    correct: {
+      text: 'Con carácter general no, salvo el art. 128 LGSS',
+      rule: 'La incapacidad permanente absoluta es incompatible con carácter general, pero el art. 128 LGSS admite actividad lucrativa compatible si no cambia la situación de incapacidad.',
+    },
+    distractors: [
+      { text: 'Siempre es compatible con cualquier actividad lucrativa', trap: 'overbroad_statement', why: 'Es incompatible en principio; solo cabe la excepción del art. 128 LGSS.' },
+      { text: 'Nunca es compatible con actividad lucrativa alguna', trap: 'overbroad_statement', why: 'Ignora la excepción expresa del art. 128 LGSS.' },
+      { text: 'Solo si la actividad es por cuenta ajena', trap: 'partial_rule_accuracy', why: 'La excepción no se limita al trabajo por cuenta ajena.' },
+    ],
+    legal: 'Arts. 198 y 128 TRLGSS',
+    cluster: 'cluster_ip_nacimiento_revision_extincion',
+    difficulty: 4,
+  },
+  {
+    stem: '¿Qué establece siempre la resolución que reconoce una incapacidad permanente respecto del plazo de revisión?',
+    prompt: 'La resolución fija la fecha de revisión y, si persiste la incapacidad, se renueva.',
+    key: 'C',
+    correct: {
+      text: 'Fija una fecha de revisión, renovada si persiste',
+      rule: 'Cada resolución fija una fecha de revisión; si en la revisión persiste la incapacidad, se fija un nuevo plazo de revisión.',
+    },
+    distractors: [
+      { text: 'Nunca fija plazo de revisión en la resolución', trap: 'overbroad_statement', why: 'La resolución siempre fija una fecha de revisión.' },
+      { text: 'Solo fija plazo si hay expectativa de mejoría laboral', trap: 'exception_ignored', why: 'El plazo de revisión se fija en toda resolución, no solo ante expectativa de mejoría.' },
+      { text: 'Solo fija plazo a petición del interesado', trap: 'partial_rule_accuracy', why: 'No requiere solicitud del interesado; lo fija la resolución de oficio.' },
+    ],
+    legal: 'RD 1300/1995',
+    cluster: 'cluster_ip_lpni_procedimiento',
+    pair: 'pair_ip_suspension_vs_extincion',
+    difficulty: 3,
+  },
+  {
+    stem: '¿Cuál es la vía de impugnación de una resolución que deniega una pensión de incapacidad permanente?',
+    prompt: 'Prestaciones: reclamación previa y luego lo social; afiliación y alta: Ley 39.',
+    key: 'B',
+    correct: {
+      text: 'Reclamación previa y luego Juzgado de lo Social',
+      rule: 'Las prestaciones de incapacidad permanente se impugnan mediante reclamación previa a la vía judicial y, tras ella, ante el Juzgado de lo Social.',
+    },
+    distractors: [
+      { text: 'Recurso de alzada ante el mismo INSS que denegó la pensión', trap: 'wrong_competent_body', why: 'La alzada es propia de afiliación, alta y baja (Tema 3), no de prestaciones de incapacidad permanente.' },
+      { text: 'Contencioso-administrativo directo, sin reclamación previa', trap: 'rule_exception_swap', why: 'Falta el trámite preceptivo de reclamación previa.' },
+      { text: 'Recurso de reposición ante la mutua colaboradora', trap: 'factual_misapplication', why: 'La mutua no conoce de recursos contra resoluciones de reconocimiento de pensión.' },
+    ],
+    legal: 'Art. 73 LGSS y Ley 39/2015',
     cluster: 'cluster_ip_lpni_procedimiento',
     difficulty: 4,
   },

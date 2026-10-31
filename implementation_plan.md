@@ -35,6 +35,10 @@ The app is a broad local-first prototype. The table distinguishes verified behav
 | Seed | Seed inventory exists; topic/source/status/link integrity is pending P3 | `server/seedData.ts`, `server/seedDataRetrieval.ts` |
 | Export/import | Exporters exist; structured import and exact note-field compatibility remain pending P6 | `server/exporter.ts`, `server.ts` |
 
+### 1.3 Content — Tema 8 (II) IP gap audit vs. class 21-10 (2026-10-31)
+
+Audit of resúmenes 21-10 pt1/pt2 against `topic_seguridad_social_tema_8_ip` (40 validated MCQs). Gaps closed by adding 12 manually authored, validated items (`item-t8ip-41…52`): días restantes de IT como cotizados para la carencia; HC sin alta = fecha de solicitud; transformación EC→jubilación vs profesional continúa; 15 años = requisito de alta (no carencia); cualificada 55↔75 % al trabajar/perder empleo; IPT compatible con desempleo involuntario; dictamen-propuesta complementario tras alegaciones; plazos 15 (alegaciones) / 180 (observación EP); ponente facultativo médico del INSS; IPA incompatible salvo art. 128 LGSS; resolución fija plazo de revisión encadenado; reclamación previa → Juzgado de lo Social vs. Ley 39 para afiliación/alta/baja. Defered: esquema comparativo (awaits temas 9-11) y las cinco grandes preguntas (solving framework, no MCQ). Bank now 52 items, keys 13/13/13/13; `npm run lint` clean; `npm test` 197/197 across 39 suites.
+
 ### 1.1 Hardening de auditoría — 2026-10-23
 
 Auditoría exhaustiva (freeze `71935c2`) + remediación FIX 1–9, verificada con `npm run lint`

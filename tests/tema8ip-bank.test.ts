@@ -8,9 +8,9 @@ import type { Item } from '../src/types.ts';
 describe('Tema 8 (II) — Incapacidad permanente bank integrity', () => {
   const items = seedItemsTema8IP;
 
-  test('is 40 uniquely identified MCQ items', () => {
-    assert.equal(items.length, 40);
-    assert.equal(new Set(items.map((i) => i.id)).size, 40);
+  test('is 52 uniquely identified MCQ items', () => {
+    assert.equal(items.length, 52);
+    assert.equal(new Set(items.map((i) => i.id)).size, 52);
     items.forEach((item, index) => {
       assert.equal(item.id, `item-t8ip-${index + 1}`, 'IDs must be sequential from item-t8ip-1');
     });
@@ -80,7 +80,7 @@ describe('Tema 8 (II) — Incapacidad permanente bank integrity', () => {
   test('keys are balanced 10/10/10/10 with no run longer than two', () => {
     const counts: Record<string, number> = { A: 0, B: 0, C: 0, D: 0 };
     for (const item of items) counts[item.correct_answer!] += 1;
-    assert.deepEqual(counts, { A: 10, B: 10, C: 10, D: 10 });
+    assert.deepEqual(counts, { A: 13, B: 13, C: 13, D: 13 });
 
     let run = 1;
     for (let i = 1; i < items.length; i += 1) {
