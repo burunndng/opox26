@@ -7,6 +7,8 @@ import {
   Target,
   BookOpen,
   ChevronRight,
+  Brain,
+  Clock,
 } from 'lucide-react';
 import type { Topic } from '../types.ts';
 
@@ -105,6 +107,19 @@ export const StudySetup: React.FC<StudySetupProps> = ({
         </button>
         <p className="text-[11px] text-slate-500 mt-2 text-center">
           Repaso pendiente + preguntas nuevas, con −0,25 por fallo como en el examen.
+        </p>
+      </div>
+
+      {/* Study-loop explainer: generative cover toggle + adaptive pacing */}
+      <div className="flex items-start gap-2.5 rounded-lg border border-[#20293a] bg-[#121722]/60 px-4 py-3">
+        <Brain className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
+        <p className="text-[11px] text-slate-400 leading-relaxed">
+          Dentro del test puedes activar{' '}
+          <strong className="text-slate-200">Generativo</strong> para escribir la regla antes de
+          ver las opciones (recuperación activa antes del reconocimiento). El{' '}
+          <Clock className="inline w-3 h-3 -mt-0.5 text-slate-400" />{' '}
+          <strong className="text-slate-200">cronómetro de ritmo</strong> se adapta al tipo y la
+          dificultad de cada pregunta.
         </p>
       </div>
 

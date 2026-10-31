@@ -128,6 +128,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
     )
   );
   const [sandboxLoading, setSandboxLoading] = useState(false);
+  const [sandboxError, setSandboxError] = useState<string | null>(null);
   const [sandboxResult, setSandboxResult] = useState<any>(null);
 
   if (!isOpen) return null;
@@ -204,13 +205,14 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
 
   const handleRunSandbox = async () => {
     setSandboxLoading(true);
+    setSandboxError(null);
     try {
       const parsedState = JSON.parse(customState);
       const parsedQuestions = JSON.parse(customQuestions);
       const res = await api.runJevDecisions(parsedState, parsedQuestions);
       setSandboxResult(res);
     } catch (e: any) {
-      alert('Error en formato JSON: ' + e.message);
+      setSandboxError('Error en formato JSON: ' + e.message);
     } finally {
       setSandboxLoading(false);
     }
@@ -827,6 +829,15 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                   <span>Ejecutar Petición Jev Decisions API</span>
                 </button>
               </div>
+
+              {sandboxError && (
+                <div
+                  role="alert"
+                  className="rounded-lg border border-rose-500/50 bg-rose-950/50 px-4 py-3 text-xs text-rose-200"
+                >
+                  {sandboxError}
+                </div>
+              )}
 
               {sandboxResult && (
                 <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">

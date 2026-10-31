@@ -27,6 +27,30 @@ interface ErrorRepairStudioProps {
   onLaunchRepairSession: (itemIds: string[]) => void;
 }
 
+/** Plain-Spanish meaning of each error taxonomy code (see types.ts). */
+const ERROR_CODE_HINTS: Array<{ code: string; label: string }> = [
+  { code: 'E1', label: 'No sabía la regla' },
+  { code: 'E2', label: 'La sabía pero la olvidé bajo presión' },
+  { code: 'E3', label: 'Leí mal el enunciado' },
+  { code: 'E4', label: 'Ignoré la excepción o el matiz' },
+  { code: 'E5', label: 'Confundí dos conceptos' },
+  { code: 'E6', label: 'Número, plazo o importe incorrecto' },
+  { code: 'E7', label: 'Acerté por suerte (reconocimiento)' },
+  { code: 'E8', label: 'Seguro y equivocado (misconcepción)' },
+  { code: 'E9', label: 'Selección descuidada' },
+  { code: 'E10', label: 'Presión de tiempo' },
+  { code: 'E11', label: 'Caí en una redacción familiar' },
+  { code: 'E12', label: 'Cambié la respuesta sin justificación' },
+  { code: 'E13', label: 'Generé mal pero elegí la opción correcta' },
+  { code: 'E14', label: 'Generé bien pero elegí la opción incorrecta' },
+  { code: 'E15', label: 'Objeto jurídico equivocado' },
+  { code: 'E16', label: 'Fecha de inicio equivocada' },
+  { code: 'E17', label: 'Órgano competente equivocado' },
+  { code: 'E18', label: 'Afirmación demasiado amplia' },
+  { code: 'E19', label: 'Afirmación demasiado estrecha' },
+  { code: 'E20', label: 'Verdadero pero irrelevante' },
+];
+
 export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
   errors,
   items,
@@ -141,6 +165,29 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
           )}
         </div>
       </div>
+
+      {/* Error-code legend: makes the taxonomy on each card self-explanatory */}
+      <details className="group rounded-lg border border-slate-800 bg-slate-900/60">
+        <summary className="cursor-pointer list-none px-4 py-3 text-xs font-semibold text-slate-300 flex items-center justify-between">
+          <span>¿Qué significa el código de cada fallo? (E1–E20)</span>
+          <span className="text-slate-500 group-open:rotate-180 transition-transform" aria-hidden="true">
+            ▾
+          </span>
+        </summary>
+        <div className="px-4 pb-4 space-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-1.5 text-[11px] text-slate-400">
+            {ERROR_CODE_HINTS.map(({ code, label }) => (
+              <span key={code}>
+                <strong className="text-slate-200 font-mono">{code}</strong> · {label}
+              </span>
+            ))}
+          </div>
+          <p className="text-[11px] text-slate-500 pt-1 border-t border-slate-800">
+            Reparar vuelve a intentar el ítem. Los fallos <strong className="text-rose-300">E8</strong>{' '}
+            (seguro y equivocado) tienen prioridad en la cola de repaso.
+          </p>
+        </div>
+      </details>
 
       {/* Filters & Search */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3">

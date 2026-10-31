@@ -169,12 +169,19 @@ describe('Phase D: SRS, effectiveness, quality', () => {
           { id: 'B', text: 'falsa', is_correct: false },
         ],
       }),
+      mkItem('negopt', {
+        options: [
+          { id: 'A', text: 'La regla general', is_correct: true },
+          { id: 'B', text: 'Siempre todas las anteriores', is_correct: false, trap_type: 'overbroad_statement', explanation: 'e' },
+        ],
+      }),
     ];
     const q = contentQuality(items);
     assert.equal(q.duplicateStems, 1);
     assert.equal(q.missingLegalBasis, 1);
     assert.equal(q.negativeStems, 1);
-    assert.equal(q.optionLengthBias, 1);
+    assert.equal(q.negativeOptions, 1);
+    assert.equal(q.optionLengthBias, 2);
     assert.equal(q.missingDistractorExplanation, 2);
     assert.equal(q.missingTrapType, 2);
   });

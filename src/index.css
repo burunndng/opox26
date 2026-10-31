@@ -54,6 +54,12 @@
     outline-offset: 2px;
   }
 
+  /* Default keyboard focus ring (the high-contrast theme reinforces it) */
+  :focus-visible {
+    outline: 2px solid #818cf8;
+    outline-offset: 2px;
+  }
+
   /* Clear, robust typographic scale */
   h1 {
     font-size: 1.75rem;

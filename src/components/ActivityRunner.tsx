@@ -111,6 +111,32 @@ function normalizeClozeValue(value?: string): string {
     .replace(/\s+/g, ' ');
 }
 
+/**
+ * Time budget per item, adapted to cognitive load.
+ * Multi-step formats (sorting, exception trees, error spotting) need more
+ * processing time than single-fact recall. `difficulty` (1–5) scales the
+ * type baseline by roughly ±15 %.
+ */
+const PACING_BASE_SECONDS: Partial<Record<Item['item_type'], number>> = {
+  number_sort: 75,
+  exception_tree: 75,
+  spot_error: 60,
+  two_tier: 60,
+  fact_variant: 60,
+  cloze: 55,
+  contrast_card: 45,
+  cover_and_generate_mcq: 45,
+  pretest_item: 45,
+  retrieval_prompt: 30,
+};
+
+function pacingSecondsForItem(item?: Item): number {
+  const base = (item && PACING_BASE_SECONDS[item.item_type]) ?? 45;
+  const difficulty = Math.min(5, Math.max(1, item?.difficulty ?? 3));
+  const factor = 0.85 + (difficulty - 1) * 0.075; // 1 → 0.85, 3 → 1.00, 5 → 1.15
+  return Math.round((base * factor) / 5) * 5;
+}
+
 function labelForOptionId(options: Array<{ id: string }>, optionId?: string | null): string {
   if (!optionId) return '';
   const position = options.findIndex((option) => option.id === optionId);
@@ -290,6 +316,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
   // Session saving modal
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [saveStatusMessage, setSaveStatusMessage] = useState<string | null>(null);
+  const [saveStatusKind, setSaveStatusKind] = useState<'success' | 'error'>('success');
 
   // User input states
   const [generatedAnswer, setGeneratedAnswer] = useState('');
@@ -337,12 +364,24 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
   );
 
   const [sessionComplete, setSessionComplete] = useState(false);
+
+  // Exam integrity: once scoring has started, the baremo is frozen. Changing it
+  // afterwards would retroactively re-score attempts already recorded.
+  const baremoLocked =
+    mode === 'sniper' ||
+    sessionComplete ||
+    attemptLogs.length > 0 ||
+    (initialResults?.total ?? 0) > 0 ||
+    currentIndex > 0;
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
   const isRecordingRef = useRef(false);
 
-  // Pacing Sprint Timer (e.g., 45 seconds per item for E10 time pressure training)
+  // Pacing Sprint Timer: adaptive per item type/difficulty (E10 time-pressure training)
   const [isPacingActive, setIsPacingActive] = useState(false);
-  const [pacingTimeLeft, setPacingTimeLeft] = useState(45);
+  const [pacingTimeLeft, setPacingTimeLeft] = useState(() =>
+    pacingSecondsForItem(items[initialIndex]),
+  );
+  const currentPacingBudget = pacingSecondsForItem(currentItem);
 
   // Optional generative cover mode (default false so exam-like MCQ options show immediately without forced typing)
   const [enableGenerativeCover, setEnableGenerativeCover] = useState(false);
@@ -630,10 +669,10 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
     };
   }, [isPacingActive, stage, sessionComplete]);
 
-  // Reset pacing timer on next item
+  // Reset pacing timer on next item (adaptive budget by item type/difficulty)
   useEffect(() => {
-    setPacingTimeLeft(45);
-  }, [currentIndex]);
+    setPacingTimeLeft(pacingSecondsForItem(items[currentIndex]));
+  }, [currentIndex, items]);
 
   // Autosave current session state to localStorage on step / progress changes
   useEffect(() => {
@@ -1003,6 +1042,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
     a.download = `oposilab-sesion-${cleanTitle}-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
+    setSaveStatusKind('success');
     setSaveStatusMessage(
       `Sesión exportada como archivo JSON (${currentRunnerItems.length} ítems, ítem actual ${currentRunnerIndex + 1}). Puedes restaurarla en cualquier navegador.`
     );
@@ -1021,13 +1061,16 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
         if (parsed.items && Array.isArray(parsed.items) && parsed.items.length > 0) {
           setCurrentIndex(Math.min(parsed.currentIndex || 0, parsed.items.length - 1));
           setSessionResults(parsed.sessionResults || { correct: 0, total: 0, confidences: [] });
+          setSaveStatusKind('success');
           setSaveStatusMessage('¡Sesión restaurada con éxito!');
           setIsSaveModalOpen(false);
         } else {
-          alert('El archivo JSON no contiene una estructura de sesión válida de OposiLab.');
+          setSaveStatusKind('error');
+          setSaveStatusMessage('El archivo JSON no contiene una estructura de sesión válida de OposiLab.');
         }
       } catch (err) {
-        alert('Error al leer el archivo de sesión JSON.');
+        setSaveStatusKind('error');
+        setSaveStatusMessage('Error al leer el archivo de sesión JSON.');
       }
     };
     reader.readAsText(file);
@@ -1098,23 +1141,11 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                 </p>
               </div>
             </div>
-            <div className="flex flex-wrap items-center gap-1.5">
-              {BAREMOS.map((b) => {
-                const isSelected = Math.abs(baremoPenalty - b.penaltyPerError) < 0.01;
-                return (
-                  <button
-                    key={b.id}
-                    onClick={() => setBaremoPenalty(b.penaltyPerError)}
-                    className={`px-2.5 py-1 rounded text-xs font-medium transition ${
-                      isSelected
-                        ? 'bg-amber-500 text-slate-950 font-bold'
-                        : 'bg-slate-900 hover:bg-slate-800 text-slate-400 border border-slate-800'
-                    }`}
-                  >
-                    {b.shortLabel}
-                  </button>
-                );
-              })}
+            <div className="flex items-center gap-2">
+              <span className="px-3 py-1.5 rounded-md bg-amber-500/15 border border-amber-500/40 text-amber-300 text-xs font-mono font-bold">
+                {baremoPenalty === 0 ? 'Sin penalización' : `+1 / −${baremoPenalty.toFixed(2)}`}
+              </span>
+              <span className="text-[11px] text-slate-500">fijado al iniciar la sesión</span>
             </div>
           </div>
 
@@ -1419,10 +1450,10 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                   : 'bg-amber-950/60 text-amber-300 border-amber-500/60'
                 : 'bg-slate-900 hover:bg-slate-800 text-slate-400 border-slate-700'
             }`}
-            title="Activar cronómetro de ritmo (45s por ítem para entrenar velocidad)"
+            title={`Cronómetro de ritmo: ${currentPacingBudget}s para este ítem (adaptado a su tipo y dificultad)`}
           >
             <Clock className="w-3.5 h-3.5" />
-            <span>{isPacingActive ? `${pacingTimeLeft}s` : 'Ritmo (45s)'}</span>
+            <span>{isPacingActive ? `${pacingTimeLeft}s` : `Ritmo (${currentPacingBudget}s)`}</span>
           </button>
 
           {/* Direct JSON Session Export Button */}
@@ -1474,12 +1505,17 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                 <button
                   key={b.id}
                   onClick={() => setBaremoPenalty(b.penaltyPerError)}
+                  disabled={baremoLocked}
                   className={`px-2.5 py-1 rounded-lg text-xs font-medium transition ${
                     isSelected
                       ? 'bg-indigo-600 text-white font-bold shadow-xs'
                       : 'bg-slate-950 hover:bg-slate-800 text-slate-400 border border-slate-800'
-                  }`}
-                  title={`${b.label} — ${b.formulaDescription}`}
+                  } disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-slate-950`}
+                  title={
+                    baremoLocked
+                      ? `Baremo fijado al registrar la primera respuesta (${b.label})`
+                      : `${b.label} — ${b.formulaDescription}`
+                  }
                 >
                   {b.shortLabel}
                 </button>
@@ -2908,8 +2944,18 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
             </p>
 
             {saveStatusMessage && (
-              <div className="p-3 bg-emerald-950/40 border border-emerald-800 text-emerald-300 text-xs rounded-lg flex items-center space-x-2">
-                <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+              <div
+                className={`p-3 text-xs rounded-lg flex items-center space-x-2 border ${
+                  saveStatusKind === 'error'
+                    ? 'bg-rose-950/40 border-rose-800 text-rose-300'
+                    : 'bg-emerald-950/40 border-emerald-800 text-emerald-300'
+                }`}
+              >
+                {saveStatusKind === 'error' ? (
+                  <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
+                ) : (
+                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                )}
                 <span>{saveStatusMessage}</span>
               </div>
             )}
@@ -2951,8 +2997,20 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
       {/* Floating status toast notification */}
       {saveStatusMessage && !isSaveModalOpen && (
-        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 border border-emerald-500/60 text-emerald-300 px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-2.5 animate-fadeIn max-w-md">
-          <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+        <div
+          role="status"
+          aria-live="polite"
+          className={`fixed bottom-6 right-6 z-50 px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-2.5 animate-fadeIn max-w-md border ${
+            saveStatusKind === 'error'
+              ? 'bg-slate-900 border-rose-500/60 text-rose-300'
+              : 'bg-slate-900 border-emerald-500/60 text-emerald-300'
+          }`}
+        >
+          {saveStatusKind === 'error' ? (
+            <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
+          ) : (
+            <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+          )}
           <span className="text-xs font-semibold leading-relaxed">{saveStatusMessage}</span>
         </div>
       )}

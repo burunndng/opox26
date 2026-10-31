@@ -105,6 +105,7 @@ export interface QualitySummary {
   missingTrapType: number;
   duplicateStems: number;
   negativeStems: number;
+  negativeOptions: number;
   optionLengthBias: number;
 }
 
@@ -465,7 +466,7 @@ export function contentQuality(items: Item[]): QualitySummary {
     total: items.length,
     draft: 0, validated: 0, active: 0, retired: 0,
     missingLegalBasis: 0, missingDistractorExplanation: 0, missingTrapType: 0,
-    duplicateStems: 0, negativeStems: 0, optionLengthBias: 0,
+    duplicateStems: 0, negativeStems: 0, negativeOptions: 0, optionLengthBias: 0,
   };
   const stems = new Set<string>();
   const dupes = new Set<string>();
@@ -482,6 +483,9 @@ export function contentQuality(items: Item[]): QualitySummary {
       if (opt.is_correct) continue;
       if (!opt.explanation || !opt.explanation.trim()) summary.missingDistractorExplanation += 1;
       if (!opt.trap_type) summary.missingTrapType += 1;
+      if (NEGATIVE_WORDS.test(opt.text ?? '') || ALL_PREVIOUS.test(opt.text ?? '')) {
+        summary.negativeOptions += 1;
+      }
     }
 
     const normStem = (item.stem ?? '').toLowerCase().replace(/\s+/g, ' ').trim();
@@ -495,8 +499,10 @@ export function contentQuality(items: Item[]): QualitySummary {
     const others = (item.options ?? []).filter((o) => !o.is_correct);
     if (correct && others.length > 0) {
       const correctLen = (correct.text ?? '').length;
-      const maxOther = Math.max(...others.map((o) => (o.text ?? '').length));
-      if (correctLen > maxOther * 1.6) summary.optionLengthBias += 1;
+      const meanOther =
+        others.reduce((sum, o) => sum + (o.text ?? '').length, 0) / others.length;
+      // Aligned with the bank gate F3: correct option ≤ 1.25 × mean distractor length.
+      if (correctLen > meanOther * 1.25) summary.optionLengthBias += 1;
     }
   }
   summary.duplicateStems = dupes.size;

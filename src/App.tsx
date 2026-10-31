@@ -125,6 +125,15 @@ export default function App() {
   const [isCreateTopicModalOpen, setIsCreateTopicModalOpen] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
+  // Non-blocking in-app toast (replaces native alert()).
+  const [toast, setToast] = useState<{ message: string; kind: 'error' | 'info' } | null>(null);
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 5000);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
   const loadData = async (topicId?: string | 'all', isRetry = false) => {
     try {
       const currentTopicId = topicId !== undefined ? topicId : selectedTopicId;
@@ -242,7 +251,7 @@ export default function App() {
   const handleStartMicroLesson = (topicId: string) => {
     const topic = topics.find((t) => t.id === topicId);
     if (!topic) {
-      alert('Tema no encontrado para la micro-lección.');
+      setToast({ message: 'Tema no encontrado para la micro-lección.', kind: 'error' });
       return;
     }
     setRunnerItems([]);
@@ -272,9 +281,10 @@ export default function App() {
     const selected = selectSniperItems(eligibleForPractice(items), openErrors, { subType, count, confusionPairs });
 
     if (selected.length === 0) {
-      alert(
-        'No hay suficientes preguntas en la base de datos para este simulacro.'
-      );
+      setToast({
+        message: 'No hay suficientes preguntas en la base de datos para este simulacro.',
+        kind: 'error',
+      });
       return;
     }
 
@@ -301,9 +311,25 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-400 space-y-3">
-        <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-        <p className="text-xs font-mono">Iniciando OposiLab MCQ Trainer...</p>
+      <div className="min-h-screen bg-[#0c0f17] text-slate-100">
+        <div className="h-16 border-b border-[#20293a] bg-[#121722]" />
+        <div
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-5"
+          aria-busy="true"
+          aria-live="polite"
+        >
+          <div className="h-8 w-64 max-w-full rounded-md bg-slate-800/70 animate-pulse" />
+          <div className="h-36 rounded-lg bg-[#121722] border border-[#20293a] animate-pulse" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[0, 1, 2, 3, 4, 5].map((i) => (
+              <div
+                key={i}
+                className="h-32 rounded-lg bg-[#121722] border border-[#20293a] animate-pulse"
+              />
+            ))}
+          </div>
+          <span className="sr-only">Iniciando OposiLab MCQ Trainer…</span>
+        </div>
       </div>
     );
   }
@@ -401,7 +427,7 @@ export default function App() {
             />
           ) : (
           <ActivityRunner
-            items={runnerItems.length > 0 ? runnerItems : items.slice(0, 10)}
+            items={runnerItems}
             title={runnerTitle}
             mode={runnerMode}
             initialBaremoPenalty={runnerBaremoPenalty}
@@ -523,6 +549,34 @@ export default function App() {
         clusters={clusters}
         confusionPairs={confusionPairs}
       />
+
+      {/* Non-blocking toast (replaces native alert()) */}
+      {toast && (
+        <div
+          role="alert"
+          aria-live="assertive"
+          className={`fixed bottom-5 left-1/2 -translate-x-1/2 z-[100] flex items-start gap-3 max-w-[calc(100vw-2rem)] sm:max-w-md px-4 py-3 rounded-xl border shadow-2xl text-sm ${
+            toast.kind === 'error'
+              ? 'bg-rose-950/95 border-rose-500/60 text-rose-100'
+              : 'bg-slate-900/95 border-slate-600 text-slate-100'
+          }`}
+        >
+          <AlertTriangle
+            className={`w-4 h-4 shrink-0 mt-0.5 ${
+              toast.kind === 'error' ? 'text-rose-400' : 'text-indigo-400'
+            }`}
+          />
+          <span className="flex-1">{toast.message}</span>
+          <button
+            type="button"
+            onClick={() => setToast(null)}
+            aria-label="Cerrar aviso"
+            className="shrink-0 -mr-1 -mt-1 p-1 rounded-md text-white/70 hover:text-white hover:bg-white/10 transition"
+          >
+            <span aria-hidden="true" className="text-base leading-none">×</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

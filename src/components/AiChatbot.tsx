@@ -219,6 +219,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
   const [attachments, setAttachments] = useState<ChatAttachment[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [importingId, setImportingId] = useState<string | null>(null);
+  const [importError, setImportError] = useState<string | null>(null);
   const [importedItems, setImportedItems] = useState<Set<string>>(new Set());
   const [importedAtoms, setImportedAtoms] = useState<Set<string>>(new Set());
 
@@ -393,9 +394,10 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
       };
       await api.createItem(itemToSave as any);
       setImportedItems((prev) => new Set(prev).add(key));
+      setImportError(null);
       onItemCreated?.();
     } catch (err: any) {
-      alert(`Error al guardar ítem: ${err.message}`);
+      setImportError(`Error al guardar ítem: ${err.message}`);
     } finally {
       setImportingId(null);
     }
@@ -411,9 +413,10 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
       };
       await api.createAtom(atomToSave as any);
       setImportedAtoms((prev) => new Set(prev).add(key));
+      setImportError(null);
       onAtomCreated?.();
     } catch (err: any) {
-      alert(`Error al guardar átomo: ${err.message}`);
+      setImportError(`Error al guardar átomo: ${err.message}`);
     } finally {
       setImportingId(null);
     }
@@ -1040,6 +1043,22 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
 
       {/* Input box */}
       <div className="p-4 bg-[#0c0f17] border-t border-[#20293a]">
+        {importError && (
+          <div
+            role="alert"
+            className="mb-3 flex items-start gap-2 rounded-lg border border-rose-500/50 bg-rose-950/50 px-3 py-2 text-xs text-rose-200"
+          >
+            <span className="flex-1">{importError}</span>
+            <button
+              type="button"
+              onClick={() => setImportError(null)}
+              aria-label="Cerrar aviso"
+              className="shrink-0 text-rose-300 hover:text-white"
+            >
+              ✕
+            </button>
+          </div>
+        )}
         <div className="flex items-center justify-between px-1 mb-2 text-xs">
           <div className="flex items-center gap-2">
             <span className="text-xs text-slate-300 font-medium">

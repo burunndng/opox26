@@ -82,6 +82,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
   const [isSavingFullSet, setIsSavingFullSet] = useState(false);
   const [setFilterCluster, setSetFilterCluster] = useState<string>('all');
   const [saveSuccessMessage, setSaveSuccessMessage] = useState<string | null>(null);
+  const [saveErrorMessage, setSaveErrorMessage] = useState<string | null>(null);
   const [activeSetSubTab, setActiveSetSubTab] = useState<'atoms' | 'clusters' | 'confusion_pairs'>(
     'atoms'
   );
@@ -357,12 +358,13 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
       setSaveSuccessMessage(
         `¡Set validado y guardado en 1 clic! Se han registrado ${selectedClusters.length} clústeres, ${selectedAtoms.length} proposiciones atómicas y ${selectedPairs.length} pares de confusión en el tema.`
       );
+      setSaveErrorMessage(null);
       setExtractedSet(null);
       setDraftedAtoms([]);
       onRefresh();
     } catch (err) {
       console.error('Failed to save full set:', err);
-      alert('Hubo un error al guardar el set. Revisa la consola del navegador.');
+      setSaveErrorMessage('Hubo un error al guardar el set. Revisa la consola del navegador.');
     } finally {
       setIsSavingFullSet(false);
     }
@@ -1280,6 +1282,23 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
       {activeTab === 'import' && (
         <div className="space-y-6">
           {/* Success Banner */}
+          {saveErrorMessage && (
+            <div
+              role="alert"
+              className="p-4 bg-rose-950/60 border border-rose-500/40 rounded-2xl flex items-center justify-between text-xs text-rose-200 shadow-sm"
+            >
+              <div className="flex items-center space-x-3">
+                <span className="font-medium leading-relaxed">{saveErrorMessage}</span>
+              </div>
+              <button
+                onClick={() => setSaveErrorMessage(null)}
+                className="text-rose-300 hover:text-white px-2 py-1 rounded text-[11px] font-mono"
+                aria-label="Cerrar aviso"
+              >
+                ✕
+              </button>
+            </div>
+          )}
           {saveSuccessMessage && (
             <div className="p-4 bg-emerald-950/60 border border-emerald-500/40 rounded-2xl flex items-center justify-between text-xs text-emerald-200 shadow-sm animate-in fade-in duration-300">
               <div className="flex items-center space-x-3">
