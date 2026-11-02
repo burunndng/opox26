@@ -420,7 +420,7 @@ export interface SavedSessionState {
   version: number;
   id: string;
   saved_at: string;
-  mode: 'srs' | 'interleaved' | 'activity_specific' | 'pretest' | 'repair' | 'sniper';
+  mode: 'srs' | 'interleaved' | 'activity_specific' | 'pretest' | 'repair' | 'sniper' | 'drill' | 'duel';
   title: string;
   currentIndex: number;
   items: Item[];

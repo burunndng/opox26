@@ -16,6 +16,7 @@ import { CreateTopicModal } from './components/CreateTopicModal.tsx';
 import { MicroLessonRunner } from './components/MicroLessonRunner.tsx';
 import { api } from './api.ts';
 import { selectSniperItems } from './utils/sniperFilter.ts';
+import { selectPlazosDrillItems, selectDuelDrillItems } from './utils/drillSelectors.ts';
 import { eligibleForPractice, buildPretestPool } from './utils/practicePools.ts';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import {
@@ -92,7 +93,14 @@ export default function App() {
   const [runnerItems, setRunnerItems] = useState<Item[]>([]);
   const [runnerTitle, setRunnerTitle] = useState('Test');
   const [runnerMode, setRunnerMode] = useState<
-    'srs' | 'interleaved' | 'activity_specific' | 'pretest' | 'repair' | 'sniper'
+    | 'srs'
+    | 'interleaved'
+    | 'activity_specific'
+    | 'pretest'
+    | 'repair'
+    | 'sniper'
+    | 'drill'
+    | 'duel'
   >('srs');
   const [runnerBaremoPenalty, setRunnerBaremoPenalty] = useState<number>(0.25);
   const [runnerInitialIndex, setRunnerInitialIndex] = useState(0);
@@ -111,6 +119,8 @@ export default function App() {
     setRunnerMode(saved.mode || 'srs');
     if (saved.baremoPenalty !== undefined) {
       setRunnerBaremoPenalty(saved.baremoPenalty);
+    } else {
+      setRunnerBaremoPenalty(0.25);
     }
     setRunnerInitialIndex(saved.currentIndex || 0);
     setRunnerInitialResults(saved.sessionResults);
@@ -219,6 +229,7 @@ export default function App() {
         matchedTopic ? `Test: ${matchedTopic.name}` : 'Test de repaso'
       );
       setRunnerMode('srs');
+      setRunnerBaremoPenalty(0.25);
       setActiveTab('runner');
     } catch (err) {
       console.error('Failed to get due queue:', err);
@@ -230,6 +241,7 @@ export default function App() {
     setRunnerItems(blockItems);
     setRunnerTitle(`Test mezclado (${blockItems.length} preguntas)`);
     setRunnerMode('interleaved');
+    setRunnerBaremoPenalty(0.25);
     setActiveTab('runner');
   };
 
@@ -244,6 +256,7 @@ export default function App() {
       matchedTopic ? `Test de nivel: ${matchedTopic.name}` : 'Test de nivel'
     );
     setRunnerMode('pretest');
+    setRunnerBaremoPenalty(0.25);
     setActiveTab('runner');
   };
 
@@ -266,6 +279,7 @@ export default function App() {
     setRunnerItems(repairItems);
     setRunnerTitle(`Repaso de fallos (${repairItems.length})`);
     setRunnerMode('repair');
+    setRunnerBaremoPenalty(0.25);
     setActiveTab('runner');
   };
 
@@ -307,6 +321,57 @@ export default function App() {
   // Launch exam-like simulacro: hard questions with official -0.25 penalty
   const handleStartSimulacro = () => {
     handleStartSniper({ subType: 'mixed', count: 15, baremoPenalty: 0.25 });
+  };
+
+  // Launch formative drill: Plazos y Cuantías (numeric traps, no penalty)
+  const handleStartPlazosDrill = () => {
+    const topicScope = selectedTopicId !== 'all' ? selectedTopicId : undefined;
+    const selected = selectPlazosDrillItems(items, openErrors, { count: 12, topicScope });
+
+    if (selected.length === 0) {
+      setToast({
+        message:
+          'No hay preguntas de plazos o cuantías en este ámbito. Prueba con "Todo el temario".',
+        kind: 'error',
+      });
+      return;
+    }
+
+    setRunnerItems(selected);
+    setRunnerTitle(`Drill: plazos y cuantías (${selected.length})`);
+    setRunnerMode('drill');
+    setRunnerBaremoPenalty(0);
+    setRunnerInitialIndex(0);
+    setRunnerInitialResults(undefined);
+    setRunnerSessionId(`drill-plazos-${Date.now()}`);
+    setActiveTab('runner');
+  };
+
+  // Launch formative drill: Duelo de Conceptos (confusion pairs, no penalty)
+  const handleStartDuelDrill = () => {
+    const topicScope = selectedTopicId !== 'all' ? selectedTopicId : undefined;
+    const selected = selectDuelDrillItems(items, openErrors, confusionPairs, {
+      count: 12,
+      topicScope,
+    });
+
+    if (selected.length === 0) {
+      setToast({
+        message:
+          'No hay pares de confusión con preguntas en este ámbito. Prueba con "Todo el temario".',
+        kind: 'error',
+      });
+      return;
+    }
+
+    setRunnerItems(selected);
+    setRunnerTitle(`Duelo de conceptos (${selected.length})`);
+    setRunnerMode('duel');
+    setRunnerBaremoPenalty(0);
+    setRunnerInitialIndex(0);
+    setRunnerInitialResults(undefined);
+    setRunnerSessionId(`drill-duel-${Date.now()}`);
+    setActiveTab('runner');
   };
 
   if (isLoading) {
@@ -412,6 +477,8 @@ export default function App() {
               onStartSimulacro={handleStartSimulacro}
               onOpenInterleaved={() => setIsInterleavedModalOpen(true)}
               onStartPretest={() => handleStartPretest()}
+              onStartPlazosDrill={handleStartPlazosDrill}
+              onStartDuel={handleStartDuelDrill}
               onStartGuided={(topicId) => handleStartMicroLesson(topicId)}
             />
           ) : microLessonTopic ? (
@@ -441,6 +508,7 @@ export default function App() {
               setRunnerItems([]);
               setRunnerTitle('Test');
               setRunnerMode('srs');
+              setRunnerBaremoPenalty(0.25);
               setRunnerInitialIndex(0);
               setRunnerInitialResults(undefined);
               setRunnerSessionId(undefined);
@@ -451,6 +519,7 @@ export default function App() {
               setRunnerItems([]);
               setRunnerTitle('Test');
               setRunnerMode('srs');
+              setRunnerBaremoPenalty(0.25);
               setRunnerInitialIndex(0);
               setRunnerInitialResults(undefined);
               setRunnerSessionId(undefined);

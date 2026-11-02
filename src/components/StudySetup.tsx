@@ -9,6 +9,8 @@ import {
   ChevronRight,
   Brain,
   Clock,
+  Percent,
+  Swords,
 } from 'lucide-react';
 import type { Topic } from '../types.ts';
 
@@ -23,6 +25,8 @@ interface StudySetupProps {
   onStartSimulacro: () => void;
   onOpenInterleaved: () => void;
   onStartPretest: () => void;
+  onStartPlazosDrill: () => void;
+  onStartDuel: () => void;
   onStartGuided: (topicId: string) => void;
 }
 
@@ -42,6 +46,8 @@ export const StudySetup: React.FC<StudySetupProps> = ({
   onStartSimulacro,
   onOpenInterleaved,
   onStartPretest,
+  onStartPlazosDrill,
+  onStartDuel,
   onStartGuided,
 }) => {
   const scopeName =
@@ -194,6 +200,40 @@ export const StudySetup: React.FC<StudySetupProps> = ({
             </div>
             <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
               10 preguntas a ciegas para saber de dónde partes en un tema.
+            </p>
+          </button>
+
+          <button
+            onClick={onStartPlazosDrill}
+            className="text-left bg-[#121722] border border-[#20293a] hover:border-amber-700/60 rounded-lg p-4 transition min-h-[88px]"
+          >
+            <div className="flex items-center justify-between">
+              <span className="flex items-center space-x-2 text-sm font-semibold text-slate-100">
+                <Percent className="w-4 h-4 text-amber-400" />
+                <span>Plazos y cuantías</span>
+              </span>
+              <ChevronRight className="w-4 h-4 text-slate-500" />
+            </div>
+            <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
+              Cifras, plazos y porcentajes: practica donde se pierden los puntos.
+              Sin penalización.
+            </p>
+          </button>
+
+          <button
+            onClick={onStartDuel}
+            className="text-left bg-[#121722] border border-[#20293a] hover:border-violet-700/60 rounded-lg p-4 transition min-h-[88px]"
+          >
+            <div className="flex items-center justify-between">
+              <span className="flex items-center space-x-2 text-sm font-semibold text-slate-100">
+                <Swords className="w-4 h-4 text-violet-400" />
+                <span>Duelo de conceptos</span>
+              </span>
+              <ChevronRight className="w-4 h-4 text-slate-500" />
+            </div>
+            <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
+              Parejas de conceptos que se confunden, enfrentadas una y otra vez
+              hasta distinguir la regla.
             </p>
           </button>
         </div>

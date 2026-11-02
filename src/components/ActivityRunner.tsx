@@ -30,6 +30,7 @@ import {
   Sparkles,
   Shuffle,
   Trophy,
+  Percent,
 } from 'lucide-react';
 import {
   Item,
@@ -216,7 +217,7 @@ export interface SessionAttemptLog {
 interface ActivityRunnerProps {
   items: Item[];
   title?: string;
-  mode: 'srs' | 'interleaved' | 'activity_specific' | 'pretest' | 'repair' | 'sniper';
+  mode: 'srs' | 'interleaved' | 'activity_specific' | 'pretest' | 'repair' | 'sniper' | 'drill' | 'duel';
   initialIndex?: number;
   initialResults?: {
     correct: number;
@@ -369,12 +370,20 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
   // afterwards would retroactively re-score attempts already recorded.
   const baremoLocked =
     mode === 'sniper' ||
+    mode === 'drill' ||
+    mode === 'duel' ||
     sessionComplete ||
     attemptLogs.length > 0 ||
     (initialResults?.total ?? 0) > 0 ||
     currentIndex > 0;
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
   const isRecordingRef = useRef(false);
+
+  // Duelo de conceptos: pair context for the current item (mode 'duel' only)
+  const duelPair =
+    mode === 'duel' && currentItem?.confusion_pair_id
+      ? confusionPairs?.find((p) => p.id === currentItem.confusion_pair_id)
+      : undefined;
 
   // Pacing Sprint Timer: adaptive per item type/difficulty (E10 time-pressure training)
   const [isPacingActive, setIsPacingActive] = useState(false);
@@ -758,6 +767,10 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
         ? '🔀 Mezcla de temas'
         : mode === 'pretest'
         ? '🧭 Test de nivel'
+        : mode === 'drill'
+        ? '🎯 Drill enfocado'
+        : mode === 'duel'
+        ? '⚔️ Duelo de conceptos'
         : '🗓️ Repaso en el momento justo',
     selection_reason_detail:
       'Pregunta programada para repasar antes de que la olvides.',
@@ -1122,10 +1135,18 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               ? 'Test de nivel completado'
               : mode === 'sniper'
               ? 'Simulacro completado'
+              : mode === 'duel'
+              ? 'Duelo de conceptos completado'
+              : mode === 'drill'
+              ? 'Drill completado'
               : 'Test finalizado'}
           </h2>
           <p className="text-slate-400 text-xs sm:text-sm mt-2 max-w-xl mx-auto">
-            Con penalización de −0,25 por fallo, como en el examen.
+            {baremoPenalty === 0
+              ? 'Práctica formativa sin penalización: el objetivo es acertar y asimilar la regla.'
+              : `Con penalización de −${baremoPenalty
+                  .toFixed(2)
+                  .replace('.', ',')} por fallo, como en el examen.`}
           </p>
 
           {/* Baremo Selector Banner */}
@@ -1532,6 +1553,20 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
             </div>
           )}
 
+          {mode === 'drill' && (
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold">
+              <Percent className="w-3.5 h-3.5 text-amber-400" />
+              <span>Drill enfocado</span>
+            </div>
+          )}
+
+          {mode === 'duel' && (
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-violet-500/20 text-violet-300 border border-violet-500/40 text-xs font-bold">
+              <Scale className="w-3.5 h-3.5 text-violet-400" />
+              <span>Duelo de conceptos</span>
+            </div>
+          )}
+
           {/* Mode B Streak Counter Pill */}
           <div
             className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-lg border text-xs font-mono font-bold transition ${
@@ -1686,6 +1721,17 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                 </p>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Duelo de conceptos: frame the item as a duel between two confusable concepts */}
+        {duelPair && (
+          <div className="mb-4 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-violet-500/40 bg-violet-500/10 px-3 py-2 text-xs text-violet-100">
+            <Scale className="w-4 h-4 text-violet-300 shrink-0" aria-hidden="true" />
+            <span className="font-semibold text-violet-200">⚔️ Duelo:</span>
+            <span className="font-semibold">{duelPair.concept_a}</span>
+            <span className="text-violet-400 font-mono">vs</span>
+            <span className="font-semibold">{duelPair.concept_b}</span>
           </div>
         )}
 
@@ -2847,6 +2893,29 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                   </p>
                 )}
             </div>
+
+            {/* Duelo de conceptos: reveal the discriminating cue only after answering */}
+            {duelPair && (
+              <div className="rounded-lg border border-violet-500/40 bg-violet-500/10 p-4 space-y-2 text-xs">
+                <span className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-violet-300 font-mono">
+                  <Scale className="w-3.5 h-3.5" aria-hidden="true" />
+                  Clave del duelo
+                </span>
+                <p className="text-slate-200 leading-relaxed">
+                  <strong>{duelPair.concept_a}</strong>: {duelPair.legal_basis_a}
+                  {' · '}
+                  <strong>{duelPair.concept_b}</strong>: {duelPair.legal_basis_b}
+                </p>
+                <p className="text-slate-300 leading-relaxed">
+                  <span className="font-semibold text-violet-200">Discrimina: </span>
+                  {duelPair.discriminating_cue}
+                </p>
+                <p className="text-slate-400 leading-relaxed">
+                  <span className="font-semibold text-rose-300">Trampa común: </span>
+                  {duelPair.common_trap}
+                </p>
+              </div>
+            )}
 
             {/* Retrieval cue: shown only when the item carries a real one */}
             {currentItem.corrective_rule && (
