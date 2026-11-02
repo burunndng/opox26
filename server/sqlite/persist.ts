@@ -96,7 +96,7 @@ const atomMapper: TableMapper<Atom> = {
 const clusterMapper: TableMapper<Cluster> = {
   name: 'clusters',
   columns: ['id', 'topic_id', 'name', 'description', 'type', 'priority'],
-  toRow: (c) => [c.id, nul(c.topic_id), c.name, c.description ?? '', c.type, c.priority ?? 'medium'],
+  toRow: (c) => [c.id, nul(c.topic_id), c.name, c.description ?? '', c.type ?? 'general', c.priority ?? 'medium'],
   fromRow: (r) => ({
     id: String(r.id), topic_id: str(r.topic_id), name: String(r.name),
     description: str(r.description) ?? '', type: str(r.type) as Cluster['type'],
@@ -108,7 +108,7 @@ const clusterMapper: TableMapper<Cluster> = {
 const pairMapper: TableMapper<ConfusionPair> = {
   name: 'confusion_pairs',
   columns: ['id', 'topic_id', 'concept_a', 'concept_b', 'discriminating_cue', 'common_trap', 'legal_basis_a', 'legal_basis_b', 'example_case', 'status', 'severity'],
-  toRow: (p) => [p.id, nul(p.topic_id), p.concept_a, p.concept_b, p.discriminating_cue, p.common_trap, nul(p.legal_basis_a), nul(p.legal_basis_b), nul(p.example_case), p.status, p.severity],
+  toRow: (p) => [p.id, nul(p.topic_id), p.concept_a, p.concept_b, p.discriminating_cue, p.common_trap, nul(p.legal_basis_a), nul(p.legal_basis_b), nul(p.example_case), p.status ?? 'draft', p.severity ?? 'medium'],
   fromRow: (r) => ({
     id: String(r.id), topic_id: str(r.topic_id), concept_a: String(r.concept_a),
     concept_b: String(r.concept_b), discriminating_cue: String(r.discriminating_cue),
@@ -128,10 +128,10 @@ const itemMapper: TableMapper<Item> = {
     nul(i.prompt_before_options), j(i.options), nul(i.correct_answer), nul(i.legal_basis),
     nul(i.rule_statement), nul(i.why_correct), j(i.distractor_analysis), j(i.trap_types),
     nul(i.corrective_rule), j(i.condition_if_distractor_correct), nul(i.difficulty),
-    j(i.cognitive_operations), i.status, i.source ?? 'manual',
+    j(i.cognitive_operations), i.status ?? 'draft', i.source ?? 'manual',
     j(i.cloze_data), j(i.contrast_data), j(i.number_sort_data), j(i.spot_error_data),
     j(i.two_tier_data), j(i.exception_tree_data), j(i.fact_variant_data), j(i.fsrs_info),
-    nul(i.figure_status), i.created_at, i.updated_at,
+    nul(i.figure_status), i.created_at ?? new Date().toISOString(), i.updated_at ?? new Date().toISOString(),
   ],
   fromRow: (r) => ({
     id: String(r.id), topic_id: String(r.topic_id), cluster_id: str(r.cluster_id),
@@ -195,7 +195,7 @@ const scheduleMapper: TableMapper<ReviewSchedule> = {
   name: 'review_schedules',
   columns: ['id', 'item_id', 'state', 'due_date', 'interval_days', 'ease_factor', 'stability', 'difficulty', 'lapses', 'consecutive_correct_sessions', 'formats_completed', 'last_confidence', 'last_error_type', 'priority_score', 'graduated_at', 'suspended_reason'],
   toRow: (s) => [
-    s.id, s.item_id, s.state, s.due_date, s.interval_days ?? 0, s.ease_factor ?? 2.5,
+    s.id, s.item_id, s.state ?? 'new', s.due_date, s.interval_days ?? 0, s.ease_factor ?? 2.5,
     s.stability ?? 1.0, s.difficulty ?? 5.0, s.lapses ?? 0,
     s.consecutive_correct_sessions ?? 0, j(s.formats_completed ?? []),
     nul(s.last_confidence), nul(s.last_error_type), s.priority_score ?? 10,
@@ -220,9 +220,9 @@ const errorLogMapper: TableMapper<ErrorLog> = {
   columns: ['id', 'attempt_id', 'item_id', 'topic_id', 'cluster_id', 'confusion_pair_id', 'error_type_code', 'confidence', 'user_explanation', 'corrective_rule', 'legal_basis', 'trap_type', 'status', 'next_review_date', 'created_at', 'updated_at'],
   toRow: (e) => [
     e.id, nul(e.attempt_id), e.item_id, e.topic_id, nul(e.cluster_id),
-    nul(e.confusion_pair_id), e.error_type_code, e.confidence, nul(e.user_explanation),
-    nul(e.corrective_rule), nul(e.legal_basis), nul(e.trap_type), e.status,
-    nul(e.next_review_date), e.created_at, e.updated_at,
+    nul(e.confusion_pair_id), e.error_type_code ?? 'E1', e.confidence ?? 0, nul(e.user_explanation),
+    nul(e.corrective_rule), nul(e.legal_basis), nul(e.trap_type), e.status ?? 'open',
+    nul(e.next_review_date), e.created_at ?? new Date().toISOString(), e.updated_at ?? new Date().toISOString(),
   ],
   fromRow: (r) => ({
     id: String(r.id), attempt_id: str(r.attempt_id) ?? '', item_id: String(r.item_id),

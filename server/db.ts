@@ -475,10 +475,13 @@ class LocalDatabase {
     return this.data.items.find((i) => i.id === id);
   }
 
-  public createItem(item: Omit<Item, 'id' | 'created_at' | 'updated_at'>): Item {
+  public createItem(item: Omit<Item, 'id' | 'created_at' | 'updated_at'> & { id?: string }): Item {
     const newItem: Item = {
       ...item,
-      id: `item-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      id: item.id || `item-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      difficulty: item.difficulty ?? 3,
+      status: item.status || 'draft',
+      source: item.source || 'manual',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
@@ -493,11 +496,11 @@ class LocalDatabase {
       interval_days: 0,
       ease_factor: 2.5,
       stability: 1.0,
-      difficulty: newItem.difficulty,
+      difficulty: newItem.difficulty ?? 3,
       lapses: 0,
       consecutive_correct_sessions: 0,
       formats_completed: [],
-      priority_score: newItem.difficulty * 10,
+      priority_score: (newItem.difficulty ?? 3) * 10,
     });
 
     this.saveSync();
