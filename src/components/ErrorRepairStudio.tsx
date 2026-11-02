@@ -16,13 +16,14 @@ import {
   X,
   Scale,
 } from 'lucide-react';
-import { ErrorLog, Item } from '../types.ts';
+import { ErrorLog, Item, Topic } from '../types.ts';
 import { api } from '../api.ts';
 import { trapLabelEs } from '../utils/trapLabels.ts';
 
 interface ErrorRepairStudioProps {
   errors: ErrorLog[];
   items: Item[];
+  topics: Topic[];
   onRefresh: () => void;
   onLaunchRepairSession: (itemIds: string[]) => void;
 }
@@ -54,22 +55,37 @@ const ERROR_CODE_HINTS: Array<{ code: string; label: string }> = [
 export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
   errors,
   items,
+  topics,
   onRefresh,
   onLaunchRepairSession,
 }) => {
   const [filterTab, setFilterTab] = useState<'all' | 'confident_wrong' | 'open' | 'repaired'>(
     'open'
   );
+  const [selectedTopicId, setSelectedTopicId] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [isDossierOpen, setIsDossierOpen] = useState(false);
   const [copiedDossier, setCopiedDossier] = useState(false);
 
   const itemMap = new Map(items.map((i) => [i.id, i]));
 
+  /** Topic of an error: prefer the linked item's topic, fall back to the log's own. */
+  const topicOfError = (e: ErrorLog): string | undefined =>
+    itemMap.get(e.item_id)?.topic_id || e.topic_id || undefined;
+
+  // Per-topic open counts for the dropdown (all statuses, so the opositor can
+  // see where the failures concentrate before switching tab).
+  const errorsByTopic = new Map<string, number>();
+  for (const e of errors) {
+    const tid = topicOfError(e);
+    if (tid) errorsByTopic.set(tid, (errorsByTopic.get(tid) ?? 0) + 1);
+  }
+
   const filteredErrors = errors.filter((e) => {
     if (filterTab === 'open' && e.status !== 'open') return false;
     if (filterTab === 'repaired' && e.status !== 'repaired') return false;
     if (filterTab === 'confident_wrong' && e.confidence !== 3) return false;
+    if (selectedTopicId !== 'all' && topicOfError(e) !== selectedTopicId) return false;
 
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
@@ -234,15 +250,31 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
           </button>
         </div>
 
-        <div className="relative w-full sm:w-64">
-          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Buscar por base legal o regla..."
-            className="w-full bg-slate-900 border border-slate-800 rounded-md pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
-          />
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <select
+            value={selectedTopicId}
+            onChange={(e) => setSelectedTopicId(e.target.value)}
+            aria-label="Filtrar fallos por tema"
+            className="flex-1 sm:flex-none bg-slate-900 border border-slate-800 rounded-md px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500 cursor-pointer"
+          >
+            <option value="all">Todos los temas</option>
+            {topics.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.name} ({errorsByTopic.get(t.id) ?? 0})
+              </option>
+            ))}
+          </select>
+
+          <div className="relative flex-1 sm:flex-none sm:w-64">
+            <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Buscar por base legal o regla..."
+              className="w-full bg-slate-900 border border-slate-800 rounded-md pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+            />
+          </div>
         </div>
       </div>
 
@@ -260,6 +292,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
           filteredErrors.map((err) => {
             const item = itemMap.get(err.item_id);
             const isConfident = err.confidence === 3;
+            const topicName = topics.find((t) => t.id === topicOfError(err))?.name;
 
             return (
               <div
@@ -291,6 +324,15 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
                     {err.trap_type && (
                       <span className="text-[10px] px-2 py-0.5 rounded bg-rose-500/10 text-rose-300 border border-rose-500/20">
                         Trampa: {trapLabelEs(err.trap_type)}
+                      </span>
+                    )}
+
+                    {topicName && (
+                      <span
+                        className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700"
+                        title={topicName}
+                      >
+                        {topicName}
                       </span>
                     )}
 

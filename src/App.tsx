@@ -464,6 +464,7 @@ export default function App() {
           <ErrorRepairStudio
             errors={openErrors}
             items={items}
+            topics={topics}
             onRefresh={loadData}
             onLaunchRepairSession={handleLaunchRepairSession}
           />
@@ -483,6 +484,7 @@ export default function App() {
         {activeTab === 'items' && (
           <ItemBank
             items={items}
+            topics={topics}
             clusters={clusters}
             confusionPairs={confusionPairs}
             warnings={warnings}

@@ -16,12 +16,13 @@ import {
   Percent,
   RotateCw,
 } from 'lucide-react';
-import { Item, Cluster, ConfusionPair, ItemType, QualityWarning, JevItemAuditResult } from '../types.ts';
+import { Item, Cluster, ConfusionPair, ItemType, QualityWarning, JevItemAuditResult, Topic } from '../types.ts';
 import { api } from '../api.ts';
 import { trapLabelEs } from '../utils/trapLabels.ts';
 
 interface ItemBankProps {
   items: Item[];
+  topics: Topic[];
   clusters: Cluster[];
   confusionPairs: ConfusionPair[];
   warnings: QualityWarning[];
@@ -31,12 +32,14 @@ interface ItemBankProps {
 
 export const ItemBank: React.FC<ItemBankProps> = ({
   items,
+  topics,
   clusters,
   confusionPairs,
   warnings,
   onRefresh,
   onPreviewItem,
 }) => {
+  const [selectedTopicId, setSelectedTopicId] = useState<string>('all');
   const [selectedType, setSelectedType] = useState<string>('all');
   const [selectedCluster, setSelectedCluster] = useState<string>('all');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
@@ -70,6 +73,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
 
   const filteredItems = items.filter((item) => {
     if (showWarningsOnly && !warningItemIds.has(item.id)) return false;
+    if (selectedTopicId !== 'all' && item.topic_id !== selectedTopicId) return false;
     if (selectedType !== 'all' && item.item_type !== selectedType) return false;
     if (selectedCluster !== 'all' && item.cluster_id !== selectedCluster) return false;
     if (selectedStatus !== 'all' && item.status !== selectedStatus) return false;
@@ -84,6 +88,21 @@ export const ItemBank: React.FC<ItemBankProps> = ({
 
     return true;
   });
+
+  // Clusters scoped to the selected topic so the dropdown never offers an
+  // empty combination (cluster of another tema).
+  const visibleClusters =
+    selectedTopicId === 'all'
+      ? clusters
+      : clusters.filter((c) => c.topic_id === selectedTopicId);
+
+  const hasActiveFilters =
+    selectedTopicId !== 'all' ||
+    selectedType !== 'all' ||
+    selectedCluster !== 'all' ||
+    selectedStatus !== 'all' ||
+    showWarningsOnly ||
+    searchTerm.trim().length > 0;
 
   const handleDeleteItem = async (id: string) => {
     if (!window.confirm('¿Seguro que deseas eliminar este ítem de entrenamiento?')) return;
@@ -108,7 +127,9 @@ export const ItemBank: React.FC<ItemBankProps> = ({
             </h1>
           </div>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl">
-            {items.length} preguntas en total, con su regla legal y análisis de trampas.
+            {hasActiveFilters
+              ? `${filteredItems.length} de ${items.length} preguntas con los filtros actuales, con su regla legal y análisis de trampas.`
+              : `${items.length} preguntas en total, con su regla legal y análisis de trampas.`}
           </p>
         </div>
 
@@ -129,7 +150,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
 
       {/* Filter Toolbar */}
       <div className="bg-slate-900 border border-slate-800 p-4 rounded-lg space-y-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           <div className="relative">
             <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
             <input
@@ -140,6 +161,23 @@ export const ItemBank: React.FC<ItemBankProps> = ({
               className="w-full bg-slate-950 border border-slate-800 rounded-md pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
             />
           </div>
+
+          <select
+            value={selectedTopicId}
+            onChange={(e) => {
+              setSelectedTopicId(e.target.value);
+              setSelectedCluster('all'); // clusters are scoped per topic
+            }}
+            aria-label="Filtrar por tema"
+            className="bg-slate-950 border border-slate-800 rounded-md px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500"
+          >
+            <option value="all">-- Todos los Temas --</option>
+            {topics.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.name} ({items.filter((i) => i.topic_id === t.id).length})
+              </option>
+            ))}
+          </select>
 
           <select
             value={selectedType}
@@ -163,7 +201,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
             className="bg-slate-950 border border-slate-800 rounded-md px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500"
           >
             <option value="all">-- Todos los Clusters --</option>
-            {clusters.map((c) => (
+            {visibleClusters.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
               </option>
@@ -193,6 +231,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
           filteredItems.map((item) => {
             const hasWarning = warningItemIds.has(item.id);
             const cluster = clusters.find((c) => c.id === item.cluster_id);
+            const topic = topics.find((t) => t.id === item.topic_id);
 
             return (
               <div
@@ -204,6 +243,18 @@ export const ItemBank: React.FC<ItemBankProps> = ({
                     <span className="text-[11px] font-mono font-semibold text-amber-400 uppercase">
                       {item.item_type.replace(/_/g, ' ')}
                     </span>
+
+                    {topic && (
+                      <>
+                        <span className="text-slate-600" aria-hidden="true">·</span>
+                        <span
+                          className="text-[11px] text-slate-400 font-medium"
+                          title={topic.name}
+                        >
+                          {topic.name}
+                        </span>
+                      </>
+                    )}
 
                     {item.legal_basis && (
                       <>
