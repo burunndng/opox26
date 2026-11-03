@@ -51,8 +51,8 @@ export const StudySetup: React.FC<StudySetupProps> = ({
   onStartDuel,
   onStartGuided,
 }) => {
-  // Distill P1: reducir opciones visibles en el punto de decisión (≤4).
-  // Plazos y Duelo son drills especializados; se revelan bajo demanda.
+  // Distill P1: dos alternativas visibles en el punto de decisión; el resto
+  // (variantes y drills especializados) se revela bajo demanda.
   const [showMoreDrills, setShowMoreDrills] = useState(false);
 
   // Onboard P2: bienvenida opcional para primerizos (se muestra una sola vez).
@@ -87,26 +87,6 @@ export const StudySetup: React.FC<StudySetupProps> = ({
         </p>
       </div>
 
-      {/* Scope: which syllabus slice */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-        <label htmlFor="study-scope" className="text-xs text-slate-400 font-medium shrink-0">
-          Ámbito del test:
-        </label>
-        <select
-          id="study-scope"
-          value={selectedTopicId}
-          onChange={(e) => onSelectTopic(e.target.value)}
-          className="bg-[#121722] border border-[#20293a] rounded-md px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-blue-500 cursor-pointer w-full sm:max-w-md min-h-[44px]"
-        >
-          <option value="all">Todo el temario</option>
-          {topics.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
       {/* Smart default */}
       <div className="bg-[#121722] border border-[#20293a] rounded-lg p-5">
         {dueCount > 0 ? (
@@ -129,6 +109,26 @@ export const StudySetup: React.FC<StudySetupProps> = ({
         <p className="text-[11px] text-slate-500 mt-2 text-center">
           Repaso pendiente + preguntas nuevas, con −0,25 por fallo como en el examen.
         </p>
+
+        {/* Scope: which syllabus slice — secondary choice, revealed under the CTA */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-4 pt-4 border-t border-[#20293a]/60">
+          <label htmlFor="study-scope" className="text-xs text-slate-400 font-medium shrink-0">
+            Ámbito del test:
+          </label>
+          <select
+            id="study-scope"
+            value={selectedTopicId}
+            onChange={(e) => onSelectTopic(e.target.value)}
+            className="bg-[#0c0f17] border border-[#20293a] rounded-md px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-blue-500 cursor-pointer w-full sm:max-w-md min-h-[44px]"
+          >
+            <option value="all">Todo el temario</option>
+            {topics.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Study-loop explainer: generative cover toggle + adaptive pacing */}
@@ -186,6 +186,8 @@ export const StudySetup: React.FC<StudySetupProps> = ({
             </p>
           </button>
 
+          {showMoreDrills && (
+            <>
           <button
             onClick={onOpenInterleaved}
             className="text-left bg-[#121722] border border-[#20293a] hover:border-slate-600 rounded-lg p-4 transition min-h-[88px]"
@@ -218,9 +220,7 @@ export const StudySetup: React.FC<StudySetupProps> = ({
             </p>
           </button>
 
-          {showMoreDrills && (
-            <>
-              <button
+          <button
                 onClick={onStartPlazosDrill}
                 className="text-left bg-[#121722] border border-[#20293a] hover:border-amber-700/60 rounded-lg p-4 transition min-h-[88px]"
               >
@@ -253,6 +253,23 @@ export const StudySetup: React.FC<StudySetupProps> = ({
                   hasta distinguir la regla.
                 </p>
               </button>
+
+              <button
+                onClick={() => guidedTopicId && onStartGuided(guidedTopicId)}
+                disabled={!guidedTopicId}
+                className="text-left bg-[#121722] border border-[#20293a] hover:border-slate-600 rounded-lg p-4 transition min-h-[88px] disabled:opacity-50"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="flex items-center space-x-2 text-sm font-semibold text-slate-100">
+                    <BookOpen className="w-4 h-4 text-indigo-400" />
+                    <span>Estudio guiado</span>
+                  </span>
+                  <ChevronRight className="w-4 h-4 text-slate-500" />
+                </div>
+                <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
+                  Lee la regla, intenta recordarla y comprueba: para asentar un tema desde cero.
+                </p>
+              </button>
             </>
           )}
         </div>
@@ -263,23 +280,6 @@ export const StudySetup: React.FC<StudySetupProps> = ({
           className="mt-2 w-full text-left text-xs font-semibold text-blue-400 hover:text-blue-300 underline underline-offset-4 transition"
         >
           {showMoreDrills ? 'Menos formas de practicar ↑' : 'Más formas de practicar →'}
-        </button>
-
-        <button
-          onClick={() => guidedTopicId && onStartGuided(guidedTopicId)}
-          disabled={!guidedTopicId}
-          className="mt-3 w-full text-left bg-[#121722] border border-[#20293a] hover:border-slate-600 rounded-lg p-4 transition min-h-[76px] disabled:opacity-50"
-        >
-          <div className="flex items-center justify-between">
-            <span className="flex items-center space-x-2 text-sm font-semibold text-slate-100">
-              <BookOpen className="w-4 h-4 text-indigo-400" />
-              <span>Estudio guiado</span>
-            </span>
-            <ChevronRight className="w-4 h-4 text-slate-500" />
-          </div>
-          <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
-            Lee la regla, intenta recordarla y comprueba: para asentar un tema desde cero.
-          </p>
         </button>
       </div>
 
