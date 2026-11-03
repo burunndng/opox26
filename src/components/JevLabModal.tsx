@@ -337,6 +337,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                 </label>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <select
+                    aria-label="Seleccionar ítem para auditar"
                     value={selectedItemId}
                     onChange={(e) => setSelectedItemId(e.target.value)}
                     className="flex-1 bg-slate-950 border border-slate-700 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
@@ -478,6 +479,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                   <div>
                     <label className="block text-xs font-semibold text-slate-300 mb-1">Enunciado del ítem:</label>
                     <input
+                      aria-label="Enunciado del ítem"
                       type="text"
                       value={triageStem}
                       onChange={(e) => setTriageStem(e.target.value)}
@@ -487,6 +489,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                   <div>
                     <label className="block text-xs font-semibold text-slate-300 mb-1">Regla normativa exacta:</label>
                     <input
+                      aria-label="Regla normativa exacta"
                       type="text"
                       value={triageRule}
                       onChange={(e) => setTriageRule(e.target.value)}
@@ -498,6 +501,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                       Respuesta generada de memoria por el opositor (Cover & Generate):
                     </label>
                     <input
+                      aria-label="Respuesta generada de memoria"
                       type="text"
                       value={triageUserGen}
                       onChange={(e) => setTriageUserGen(e.target.value)}
@@ -509,6 +513,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                       Opción marcada tras revelar alternativas:
                     </label>
                     <input
+                      aria-label="Opción marcada tras revelar alternativas"
                       type="text"
                       value={triageUserOption}
                       onChange={(e) => setTriageUserOption(e.target.value)}
@@ -636,6 +641,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                     Proposición Jurídica Atómica:
                   </label>
                   <textarea
+                    aria-label="Proposición jurídica atómica"
                     rows={3}
                     value={atomText}
                     onChange={(e) => setAtomText(e.target.value)}
@@ -646,6 +652,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                   <div className="flex items-center space-x-2 text-xs">
                     <span className="text-slate-400">Base legal:</span>
                     <input
+                      aria-label="Base legal"
                       type="text"
                       value={atomLegalBasis}
                       onChange={(e) => setAtomLegalBasis(e.target.value)}
@@ -736,6 +743,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                       Texto Normativo de Origen (Contexto Verídico):
                     </label>
                     <textarea
+                      aria-label="Texto normativo de origen"
                       rows={3}
                       value={cascadeSource}
                       onChange={(e) => setCascadeSource(e.target.value)}
@@ -747,6 +755,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                       Borrador del Enunciado (Draft):
                     </label>
                     <textarea
+                      aria-label="Borrador del enunciado"
                       rows={3}
                       value={cascadeStem}
                       onChange={(e) => setCascadeStem(e.target.value)}
@@ -812,6 +821,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                     State (Estado / Contexto en JSON):
                   </label>
                   <textarea
+                    aria-label="State (estado en JSON)"
                     rows={10}
                     value={customState}
                     onChange={(e) => setCustomState(e.target.value)}
@@ -823,6 +833,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                     Questions (Preguntas Tipadas: Choice, Noul, Score):
                   </label>
                   <textarea
+                    aria-label="Questions (preguntas tipadas)"
                     rows={10}
                     value={customQuestions}
                     onChange={(e) => setCustomQuestions(e.target.value)}

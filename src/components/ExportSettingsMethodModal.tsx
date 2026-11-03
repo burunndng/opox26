@@ -416,6 +416,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                 Intervalo de Graduación (días)
               </label>
               <input
+                aria-label="Intervalo de graduación (días)"
                 type="number"
                 value={srsSettings.graduating_interval}
                 onChange={(e) =>
@@ -433,6 +434,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                 Máximo de Ítems Nuevos por Día
               </label>
               <input
+                aria-label="Máximo de ítems nuevos por día"
                 type="number"
                 value={srsSettings.max_new_items_per_day}
                 onChange={(e) =>
@@ -520,6 +522,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-slate-300">Proveedor de IA</label>
                 <select
+                  aria-label="Proveedor de IA"
                   value={srsSettings.ai_provider}
                   onChange={(e) =>
                     setSrsSettings({
@@ -546,7 +549,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                       ai_model: e.target.value,
                     })
                   }
-                  placeholder="gemini-2.5-flash"
+                  placeholder="gemini-2.5-flash" aria-label="gemini-2.5-flash"
                   className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white"
                 />
               </div>

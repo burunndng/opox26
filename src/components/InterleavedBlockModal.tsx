@@ -89,6 +89,7 @@ export const InterleavedBlockModal: React.FC<InterleavedBlockModalProps> = ({
               <span>Alcance del Bloque (Tema / Set de Estudio)</span>
             </label>
             <select
+              aria-label="Alcance del bloque"
               value={targetTopicId}
               onChange={(e) => setTargetTopicId(e.target.value)}
               className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer"
@@ -125,6 +126,7 @@ export const InterleavedBlockModal: React.FC<InterleavedBlockModalProps> = ({
               <span className="font-mono text-emerald-400">{blockSize} ítems</span>
             </div>
             <input
+              aria-label="Tamaño del bloque"
               type="range"
               min={8}
               max={30}

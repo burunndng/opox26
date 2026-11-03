@@ -738,6 +738,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   <div className="flex items-center space-x-2">
                     <span className="text-[11px] text-slate-400">Auditar ítem existente:</span>
                     <select
+                      aria-label="Auditar ítem existente"
                       value={selectedItemIdToAudit}
                       onChange={(e) => handleSelectAuditedItem(e.target.value)}
                       className="bg-slate-950 border border-slate-700 text-xs text-white rounded-lg px-2.5 py-1 max-w-[200px] truncate"
@@ -764,7 +765,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                     rows={3}
                     value={auditStem}
                     onChange={(e) => setAuditStem(e.target.value)}
-                    placeholder="Escribe la pregunta o caso práctico..."
+                    placeholder="Escribe la pregunta o caso práctico..." aria-label="Escribe la pregunta o caso práctico..."
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-indigo-500 leading-relaxed"
                   />
                 </div>
@@ -777,13 +778,14 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                       type="text"
                       value={auditLegalBasis}
                       onChange={(e) => setAuditLegalBasis(e.target.value)}
-                      placeholder="ej. Art. 53.1 TRLGSS o Art. 167 CE"
+                      placeholder="ej. Art. 53.1 TRLGSS o Art. 167 CE" aria-label="ej. Art. 53.1 TRLGSS o Art. 167 CE"
                       className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                     />
                   </div>
                   <div className="space-y-1">
                     <label className="text-xs font-semibold text-slate-300">Tipo de Actividad</label>
                     <select
+                      aria-label="Tipo de actividad"
                       value={auditItemType}
                       onChange={(e) => setAuditItemType(e.target.value)}
                       className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
@@ -809,7 +811,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                     type="text"
                     value={auditCorrectAnswer}
                     onChange={(e) => setAuditCorrectAnswer(e.target.value)}
-                    placeholder="Respuesta legalmente correcta y precisa..."
+                    placeholder="Respuesta legalmente correcta y precisa..." aria-label="Respuesta legalmente correcta y precisa..."
                     className="w-full bg-slate-950 border border-emerald-500/40 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"
                   />
                 </div>
@@ -823,21 +825,21 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                     type="text"
                     value={auditDistractor1}
                     onChange={(e) => setAuditDistractor1(e.target.value)}
-                    placeholder="Distractor B (error plausible del mismo clúster)..."
+                    placeholder="Distractor B (error plausible del mismo clúster)..." aria-label="Distractor B (error plausible del mismo clúster)..."
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                   />
                   <input
                     type="text"
                     value={auditDistractor2}
                     onChange={(e) => setAuditDistractor2(e.target.value)}
-                    placeholder="Distractor C (trampa temporal / numérica / competencial)..."
+                    placeholder="Distractor C (trampa temporal / numérica / competencial)..." aria-label="Distractor C (trampa temporal / numérica / competencial)..."
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                   />
                   <input
                     type="text"
                     value={auditDistractor3}
                     onChange={(e) => setAuditDistractor3(e.target.value)}
-                    placeholder="Distractor D (excepción mal aplicada)..."
+                    placeholder="Distractor D (excepción mal aplicada)..." aria-label="Distractor D (excepción mal aplicada)..."
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                   />
                 </div>
@@ -1160,14 +1162,14 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 type="text"
                 value={newAtomText}
                 onChange={(e) => setNewAtomText(e.target.value)}
-                placeholder="Proposición legal exacta (ej. Prescripción de 5 años desde día siguiente a hecho causante)"
+                placeholder="Proposición legal exacta (ej. Prescripción de 5 años desde día siguiente a hecho causante)" aria-label="Proposición legal exacta (ej. Prescripción de 5 años desde día siguiente a hecho causante)"
                 className="sm:col-span-2 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
               />
               <input
                 type="text"
                 value={newAtomBasis}
                 onChange={(e) => setNewAtomBasis(e.target.value)}
-                placeholder="Base Legal (ej. Art. 53.1 TRLGSS)"
+                placeholder="Base Legal (ej. Art. 53.1 TRLGSS)" aria-label="Base Legal (ej. Art. 53.1 TRLGSS)"
                 className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
               />
             </div>
@@ -1175,6 +1177,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
             <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
               <div className="flex items-center space-x-3">
                 <select
+                  aria-label="Tipo de átomo"
                   value={newAtomType}
                   onChange={(e) => setNewAtomType(e.target.value as AtomType)}
                   className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
@@ -1187,6 +1190,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 </select>
 
                 <select
+                  aria-label="Clúster del átomo"
                   value={newAtomClusterId}
                   onChange={(e) => setNewAtomClusterId(e.target.value)}
                   className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 max-w-[200px] truncate"
@@ -1200,6 +1204,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 </select>
 
                 <select
+                  aria-label="Par de confusión del átomo"
                   value={newAtomPairId}
                   onChange={(e) => setNewAtomPairId(e.target.value)}
                   className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 max-w-[200px] truncate"
@@ -1231,7 +1236,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Buscar átomos por texto, artículo o tipo..."
+                placeholder="Buscar átomos por texto, artículo o tipo..." aria-label="Buscar átomos por texto, artículo o tipo..."
                 className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
               />
             </div>
@@ -1335,6 +1340,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 {!isCreatingNewTopic ? (
                   <div className="flex items-center space-x-1.5">
                     <select
+                      aria-label="Tema destino del set"
                       value={selectedSetTopicId}
                       onChange={(e) => {
                         if (e.target.value === '__new__') {
@@ -1359,7 +1365,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                       type="text"
                       value={newTopicName}
                       onChange={(e) => setNewTopicName(e.target.value)}
-                      placeholder="Nombre del nuevo tema"
+                      placeholder="Nombre del nuevo tema" aria-label="Nombre del nuevo tema"
                       className="bg-transparent text-xs text-white px-2 py-0.5 focus:outline-none w-36"
                     />
                     <button
@@ -1380,7 +1386,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 type="text"
                 value={articleRef}
                 onChange={(e) => setArticleRef(e.target.value)}
-                placeholder="Referencia Legal / Artículo (ej. Arts. 53 y 54 TRLGSS)"
+                placeholder="Referencia Legal / Artículo (ej. Arts. 53 y 54 TRLGSS)" aria-label="Referencia Legal / Artículo (ej. Arts. 53 y 54 TRLGSS)"
                 className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
               />
               <div className="sm:col-span-2 flex flex-wrap items-center gap-1.5">
@@ -1479,7 +1485,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
               rows={7}
               value={sourceText}
               onChange={(e) => setSourceText(e.target.value)}
-              placeholder="Pega aquí el texto normativo del BOE, diapositivas o apuntes del temario de oposición..."
+              placeholder="Pega aquí el texto normativo del BOE, diapositivas o apuntes del temario de oposición..." aria-label="Pega aquí el texto normativo del BOE, diapositivas o apuntes del temario de oposición..."
               className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 font-sans leading-relaxed"
             />
 
@@ -1625,6 +1631,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 {activeSetSubTab === 'atoms' && (
                   <div className="flex items-center space-x-3 text-xs">
                     <select
+                      aria-label="Filtrar set por clúster"
                       value={setFilterCluster}
                       onChange={(e) => setSetFilterCluster(e.target.value)}
                       className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-slate-300 text-xs focus:outline-none"
@@ -1673,6 +1680,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                         >
                           <div className="flex items-start space-x-3 pt-0.5">
                             <input
+                              aria-label="Seleccionar átomo"
                               type="checkbox"
                               checked={atom.selected}
                               onChange={(e) => {

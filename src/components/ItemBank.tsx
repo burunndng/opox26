@@ -163,7 +163,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Buscar por pregunta, artículo o regla..."
+              placeholder="Buscar por pregunta, artículo o regla..." aria-label="Buscar por pregunta, artículo o regla..."
               className="w-full bg-slate-950 border border-slate-800 rounded-md pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
             />
           </div>
@@ -186,6 +186,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
           </select>
 
           <select
+            aria-label="Filtrar por tipo"
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
             className="bg-slate-950 border border-slate-800 rounded-md px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500"
@@ -202,6 +203,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
           </select>
 
           <select
+            aria-label="Filtrar por clúster"
             value={selectedCluster}
             onChange={(e) => setSelectedCluster(e.target.value)}
             className="bg-slate-950 border border-slate-800 rounded-md px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500"
@@ -215,6 +217,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
           </select>
 
           <select
+            aria-label="Filtrar por estado"
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
             className="bg-slate-950 border border-slate-800 rounded-md px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500"

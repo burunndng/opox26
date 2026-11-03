@@ -223,7 +223,7 @@ export const MicroLessonRunner: React.FC<MicroLessonRunnerProps> = ({ topic, ato
             value={recallAnswer}
             onChange={(e) => setRecallAnswer(e.target.value)}
             autoFocus
-            placeholder="Escribe aquí la regla, los datos numéricos y las excepciones que recuerdes…"
+            placeholder="Escribe aquí la regla, los datos numéricos y las excepciones que recuerdes…" aria-label="Escribe aquí la regla, los datos numéricos y las excepciones que recuerdes…"
             className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 leading-relaxed"
           />
           <button

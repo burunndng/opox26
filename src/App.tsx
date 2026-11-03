@@ -433,6 +433,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#0c0f17] text-slate-100 flex flex-col font-sans selection:bg-blue-600/30 selection:text-blue-200">
+      {/* Skip link: first tab stop, visually hidden until focused */}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-3 focus:py-2 focus:rounded-md focus:bg-indigo-600 focus:text-white focus:text-xs focus:font-semibold"
+      >
+        Saltar al contenido principal
+      </a>
       {/* Top Navigation */}
       <Navbar
         activeTab={activeTab}
@@ -451,7 +458,7 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <main id="main" className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         {activeTab === 'dashboard' && (
           <Dashboard
             dueStats={dueStats}

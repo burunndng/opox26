@@ -287,7 +287,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Buscar por base legal o regla..."
+              placeholder="Buscar por base legal o regla..." aria-label="Buscar por base legal o regla..."
               className="w-full bg-slate-900 border border-slate-800 rounded-md pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
             />
           </div>
@@ -439,7 +439,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
                 <button
                   onClick={() => setIsDossierOpen(false)}
                   aria-label="Cerrar cuaderno de fallos"
-                  className="p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                  className="h-9 w-9 flex items-center justify-center p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition"
                 >
                   <X className="w-4 h-4" />
                 </button>

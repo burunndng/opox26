@@ -114,7 +114,7 @@ export const CreateTopicModal: React.FC<CreateTopicModalProps> = ({
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Ej: Tema 8: Pensiones de Jubilación e Incapacidad Permanente"
+              placeholder="Ej: Tema 8: Pensiones de Jubilación e Incapacidad Permanente" aria-label="Ej: Tema 8: Pensiones de Jubilación e Incapacidad Permanente"
               className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
             />
           </div>
@@ -127,7 +127,7 @@ export const CreateTopicModal: React.FC<CreateTopicModalProps> = ({
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Ej: Artículos 193 a 215 TRLGSS. Requisitos de cotización, base reguladora, porcentajes de incapacidad y excepciones."
+              placeholder="Ej: Artículos 193 a 215 TRLGSS. Requisitos de cotización, base reguladora, porcentajes de incapacidad y excepciones." aria-label="Ej: Artículos 193 a 215 TRLGSS. Requisitos de cotización, base reguladora, porcentajes de incapacidad y excepciones."
               className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 resize-none"
             />
           </div>
@@ -140,7 +140,7 @@ export const CreateTopicModal: React.FC<CreateTopicModalProps> = ({
               type="text"
               value={sourceFile}
               onChange={(e) => setSourceFile(e.target.value)}
-              placeholder="Ej: Diapositivas Tema 8 SS.pdf / BOE-A-2015-11724"
+              placeholder="Ej: Diapositivas Tema 8 SS.pdf / BOE-A-2015-11724" aria-label="Ej: Diapositivas Tema 8 SS.pdf / BOE-A-2015-11724"
               className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
             />
           </div>

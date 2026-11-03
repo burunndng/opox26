@@ -1959,7 +1959,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                 <textarea
                   value={generatedAnswer}
                   onChange={(e) => setGeneratedAnswer(e.target.value)}
-                  placeholder="Escribe aquí tu respuesta o regla antes de ver las alternativas..."
+                  placeholder="Escribe aquí tu respuesta o regla antes de ver las alternativas..." aria-label="Escribe aquí tu respuesta o regla antes de ver las alternativas..."
                   rows={3}
                   className="w-full bg-[#121722] border border-[#20293a] rounded-md p-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition"
                   autoFocus
@@ -2184,7 +2184,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                       onKeyDown={(event) => {
                         if (event.key === 'Enter' && clozeInput.trim()) setStage('confidence');
                       }}
-                      placeholder="ej: 5 años, 3 meses, 1 año..."
+                      placeholder="ej: 5 años, 3 meses, 1 año..." aria-label="ej: 5 años, 3 meses, 1 año..."
                       className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 disabled:opacity-50"
                       autoFocus
                     />
@@ -2427,6 +2427,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <span className="text-xs text-slate-200 font-medium flex-1">{pair.concept}</span>
                     <select
+                      aria-label={pair.concept}
                       disabled={stage !== 'answering'}
                       value={numberSortMatches[pair.id] || ''}
                       onChange={(e) =>
@@ -2892,7 +2893,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                         setStage('confidence');
                       }
                     }}
-                    placeholder="Escribe aquí tu respuesta de memoria..."
+                    placeholder="Escribe aquí tu respuesta de memoria..." aria-label="Escribe aquí tu respuesta de memoria..."
                     rows={4}
                     className="w-full bg-[#121722] border border-[#20293a] rounded-md p-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition"
                     autoFocus
@@ -3268,7 +3269,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               <button
                 onClick={() => setIsSaveModalOpen(false)}
                 aria-label="Cerrar guardar o restaurar sesión"
-                className="text-slate-400 hover:text-white p-1"
+                className="text-slate-400 hover:text-white h-9 w-9 flex items-center justify-center p-1"
               >
                 ✕
               </button>

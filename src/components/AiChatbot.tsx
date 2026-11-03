@@ -575,6 +575,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
           ) : (
             <div className="relative">
               <select
+                aria-label="Modelo de IA"
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
                 className="text-xs font-medium bg-[#182030] text-slate-200 border border-[#20293a] rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-amber-500 shadow-2xs cursor-pointer"
@@ -651,7 +652,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
                 onChange={(e) => setCustomSystemPrompt(e.target.value)}
                 rows={2}
                 className="w-full text-xs font-mono bg-[#0c0f17] border border-[#20293a] text-slate-200 rounded-md p-2 focus:ring-1 focus:ring-amber-500 focus:outline-none"
-                placeholder="Instrucción del sistema personalizada..."
+                placeholder="Instrucción del sistema personalizada..." aria-label="Instrucción del sistema personalizada..."
               />
             </div>
 
@@ -1080,6 +1081,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
         <div className="flex items-end gap-2 bg-[#182030] border border-[#20293a] rounded-xl p-2 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all shadow-xs">
           {/* File upload hidden input */}
           <input
+            aria-label="Adjuntar archivos al chat"
             type="file"
             ref={fileInputRef}
             onChange={handleFileUpload}
@@ -1102,7 +1104,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
             onChange={(e) => setInputText(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={isLoading}
-            placeholder="Escribe tu instrucción o pregunta sobre el temario (ej: 'Extrae los átomos del documento y crea 2 preguntas de test')..."
+            placeholder="Escribe tu instrucción o pregunta sobre el temario (ej: 'Extrae los átomos del documento y crea 2 preguntas de test')..." aria-label="Escribe tu instrucción o pregunta sobre el temario (ej: 'Extrae los átomos del documento y crea 2 preguntas de test')..."
             rows={2}
             className="flex-1 bg-transparent border-0 resize-none text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-0 px-1 py-1"
           />

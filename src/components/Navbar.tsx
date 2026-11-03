@@ -315,6 +315,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="flex items-center space-x-1.5 bg-[#121722] border border-[#20293a] rounded-md px-2.5 py-1">
               <BookOpen className="w-3.5 h-3.5 text-slate-400 shrink-0" />
               <select
+                aria-label="Tema activo en la barra superior"
                 value={selectedTopicId}
                 onChange={(e) => setSelectedTopicId(e.target.value)}
                 className="bg-transparent text-xs text-slate-200 focus:outline-none cursor-pointer max-w-[140px] truncate"
@@ -355,7 +356,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={onOpenHelp}
               title="Metodología y atajos (?)"
-              className="p-1.5 rounded-md text-slate-400 hover:text-slate-200 hover:bg-[#121722] transition"
+              aria-label="Metodología y atajos"
+              className="h-9 w-9 flex items-center justify-center p-1.5 rounded-md text-slate-400 hover:text-slate-200 hover:bg-[#121722] transition"
             >
               <HelpCircle className="w-4 h-4" />
             </button>
@@ -428,7 +430,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* Compact Secondary Bar for Mobile & Tablet screens */}
-      <div className="md:hidden flex overflow-x-auto px-4 py-1.5 bg-[#0c0f17] border-t border-[#20293a] space-x-2 no-scrollbar">
+      <nav aria-label="Navegación rápida en pantallas pequeñas" className="md:hidden flex overflow-x-auto px-4 py-1.5 bg-[#0c0f17] border-t border-[#20293a] space-x-2 no-scrollbar">
         {primaryNavItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -463,7 +465,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span>Más</span>
           <ChevronDown className="w-3 h-3" />
         </button>
-      </div>
+      </nav>
       {showMobileMore && (
         <div className="md:hidden px-4 pb-3 bg-[#0c0f17] border-b border-[#20293a] space-y-0.5">
           {drawerTabItems.map((item) => {

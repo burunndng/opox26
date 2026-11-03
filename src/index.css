@@ -60,6 +60,20 @@
     outline-offset: 2px;
   }
 
+  /* Reduced motion: honor the OS preference by removing decorative motion
+     (entrances, pulses, spinners) while properties still snap to their end
+     state, so no state-change feedback is lost (a11y audit P2). */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
   /* Clear, robust typographic scale */
   h1 {
     font-size: 1.75rem;

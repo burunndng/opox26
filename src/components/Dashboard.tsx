@@ -178,7 +178,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </button>
             <button
               onClick={() => handleDismissSession(activePausedSession.id)}
-              className="p-1.5 rounded-md text-slate-500 hover:text-slate-300 hover:bg-[#182030] transition"
+              aria-label="Descartar sesión guardada"
+              className="h-11 w-11 flex items-center justify-center rounded-md text-slate-500 hover:text-slate-300 hover:bg-[#182030] transition"
               title="Descartar sesión"
             >
               <Trash2 className="w-3.5 h-3.5" />
