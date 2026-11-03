@@ -65,13 +65,13 @@ export const InterleavedBlockModal: React.FC<InterleavedBlockModalProps> = ({
       aria-modal="true"
       aria-labelledby="interleaved-modal-title"
     >
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-6 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+      <div className="bg-[#121722] border border-[#20293a] rounded-2xl max-w-lg w-full p-6 space-y-6 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-[#20293a] pb-4">
           <div className="flex items-center space-x-2">
             <Shuffle className="w-5 h-5 text-emerald-400" />
             <h2 id="interleaved-modal-title" className="text-base font-bold text-white">Mezclar temas</h2>
           </div>
-          <button onClick={onClose} className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition" aria-label="Cerrar bloque intercalado">
+          <button onClick={onClose} className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-[#182030] transition" aria-label="Cerrar bloque intercalado">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -92,7 +92,7 @@ export const InterleavedBlockModal: React.FC<InterleavedBlockModalProps> = ({
               aria-label="Alcance del bloque"
               value={targetTopicId}
               onChange={(e) => setTargetTopicId(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer"
+              className="w-full px-3 py-2 bg-[#0c0f17] border border-[#20293a] rounded-xl text-xs text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer"
             >
               <option value="all">🌐 Todos los Temas (Entrenamiento Global Cruzado)</option>
               {topics.map((t) => (
@@ -143,7 +143,7 @@ export const InterleavedBlockModal: React.FC<InterleavedBlockModalProps> = ({
                 type="checkbox"
                 checked={focusConfusionPairs}
                 onChange={(e) => setFocusConfusionPairs(e.target.checked)}
-                className="rounded border-slate-700 bg-slate-950 text-emerald-600 focus:ring-2 focus:ring-indigo-500"
+                className="rounded border-[#20293a] bg-[#0c0f17] text-emerald-600 focus:ring-2 focus:ring-indigo-500"
               />
               <span>Priorizar pares de alta confusión (prescripción/caducidad, 1,4/1,5)</span>
             </label>
@@ -153,7 +153,7 @@ export const InterleavedBlockModal: React.FC<InterleavedBlockModalProps> = ({
                 type="checkbox"
                 checked={includeNew}
                 onChange={(e) => setIncludeNew(e.target.checked)}
-                className="rounded border-slate-700 bg-slate-950 text-emerald-600 focus:ring-2 focus:ring-indigo-500"
+                className="rounded border-[#20293a] bg-[#0c0f17] text-emerald-600 focus:ring-2 focus:ring-indigo-500"
               />
               <span>Incluir ítems nuevos aún no evaluados</span>
             </label>
@@ -163,7 +163,7 @@ export const InterleavedBlockModal: React.FC<InterleavedBlockModalProps> = ({
                 type="checkbox"
                 checked={includeMaintenance}
                 onChange={(e) => setIncludeMaintenance(e.target.checked)}
-                className="rounded border-slate-700 bg-slate-950 text-emerald-600 focus:ring-2 focus:ring-indigo-500"
+                className="rounded border-[#20293a] bg-[#0c0f17] text-emerald-600 focus:ring-2 focus:ring-indigo-500"
               />
               <span>Incluir ítems graduados para mantenimiento a largo plazo</span>
             </label>

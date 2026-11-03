@@ -67,7 +67,7 @@ export function SessionHeatMap({ items, attemptLogs, className = '' }: SessionHe
     acc >= 80 ? 'bg-emerald-500' : acc >= 50 ? 'bg-amber-500' : 'bg-rose-500';
 
   return (
-    <div className={`mt-6 p-4 rounded-xl bg-slate-950 border border-slate-800 text-left space-y-3 ${className}`}>
+    <div className={`mt-6 p-4 rounded-xl bg-[#0c0f17] border border-[#20293a] text-left space-y-3 ${className}`}>
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Flame className="w-4 h-4 text-rose-400" />
@@ -77,7 +77,7 @@ export function SessionHeatMap({ items, attemptLogs, className = '' }: SessionHe
         </div>
         <span
           className={`text-[11px] font-mono px-2 py-0.5 rounded ${
-            calibrationDelta > 0.4 ? 'text-rose-300 bg-rose-950/40' : calibrationDelta < -0.3 ? 'text-sky-300 bg-sky-950/40' : 'text-slate-400 bg-slate-900'
+            calibrationDelta > 0.4 ? 'text-rose-300 bg-rose-950/40' : calibrationDelta < -0.3 ? 'text-sky-300 bg-sky-950/40' : 'text-slate-400 bg-[#121722]'
           }`}
           title="Confianza media menos acierto real. Positivo = sobreconfianza en este bloque."
         >
@@ -95,7 +95,7 @@ export function SessionHeatMap({ items, attemptLogs, className = '' }: SessionHe
                   <span className="text-slate-300 truncate max-w-[70%]" title={r.key}>{r.key}</span>
                   <span className="font-mono text-slate-400">{r.correct}/{r.attempted}</span>
                 </div>
-                <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-[#182030] rounded-full overflow-hidden">
                   <div className={`h-full ${barColor(r.accuracy)} transition-all`} style={{ width: `${r.accuracy}%` }} />
                 </div>
               </div>

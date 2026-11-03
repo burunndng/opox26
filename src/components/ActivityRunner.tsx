@@ -165,7 +165,7 @@ export function renderLifecycleBadge(state?: ItemStudyLifecycleState) {
   switch (state) {
     case 'new_unseen':
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded bg-slate-800 text-slate-400 text-[11px] font-mono border border-slate-700">
+        <span className="inline-flex items-center px-2 py-0.5 rounded bg-[#182030] text-slate-400 text-[11px] font-mono border border-[#20293a]">
           Nuevo / Sin Ver
         </span>
       );
@@ -1166,7 +1166,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
     return (
       <div className="max-w-3xl mx-auto py-10 px-4 text-center">
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+        <div className="bg-[#121722] border border-[#20293a] rounded-2xl p-6 sm:p-8 shadow-2xl">
           <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center mx-auto mb-4">
             <Award className="w-8 h-8 text-emerald-400" />
           </div>
@@ -1190,7 +1190,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
           </p>
 
           {/* Baremo Selector Banner */}
-          <div className="mt-6 p-4 rounded-lg bg-slate-950 border border-slate-800 flex flex-wrap items-center justify-between gap-3 text-left">
+          <div className="mt-6 p-4 rounded-lg bg-[#0c0f17] border border-[#20293a] flex flex-wrap items-center justify-between gap-3 text-left">
             <div className="flex items-center space-x-2">
               <Shield className="w-4 h-4 text-amber-400 shrink-0" />
               <div>
@@ -1211,7 +1211,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
           </div>
 
           {/* Official Net Score Hero Card */}
-          <div className="mt-6 p-6 rounded-lg bg-slate-950 border border-slate-800 relative overflow-hidden">
+          <div className="mt-6 p-6 rounded-lg bg-[#0c0f17] border border-[#20293a] relative overflow-hidden">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-left">
                 <span className="text-xs uppercase font-mono tracking-wider text-amber-400 font-semibold">
@@ -1256,8 +1256,8 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
             </div>
 
             {/* Score Component Breakdown Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-6 pt-6 border-t border-slate-800/80 text-left">
-              <div className="p-3 bg-slate-900 rounded-xl border border-emerald-900/40">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-6 pt-6 border-t border-[#20293a]/80 text-left">
+              <div className="p-3 bg-[#121722] rounded-xl border border-emerald-900/40">
                 <div className="flex items-center justify-between text-xs text-emerald-400 font-semibold">
                   <span>Aciertos (+1 pt)</span>
                   <CheckCircle2 className="w-3.5 h-3.5" />
@@ -1268,7 +1268,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                 </span>
               </div>
 
-              <div className="p-3 bg-slate-900 rounded-xl border border-rose-900/40">
+              <div className="p-3 bg-[#121722] rounded-xl border border-rose-900/40">
                 <div className="flex items-center justify-between text-xs text-rose-400 font-semibold">
                   <span>Fallos (-{baremoPenalty.toFixed(2)})</span>
                   <XCircle className="w-3.5 h-3.5" />
@@ -1279,7 +1279,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                 </span>
               </div>
 
-              <div className="p-3 bg-slate-900 rounded-xl border border-amber-900/40">
+              <div className="p-3 bg-[#121722] rounded-xl border border-amber-900/40">
                 <div className="flex items-center justify-between text-xs text-amber-400 font-semibold">
                   <span>En Blanco (0 pts)</span>
                   <Shield className="w-3.5 h-3.5" />
@@ -1288,7 +1288,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                 <span className="text-[11px] text-slate-400 font-mono">0.00 pts penaliz.</span>
               </div>
 
-              <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
+              <div className="p-3 bg-[#121722] rounded-xl border border-[#20293a]">
                 <div className="flex items-center justify-between text-xs text-slate-400 font-semibold">
                   <span>Confianza Media</span>
                   <TrendingUp className="w-3.5 h-3.5 text-indigo-400" />
@@ -1297,7 +1297,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                 <span className="text-[11px] text-slate-400 font-mono">{accuracy}% acierto bruto</span>
               </div>
 
-              <div className="p-3 bg-slate-900 rounded-xl border border-amber-900/30 col-span-2 sm:col-span-1">
+              <div className="p-3 bg-[#121722] rounded-xl border border-amber-900/30 col-span-2 sm:col-span-1">
                 <div className="flex items-center justify-between text-xs text-amber-400 font-semibold">
                   <span>Mejor Racha</span>
                   <Flame className="w-3.5 h-3.5 text-amber-400" />
@@ -1317,7 +1317,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
             confidentWrongAttempts.length > 0 ||
             luckyGuesses.length > 0 ||
             showDecisionRule) && (
-            <div className="mt-6 p-4 rounded-xl bg-slate-950 border border-slate-800 text-left space-y-3">
+            <div className="mt-6 p-4 rounded-xl bg-[#0c0f17] border border-[#20293a] text-left space-y-3">
               <div className="flex items-center space-x-2 text-xs font-semibold text-slate-200">
                 <AlertTriangle className="w-4 h-4 text-amber-400" />
                 <span>Auditoría de Riesgo Táctico y Metacognición</span>
@@ -1460,7 +1460,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
             <button
               onClick={handleDownloadSessionJson}
-              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-sm transition flex items-center space-x-2"
+              className="px-4 py-2.5 rounded-xl bg-[#182030] hover:bg-[#20293a] text-slate-200 border border-[#20293a] font-semibold text-sm transition flex items-center space-x-2"
               title="Descargar archivo JSON con el progreso y los resultados de esta sesión"
             >
               <Download className="w-4 h-4 text-indigo-400" />
@@ -1524,14 +1524,14 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
       )}
 
       {/* Top Session Progress Bar & Controls */}
-      <div className="flex items-center justify-between py-4 border-b border-slate-800 mb-6 gap-2">
+      <div className="flex items-center justify-between py-4 border-b border-[#20293a] mb-6 gap-2">
         <div className="flex items-center space-x-3">
           <button
             onClick={() => {
               saveSession();
               onExit();
             }}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#182030] transition"
             title="Salir al panel"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -1552,7 +1552,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
             onClick={() => setShowMoreOptions((prev) => !prev)}
             aria-expanded={showMoreOptions}
             aria-controls="runner-more-options"
-            className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium border transition bg-slate-900 hover:bg-slate-800 text-slate-400 border-slate-700"
+            className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium border transition bg-[#121722] hover:bg-[#182030] text-slate-400 border-[#20293a]"
             title="Más opciones de sesión (ritmo, exportar, guardar, progreso)"
           >
             <Sliders className={`w-3.5 h-3.5 ${showMoreOptions ? 'animate-spin' : ''}`} />
@@ -1571,7 +1571,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
             <div className="space-y-2">
               <button
                 onClick={() => setEnableGenerativeCover(!enableGenerativeCover)}
-                className="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-md text-xs font-medium transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700"
+                className="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-md text-xs font-medium transition bg-[#121722] hover:bg-[#182030] text-slate-300 border border-[#20293a]"
                 title="Activar/desactivar redacción generativa previa a ver opciones (Cover & Generate)"
               >
                 <Brain className="w-3.5 h-3.5" />
@@ -1579,7 +1579,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               </button>
               <button
                 onClick={() => setIsPacingActive(!isPacingActive)}
-                className="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-md text-xs font-medium transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700"
+                className="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-md text-xs font-medium transition bg-[#121722] hover:bg-[#182030] text-slate-300 border border-[#20293a]"
                 title={`Cronómetro de ritmo: ${currentPacingBudget}s para este ítem (adaptado a su tipo y dificultad)`}
               >
                 <Clock className="w-3.5 h-3.5" />
@@ -1597,7 +1597,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               </button>
               <button
                 onClick={() => setIsSaveModalOpen(true)}
-                className="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-md text-xs font-medium transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700"
+                className="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-md text-xs font-medium transition bg-[#121722] hover:bg-[#182030] text-slate-300 border border-[#20293a]"
                 title="Guardar o pausar el progreso de la sesión"
               >
                 <Save className="w-3.5 h-3.5 text-indigo-400" />
@@ -1605,7 +1605,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               </button>
               <div className="pt-2 border-t border-[#20293a]/40">
                 <div className="flex items-center space-x-2">
-                  <div className="w-24 sm:w-36 h-2 bg-slate-800 rounded-full overflow-hidden">
+                  <div className="w-24 sm:w-36 h-2 bg-[#182030] rounded-full overflow-hidden">
                     <div
                       className="h-full bg-indigo-500 rounded-full transition-all duration-300"
                       style={{ width: `${((currentIndex + 1) / items.length) * 100}%` }}
@@ -1625,7 +1625,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
       </div>
 
       {/* Sub-header: Official Scoring Baremo Selector & Live Net Score */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3 mb-6 bg-slate-900/90 border border-slate-800 rounded-xl shadow-xs">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3 mb-6 bg-[#121722]/90 border border-[#20293a] rounded-xl shadow-xs">
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center space-x-1.5 text-xs font-semibold text-slate-300">
             <Shield className="w-3.5 h-3.5 text-indigo-400" />
@@ -1634,7 +1634,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
           {baremoLocked ? (
             // P0: read-only pill while locked — all preset buttons would be disabled anyway,
             // so a single pill keeps the penalty context without cluttering the answering field.
-            <span className="font-mono text-indigo-300 px-2 py-1 rounded-lg bg-slate-950 border border-slate-800">
+            <span className="font-mono text-indigo-300 px-2 py-1 rounded-lg bg-[#0c0f17] border border-[#20293a]">
               {selectedBaremo.shortLabel}
             </span>
           ) : (
@@ -1649,8 +1649,8 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                     className={`px-2.5 py-1 rounded-lg text-xs font-medium transition ${
                       isSelected
                         ? 'bg-indigo-600 text-white font-bold shadow-xs'
-                        : 'bg-slate-950 hover:bg-slate-800 text-slate-400 border border-slate-800'
-                    } disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-slate-950`}
+                        : 'bg-[#0c0f17] hover:bg-[#182030] text-slate-400 border border-[#20293a]'
+                    } disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-[#0c0f17]`}
                     title={
                       baremoLocked
                         ? `Baremo fijado al registrar la primera respuesta (${b.label})`
@@ -1699,8 +1699,8 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                 currentStreak >= 3
                   ? 'bg-amber-950/60 text-amber-300 border-amber-500/70 shadow-xs'
                   : currentStreak > 0
-                  ? 'bg-slate-950 text-amber-400 border-slate-800'
-                  : 'bg-slate-950 text-slate-500 border-slate-800'
+                  ? 'bg-[#0c0f17] text-amber-400 border-[#20293a]'
+                  : 'bg-[#0c0f17] text-slate-500 border-[#20293a]'
               }`}
               title={`Racha actual: ${currentStreak} aciertos consecutivos${
                 bestStreak > 0 ? ` (Mejor racha de la sesión: ${bestStreak})` : ''
@@ -1741,7 +1741,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                   netScore > 0
                     ? 'bg-emerald-950/40 text-emerald-300 border-emerald-800/60'
                     : netScore === 0
-                    ? 'bg-slate-950 text-slate-300 border-slate-800'
+                    ? 'bg-[#0c0f17] text-slate-300 border-[#20293a]'
                     : 'bg-rose-950/40 text-rose-300 border-rose-800/60'
                 }`}
                 title={`Puntuación Neta Oficial: +${correctCount} aciertos (${(correctCount * 1).toFixed(2)} pts), -${errorCount} fallos (-${(errorCount * baremoPenalty).toFixed(2)} pts), ${blankCount} omisiones (0 pts)`}
@@ -1811,7 +1811,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               <div className="bg-[#121722] p-2.5 rounded border border-[#20293a]">
                 <span className="text-[11px] text-slate-300 uppercase">Probabilidad de Recuerdo (R)</span>
                 <div className="flex items-center space-x-2 mt-1">
-                  <div className="flex-1 bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                  <div className="flex-1 bg-[#182030] h-1.5 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full ${
                         (fsrsInfo.retrievability || 80) >= 80
@@ -2076,7 +2076,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
           return (
             <div className="space-y-6">
               {/* Statement with inline blanks */}
-              <div className="p-5 bg-slate-950 rounded-xl border border-slate-800 text-base leading-relaxed text-slate-200">
+              <div className="p-5 bg-[#0c0f17] rounded-xl border border-[#20293a] text-base leading-relaxed text-slate-200">
                 {parts.map((part, i) => {
                   const match = part.match(/\{\{(c\d+)::(.*?)\}\}/);
                   if (match) {
@@ -2108,7 +2108,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                         }}
                         placeholder="…"
                         aria-label={`Hueco ${blankId}`}
-                        className="inline-block w-28 mx-1 px-2 py-0.5 bg-slate-900 border border-indigo-700/70 rounded text-indigo-200 font-mono text-sm focus:outline-none focus:border-indigo-400 disabled:opacity-70"
+                        className="inline-block w-28 mx-1 px-2 py-0.5 bg-[#121722] border border-indigo-700/70 rounded text-indigo-200 font-mono text-sm focus:outline-none focus:border-indigo-400 disabled:opacity-70"
                       />
                     );
                   }
@@ -2185,7 +2185,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                         if (event.key === 'Enter' && clozeInput.trim()) setStage('confidence');
                       }}
                       placeholder="ej: 5 años, 3 meses, 1 año..." aria-label="ej: 5 años, 3 meses, 1 año..."
-                      className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 disabled:opacity-50"
+                      className="flex-1 bg-[#0c0f17] border border-[#20293a] rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 disabled:opacity-50"
                       autoFocus
                     />
                     <button
@@ -2201,7 +2201,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
               {/* Per-gap remediation */}
               {stage === 'feedback' && hasMarkers && (
-                <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
+                <div className="p-4 bg-[#0c0f17] border border-[#20293a] rounded-xl space-y-3">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
                     Corrección de huecos
                   </h4>
@@ -2311,7 +2311,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                         setSelectedOption('A');
                         setStage('confidence');
                       }}
-                      className="p-3 bg-slate-950 border border-slate-800 hover:border-indigo-500 rounded-lg text-xs font-semibold text-slate-200 disabled:opacity-50"
+                      className="p-3 bg-[#0c0f17] border border-[#20293a] hover:border-indigo-500 rounded-lg text-xs font-semibold text-slate-200 disabled:opacity-50"
                     >
                       Se aplica {data?.concept_a}
                     </button>
@@ -2321,7 +2321,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                         setSelectedOption('B');
                         setStage('confidence');
                       }}
-                      className="p-3 bg-slate-950 border border-slate-800 hover:border-amber-500 rounded-lg text-xs font-semibold text-slate-200 disabled:opacity-50"
+                      className="p-3 bg-[#0c0f17] border border-[#20293a] hover:border-amber-500 rounded-lg text-xs font-semibold text-slate-200 disabled:opacity-50"
                     >
                       Se aplica {data?.concept_b}
                     </button>
@@ -2330,7 +2330,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               )}
 
               {stage === 'feedback' && data && (
-                <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
+                <div className="p-4 bg-[#0c0f17] border border-[#20293a] rounded-xl space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <h4 className="text-xs font-bold text-white uppercase">Matriz de Discriminación</h4>
                     {correctConcept && (
@@ -2348,7 +2348,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                         <span>B · {data.concept_b}</span>
                       </div>
                       {rows.map((row, index) => (
-                        <div key={index} className="border-b border-slate-850 pb-2 last:border-b-0">
+                        <div key={index} className="border-b border-[#20293a] pb-2 last:border-b-0">
                           <div className="grid grid-cols-3 gap-2 py-1">
                             <span className="font-medium text-slate-400">{row.label}</span>
                             <span className="text-indigo-300">{row.valueA}</span>
@@ -2369,7 +2369,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                   )}
 
                   {data.distinguishing_criteria && (
-                    <p className="border-t border-slate-800 pt-2 text-xs leading-relaxed text-slate-300">
+                    <p className="border-t border-[#20293a] pt-2 text-xs leading-relaxed text-slate-300">
                       {data.distinguishing_criteria}
                     </p>
                   )}
@@ -2390,7 +2390,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
             {/* Draggable value chips (mouse path). The <select> on each row is
                 the full keyboard/screen-reader alternative (spec §14). */}
-            <div className="flex flex-wrap gap-2 p-3 bg-slate-950/60 border border-slate-800 rounded-xl">
+            <div className="flex flex-wrap gap-2 p-3 bg-[#0c0f17]/60 border border-[#20293a] rounded-xl">
               {(currentItem.number_sort_data?.items || []).map((o) => (
                 <span
                   key={o.id}
@@ -2399,8 +2399,8 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                   title="Arrastra este valor sobre el supuesto correcto"
                   className={`px-2.5 py-1 rounded-lg text-xs font-mono border cursor-grab select-none ${
                     stage === 'answering'
-                      ? 'bg-slate-900 border-slate-700 text-slate-200 hover:border-indigo-500'
-                      : 'bg-slate-950 border-slate-850 text-slate-600 opacity-60'
+                      ? 'bg-[#121722] border-[#20293a] text-slate-200 hover:border-indigo-500'
+                      : 'bg-[#0c0f17] border-[#20293a] text-slate-600 opacity-60'
                   }`}
                 >
                   {o.correct_value}
@@ -2422,7 +2422,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                     if (!value) return;
                     setNumberSortMatches((prev) => ({ ...prev, [pair.id]: value }));
                   }}
-                  className="p-3 bg-slate-950 border border-slate-800 rounded-lg space-y-1.5"
+                  className="p-3 bg-[#0c0f17] border border-[#20293a] rounded-lg space-y-1.5"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <span className="text-xs text-slate-200 font-medium flex-1">{pair.concept}</span>
@@ -2436,7 +2436,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                           [pair.id]: e.target.value,
                         }))
                       }
-                      className="bg-slate-900 border border-slate-700 text-xs text-white rounded px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50"
+                      className="bg-[#121722] border border-[#20293a] text-xs text-white rounded px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50"
                     >
                       <option value="">-- Seleccionar valor --</option>
                       {(currentItem.number_sort_data?.items || []).map((o) => (
@@ -2536,7 +2536,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               </p>
 
               {/* Full statement display */}
-              <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl text-sm leading-relaxed text-slate-200">
+              <div className="p-4 bg-[#0c0f17] border border-[#20293a] rounded-xl text-sm leading-relaxed text-slate-200">
                 {stage === 'feedback' && errSpan ? (
                   segments.map((seg, i) =>
                     seg.isError ? (
@@ -2581,7 +2581,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                           setSpotSelectedSpan(fragment);
                           setStage('confidence');
                         }}
-                        className="w-full text-left p-3 bg-slate-950 border border-slate-800 hover:border-rose-500 rounded-lg text-xs text-slate-200 disabled:opacity-50 font-mono"
+                        className="w-full text-left p-3 bg-[#0c0f17] border border-[#20293a] hover:border-rose-500 rounded-lg text-xs text-slate-200 disabled:opacity-50 font-mono"
                       >
                         "{fragment}"
                       </button>
@@ -2624,9 +2624,9 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                         key={opt.id}
                         disabled={stage !== 'answering'}
                         onClick={() => handleSubmitOption(opt.id)}
-                        className="w-full text-left p-3.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-indigo-500 text-xs text-slate-200 flex items-center space-x-3 disabled:opacity-50"
+                        className="w-full text-left p-3.5 rounded-xl bg-[#0c0f17] border border-[#20293a] hover:border-indigo-500 text-xs text-slate-200 flex items-center space-x-3 disabled:opacity-50"
                       >
-                        <span className="w-5 h-5 rounded bg-slate-800 flex items-center justify-center font-bold shrink-0">
+                        <span className="w-5 h-5 rounded bg-[#182030] flex items-center justify-center font-bold shrink-0">
                           {optionLabelAtPosition(index)}
                         </span>
                         <span>{opt.text}</span>
@@ -2647,9 +2647,9 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                           setUserReasoning(opt.id);
                           setStage('confidence');
                         }}
-                        className="w-full text-left p-3.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-purple-500 text-xs text-slate-200 flex items-center space-x-3 disabled:opacity-50"
+                        className="w-full text-left p-3.5 rounded-xl bg-[#0c0f17] border border-[#20293a] hover:border-purple-500 text-xs text-slate-200 flex items-center space-x-3 disabled:opacity-50"
                       >
-                        <span className="w-5 h-5 rounded bg-slate-800 flex items-center justify-center font-bold shrink-0">
+                        <span className="w-5 h-5 rounded bg-[#182030] flex items-center justify-center font-bold shrink-0">
                           {optionLabelAtPosition(index)}
                         </span>
                         <span>{opt.text}</span>
@@ -2664,7 +2664,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                 const tier2Correct = t2Options.find((option) => option.is_correct);
                 const chosenTier2 = t2Options.find((option) => option.id === userReasoning);
                 return (
-                  <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                  <div className="p-4 bg-[#0c0f17] border border-[#20293a] rounded-xl space-y-2 text-xs">
                     <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
                       Corrección del diagnóstico
                     </h4>
@@ -2690,7 +2690,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                       <p className="text-slate-400 leading-relaxed">{tier2Correct.explanation}</p>
                     )}
                     {chosenTier2 && !chosenTier2.is_correct && chosenTier2.explanation && (
-                      <p className="border-t border-slate-800 pt-2 text-slate-400 leading-relaxed">
+                      <p className="border-t border-[#20293a] pt-2 text-slate-400 leading-relaxed">
                         <span className="font-semibold text-rose-300">Por qué tu opción no encaja: </span>
                         {chosenTier2.explanation}
                       </p>
@@ -2755,7 +2755,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
           return (
             <div className="space-y-4">
               {isFactVariant && (baseCase || variant) && stage !== 'feedback' && (
-                <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-2">
+                <div className="p-4 bg-[#0c0f17] border border-[#20293a] rounded-xl text-xs space-y-2">
                   <div>
                     <span className="font-bold uppercase tracking-wider text-indigo-300 font-mono">
                       Supuesto base
@@ -2766,7 +2766,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                     )}
                   </div>
                   {variant && (
-                    <div className="border-t border-slate-800 pt-2">
+                    <div className="border-t border-[#20293a] pt-2">
                       <span className="font-bold uppercase tracking-wider text-amber-300 font-mono">
                         Variante · hecho que cambia
                       </span>
@@ -2780,7 +2780,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               )}
 
               {!isFactVariant && testCase?.scenario && stage !== 'feedback' && (
-                <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs">
+                <div className="p-4 bg-[#0c0f17] border border-[#20293a] rounded-xl text-xs">
                   <span className="font-bold uppercase tracking-wider text-indigo-300 font-mono">
                     Caso a resolver
                   </span>
@@ -2795,9 +2795,9 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                       key={opt.id}
                       disabled={stage !== 'answering'}
                       onClick={() => handleSubmitOption(opt.id)}
-                      className="w-full text-left p-3.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-indigo-500 text-xs text-slate-200 flex items-center space-x-3 disabled:opacity-50"
+                      className="w-full text-left p-3.5 rounded-xl bg-[#0c0f17] border border-[#20293a] hover:border-indigo-500 text-xs text-slate-200 flex items-center space-x-3 disabled:opacity-50"
                     >
-                      <span className="w-5 h-5 rounded bg-slate-800 flex items-center justify-center font-bold shrink-0">
+                      <span className="w-5 h-5 rounded bg-[#182030] flex items-center justify-center font-bold shrink-0">
                         {isFactVariant ? optionLabelAtPosition(index) : index + 1}
                       </span>
                       <span>{opt.text}</span>
@@ -2807,7 +2807,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               )}
 
               {!isFactVariant && stage === 'feedback' && testCase && (
-                <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-2">
+                <div className="p-4 bg-[#0c0f17] border border-[#20293a] rounded-xl text-xs space-y-2">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
                     Resolución del árbol
                   </h4>
@@ -2834,7 +2834,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               )}
 
               {isFactVariant && stage === 'feedback' && variant && (
-                <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-2">
+                <div className="p-4 bg-[#0c0f17] border border-[#20293a] rounded-xl text-xs space-y-2">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
                     Efecto del cambio fáctico
                   </h4>
@@ -2850,7 +2850,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                     <p className="text-slate-400 leading-relaxed">{variant.explanation}</p>
                   )}
                   {baseCase?.correct_outcome && (
-                    <p className="border-t border-slate-800 pt-2 text-slate-300">
+                    <p className="border-t border-[#20293a] pt-2 text-slate-300">
                       <span className="font-semibold text-indigo-300">Supuesto base: </span>
                       {baseCase.correct_outcome}
                     </p>
@@ -2927,7 +2927,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                       onClick={() => handleSubmitOption(opt.id)}
                       className="w-full text-left p-3.5 rounded-xl bg-[#0c0f17] border border-[#20293a] hover:border-blue-500 text-xs text-slate-200 flex items-center space-x-3"
                     >
-                      <span className="w-5 h-5 rounded bg-slate-800 flex items-center justify-center font-bold shrink-0">
+                      <span className="w-5 h-5 rounded bg-[#182030] flex items-center justify-center font-bold shrink-0">
                         {index + 1}
                       </span>
                       <span>{opt.text}</span>
@@ -2965,7 +2965,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                         key={opt.id}
                         className={`p-3.5 rounded-xl border text-xs flex items-center space-x-3 ${style}`}
                       >
-                        <span className="w-5 h-5 rounded bg-slate-800/60 flex items-center justify-center font-bold shrink-0">
+                        <span className="w-5 h-5 rounded bg-[#182030]/60 flex items-center justify-center font-bold shrink-0">
                           {index + 1}
                         </span>
                         <span>{opt.text}</span>
@@ -3002,7 +3002,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
         {/* CONFIDENCE RATING STAGE (0-3) */}
         {/* ---------------------------------------------------- */}
         {stage === 'confidence' && (
-          <div className="mt-8 pt-6 border-t border-slate-800 animate-fadeIn">
+          <div className="mt-8 pt-6 border-t border-[#20293a] animate-fadeIn">
             <h4 className="text-sm font-bold text-slate-200 mb-2">
               ¿Con qué grado de seguridad has respondido? (Calibración metacognitiva)
             </h4>
@@ -3014,7 +3014,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <button
                 onClick={() => handleSelectConfidence(0)}
-                className="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-700 text-left transition group"
+                className="p-3 rounded-xl bg-[#0c0f17] border border-[#20293a] hover:border-[#20293a] text-left transition group"
               >
                 <div className="text-xs font-mono font-bold text-slate-400 group-hover:text-white">
                   0 · Puro Azar
@@ -3024,7 +3024,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
               <button
                 onClick={() => handleSelectConfidence(1)}
-                className="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-blue-500/50 text-left transition group"
+                className="p-3 rounded-xl bg-[#0c0f17] border border-[#20293a] hover:border-blue-500/50 text-left transition group"
               >
                 <div className="text-xs font-mono font-bold text-blue-400">
                   1 · Corazonada Débil
@@ -3034,7 +3034,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
               <button
                 onClick={() => handleSelectConfidence(2)}
-                className="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-amber-500/50 text-left transition group"
+                className="p-3 rounded-xl bg-[#0c0f17] border border-[#20293a] hover:border-amber-500/50 text-left transition group"
               >
                 <div className="text-xs font-mono font-bold text-amber-400">
                   2 · Probablemente
@@ -3044,7 +3044,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
               <button
                 onClick={() => handleSelectConfidence(3)}
-                className="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 text-left transition group"
+                className="p-3 rounded-xl bg-[#0c0f17] border border-[#20293a] hover:border-emerald-500/50 text-left transition group"
               >
                 <div className="text-xs font-mono font-bold text-emerald-400">
                   3 · Absolutamente Seguro
@@ -3059,7 +3059,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
         {/* COMPREHENSIVE EXPLANATORY FEEDBACK STAGE */}
         {/* ---------------------------------------------------- */}
         {stage === 'feedback' && (
-          <div className="mt-8 pt-6 border-t border-slate-800 space-y-6 animate-fadeIn">
+          <div className="mt-8 pt-6 border-t border-[#20293a] space-y-6 animate-fadeIn">
             {/* Outcome Banner */}
             {(() => {
               const lastLog = attemptLogs[attemptLogs.length - 1];
@@ -3104,7 +3104,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                           ? '¡Respuesta Correcta!'
                           : `Incorrecto · Respuesta correcta: ${expectedAnswerSummary}`}
                       </span>
-                      <span className="text-xs px-2 py-0.5 rounded font-mono font-bold bg-slate-900 border border-slate-750">
+                      <span className="text-xs px-2 py-0.5 rounded font-mono font-bold bg-[#121722] border border-[#20293a]">
                         {isCorrect ? '+1.00 pt' : `-${baremoPenalty.toFixed(2)} pts`}
                       </span>
                     </div>
@@ -3260,8 +3260,8 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
           aria-modal="true"
           aria-labelledby="save-session-modal-title"
         >
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="bg-[#121722] border border-[#20293a] rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[#20293a] pb-3">
               <div className="flex items-center space-x-2">
                 <Save className="w-5 h-5 text-indigo-400" />
                 <h3 id="save-session-modal-title" className="font-bold text-white text-base">Guardar / Restaurar Progreso</h3>
@@ -3306,7 +3306,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                 <span>Descargar Sesión como Archivo JSON</span>
               </button>
 
-              <label className="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center justify-center space-x-2 cursor-pointer transition">
+              <label className="w-full py-2.5 px-4 rounded-xl bg-[#182030] hover:bg-[#20293a] text-slate-200 border border-[#20293a] text-xs font-semibold flex items-center justify-center space-x-2 cursor-pointer transition">
                 <Upload className="w-4 h-4 text-slate-400" />
                 <span>Cargar / Restaurar Sesión desde Archivo</span>
                 <input
@@ -3323,7 +3323,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                   setIsSaveModalOpen(false);
                   onExit();
                 }}
-                className="w-full py-2.5 px-4 rounded-xl bg-slate-950 hover:bg-slate-850 text-slate-400 hover:text-white border border-slate-800 text-xs font-medium transition"
+                className="w-full py-2.5 px-4 rounded-xl bg-[#0c0f17] hover:bg-[#182030] text-slate-400 hover:text-white border border-[#20293a] text-xs font-medium transition"
               >
                 Pausar y Salir al Panel Principal
               </button>
@@ -3339,8 +3339,8 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
           aria-live="polite"
           className={`fixed bottom-6 right-6 z-50 px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-2.5 animate-fadeIn max-w-md border ${
             saveStatusKind === 'error'
-              ? 'bg-slate-900 border-rose-500/60 text-rose-300'
-              : 'bg-slate-900 border-emerald-500/60 text-emerald-300'
+              ? 'bg-[#121722] border-rose-500/60 text-rose-300'
+              : 'bg-[#121722] border-emerald-500/60 text-emerald-300'
           }`}
         >
           {saveStatusKind === 'error' ? (

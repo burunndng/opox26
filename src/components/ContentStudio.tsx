@@ -578,7 +578,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
   return (
     <div className="max-w-7xl mx-auto space-y-6 pb-16">
       {/* Header */}
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
+      <div className="bg-[#121722] border border-[#20293a] p-6 rounded-2xl shadow-sm">
         <div className="flex items-center space-x-2">
           <FolderGit2 className="w-5 h-5 text-indigo-400" />
           <h1 className="text-xl font-bold text-white tracking-tight">
@@ -590,13 +590,13 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
         </p>
 
         {/* Tab controls */}
-        <div className="flex flex-wrap items-center gap-2 mt-5 border-t border-slate-800 pt-4">
+        <div className="flex flex-wrap items-center gap-2 mt-5 border-t border-[#20293a] pt-4">
           <button
             onClick={() => setActiveTab('atoms')}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition ${
               activeTab === 'atoms'
                 ? 'bg-indigo-600 text-white shadow-sm'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
+                : 'bg-[#182030] text-slate-400 hover:text-white'
             }`}
           >
             Átomos Validados ({atoms.length})
@@ -606,7 +606,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
             className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition ${
               activeTab === 'validator'
                 ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-slate-800 text-emerald-400 hover:bg-slate-750'
+                : 'bg-[#182030] text-emerald-400 hover:bg-[#20293a]'
             }`}
           >
             <ShieldAlert className="w-3.5 h-3.5" />
@@ -622,7 +622,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
             className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition ${
               activeTab === 'import'
                 ? 'bg-amber-600 text-white shadow-sm'
-                : 'bg-slate-800 text-amber-400 hover:bg-slate-750'
+                : 'bg-[#182030] text-amber-400 hover:bg-[#20293a]'
             }`}
           >
             <Wand2 className="w-3.5 h-3.5" />
@@ -633,7 +633,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
             className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition ${
               activeTab === 'clusters'
                 ? 'bg-indigo-600 text-white shadow-sm'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
+                : 'bg-[#182030] text-slate-400 hover:text-white'
             }`}
           >
             Clusters Temáticos ({clusters.length})
@@ -643,7 +643,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
             className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition ${
               activeTab === 'confusion_pairs'
                 ? 'bg-indigo-600 text-white shadow-sm'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
+                : 'bg-[#182030] text-slate-400 hover:text-white'
             }`}
           >
             Pares Confusos ({confusionPairs.length})
@@ -657,7 +657,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
       {activeTab === 'validator' && (
         <div className="space-y-6">
           {/* Top banner explaining learning design rationale */}
-          <div className="bg-gradient-to-r from-emerald-950/60 via-slate-900 to-indigo-950/50 border border-emerald-500/30 p-5 rounded-2xl">
+          <div className="bg-gradient-to-r from-emerald-950/60 via-[#121722] to-indigo-950/50 border border-emerald-500/30 p-5 rounded-2xl">
             <div className="flex items-start justify-between">
               <div className="space-y-1">
                 <div className="flex items-center space-x-2">
@@ -672,7 +672,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   redacción de tipo test:
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                  <div className="bg-slate-950/80 border border-slate-800 p-3 rounded-xl">
+                  <div className="bg-[#0c0f17]/80 border border-[#20293a] p-3 rounded-xl">
                     <span className="text-xs font-bold text-amber-300 block">
                       🎯 Pistas en el Enunciado (Answer Leakage)
                     </span>
@@ -681,7 +681,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                       opción correcta, reduciendo la dificultad a mero reconocimiento visual.
                     </span>
                   </div>
-                  <div className="bg-slate-950/80 border border-slate-800 p-3 rounded-xl">
+                  <div className="bg-[#0c0f17]/80 border border-[#20293a] p-3 rounded-xl">
                     <span className="text-xs font-bold text-indigo-300 block">
                       🧠 Sobrecarga de Conceptos (Multi-Focal Overload)
                     </span>
@@ -696,7 +696,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
             </div>
 
             {/* Quick Test Presets */}
-            <div className="mt-4 pt-3 border-t border-slate-800/80 flex flex-wrap items-center gap-2">
+            <div className="mt-4 pt-3 border-t border-[#20293a]/80 flex flex-wrap items-center gap-2">
               <span className="text-[11px] font-mono text-slate-400 mr-1">Cargar caso de prueba:</span>
               <button
                 onClick={() => loadPreset('answer_in_stem')}
@@ -729,7 +729,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Left Column: Question Draft Editor (7 cols) */}
             <div className="lg:col-span-7 space-y-4">
-              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+              <div className="bg-[#121722] border border-[#20293a] rounded-2xl p-5 space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-2">
                     <FileText className="w-4 h-4 text-indigo-400" />
@@ -741,7 +741,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                       aria-label="Auditar ítem existente"
                       value={selectedItemIdToAudit}
                       onChange={(e) => handleSelectAuditedItem(e.target.value)}
-                      className="bg-slate-950 border border-slate-700 text-xs text-white rounded-lg px-2.5 py-1 max-w-[200px] truncate"
+                      className="bg-[#0c0f17] border border-[#20293a] text-xs text-white rounded-lg px-2.5 py-1 max-w-[200px] truncate"
                     >
                       <option value="custom">-- Redacción libre / Nuevo --</option>
                       {items.map((it) => (
@@ -766,7 +766,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                     value={auditStem}
                     onChange={(e) => setAuditStem(e.target.value)}
                     placeholder="Escribe la pregunta o caso práctico..." aria-label="Escribe la pregunta o caso práctico..."
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-indigo-500 leading-relaxed"
+                    className="w-full bg-[#0c0f17] border border-[#20293a] rounded-xl p-3 text-xs text-white focus:outline-none focus:border-indigo-500 leading-relaxed"
                   />
                 </div>
 
@@ -779,7 +779,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                       value={auditLegalBasis}
                       onChange={(e) => setAuditLegalBasis(e.target.value)}
                       placeholder="ej. Art. 53.1 TRLGSS o Art. 167 CE" aria-label="ej. Art. 53.1 TRLGSS o Art. 167 CE"
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                      className="w-full bg-[#0c0f17] border border-[#20293a] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                     />
                   </div>
                   <div className="space-y-1">
@@ -788,7 +788,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                       aria-label="Tipo de actividad"
                       value={auditItemType}
                       onChange={(e) => setAuditItemType(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                      className="w-full bg-[#0c0f17] border border-[#20293a] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                     >
                       <option value="cover_and_generate_mcq">Cover & Generate MCQ</option>
                       <option value="spot_error">Spot-the-Error (Falsedad)</option>
@@ -812,7 +812,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                     value={auditCorrectAnswer}
                     onChange={(e) => setAuditCorrectAnswer(e.target.value)}
                     placeholder="Respuesta legalmente correcta y precisa..." aria-label="Respuesta legalmente correcta y precisa..."
-                    className="w-full bg-slate-950 border border-emerald-500/40 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full bg-[#0c0f17] border border-emerald-500/40 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"
                   />
                 </div>
 
@@ -826,21 +826,21 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                     value={auditDistractor1}
                     onChange={(e) => setAuditDistractor1(e.target.value)}
                     placeholder="Distractor B (error plausible del mismo clúster)..." aria-label="Distractor B (error plausible del mismo clúster)..."
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-[#0c0f17] border border-[#20293a] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                   />
                   <input
                     type="text"
                     value={auditDistractor2}
                     onChange={(e) => setAuditDistractor2(e.target.value)}
                     placeholder="Distractor C (trampa temporal / numérica / competencial)..." aria-label="Distractor C (trampa temporal / numérica / competencial)..."
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-[#0c0f17] border border-[#20293a] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                   />
                   <input
                     type="text"
                     value={auditDistractor3}
                     onChange={(e) => setAuditDistractor3(e.target.value)}
                     placeholder="Distractor D (excepción mal aplicada)..." aria-label="Distractor D (excepción mal aplicada)..."
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-[#0c0f17] border border-[#20293a] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                   />
                 </div>
 
@@ -869,9 +869,9 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
 
             {/* Right Column: Real-time Psychometric Audit Panel (5 cols) */}
             <div className="lg:col-span-5 space-y-4">
-              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+              <div className="bg-[#121722] border border-[#20293a] rounded-2xl p-5 space-y-4">
                 {/* Score gauge header */}
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div className="flex items-center justify-between pb-3 border-b border-[#20293a]">
                   <div>
                     <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
                       Puntuación Psicométrica
@@ -910,7 +910,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                     className={`p-3.5 rounded-xl border transition ${
                       liveDiagnostic.answerInStem.detected
                         ? 'bg-rose-950/30 border-rose-500/50'
-                        : 'bg-slate-950/60 border-slate-800/80'
+                        : 'bg-[#0c0f17]/60 border-[#20293a]/80'
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -947,7 +947,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                     className={`p-3.5 rounded-xl border transition ${
                       liveDiagnostic.overloadedConcepts.detected
                         ? 'bg-amber-950/30 border-amber-500/50'
-                        : 'bg-slate-950/60 border-slate-800/80'
+                        : 'bg-[#0c0f17]/60 border-[#20293a]/80'
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -984,7 +984,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                     className={`p-3.5 rounded-xl border transition ${
                       liveDiagnostic.longestOptionBias.detected
                         ? 'bg-indigo-950/30 border-indigo-500/50'
-                        : 'bg-slate-950/60 border-slate-800/80'
+                        : 'bg-[#0c0f17]/60 border-[#20293a]/80'
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -1010,7 +1010,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
 
                   {/* 4. Cliché / Absolute wording */}
                   {liveDiagnostic.absoluteWording.detected && (
-                    <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 space-y-1">
+                    <div className="p-3 rounded-xl bg-[#0c0f17] border border-[#20293a] text-xs text-slate-300 space-y-1">
                       <span className="font-semibold text-amber-400 block">
                         ⚠️ Palabras absolutistas encontradas:
                       </span>
@@ -1024,7 +1024,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
 
                 {/* Recommendations list */}
                 {liveDiagnostic.recommendations.length > 0 && (
-                  <div className="p-3.5 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
+                  <div className="p-3.5 bg-[#0c0f17] rounded-xl border border-[#20293a] space-y-2">
                     <span className="text-xs font-bold text-emerald-300 block">
                       💡 Sugerencias de Reparación Instruccional
                     </span>
@@ -1046,7 +1046,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
           </div>
 
           {/* Database-wide Item Audit Scanner */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+          <div className="bg-[#121722] border border-[#20293a] rounded-2xl p-5 space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-bold text-white flex items-center space-x-2">
@@ -1058,13 +1058,13 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   conceptual o sesgo de longitud.
                 </p>
               </div>
-              <span className="text-xs font-mono px-2.5 py-1 bg-slate-800 rounded-lg text-slate-300">
+              <span className="text-xs font-mono px-2.5 py-1 bg-[#182030] rounded-lg text-slate-300">
                 {flaggedBatchItems.length} detectados con advertencias
               </span>
             </div>
 
             {flaggedBatchItems.length === 0 ? (
-              <div className="p-8 text-center bg-slate-950 rounded-xl border border-slate-800/80">
+              <div className="p-8 text-center bg-[#0c0f17] rounded-xl border border-[#20293a]/80">
                 <CheckCircle className="w-8 h-8 text-emerald-400 mx-auto mb-2 opacity-80" />
                 <h4 className="text-sm font-bold text-white">¡Excelente calidad psicométrica!</h4>
                 <p className="text-xs text-slate-400 max-w-md mx-auto mt-1">
@@ -1073,15 +1073,15 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 </p>
               </div>
             ) : (
-              <div className="divide-y divide-slate-800 border border-slate-800 rounded-xl overflow-hidden bg-slate-950">
+              <div className="divide-y divide-slate-800 border border-[#20293a] rounded-xl overflow-hidden bg-[#0c0f17]">
                 {flaggedBatchItems.map(({ item, diag, hasAnswerInStem, hasOverload, hasLengthBias }) => (
                   <div
                     key={item.id}
-                    className="p-4 hover:bg-slate-900/60 transition flex flex-col md:flex-row md:items-center md:justify-between gap-3"
+                    className="p-4 hover:bg-[#182030]/60 transition flex flex-col md:flex-row md:items-center md:justify-between gap-3"
                   >
                     <div className="space-y-1 max-w-2xl">
                       <div className="flex items-center space-x-2">
-                        <span className="text-[10px] font-mono bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">
+                        <span className="text-[10px] font-mono bg-[#182030] text-slate-300 px-1.5 py-0.5 rounded">
                           {item.id}
                         </span>
                         <span className="text-[10px] font-mono text-indigo-400">
@@ -1133,7 +1133,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                           handleSelectAuditedItem(item.id);
                           window.scrollTo({ top: 200, behavior: 'smooth' });
                         }}
-                        className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-medium transition flex items-center space-x-1"
+                        className="px-3 py-1.5 bg-[#182030] hover:bg-[#20293a] text-white rounded-lg text-xs font-medium transition flex items-center space-x-1"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         <span>Abrir en Editor</span>
@@ -1153,7 +1153,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
       {activeTab === 'atoms' && (
         <div className="space-y-6">
           {/* Quick Manual Creator */}
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+          <div className="bg-[#121722] border border-[#20293a] rounded-xl p-5 shadow-sm space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
               Crear Nueva Proposición Atómica Manual
             </h3>
@@ -1163,14 +1163,14 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 value={newAtomText}
                 onChange={(e) => setNewAtomText(e.target.value)}
                 placeholder="Proposición legal exacta (ej. Prescripción de 5 años desde día siguiente a hecho causante)" aria-label="Proposición legal exacta (ej. Prescripción de 5 años desde día siguiente a hecho causante)"
-                className="sm:col-span-2 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                className="sm:col-span-2 bg-[#0c0f17] border border-[#20293a] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
               />
               <input
                 type="text"
                 value={newAtomBasis}
                 onChange={(e) => setNewAtomBasis(e.target.value)}
                 placeholder="Base Legal (ej. Art. 53.1 TRLGSS)" aria-label="Base Legal (ej. Art. 53.1 TRLGSS)"
-                className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                className="bg-[#0c0f17] border border-[#20293a] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
               />
             </div>
 
@@ -1180,7 +1180,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   aria-label="Tipo de átomo"
                   value={newAtomType}
                   onChange={(e) => setNewAtomType(e.target.value as AtomType)}
-                  className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
+                  className="bg-[#0c0f17] border border-[#20293a] rounded-lg px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
                 >
                   {atomTypes.map((t) => (
                     <option key={t} value={t}>
@@ -1193,7 +1193,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   aria-label="Clúster del átomo"
                   value={newAtomClusterId}
                   onChange={(e) => setNewAtomClusterId(e.target.value)}
-                  className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 max-w-[200px] truncate"
+                  className="bg-[#0c0f17] border border-[#20293a] rounded-lg px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 max-w-[200px] truncate"
                 >
                   <option value="">-- Sin Cluster --</option>
                   {clusters.map((c) => (
@@ -1207,7 +1207,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   aria-label="Par de confusión del átomo"
                   value={newAtomPairId}
                   onChange={(e) => setNewAtomPairId(e.target.value)}
-                  className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 max-w-[200px] truncate"
+                  className="bg-[#0c0f17] border border-[#20293a] rounded-lg px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 max-w-[200px] truncate"
                 >
                   <option value="">-- Sin Par de Confusión --</option>
                   {confusionPairs.map((p) => (
@@ -1237,7 +1237,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Buscar átomos por texto, artículo o tipo..." aria-label="Buscar átomos por texto, artículo o tipo..."
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-[#121722] border border-[#20293a] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
               />
             </div>
             <span className="text-xs text-slate-500 font-mono">
@@ -1250,7 +1250,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
             {filteredAtoms.map((atom) => (
               <div
                 key={atom.id}
-                className="p-3.5 bg-slate-900 border border-slate-800 rounded-xl space-y-2 hover:border-slate-700 transition flex flex-col justify-between"
+                className="p-3.5 bg-[#121722] border border-[#20293a] rounded-xl space-y-2 hover:border-[#20293a] transition flex flex-col justify-between"
               >
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
@@ -1264,7 +1264,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   <p className="text-xs text-slate-200 leading-relaxed">{atom.text}</p>
                 </div>
 
-                <div className="flex items-center justify-between pt-2 border-t border-slate-800/80 text-[11px] text-slate-500">
+                <div className="flex items-center justify-between pt-2 border-t border-[#20293a]/80 text-[11px] text-slate-500">
                   <span className="font-mono">
                     {atom.status === 'validated' ? '✓ Validado' : 'Borrador'}
                   </span>
@@ -1320,8 +1320,8 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
           )}
 
           {/* Configuration & Source Input Card */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div className="bg-[#121722] border border-[#20293a] rounded-2xl p-5 space-y-4 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#20293a] pb-3">
               <div>
                 <div className="flex items-center space-x-2">
                   <Wand2 className="w-4 h-4 text-amber-400" />
@@ -1349,7 +1349,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                           setSelectedSetTopicId(e.target.value);
                         }
                       }}
-                      className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500 max-w-[200px] truncate"
+                      className="bg-[#0c0f17] border border-[#20293a] rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500 max-w-[200px] truncate"
                     >
                       {topics.map((t) => (
                         <option key={t.id} value={t.id}>
@@ -1360,7 +1360,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                     </select>
                   </div>
                 ) : (
-                  <div className="flex items-center space-x-1.5 bg-slate-950 p-1.5 rounded-lg border border-amber-500/40">
+                  <div className="flex items-center space-x-1.5 bg-[#0c0f17] p-1.5 rounded-lg border border-amber-500/40">
                     <input
                       type="text"
                       value={newTopicName}
@@ -1387,7 +1387,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 value={articleRef}
                 onChange={(e) => setArticleRef(e.target.value)}
                 placeholder="Referencia Legal / Artículo (ej. Arts. 53 y 54 TRLGSS)" aria-label="Referencia Legal / Artículo (ej. Arts. 53 y 54 TRLGSS)"
-                className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
+                className="bg-[#0c0f17] border border-[#20293a] rounded-lg px-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
               />
               <div className="sm:col-span-2 flex flex-wrap items-center gap-1.5">
                 <span className="text-xs text-slate-400 mr-1">Preajustes rápidos:</span>
@@ -1399,7 +1399,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                       'El derecho al reconocimiento de las prestaciones prescribirá a los cinco años, contados desde el día siguiente a aquel en que tenga lugar el hecho causante de la prestación de que se trate, sin perjuicio de que los efectos de tal reconocimiento se produzcan a partir de los tres meses anteriores a la fecha en que se presente la correspondiente solicitud. El derecho al percibo de las prestaciones a tanto alzado y por una sola vez caducará al año, a contar desde el día siguiente al de haber sido notificada en forma al interesado la concesión de la prestación. Si se trata de prestaciones periódicas, el derecho al percibo de cada mensualidad caducará al año de su respectivo vencimiento.'
                     );
                   }}
-                  className="px-2 py-1 bg-slate-800 hover:bg-slate-750 text-[11px] text-slate-300 rounded font-mono transition"
+                  className="px-2 py-1 bg-[#182030] hover:bg-[#20293a] text-[11px] text-slate-300 rounded font-mono transition"
                 >
                   Prescripción/Caducidad (53-54)
                 </button>
@@ -1411,7 +1411,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                       'Para acreditar los periodos de cotización necesarios para causar derecho a las prestaciones de jubilación, incapacidad permanente, muerte y supervivencia, incapacidad temporal y nacimiento y cuidado de menor, en los contratos fijos-discontinuos se multiplicarán por el coeficiente de 1,5 los días en que el trabajador haya permanecido en alta, sin que en ningún caso pueda computarse un número de días superior al de los días naturales transcurridos. En los contratos de duración determinada de hasta cinco días, cada día de trabajo se considerará como 1,4 días de cotización, sin que en ningún caso la mensualidad pueda superar los días naturales del mes.'
                     );
                   }}
-                  className="px-2 py-1 bg-slate-800 hover:bg-slate-750 text-[11px] text-slate-300 rounded font-mono transition"
+                  className="px-2 py-1 bg-[#182030] hover:bg-[#20293a] text-[11px] text-slate-300 rounded font-mono transition"
                 >
                   Coeficientes Cómputo (1,5 / 1,4)
                 </button>
@@ -1423,7 +1423,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                       'Es inembargable el salario, sueldo, pensión, retribución o su equivalente, que no exceda de la cuantía señalada para el salario mínimo interprofesional. Los salarios, sueldos, jornales, retribuciones o pensiones que sean superiores al SMI se embargarán conforme a la siguiente escala: Para la primera cuantía adicional hasta el doble del SMI, el 30 por 100. Para la cuantía adicional hasta el importe de un tercer SMI, el 50 por 100. Para la cuantía adicional hasta el importe de un cuarto SMI, el 60 por 100. Para la cuantía adicional hasta el importe de un quinto SMI, el 75 por 100. Para cualquier cantidad que exceda de la anterior cuantía, el 90 por 100.'
                     );
                   }}
-                  className="px-2 py-1 bg-slate-800 hover:bg-slate-750 text-[11px] text-slate-300 rounded font-mono transition"
+                  className="px-2 py-1 bg-[#182030] hover:bg-[#20293a] text-[11px] text-slate-300 rounded font-mono transition"
                 >
                   Escala Embargo SMI
                 </button>
@@ -1435,7 +1435,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                       'Los proyectos de reforma constitucional deberán ser aprobados por una mayoría de tres quintos de cada una de las Cámaras. Aprobada la reforma por las Cortes Generales, será sometida a referéndum para su ratificación cuando así lo soliciten, dentro de los quince días siguientes a su aprobación, una décima parte de los miembros de cualquiera de las Cámaras. Cuando se propusiere la revisión total de la Constitución o una parcial que afecte al Título Preliminar, al Capítulo II, Sección 1ª del Título I, o al Título II, se procederá a la aprobación del principio por mayoría de dos tercios de cada Cámara, y a la disolución inmediata de las Cortes.'
                     );
                   }}
-                  className="px-2 py-1 bg-slate-800 hover:bg-slate-750 text-[11px] text-slate-300 rounded font-mono transition"
+                  className="px-2 py-1 bg-[#182030] hover:bg-[#20293a] text-[11px] text-slate-300 rounded font-mono transition"
                 >
                   Reforma CE
                 </button>
@@ -1486,7 +1486,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
               value={sourceText}
               onChange={(e) => setSourceText(e.target.value)}
               placeholder="Pega aquí el texto normativo del BOE, diapositivas o apuntes del temario de oposición..." aria-label="Pega aquí el texto normativo del BOE, diapositivas o apuntes del temario de oposición..."
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 font-sans leading-relaxed"
+              className="w-full bg-[#0c0f17] border border-[#20293a] rounded-xl p-3.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 font-sans leading-relaxed"
             />
 
             {/* Action Bar */}
@@ -1503,7 +1503,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   onClick={handleSuggestAtomsOffline}
                   disabled={isSuggestingOffline || !sourceText.trim()}
                   title="Detección por marcadores léxicos (plazos, porcentajes, excepciones, órganos…). Sin IA, sin API key."
-                  className="px-3.5 py-2 bg-slate-800 hover:bg-slate-750 disabled:opacity-50 text-cyan-300 rounded-xl text-xs font-semibold transition flex items-center space-x-1.5"
+                  className="px-3.5 py-2 bg-[#182030] hover:bg-[#20293a] disabled:opacity-50 text-cyan-300 rounded-xl text-xs font-semibold transition flex items-center space-x-1.5"
                 >
                   <Search className="w-3.5 h-3.5" />
                   <span>{isSuggestingOffline ? 'Analizando…' : 'Sugerir átomos (sin IA)'}</span>
@@ -1513,7 +1513,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   onClick={handleCreateChunks}
                   disabled={isCreatingChunks || !sourceText.trim()}
                   title="Divide el texto en fragmentos con referencia de artículo y página"
-                  className="px-3.5 py-2 bg-slate-800 hover:bg-slate-750 disabled:opacity-50 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center space-x-1.5"
+                  className="px-3.5 py-2 bg-[#182030] hover:bg-[#20293a] disabled:opacity-50 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center space-x-1.5"
                 >
                   <FileText className="w-3.5 h-3.5" />
                   <span>{isCreatingChunks ? 'Creando…' : 'Crear fragmentos'}</span>
@@ -1522,7 +1522,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   type="button"
                   onClick={handleExtractAtoms}
                   disabled={isExtracting || !sourceText.trim()}
-                  className="px-3.5 py-2 bg-slate-800 hover:bg-slate-750 disabled:opacity-50 text-slate-300 rounded-xl text-xs font-semibold transition"
+                  className="px-3.5 py-2 bg-[#182030] hover:bg-[#20293a] disabled:opacity-50 text-slate-300 rounded-xl text-xs font-semibold transition"
                 >
                   Solo Átomos
                 </button>
@@ -1541,9 +1541,9 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
 
           {/* Unified Extracted Set Approval Workspace */}
           {extractedSet && (
-            <div className="bg-slate-900 border border-amber-500/30 rounded-2xl p-5 space-y-5 shadow-lg animate-in fade-in duration-300">
+            <div className="bg-[#121722] border border-amber-500/30 rounded-2xl p-5 space-y-5 shadow-lg animate-in fade-in duration-300">
               {/* Top Approval Header */}
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#20293a] pb-4">
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
                     <span className="px-2 py-0.5 bg-amber-500/20 text-amber-300 rounded text-[10px] font-mono uppercase font-bold">
@@ -1555,13 +1555,13 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   </div>
                   <h4 className="text-sm font-bold text-white">{extractedSet.summary}</h4>
                   <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-slate-300">
-                    <span className="px-2 py-0.5 bg-slate-800 rounded">
+                    <span className="px-2 py-0.5 bg-[#182030] rounded">
                       📦 <strong>{extractedSet.clusters.filter((c) => c.selected).length}</strong> / {extractedSet.clusters.length} Clústeres
                     </span>
-                    <span className="px-2 py-0.5 bg-slate-800 rounded">
+                    <span className="px-2 py-0.5 bg-[#182030] rounded">
                       ⚡ <strong>{extractedSet.atoms.filter((a) => a.selected).length}</strong> / {extractedSet.atoms.length} Átomos
                     </span>
-                    <span className="px-2 py-0.5 bg-slate-800 rounded">
+                    <span className="px-2 py-0.5 bg-[#182030] rounded">
                       ⚖️ <strong>{extractedSet.confusionPairs.filter((p) => p.selected).length}</strong> / {extractedSet.confusionPairs.length} Pares de Confusión
                     </span>
                   </div>
@@ -1574,7 +1574,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                       setExtractedSet(null);
                       setDraftedAtoms([]);
                     }}
-                    className="px-3 py-2 bg-slate-800 hover:bg-slate-750 text-slate-400 text-xs rounded-xl transition"
+                    className="px-3 py-2 bg-[#182030] hover:bg-[#20293a] text-slate-400 text-xs rounded-xl transition"
                   >
                     Descartar Todo
                   </button>
@@ -1591,7 +1591,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
               </div>
 
               {/* Subtabs to inspect & customize components */}
-              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+              <div className="flex items-center justify-between border-b border-[#20293a] pb-2">
                 <div className="flex items-center space-x-2">
                   <button
                     type="button"
@@ -1599,7 +1599,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                     className={`px-3 py-1 rounded-lg text-xs font-semibold transition ${
                       activeSetSubTab === 'atoms'
                         ? 'bg-indigo-600 text-white shadow-sm'
-                        : 'bg-slate-800 text-slate-400 hover:text-white'
+                        : 'bg-[#182030] text-slate-400 hover:text-white'
                     }`}
                   >
                     Átomos ({extractedSet.atoms.length})
@@ -1610,7 +1610,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                     className={`px-3 py-1 rounded-lg text-xs font-semibold transition ${
                       activeSetSubTab === 'clusters'
                         ? 'bg-indigo-600 text-white shadow-sm'
-                        : 'bg-slate-800 text-slate-400 hover:text-white'
+                        : 'bg-[#182030] text-slate-400 hover:text-white'
                     }`}
                   >
                     Clústeres Temáticos ({extractedSet.clusters.length})
@@ -1621,7 +1621,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                     className={`px-3 py-1 rounded-lg text-xs font-semibold transition ${
                       activeSetSubTab === 'confusion_pairs'
                         ? 'bg-indigo-600 text-white shadow-sm'
-                        : 'bg-slate-800 text-slate-400 hover:text-white'
+                        : 'bg-[#182030] text-slate-400 hover:text-white'
                     }`}
                   >
                     Pares de Confusión ({extractedSet.confusionPairs.length})
@@ -1634,7 +1634,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                       aria-label="Filtrar set por clúster"
                       value={setFilterCluster}
                       onChange={(e) => setSetFilterCluster(e.target.value)}
-                      className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-slate-300 text-xs focus:outline-none"
+                      className="bg-[#0c0f17] border border-[#20293a] rounded-lg px-2 py-1 text-slate-300 text-xs focus:outline-none"
                     >
                       <option value="all">Todos los Clústeres</option>
                       {extractedSet.clusters.map((c) => (
@@ -1674,8 +1674,8 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                           key={idx}
                           className={`p-3 rounded-xl border transition flex items-start justify-between gap-3 ${
                             atom.selected
-                              ? 'bg-slate-950/90 border-slate-750'
-                              : 'bg-slate-950/40 border-slate-850 opacity-60'
+                              ? 'bg-[#0c0f17]/90 border-[#20293a]'
+                              : 'bg-[#0c0f17]/40 border-[#20293a] opacity-60'
                           }`}
                         >
                           <div className="flex items-start space-x-3 pt-0.5">
@@ -1692,7 +1692,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                                   ),
                                 });
                               }}
-                              className="mt-0.5 rounded border-slate-700 text-indigo-600 focus:ring-0 focus:ring-offset-0 cursor-pointer"
+                              className="mt-0.5 rounded border-[#20293a] text-indigo-600 focus:ring-0 focus:ring-offset-0 cursor-pointer"
                             />
                             <div className="space-y-1">
                               <div className="flex flex-wrap items-center gap-2">
@@ -1721,7 +1721,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                                 atoms: extractedSet.atoms.filter((_, i) => i !== idx),
                               });
                             }}
-                            className="px-2.5 py-1 bg-slate-800 hover:bg-emerald-600 hover:text-white text-slate-300 rounded text-[11px] font-medium transition shrink-0"
+                            className="px-2.5 py-1 bg-[#182030] hover:bg-emerald-700 hover:text-white text-slate-300 rounded text-[11px] font-medium transition shrink-0"
                           >
                             Guardar solo este
                           </button>
@@ -1739,8 +1739,8 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                       key={cluster.temp_id || idx}
                       className={`p-3.5 rounded-xl border transition space-y-2 ${
                         cluster.selected
-                          ? 'bg-slate-950/90 border-slate-750'
-                          : 'bg-slate-950/40 border-slate-850 opacity-60'
+                          ? 'bg-[#0c0f17]/90 border-[#20293a]'
+                          : 'bg-[#0c0f17]/40 border-[#20293a] opacity-60'
                       }`}
                     >
                       <div className="flex items-center justify-between">
@@ -1757,7 +1757,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                                 ),
                               });
                             }}
-                            className="rounded border-slate-700 text-indigo-600 focus:ring-0 focus:ring-offset-0 cursor-pointer"
+                            className="rounded border-[#20293a] text-indigo-600 focus:ring-0 focus:ring-offset-0 cursor-pointer"
                           />
                           <span className="text-xs font-bold text-white">{cluster.name}</span>
                         </label>
@@ -1783,8 +1783,8 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                       key={idx}
                       className={`p-3.5 rounded-xl border transition space-y-2 ${
                         cp.selected
-                          ? 'bg-slate-950/90 border-slate-750'
-                          : 'bg-slate-950/40 border-slate-850 opacity-60'
+                          ? 'bg-[#0c0f17]/90 border-[#20293a]'
+                          : 'bg-[#0c0f17]/40 border-[#20293a] opacity-60'
                       }`}
                     >
                       <div className="flex items-center justify-between">
@@ -1801,7 +1801,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                                 ),
                               });
                             }}
-                            className="rounded border-slate-700 text-indigo-600 focus:ring-0 focus:ring-offset-0 cursor-pointer"
+                            className="rounded border-[#20293a] text-indigo-600 focus:ring-0 focus:ring-offset-0 cursor-pointer"
                           />
                           <span className="text-xs font-bold text-indigo-300">{cp.concept_a}</span>
                           <span className="text-[10px] text-slate-500 font-mono">vs</span>
@@ -1849,7 +1849,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 {draftedAtoms.map((atom, idx) => (
                   <div
                     key={idx}
-                    className="p-3.5 bg-slate-900 border border-amber-500/30 rounded-xl flex items-center justify-between gap-4"
+                    className="p-3.5 bg-[#121722] border border-amber-500/30 rounded-xl flex items-center justify-between gap-4"
                   >
                     <div className="space-y-1">
                       <div className="flex items-center space-x-2">
@@ -1872,7 +1872,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                       </button>
                       <button
                         onClick={() => setDraftedAtoms((prev) => prev.filter((_, i) => i !== idx))}
-                        className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-750 text-slate-400 text-xs rounded-lg transition"
+                        className="px-2.5 py-1.5 bg-[#182030] hover:bg-[#20293a] text-slate-400 text-xs rounded-lg transition"
                       >
                         Descartar
                       </button>
@@ -1895,13 +1895,13 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
             return (
               <div
                 key={c.id}
-                className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2"
+                className="p-4 bg-[#121722] border border-[#20293a] rounded-xl space-y-2"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] px-2 py-0.5 rounded font-mono uppercase font-semibold bg-indigo-500/20 text-indigo-300">
                     {c.type}
                   </span>
-                  <span className="text-[10px] px-2 py-0.5 rounded font-mono font-semibold bg-slate-800 text-slate-300">
+                  <span className="text-[10px] px-2 py-0.5 rounded font-mono font-semibold bg-[#182030] text-slate-300">
                     Prioridad: {c.priority}
                   </span>
                 </div>
@@ -1924,7 +1924,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
           {confusionPairs.map((cp) => (
             <div
               key={cp.id}
-              className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2.5"
+              className="p-4 bg-[#121722] border border-[#20293a] rounded-xl space-y-2.5"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
@@ -1936,14 +1936,14 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   className={`text-[10px] px-2 py-0.5 rounded font-mono uppercase font-semibold ${
                     cp.severity === 'critical'
                       ? 'bg-red-500/20 text-red-300 border border-red-500/30'
-                      : 'bg-slate-800 text-slate-300'
+                      : 'bg-[#182030] text-slate-300'
                   }`}
                 >
                   {cp.severity}
                 </span>
               </div>
 
-              <div className="p-3 bg-slate-950 rounded-lg text-xs space-y-1.5 border border-slate-850">
+              <div className="p-3 bg-[#0c0f17] rounded-lg text-xs space-y-1.5 border border-[#20293a]">
                 <p className="text-slate-300">
                   <span className="font-semibold text-slate-400">Criterio discriminante: </span>
                   {cp.discriminating_cue}

@@ -176,7 +176,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className={`flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-b-2 ${
                 activeTab === 'dashboard'
                   ? 'border-blue-500 text-white font-semibold'
-                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-[#20293a]'
               }`}
             >
               <LayoutDashboard className="w-3.5 h-3.5" />
@@ -189,7 +189,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className={`flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-b-2 ${
                 activeTab === 'runner'
                   ? 'border-blue-500 text-white font-semibold'
-                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-[#20293a]'
               }`}
             >
               <PlayCircle className="w-3.5 h-3.5" />
@@ -207,7 +207,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className={`flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-b-2 ${
                 activeTab === 'errors'
                   ? 'border-blue-500 text-white font-semibold'
-                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-[#20293a]'
               }`}
             >
               <AlertTriangle className="w-3.5 h-3.5" />
@@ -228,7 +228,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className={`flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-b-2 ${
                   isMoreActive
                     ? 'border-blue-500 text-white font-semibold'
-                    : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                    : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-[#20293a]'
                 }`}
               >
                 <MoreHorizontal className="w-3.5 h-3.5" />
@@ -364,7 +364,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Auth / Cloud Sync */}
             {authLoading ? (
-              <div className="w-6 h-6 rounded-full bg-slate-800 animate-pulse" />
+              <div className="w-6 h-6 rounded-full bg-[#182030] animate-pulse" />
             ) : user ? (
               <div className="relative">
                 <button

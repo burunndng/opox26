@@ -89,7 +89,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
           </div>
           <button
             onClick={handleSkip}
-            className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="p-1 rounded text-slate-400 hover:text-white hover:bg-[#182030] transition"
             aria-label="Saltar bienvenida"
           >
             <SkipForward className="w-5 h-5" />
@@ -126,7 +126,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
           </button>
           <button
             onClick={handleSkip}
-            className="px-3 py-2 rounded-xl text-xs text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="px-3 py-2 rounded-xl text-xs text-slate-400 hover:text-white hover:bg-[#182030] transition"
           >
             Saltar
           </button>

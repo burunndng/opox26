@@ -53,9 +53,9 @@ export const HelpShortcutsModal: React.FC<HelpModalProps> = ({ isOpen, onClose }
           {shortcuts.map((s) => (
             <div
               key={s.key}
-              className="flex items-center justify-between p-2.5 bg-slate-950 rounded-lg border border-slate-850 text-xs"
+              className="flex items-center justify-between p-2.5 bg-[#0c0f17] rounded-lg border border-[#20293a] text-xs"
             >
-              <kbd className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-indigo-300 font-mono font-bold">
+              <kbd className="px-2 py-1 bg-[#182030] border border-[#20293a] rounded text-indigo-300 font-mono font-bold">
                 {s.key}
               </kbd>
               <span className="text-slate-300">{s.desc}</span>

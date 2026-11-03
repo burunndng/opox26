@@ -151,7 +151,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
   return (
     <div className="max-w-7xl mx-auto space-y-6 pb-16">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-slate-900 border border-slate-800 p-6 rounded-lg shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-[#121722] border border-[#20293a] p-6 rounded-lg shadow-sm">
         <div>
           <div className="flex items-center space-x-2">
             <Wrench className="w-5 h-5 text-amber-500" />
@@ -167,7 +167,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
         <div className="flex flex-wrap items-center gap-2.5 shrink-0">
           <button
             onClick={() => setIsDossierOpen(true)}
-            className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition"
+            className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-md bg-[#182030] hover:bg-[#20293a] text-slate-200 text-xs font-semibold border border-[#20293a] transition"
           >
             <BookOpen className="w-4 h-4 text-amber-400" />
             <span>Cuaderno de Fallos</span>
@@ -189,7 +189,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
                 }
                 onLaunchRepairSession(filteredErrors.map((e) => e.item_id));
               }}
-              className="inline-flex items-center space-x-2 px-4 py-2 rounded-md bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold shadow transition"
+              className="inline-flex items-center space-x-2 px-4 py-2 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow transition"
             >
               <Play className="w-4 h-4" />
               <span>Reparar Todos ({filteredErrors.length})</span>
@@ -199,7 +199,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
       </div>
 
       {/* Error-code legend: makes the taxonomy on each card self-explanatory */}
-      <details className="group rounded-lg border border-slate-800 bg-slate-900/60">
+      <details className="group rounded-lg border border-[#20293a] bg-[#121722]/60">
         <summary className="cursor-pointer list-none px-4 py-3 text-xs font-semibold text-slate-300 flex items-center justify-between">
           <span>¿Qué significa el código de cada fallo? (E1–E20)</span>
           <span className="text-slate-500 group-open:rotate-180 transition-transform" aria-hidden="true">
@@ -214,7 +214,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
               </span>
             ))}
           </div>
-          <p className="text-[11px] text-slate-500 pt-1 border-t border-slate-800">
+          <p className="text-[11px] text-slate-500 pt-1 border-t border-[#20293a]">
             Reparar vuelve a intentar el ítem. Los fallos <strong className="text-rose-300">E8</strong>{' '}
             (seguro y equivocado) tienen prioridad en la cola de repaso.
           </p>
@@ -229,7 +229,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
             className={`px-3 py-1.5 rounded-md text-xs font-medium transition ${
               filterTab === 'open'
                 ? 'bg-amber-600 text-white'
-                : 'bg-slate-900 text-slate-400 hover:text-white'
+                : 'bg-[#121722] text-slate-400 hover:text-white'
             }`}
           >
             Errores Abiertos ({errors.filter((e) => e.status === 'open').length})
@@ -239,7 +239,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
             className={`px-3 py-1.5 rounded-md text-xs font-medium transition ${
               filterTab === 'confident_wrong'
                 ? 'bg-rose-600 text-white'
-                : 'bg-slate-900 text-slate-400 hover:text-white'
+                : 'bg-[#121722] text-slate-400 hover:text-white'
             }`}
           >
             Con confianza máxima ({errors.filter((e) => e.confidence === 3).length})
@@ -249,7 +249,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
             className={`px-3 py-1.5 rounded-md text-xs font-medium transition ${
               filterTab === 'repaired'
                 ? 'bg-emerald-600 text-white'
-                : 'bg-slate-900 text-slate-400 hover:text-white'
+                : 'bg-[#121722] text-slate-400 hover:text-white'
             }`}
           >
             Reparados ({errors.filter((e) => e.status === 'repaired').length})
@@ -259,7 +259,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
             className={`px-3 py-1.5 rounded-md text-xs font-medium transition ${
               filterTab === 'all'
                 ? 'bg-slate-700 text-white'
-                : 'bg-slate-900 text-slate-400 hover:text-white'
+                : 'bg-[#121722] text-slate-400 hover:text-white'
             }`}
           >
             Todos ({errors.length})
@@ -271,7 +271,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
             value={selectedTopicId}
             onChange={(e) => setSelectedTopicId(e.target.value)}
             aria-label="Filtrar fallos por tema"
-            className="flex-1 sm:flex-none bg-slate-900 border border-slate-800 rounded-md px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500 cursor-pointer"
+            className="flex-1 sm:flex-none bg-[#121722] border border-[#20293a] rounded-md px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500 cursor-pointer"
           >
             <option value="all">Todos los temas</option>
             {topics.map((t) => (
@@ -288,7 +288,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Buscar por base legal o regla..." aria-label="Buscar por base legal o regla..."
-              className="w-full bg-slate-900 border border-slate-800 rounded-md pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+              className="w-full bg-[#121722] border border-[#20293a] rounded-md pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
             />
           </div>
         </div>
@@ -297,7 +297,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
       {/* Errors List */}
       <div className="space-y-3">
         {filteredErrors.length === 0 ? (
-          <div className="p-12 text-center bg-slate-900 border border-slate-800 rounded-lg text-slate-400">
+          <div className="p-12 text-center bg-[#121722] border border-[#20293a] rounded-lg text-slate-400">
             <CheckCircle className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
             <p className="text-sm font-medium text-white">No hay errores en esta categoría.</p>
             <p className="text-xs text-slate-500 mt-1">
@@ -316,7 +316,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
                 className={`p-5 rounded-lg border transition flex flex-col md:flex-row md:items-center justify-between gap-4 ${
                   isConfident
                     ? 'bg-rose-950/20 border-rose-900/50 hover:border-rose-800'
-                    : 'bg-slate-900 border-slate-800 hover:border-slate-700'
+                    : 'bg-[#121722] border-[#20293a] hover:border-[#20293a]'
                 }`}
               >
                 <div className="space-y-2 flex-1">
@@ -332,7 +332,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
                     </span>
 
                     {err.legal_basis && (
-                      <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                      <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#182030] text-slate-300 border border-[#20293a]">
                         {err.legal_basis}
                       </span>
                     )}
@@ -345,7 +345,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
 
                     {topicName && (
                       <span
-                        className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700"
+                        className="text-[10px] px-2 py-0.5 rounded bg-[#182030] text-slate-400 border border-[#20293a]"
                         title={topicName}
                       >
                         {topicName}
@@ -361,7 +361,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
                     {item?.stem || 'Pregunta no disponible'}
                   </p>
 
-                  <div className="p-3 bg-slate-950 rounded-md text-xs space-y-1 border border-slate-800">
+                  <div className="p-3 bg-[#0c0f17] rounded-md text-xs space-y-1 border border-[#20293a]">
                     <p className="text-slate-300">
                       <span className="font-semibold text-amber-500">Regla Correctiva: </span>
                       {err.corrective_rule || item?.corrective_rule || item?.why_correct}
@@ -372,7 +372,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
                 <div className="flex items-center space-x-2 shrink-0">
                   <button
                     onClick={() => handleRepairItem(err.item_id)}
-                    className="px-4 py-2 rounded-md bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold shadow transition flex items-center space-x-1.5"
+                    className="px-4 py-2 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow transition flex items-center space-x-1.5"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
                     <span>Reparar Ahora</span>
@@ -381,7 +381,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
                   {err.status === 'open' && (
                     <button
                       onClick={() => handleMarkRepaired(err.id)}
-                      className="px-3 py-2 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700 transition"
+                      className="px-3 py-2 rounded-md bg-[#182030] hover:bg-[#20293a] text-slate-300 text-xs font-medium border border-[#20293a] transition"
                       title="Marcar como reparado manualmente"
                     >
                       <CheckCircle className="w-4 h-4 text-emerald-400" />
@@ -399,14 +399,14 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
         <div
           ref={dossierRef}
           tabIndex={-1}
-          className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 outline-none"
+          className="fixed inset-0 z-50 bg-[#0c0f17]/80 backdrop-blur-sm flex items-center justify-center p-4 outline-none"
           role="dialog"
           aria-modal="true"
           aria-labelledby="dossier-modal-title"
         >
-          <div className="bg-slate-900 border border-slate-800 rounded-lg w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+          <div className="bg-[#121722] border border-[#20293a] rounded-lg w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
             {/* Modal Header */}
-            <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
+            <div className="p-5 border-b border-[#20293a] flex items-center justify-between bg-[#0c0f17]/50">
               <div className="flex items-center space-x-2.5">
                 <BookOpen className="w-5 h-5 text-amber-500" />
                 <div>
@@ -422,7 +422,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
               <div className="flex items-center space-x-2">
                 <button
                   onClick={handleCopyDossier}
-                  className="px-3 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition flex items-center space-x-1.5"
+                  className="px-3 py-1.5 rounded-md bg-[#182030] hover:bg-[#20293a] text-slate-200 text-xs font-semibold border border-[#20293a] transition flex items-center space-x-1.5"
                 >
                   {copiedDossier ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedDossier ? '¡Copiado!' : 'Copiar Markdown'}</span>
@@ -439,7 +439,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
                 <button
                   onClick={() => setIsDossierOpen(false)}
                   aria-label="Cerrar cuaderno de fallos"
-                  className="h-9 w-9 flex items-center justify-center p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                  className="h-9 w-9 flex items-center justify-center p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-[#182030] transition"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -447,8 +447,8 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
             </div>
 
             {/* Modal Body / Printable View */}
-            <div className="p-6 overflow-y-auto space-y-6 text-slate-200 text-xs leading-relaxed bg-slate-900">
-              <div className="p-4 bg-slate-950 rounded-md border border-slate-800 flex items-center justify-between">
+            <div className="p-6 overflow-y-auto space-y-6 text-slate-200 text-xs leading-relaxed bg-[#121722]">
+              <div className="p-4 bg-[#0c0f17] rounded-md border border-[#20293a] flex items-center justify-between">
                 <div>
                   <h4 className="font-bold text-white text-sm">Resumen Ejecutivo de Errores Activos</h4>
                   <p className="text-slate-400 mt-0.5">
@@ -466,17 +466,17 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
                   return (
                     <div
                       key={err.id}
-                      className="p-4 rounded-md bg-slate-950/80 border border-slate-800 space-y-2.5"
+                      className="p-4 rounded-md bg-[#0c0f17]/80 border border-[#20293a] space-y-2.5"
                     >
-                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-2">
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#20293a]/80 pb-2">
                         <span className="font-bold text-slate-300 font-mono text-[11px]">
                           Fallo #{i + 1}
                         </span>
                         <div className="flex items-center space-x-2">
-                          <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono font-semibold text-[10px]">
+                          <span className="px-2 py-0.5 rounded bg-[#182030] text-slate-300 font-mono font-semibold text-[10px]">
                             {err.legal_basis || item?.legal_basis || 'TRLGSS'}
                           </span>
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-mono ${err.confidence === 3 ? 'bg-rose-500/20 text-rose-300 font-bold' : 'bg-slate-800 text-slate-400'}`}>
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-mono ${err.confidence === 3 ? 'bg-rose-500/20 text-rose-300 font-bold' : 'bg-[#182030] text-slate-400'}`}>
                             Confianza: {err.confidence}/3
                           </span>
                           {err.trap_type && (
@@ -489,7 +489,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
 
                       <p className="font-semibold text-white text-xs font-legal-serif">{item?.stem}</p>
 
-                      <div className="p-2.5 rounded-md bg-slate-900 border border-slate-800 text-slate-300">
+                      <div className="p-2.5 rounded-md bg-[#121722] border border-[#20293a] text-slate-300">
                         <p className="font-semibold text-amber-400 mb-0.5">Regla Correctiva & Explicación:</p>
                         <p>{err.corrective_rule || item?.corrective_rule || item?.why_correct}</p>
                       </div>

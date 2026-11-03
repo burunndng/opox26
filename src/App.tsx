@@ -388,7 +388,7 @@ export default function App() {
           aria-busy="true"
           aria-live="polite"
         >
-          <div className="h-8 w-64 max-w-full rounded-md bg-slate-800/70 animate-pulse" />
+          <div className="h-8 w-64 max-w-full rounded-md bg-[#182030]/70 animate-pulse" />
           <div className="h-36 rounded-lg bg-[#121722] border border-[#20293a] animate-pulse" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -406,7 +406,7 @@ export default function App() {
 
   if (loadError && items.length === 0) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-300 p-6 space-y-4">
+      <div className="min-h-screen bg-[#0c0f17] flex flex-col items-center justify-center text-slate-300 p-6 space-y-4">
         <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-400">
           <AlertTriangle className="w-8 h-8" />
         </div>
@@ -642,7 +642,7 @@ export default function App() {
           className={`fixed bottom-5 left-1/2 -translate-x-1/2 z-[100] flex items-start gap-3 max-w-[calc(100vw-2rem)] sm:max-w-md px-4 py-3 rounded-xl border shadow-2xl text-sm ${
             toast.kind === 'error'
               ? 'bg-rose-950/95 border-rose-500/60 text-rose-100'
-              : 'bg-slate-900/95 border-slate-600 text-slate-100'
+              : 'bg-[#121722]/95 border-slate-600 text-slate-100'
           }`}
         >
           <AlertTriangle

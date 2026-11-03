@@ -80,7 +80,7 @@ export function PretestDiagnosticMap({ items, attemptLogs, clusters, confusionPa
   const repairIds = Array.from(new Set([...diagnostics.wrongIds, ...diagnostics.luckyIds]));
 
   return (
-    <div className="mt-6 p-5 rounded-xl bg-slate-950 border border-indigo-800/50 text-left space-y-5">
+    <div className="mt-6 p-5 rounded-xl bg-[#0c0f17] border border-indigo-800/50 text-left space-y-5">
       <div className="flex items-center space-x-2">
         <Crosshair className="w-4 h-4 text-indigo-400" />
         <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-300">Mapa Diagnóstico del Pretest</h3>

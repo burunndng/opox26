@@ -69,7 +69,7 @@ export const CalibrationAnalytics: React.FC<CalibrationAnalyticsProps> = ({
   return (
     <div className="max-w-7xl mx-auto space-y-8 pb-16">
       {/* Header */}
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-lg shadow-sm">
+      <div className="bg-[#121722] border border-[#20293a] p-6 rounded-lg shadow-sm">
         <div className="flex items-center space-x-2">
           <BarChart3 className="w-5 h-5 text-amber-500" />
           <h1 className="text-xl font-bold text-white tracking-tight">
@@ -84,7 +84,7 @@ export const CalibrationAnalytics: React.FC<CalibrationAnalyticsProps> = ({
 
       {/* Metacognitive Indices */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-slate-900 border border-rose-900/40 rounded-lg p-5 shadow-sm bg-rose-950/10">
+        <div className="bg-[#121722] border border-rose-900/40 rounded-lg p-5 shadow-sm bg-rose-950/10">
           <div className="flex items-center justify-between text-rose-400 mb-1">
             <span className="text-xs font-bold uppercase tracking-wider">Errores con confianza máxima</span>
             <AlertOctagon className="w-4 h-4 text-rose-500" />
@@ -97,7 +97,7 @@ export const CalibrationAnalytics: React.FC<CalibrationAnalyticsProps> = ({
           </p>
         </div>
 
-        <div className="bg-slate-900 border border-amber-900/40 rounded-lg p-5 shadow-sm bg-amber-950/10">
+        <div className="bg-[#121722] border border-amber-900/40 rounded-lg p-5 shadow-sm bg-amber-950/10">
           <div className="flex items-center justify-between text-amber-400 mb-1">
             <span className="text-xs font-bold uppercase tracking-wider">Reconocimiento Afortunado</span>
             <Brain className="w-4 h-4 text-amber-400" />
@@ -110,7 +110,7 @@ export const CalibrationAnalytics: React.FC<CalibrationAnalyticsProps> = ({
           </p>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-lg p-5 shadow-sm">
+        <div className="bg-[#121722] border border-[#20293a] rounded-lg p-5 shadow-sm">
           <div className="flex items-center justify-between text-slate-400 mb-1">
             <span className="text-xs font-bold uppercase tracking-wider">Tasa de Acierto con Certeza (3)</span>
             <Award className="w-4 h-4 text-emerald-400" />
@@ -123,7 +123,7 @@ export const CalibrationAnalytics: React.FC<CalibrationAnalyticsProps> = ({
           </p>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-lg p-5 shadow-sm">
+        <div className="bg-[#121722] border border-[#20293a] rounded-lg p-5 shadow-sm">
           <div className="flex items-center justify-between text-slate-400 mb-1">
             <span className="text-xs font-bold uppercase tracking-wider">Intentos Totales</span>
             <Zap className="w-4 h-4 text-amber-500" />
@@ -134,7 +134,7 @@ export const CalibrationAnalytics: React.FC<CalibrationAnalyticsProps> = ({
       </div>
 
       {/* Calibration Curve Visualization */}
-      <div className="bg-slate-900 border border-slate-800 rounded-lg p-6 shadow-sm space-y-4">
+      <div className="bg-[#121722] border border-[#20293a] rounded-lg p-6 shadow-sm space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base font-bold text-white flex items-center space-x-2">
@@ -178,7 +178,7 @@ export const CalibrationAnalytics: React.FC<CalibrationAnalyticsProps> = ({
               color: 'bg-emerald-600',
             },
           ].map((item) => (
-            <div key={item.level} className="bg-slate-950 p-4 rounded-lg border border-slate-800 space-y-3">
+            <div key={item.level} className="bg-[#0c0f17] p-4 rounded-lg border border-[#20293a] space-y-3">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-bold text-slate-300">{item.label}</span>
                 <span className="text-slate-500 font-mono">Esperado: {item.target}</span>
@@ -192,7 +192,7 @@ export const CalibrationAnalytics: React.FC<CalibrationAnalyticsProps> = ({
               </div>
 
               {/* Progress bar */}
-              <div className="w-full h-2 bg-slate-800 rounded-sm overflow-hidden">
+              <div className="w-full h-2 bg-[#182030] rounded-sm overflow-hidden">
                 <div
                   className={`h-full ${item.color} rounded-sm transition-all duration-500`}
                   style={{ width: `${item.data.accuracy}%` }}
@@ -205,7 +205,7 @@ export const CalibrationAnalytics: React.FC<CalibrationAnalyticsProps> = ({
 
       {/* Traps Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-slate-900 border border-slate-800 rounded-lg p-5 shadow-sm space-y-4">
+        <div className="bg-[#121722] border border-[#20293a] rounded-lg p-5 shadow-sm space-y-4">
           <h3 className="text-sm font-bold text-white flex items-center space-x-2">
             <Target className="w-4 h-4 text-rose-400" />
             <span>Distribución de Trampas en las que más caes</span>
@@ -223,7 +223,7 @@ export const CalibrationAnalytics: React.FC<CalibrationAnalyticsProps> = ({
               Object.entries(trapCounts).map(([trap, count]) => (
                 <div
                   key={trap}
-                  className="flex items-center justify-between p-2.5 bg-slate-950 rounded-md border border-slate-800 text-xs"
+                  className="flex items-center justify-between p-2.5 bg-[#0c0f17] rounded-md border border-[#20293a] text-xs"
                 >
                   <span className="text-rose-300 font-mono font-medium">{trap}</span>
                   <span className="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono font-bold tabular-nums">
@@ -236,7 +236,7 @@ export const CalibrationAnalytics: React.FC<CalibrationAnalyticsProps> = ({
         </div>
 
         {/* Clusters Overview */}
-        <div className="bg-slate-900 border border-slate-800 rounded-lg p-5 shadow-sm space-y-4">
+        <div className="bg-[#121722] border border-[#20293a] rounded-lg p-5 shadow-sm space-y-4">
           <h3 className="text-sm font-bold text-white flex items-center space-x-2">
             <Layers className="w-4 h-4 text-amber-500" />
             <span>Clusters Temáticos en Estudio (TRLGSS Tema 7)</span>
@@ -251,13 +251,13 @@ export const CalibrationAnalytics: React.FC<CalibrationAnalyticsProps> = ({
               return (
                 <div
                   key={c.id}
-                  className="flex items-center justify-between p-2.5 bg-slate-950 rounded-md border border-slate-800 text-xs"
+                  className="flex items-center justify-between p-2.5 bg-[#0c0f17] rounded-md border border-[#20293a] text-xs"
                 >
                   <div>
                     <span className="text-slate-200 font-semibold">{c.name}</span>
                     <span className="ml-2 text-[10px] text-slate-500 font-mono">({c.type})</span>
                   </div>
-                  <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono text-[11px] tabular-nums">
+                  <span className="px-2 py-0.5 rounded bg-[#182030] text-slate-300 font-mono text-[11px] tabular-nums">
                     {clusterItems.length} ítems
                   </span>
                 </div>

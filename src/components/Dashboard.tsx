@@ -294,7 +294,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             return (
               <div
                 key={topic.id}
-                className="bg-[#121722] border border-[#20293a] hover:border-slate-700 rounded-lg p-5 flex flex-col justify-between transition-colors"
+                className="bg-[#121722] border border-[#20293a] hover:border-[#20293a] rounded-lg p-5 flex flex-col justify-between transition-colors"
               >
                 <div>
                   {/* Metadata line: materia + explicit bloque marker */}

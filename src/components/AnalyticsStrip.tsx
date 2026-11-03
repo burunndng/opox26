@@ -52,7 +52,7 @@ export const AnalyticsStrip: React.FC<AnalyticsStripProps> = ({
   const hasData = attempts.length > 0;
 
   return (
-    <section className={`bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 ${className}`}>
+    <section className={`bg-[#121722] border border-[#20293a] rounded-2xl p-4 sm:p-5 ${className}`}>
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center space-x-2">
           <Gauge className="w-4 h-4 text-indigo-400" />
@@ -64,7 +64,7 @@ export const AnalyticsStrip: React.FC<AnalyticsStripProps> = ({
           {onOpenRepair && indices.confidentWrong > 0 && (
             <button
               onClick={onOpenRepair}
-              className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-[11px] font-semibold transition flex items-center space-x-1.5"
+              className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-semibold transition flex items-center space-x-1.5"
             >
               <Wrench className="w-3 h-3" />
               <span>Reparar ({indices.confidentWrong} con confianza máxima)</span>
@@ -89,7 +89,7 @@ export const AnalyticsStrip: React.FC<AnalyticsStripProps> = ({
           {/* Confidence curve */}
           <div className="mt-3 grid grid-cols-4 gap-2">
             {levels.map((l) => (
-              <div key={l.level} className="bg-slate-950/60 border border-slate-800 rounded-lg p-2 text-center">
+              <div key={l.level} className="bg-[#0c0f17]/60 border border-[#20293a] rounded-lg p-2 text-center">
                 <div className="text-[9px] uppercase tracking-wider text-slate-500">
                   {['AzAR', 'Duda', 'Probable', 'Seguro'][l.level]}
                 </div>
@@ -141,7 +141,7 @@ export const AnalyticsStrip: React.FC<AnalyticsStripProps> = ({
               ) : (
                 <div className="space-y-1">
                   {weakClusters.map((c) => (
-                    <div key={c.key} className="flex items-center justify-between text-[11px] bg-slate-950/60 rounded px-2 py-1">
+                    <div key={c.key} className="flex items-center justify-between text-[11px] bg-[#0c0f17]/60 rounded px-2 py-1">
                       <span className="text-slate-300 truncate">{c.label}</span>
                       <span className={`font-mono ${c.accuracy < 50 ? 'text-rose-300' : c.accuracy < 80 ? 'text-amber-300' : 'text-emerald-300'}`}>
                         {c.accuracy}%
@@ -158,7 +158,7 @@ export const AnalyticsStrip: React.FC<AnalyticsStripProps> = ({
               ) : (
                 <div className="space-y-1">
                   {riskyPairs.map((p) => (
-                    <div key={p.key} className="flex items-center justify-between text-[11px] bg-slate-950/60 rounded px-2 py-1">
+                    <div key={p.key} className="flex items-center justify-between text-[11px] bg-[#0c0f17]/60 rounded px-2 py-1">
                       <span className="text-slate-300 truncate">{p.label}</span>
                       <span className="font-mono text-amber-300">{p.accuracy}%</span>
                     </div>
@@ -170,7 +170,7 @@ export const AnalyticsStrip: React.FC<AnalyticsStripProps> = ({
 
           {/* Full detail (disclosure) */}
           {expanded && (
-            <div className="mt-4 pt-4 border-t border-slate-800 space-y-4 text-[11px]">
+            <div className="mt-4 pt-4 border-t border-[#20293a] space-y-4 text-[11px]">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <Stat label="Índice frágil" value={`${indices.fragileKnowledgeIndex}%`} hint="Aciertos con duda" />
                 <Stat label="Índice de error" value={`${indices.misconceptionIndex}%`} hint="Fallos con certeza" />
@@ -188,7 +188,7 @@ export const AnalyticsStrip: React.FC<AnalyticsStripProps> = ({
                     <p className="text-[10px] uppercase tracking-wider text-slate-500 mb-1">{label}</p>
                     <div className="space-y-1">
                       {rows.slice(0, 4).map((r) => (
-                        <div key={r.key} className="flex items-center justify-between bg-slate-950/60 rounded px-2 py-1">
+                        <div key={r.key} className="flex items-center justify-between bg-[#0c0f17]/60 rounded px-2 py-1">
                           <span className="text-slate-400 truncate">{r.label}</span>
                           <span className="font-mono text-slate-300">{r.errors} err · {r.accuracy}%</span>
                         </div>
@@ -204,7 +204,7 @@ export const AnalyticsStrip: React.FC<AnalyticsStripProps> = ({
                   <p className="text-[10px] uppercase tracking-wider text-slate-500 mb-1">Efectividad por formato</p>
                   <div className="space-y-1">
                     {snap.effectiveness.map((r) => (
-                      <div key={r.activityType} className="flex items-center justify-between bg-slate-950/60 rounded px-2 py-1">
+                      <div key={r.activityType} className="flex items-center justify-between bg-[#0c0f17]/60 rounded px-2 py-1">
                         <span className="text-slate-400">{r.activityType.replace(/_/g, ' ')}</span>
                         <span className="font-mono text-slate-300">
                           {r.accuracy}% · int {r.interleavedAccuracy ?? '—'} / bloq {r.blockedAccuracy ?? '—'}
@@ -241,7 +241,7 @@ export const AnalyticsStrip: React.FC<AnalyticsStripProps> = ({
 };
 
 const Stat: React.FC<{ label: string; value: string; hint: string }> = ({ label, value, hint }) => (
-  <div className="bg-slate-950/60 border border-slate-800 rounded-lg p-2 text-center">
+  <div className="bg-[#0c0f17]/60 border border-[#20293a] rounded-lg p-2 text-center">
     <div className="text-lg font-bold text-white font-mono">{value}</div>
     <div className="text-[9px] uppercase tracking-wider text-slate-500">{label}</div>
     <div className="text-[9px] text-slate-600">{hint}</div>

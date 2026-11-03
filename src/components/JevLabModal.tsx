@@ -226,14 +226,14 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
     <div
       ref={modalRef}
       tabIndex={-1}
-      className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto outline-none"
+      className="fixed inset-0 z-50 bg-[#121722]/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto outline-none"
       role="dialog"
       aria-modal="true"
       aria-labelledby="jev-modal-title"
     >
-      <div className="bg-slate-900 border border-indigo-500/40 w-full max-w-5xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="bg-[#121722] border border-indigo-500/40 w-full max-w-5xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-900 p-5 border-b border-indigo-500/30 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-indigo-950 via-[#121722] to-indigo-900 p-5 border-b border-indigo-500/30 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-indigo-400 shadow-inner">
               <Cpu className="w-6 h-6 animate-pulse" />
@@ -249,7 +249,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                 <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                   Totalmente Opcional
                 </span>
-                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
+                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-[#182030] text-slate-300 border border-[#20293a]">
                   Fallback Local Activo
                 </span>
               </div>
@@ -260,7 +260,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition"
+            className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-[#182030] transition"
             aria-label="Cerrar motor de decisiones Jev"
           >
             <X className="w-5 h-5" />
@@ -268,7 +268,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
         </div>
 
         {/* Navigation Tabs */}
-        <div className="bg-slate-950/80 border-b border-slate-800 px-4 flex space-x-2 overflow-x-auto text-sm">
+        <div className="bg-[#0c0f17]/80 border-b border-[#20293a] px-4 flex space-x-2 overflow-x-auto text-sm">
           <button
             onClick={() => setActiveTab('item_audit')}
             className={`py-3 px-4 font-medium border-b-2 flex items-center space-x-2 transition whitespace-nowrap ${
@@ -327,11 +327,11 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-900/60">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-[#121722]/60">
           {/* TAB 1: ITEM AUDIT */}
           {activeTab === 'item_audit' && (
             <div className="space-y-6">
-              <div className="bg-slate-800/40 p-4 rounded-xl border border-slate-700/60">
+              <div className="bg-[#182030]/40 p-4 rounded-xl border border-[#20293a]/60">
                 <label className="block text-sm font-semibold text-slate-200 mb-2">
                   Selecciona un reactivo/ítem del banco para auditar con Jev:
                 </label>
@@ -340,7 +340,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                     aria-label="Seleccionar ítem para auditar"
                     value={selectedItemId}
                     onChange={(e) => setSelectedItemId(e.target.value)}
-                    className="flex-1 bg-slate-950 border border-slate-700 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                    className="flex-1 bg-[#0c0f17] border border-[#20293a] text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
                   >
                     {items.slice(0, 40).map((it) => (
                       <option key={it.id} value={it.id}>
@@ -365,7 +365,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
 
               {itemAuditResult && (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between text-xs text-slate-400 bg-slate-950/60 px-4 py-2 rounded-lg border border-slate-800">
+                  <div className="flex items-center justify-between text-xs text-slate-400 bg-[#0c0f17]/60 px-4 py-2 rounded-lg border border-[#20293a]">
                     <span className="flex items-center space-x-1.5">
                       <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
                       <span>Decisión calculada en <strong>{itemAuditResult.latency_ms} ms</strong></span>
@@ -375,7 +375,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Unambiguous Noul */}
-                    <div className="bg-slate-800/60 border border-slate-700/80 rounded-xl p-4">
+                    <div className="bg-[#182030]/60 border border-[#20293a]/80 rounded-xl p-4">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs font-semibold uppercase text-indigo-400 flex items-center space-x-1">
                           <Percent className="w-3.5 h-3.5" />
@@ -385,7 +385,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                           {Math.round(itemAuditResult.is_stem_unambiguous.probability * 100)}%
                         </span>
                       </div>
-                      <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden mb-2">
+                      <div className="w-full bg-[#0c0f17] rounded-full h-2 overflow-hidden mb-2">
                         <div
                           className="bg-emerald-500 h-full rounded-full transition-all duration-500"
                           style={{ width: `${itemAuditResult.is_stem_unambiguous.probability * 100}%` }}
@@ -397,7 +397,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                     </div>
 
                     {/* Double Key Risk Noul */}
-                    <div className="bg-slate-800/60 border border-slate-700/80 rounded-xl p-4">
+                    <div className="bg-[#182030]/60 border border-[#20293a]/80 rounded-xl p-4">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs font-semibold uppercase text-rose-400 flex items-center space-x-1">
                           <AlertTriangle className="w-3.5 h-3.5" />
@@ -407,7 +407,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                           {Math.round(itemAuditResult.has_double_key_risk.probability * 100)}%
                         </span>
                       </div>
-                      <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden mb-2">
+                      <div className="w-full bg-[#0c0f17] rounded-full h-2 overflow-hidden mb-2">
                         <div
                           className={`h-full rounded-full transition-all duration-500 ${
                             itemAuditResult.has_double_key_risk.probability > 0.3 ? 'bg-rose-500' : 'bg-emerald-500'
@@ -421,7 +421,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                     </div>
 
                     {/* Primary Cognitive Trap Choice */}
-                    <div className="bg-slate-800/60 border border-slate-700/80 rounded-xl p-4">
+                    <div className="bg-[#182030]/60 border border-[#20293a]/80 rounded-xl p-4">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs font-semibold uppercase text-amber-400 flex items-center space-x-1">
                           <Target className="w-3.5 h-3.5" />
@@ -445,7 +445,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                     </div>
 
                     {/* Difficulty Score */}
-                    <div className="bg-slate-800/60 border border-slate-700/80 rounded-xl p-4">
+                    <div className="bg-[#182030]/60 border border-[#20293a]/80 rounded-xl p-4">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs font-semibold uppercase text-purple-400 flex items-center space-x-1">
                           <Scale className="w-3.5 h-3.5" />
@@ -455,7 +455,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                           {Number(itemAuditResult.psychometric_difficulty.score).toFixed(1)} / 5
                         </span>
                       </div>
-                      <div className="w-full bg-slate-950 rounded-full h-2.5 overflow-hidden mb-3">
+                      <div className="w-full bg-[#0c0f17] rounded-full h-2.5 overflow-hidden mb-3">
                         <div
                           className="bg-purple-500 h-full rounded-full transition-all duration-500"
                           style={{ width: `${(Number(itemAuditResult.psychometric_difficulty.score) / 5) * 100}%` }}
@@ -474,7 +474,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
           {/* TAB 2: ATTEMPT TRIAGE */}
           {activeTab === 'attempt_triage' && (
             <div className="space-y-6">
-              <div className="bg-slate-800/40 p-4 rounded-xl border border-slate-700/60 space-y-4">
+              <div className="bg-[#182030]/40 p-4 rounded-xl border border-[#20293a]/60 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-slate-300 mb-1">Enunciado del ítem:</label>
@@ -483,7 +483,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                       type="text"
                       value={triageStem}
                       onChange={(e) => setTriageStem(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white"
+                      className="w-full bg-[#0c0f17] border border-[#20293a] rounded-lg p-2 text-xs text-white"
                     />
                   </div>
                   <div>
@@ -493,7 +493,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                       type="text"
                       value={triageRule}
                       onChange={(e) => setTriageRule(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white"
+                      className="w-full bg-[#0c0f17] border border-[#20293a] rounded-lg p-2 text-xs text-white"
                     />
                   </div>
                   <div>
@@ -505,7 +505,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                       type="text"
                       value={triageUserGen}
                       onChange={(e) => setTriageUserGen(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white"
+                      className="w-full bg-[#0c0f17] border border-[#20293a] rounded-lg p-2 text-xs text-white"
                     />
                   </div>
                   <div>
@@ -517,12 +517,12 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                       type="text"
                       value={triageUserOption}
                       onChange={(e) => setTriageUserOption(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white"
+                      className="w-full bg-[#0c0f17] border border-[#20293a] rounded-lg p-2 text-xs text-white"
                     />
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-4 pt-2 border-t border-slate-800">
+                <div className="flex flex-wrap items-center gap-4 pt-2 border-t border-[#20293a]">
                   <label className="flex items-center space-x-2 text-xs text-slate-200 cursor-pointer">
                     <input
                       type="checkbox"
@@ -543,7 +543,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                         className={`px-2 py-1 rounded text-xs font-bold transition ${
                           triageConfidence === lvl
                             ? 'bg-indigo-600 text-white'
-                            : 'bg-slate-950 text-slate-400 border border-slate-700'
+                            : 'bg-[#0c0f17] text-slate-400 border border-[#20293a]'
                         }`}
                       >
                         {lvl === 0 ? '0 (Azar)' : lvl === 1 ? '1 (Duda)' : lvl === 2 ? '2 (Probable)' : '3 (Seguro)'}
@@ -565,7 +565,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
               {triageResult && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Generative Retrieval Match Noul */}
-                  <div className="bg-slate-800/60 border border-slate-700/80 rounded-xl p-4">
+                  <div className="bg-[#182030]/60 border border-[#20293a]/80 rounded-xl p-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-xs font-semibold uppercase text-indigo-400">
                         Noul: Acierto en Recuperación Generativa
@@ -574,7 +574,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                         {Math.round(triageResult.generative_retrieval_matched.probability * 100)}%
                       </span>
                     </div>
-                    <div className="w-full bg-slate-950 rounded-full h-2 mb-2">
+                    <div className="w-full bg-[#0c0f17] rounded-full h-2 mb-2">
                       <div
                         className="bg-indigo-500 h-full rounded-full"
                         style={{ width: `${triageResult.generative_retrieval_matched.probability * 100}%` }}
@@ -586,7 +586,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                   </div>
 
                   {/* Error Taxonomy Choice */}
-                  <div className="bg-slate-800/60 border border-slate-700/80 rounded-xl p-4">
+                  <div className="bg-[#182030]/60 border border-[#20293a]/80 rounded-xl p-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-xs font-semibold uppercase text-rose-400">
                         Choice: Taxonomía de Error E1-E20
@@ -609,7 +609,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                   </div>
 
                   {/* Recommended Repair Choice */}
-                  <div className="bg-slate-800/60 border border-slate-700/80 rounded-xl p-4 md:col-span-2">
+                  <div className="bg-[#182030]/60 border border-[#20293a]/80 rounded-xl p-4 md:col-span-2">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-xs font-semibold uppercase text-emerald-400">
                         Choice: Actividad de Reparación Óptima Recomendada por Jev
@@ -620,7 +620,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3">
                       {Object.entries(triageResult.recommended_repair_action.probabilities || {}).map(([k, v]: [string, any]) => (
-                        <div key={k} className="bg-slate-950 p-2 rounded-lg border border-slate-800 text-xs">
+                        <div key={k} className="bg-[#0c0f17] p-2 rounded-lg border border-[#20293a] text-xs">
                           <div className="text-slate-400 font-mono truncate">{k}</div>
                           <div className="text-sm font-bold text-emerald-400">{Math.round(v * 100)}%</div>
                         </div>
@@ -635,7 +635,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
           {/* TAB 3: ATOM CLASSIFICATION */}
           {activeTab === 'atom_classify' && (
             <div className="space-y-6">
-              <div className="bg-slate-800/40 p-4 rounded-xl border border-slate-700/60 space-y-3">
+              <div className="bg-[#182030]/40 p-4 rounded-xl border border-[#20293a]/60 space-y-3">
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1">
                     Proposición Jurídica Atómica:
@@ -645,7 +645,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                     rows={3}
                     value={atomText}
                     onChange={(e) => setAtomText(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white font-mono"
+                    className="w-full bg-[#0c0f17] border border-[#20293a] rounded-lg p-2.5 text-xs text-white font-mono"
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -656,7 +656,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                       type="text"
                       value={atomLegalBasis}
                       onChange={(e) => setAtomLegalBasis(e.target.value)}
-                      className="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white"
+                      className="bg-[#0c0f17] border border-[#20293a] rounded px-2 py-1 text-xs text-white"
                     />
                   </div>
                   <button
@@ -672,7 +672,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
 
               {atomClassifyResult && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-slate-800/60 border border-slate-700/80 rounded-xl p-4">
+                  <div className="bg-[#182030]/60 border border-[#20293a]/80 rounded-xl p-4">
                     <div className="text-xs font-semibold uppercase text-indigo-400 mb-1">
                       Choice: Asignación a Clúster Temático
                     </div>
@@ -689,7 +689,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                     </div>
                   </div>
 
-                  <div className="bg-slate-800/60 border border-slate-700/80 rounded-xl p-4">
+                  <div className="bg-[#182030]/60 border border-[#20293a]/80 rounded-xl p-4">
                     <div className="text-xs font-semibold uppercase text-purple-400 mb-1">
                       Choice: Refinamiento del Tipo Atómico
                     </div>
@@ -706,7 +706,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                     </div>
                   </div>
 
-                  <div className="bg-slate-800/60 border border-slate-700/80 rounded-xl p-4 md:col-span-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="bg-[#182030]/60 border border-[#20293a]/80 rounded-xl p-4 md:col-span-2 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div>
                       <div className="text-xs font-semibold uppercase text-amber-400">
                         Noul: Riesgo de Alta Interferencia / Trampa
@@ -732,7 +732,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
           {/* TAB 4: CASCADE VERIFICATION */}
           {activeTab === 'cascade' && (
             <div className="space-y-6">
-              <div className="bg-slate-800/40 p-4 rounded-xl border border-slate-700/60 space-y-4">
+              <div className="bg-[#182030]/40 p-4 rounded-xl border border-[#20293a]/60 space-y-4">
                 <div className="p-3 bg-indigo-950/40 border border-indigo-500/30 rounded-lg text-xs text-indigo-200">
                   💡 <strong>Patrón Jev-Verified Cascade (Cookbook de OpenRouter):</strong> Un LLM generativo redacta el borrador del ejercicio y Jev (TypeSafe) actúa como auditor instantáneo verificando la fidelidad fáctica contra el texto de la ley antes de la aprobación.
                 </div>
@@ -747,7 +747,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                       rows={3}
                       value={cascadeSource}
                       onChange={(e) => setCascadeSource(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white font-mono"
+                      className="w-full bg-[#0c0f17] border border-[#20293a] rounded-lg p-2 text-xs text-white font-mono"
                     />
                   </div>
                   <div>
@@ -759,7 +759,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                       rows={3}
                       value={cascadeStem}
                       onChange={(e) => setCascadeStem(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white"
+                      className="w-full bg-[#0c0f17] border border-[#20293a] rounded-lg p-2 text-xs text-white"
                     />
                   </div>
                 </div>
@@ -776,7 +776,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
 
               {cascadeResult && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-slate-800/60 border border-slate-700/80 rounded-xl p-4">
+                  <div className="bg-[#182030]/60 border border-[#20293a]/80 rounded-xl p-4">
                     <div className="text-xs font-semibold uppercase text-indigo-400 mb-1">
                       Fidelidad Fáctica (Noul)
                     </div>
@@ -786,7 +786,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                     <p className="text-xs text-slate-400">Sin alucinaciones normativas detectadas.</p>
                   </div>
 
-                  <div className="bg-slate-800/60 border border-slate-700/80 rounded-xl p-4">
+                  <div className="bg-[#182030]/60 border border-[#20293a]/80 rounded-xl p-4">
                     <div className="text-xs font-semibold uppercase text-emerald-400 mb-1">
                       Base Legal Precisa (Noul)
                     </div>
@@ -796,7 +796,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                     <p className="text-xs text-slate-400">Cita textual concuerda con el TRLGSS.</p>
                   </div>
 
-                  <div className="bg-slate-800/60 border border-slate-700/80 rounded-xl p-4">
+                  <div className="bg-[#182030]/60 border border-[#20293a]/80 rounded-xl p-4">
                     <div className="text-xs font-semibold uppercase text-purple-400 mb-1">
                       Dictamen de Calidad (Choice)
                     </div>
@@ -825,7 +825,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                     rows={10}
                     value={customState}
                     onChange={(e) => setCustomState(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-xs text-emerald-400 font-mono"
+                    className="w-full bg-[#0c0f17] border border-[#20293a] rounded-lg p-3 text-xs text-emerald-400 font-mono"
                   />
                 </div>
                 <div>
@@ -837,7 +837,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                     rows={10}
                     value={customQuestions}
                     onChange={(e) => setCustomQuestions(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-xs text-indigo-300 font-mono"
+                    className="w-full bg-[#0c0f17] border border-[#20293a] rounded-lg p-3 text-xs text-indigo-300 font-mono"
                   />
                 </div>
               </div>
@@ -863,12 +863,12 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
               )}
 
               {sandboxResult && (
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-                  <div className="flex items-center justify-between text-xs text-slate-400 border-b border-slate-800 pb-2">
+                <div className="bg-[#0c0f17] p-4 rounded-xl border border-[#20293a] space-y-3">
+                  <div className="flex items-center justify-between text-xs text-slate-400 border-b border-[#20293a] pb-2">
                     <span className="font-mono text-indigo-400">Respuesta de Jev (Decisions API)</span>
                     <span>Latencia: <strong>{sandboxResult.latency_ms} ms</strong> | Coste: <strong>${sandboxResult.usage?.cost || 0.0001}</strong></span>
                   </div>
-                  <pre className="text-xs font-mono text-slate-200 overflow-x-auto p-2 bg-slate-900 rounded">
+                  <pre className="text-xs font-mono text-slate-200 overflow-x-auto p-2 bg-[#121722] rounded">
                     {JSON.stringify(sandboxResult.answers, null, 2)}
                   </pre>
                 </div>
@@ -878,7 +878,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="bg-slate-950 border-t border-slate-800 px-6 py-3 flex items-center justify-between text-xs text-slate-400">
+        <div className="bg-[#0c0f17] border-t border-[#20293a] px-6 py-3 flex items-center justify-between text-xs text-slate-400">
           <div className="flex items-center space-x-4">
             <span className="flex items-center space-x-1 text-slate-300">
               <Zap className="w-3.5 h-3.5 text-amber-400" />
@@ -891,7 +891,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg transition"
+            className="px-4 py-1.5 bg-[#182030] hover:bg-[#20293a] text-slate-200 rounded-lg transition"
             aria-label="Cerrar motor de decisiones Jev"
           >
             Cerrar

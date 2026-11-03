@@ -527,7 +527,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
               <span>OpenRouter</span>
               <span
                 className={`text-[10px] px-1.5 py-0.5 rounded font-mono font-bold tracking-tight ${
-                  useOpenRouter ? 'bg-purple-900/60 text-purple-300' : 'bg-slate-800 text-slate-400'
+                  useOpenRouter ? 'bg-purple-900/60 text-purple-300' : 'bg-[#182030] text-slate-400'
                 }`}
               >
                 openrouter/free
@@ -826,7 +826,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
                     return (
                       <div
                         key={idx}
-                        className="bg-[#121722] border border-[#20293a] rounded-xl p-3.5 shadow-2xs hover:border-slate-700 transition-all flex flex-col gap-2.5"
+                        className="bg-[#121722] border border-[#20293a] rounded-xl p-3.5 shadow-2xs hover:border-[#20293a] transition-all flex flex-col gap-2.5"
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div>
@@ -916,7 +916,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
                     return (
                       <div
                         key={idx}
-                        className="bg-[#121722] border border-[#20293a] rounded-xl p-3 shadow-2xs hover:border-slate-700 transition-all flex items-center justify-between gap-3"
+                        className="bg-[#121722] border border-[#20293a] rounded-xl p-3 shadow-2xs hover:border-[#20293a] transition-all flex items-center justify-between gap-3"
                       >
                         <div className="text-xs">
                           <div className="flex items-center gap-2 mb-1">

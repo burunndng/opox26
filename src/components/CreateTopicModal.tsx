@@ -76,8 +76,8 @@ export const CreateTopicModal: React.FC<CreateTopicModalProps> = ({
       aria-modal="true"
       aria-labelledby="create-topic-modal-title"
     >
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-6 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+      <div className="bg-[#121722] border border-[#20293a] rounded-2xl max-w-lg w-full p-6 space-y-6 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-[#20293a] pb-4">
           <div className="flex items-center space-x-2.5">
             <div className="p-2 rounded-xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30">
               <FolderPlus className="w-5 h-5" />
@@ -91,7 +91,7 @@ export const CreateTopicModal: React.FC<CreateTopicModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-[#182030] transition"
             aria-label="Cerrar creación de tema"
           >
             <X className="w-5 h-5" />
@@ -115,7 +115,7 @@ export const CreateTopicModal: React.FC<CreateTopicModalProps> = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ej: Tema 8: Pensiones de Jubilación e Incapacidad Permanente" aria-label="Ej: Tema 8: Pensiones de Jubilación e Incapacidad Permanente"
-              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+              className="w-full px-3.5 py-2.5 bg-[#0c0f17] border border-[#20293a] rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
             />
           </div>
 
@@ -128,7 +128,7 @@ export const CreateTopicModal: React.FC<CreateTopicModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Ej: Artículos 193 a 215 TRLGSS. Requisitos de cotización, base reguladora, porcentajes de incapacidad y excepciones." aria-label="Ej: Artículos 193 a 215 TRLGSS. Requisitos de cotización, base reguladora, porcentajes de incapacidad y excepciones."
-              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 resize-none"
+              className="w-full px-3.5 py-2.5 bg-[#0c0f17] border border-[#20293a] rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 resize-none"
             />
           </div>
 
@@ -141,7 +141,7 @@ export const CreateTopicModal: React.FC<CreateTopicModalProps> = ({
               value={sourceFile}
               onChange={(e) => setSourceFile(e.target.value)}
               placeholder="Ej: Diapositivas Tema 8 SS.pdf / BOE-A-2015-11724" aria-label="Ej: Diapositivas Tema 8 SS.pdf / BOE-A-2015-11724"
-              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+              className="w-full px-3.5 py-2.5 bg-[#0c0f17] border border-[#20293a] rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
             />
           </div>
 

@@ -86,7 +86,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-16">
       {/* Header */}
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-sm">
+      <div className="bg-[#121722] border border-[#20293a] p-6 rounded-2xl shadow-sm">
         <div className="flex items-center space-x-2">
           <Settings2 className="w-5 h-5 text-indigo-400" />
           <h1 className="text-xl font-bold text-white tracking-tight">
@@ -99,13 +99,13 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
         </p>
 
         {/* Tab switch */}
-        <div className="flex items-center space-x-2 mt-5 border-t border-slate-800 pt-4">
+        <div className="flex items-center space-x-2 mt-5 border-t border-[#20293a] pt-4">
           <button
             onClick={() => setActiveSubTab('export')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
               activeSubTab === 'export'
                 ? 'bg-indigo-600 text-white'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
+                : 'bg-[#182030] text-slate-400 hover:text-white'
             }`}
           >
             Exportar / Importar
@@ -115,7 +115,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
               activeSubTab === 'method'
                 ? 'bg-indigo-600 text-white'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
+                : 'bg-[#182030] text-slate-400 hover:text-white'
             }`}
           >
             Método Pedagógico & Principios
@@ -125,7 +125,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
               activeSubTab === 'srs'
                 ? 'bg-indigo-600 text-white'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
+                : 'bg-[#182030] text-slate-400 hover:text-white'
             }`}
           >
             Parámetros SRS & Graduación
@@ -135,7 +135,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center space-x-1.5 ${
               activeSubTab === 'ai'
                 ? 'bg-amber-600 text-white'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
+                : 'bg-[#182030] text-slate-400 hover:text-white'
             }`}
           >
             <Zap className="w-3.5 h-3.5 text-amber-300" />
@@ -150,7 +150,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
       {activeSubTab === 'export' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Anki Export Hub */}
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+          <div className="bg-[#121722] border border-[#20293a] rounded-xl p-5 space-y-4">
             <div className="flex items-center space-x-2">
               <Download className="w-4 h-4 text-emerald-400" />
               <h3 className="text-sm font-bold text-white">Exportación a Anki (TSV Tab-Separated)</h3>
@@ -168,7 +168,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
             </button>
 
             {ankiData && (
-              <div className="space-y-2 pt-2 border-t border-slate-850">
+              <div className="space-y-2 pt-2 border-t border-[#20293a]">
                 <button
                   onClick={() =>
                     downloadFile(
@@ -177,7 +177,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                       'text/tab-separated-values'
                     )
                   }
-                  className="w-full text-left p-2.5 bg-slate-950 hover:bg-slate-850 border border-slate-800 rounded-lg text-xs text-slate-200 flex items-center justify-between"
+                  className="w-full text-left p-2.5 bg-[#0c0f17] hover:bg-[#182030] border border-[#20293a] rounded-lg text-xs text-slate-200 flex items-center justify-between"
                 >
                   <span>1. Note Type: Cover-and-Generate MCQ</span>
                   <Download className="w-3.5 h-3.5 text-slate-400" />
@@ -191,7 +191,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                       'text/tab-separated-values'
                     )
                   }
-                  className="w-full text-left p-2.5 bg-slate-950 hover:bg-slate-850 border border-slate-800 rounded-lg text-xs text-slate-200 flex items-center justify-between"
+                  className="w-full text-left p-2.5 bg-[#0c0f17] hover:bg-[#182030] border border-[#20293a] rounded-lg text-xs text-slate-200 flex items-center justify-between"
                 >
                   <span>2. Note Type: Cloze / Mutilado</span>
                   <Download className="w-3.5 h-3.5 text-slate-400" />
@@ -205,7 +205,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                       'text/tab-separated-values'
                     )
                   }
-                  className="w-full text-left p-2.5 bg-slate-950 hover:bg-slate-850 border border-slate-800 rounded-lg text-xs text-slate-200 flex items-center justify-between"
+                  className="w-full text-left p-2.5 bg-[#0c0f17] hover:bg-[#182030] border border-[#20293a] rounded-lg text-xs text-slate-200 flex items-center justify-between"
                 >
                   <span>3. Note Type: Contrast Card Matrix</span>
                   <Download className="w-3.5 h-3.5 text-slate-400" />
@@ -219,7 +219,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                       'text/tab-separated-values'
                     )
                   }
-                  className="w-full text-left p-2.5 bg-slate-950 hover:bg-slate-850 border border-slate-800 rounded-lg text-xs text-slate-200 flex items-center justify-between"
+                  className="w-full text-left p-2.5 bg-[#0c0f17] hover:bg-[#182030] border border-[#20293a] rounded-lg text-xs text-slate-200 flex items-center justify-between"
                 >
                   <span>4. Note Type: Number / Deadline Sort</span>
                   <Download className="w-3.5 h-3.5 text-slate-400" />
@@ -233,7 +233,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                       'text/tab-separated-values'
                     )
                   }
-                  className="w-full text-left p-2.5 bg-slate-950 hover:bg-slate-850 border border-slate-800 rounded-lg text-xs text-slate-200 flex items-center justify-between"
+                  className="w-full text-left p-2.5 bg-[#0c0f17] hover:bg-[#182030] border border-[#20293a] rounded-lg text-xs text-slate-200 flex items-center justify-between"
                 >
                   <span>5. Note Type: Spot-the-Error</span>
                   <Download className="w-3.5 h-3.5 text-slate-400" />
@@ -243,7 +243,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
           </div>
 
           {/* Local Backups & CSV Hub */}
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3">
+          <div className="bg-[#121722] border border-[#20293a] rounded-xl p-5 space-y-3">
             <div className="flex items-center space-x-2">
               <FileSpreadsheet className="w-4 h-4 text-indigo-400" />
               <h3 className="text-sm font-bold text-white">Copias de Seguridad y Tablas CSV</h3>
@@ -256,7 +256,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
             <div className="space-y-2 pt-1">
               <button
                 onClick={handleDownloadBackup}
-                className="w-full text-left p-3 bg-slate-950 hover:bg-slate-850 border border-slate-850 rounded-lg text-xs text-indigo-300 font-semibold flex items-center justify-between"
+                className="w-full text-left p-3 bg-[#0c0f17] hover:bg-[#182030] border border-[#20293a] rounded-lg text-xs text-indigo-300 font-semibold flex items-center justify-between"
               >
                 <span>Backup Completo de Base de Datos (JSON)</span>
                 <Download className="w-4 h-4 text-indigo-400" />
@@ -264,7 +264,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
 
               <button
                 onClick={handleDownloadItemsCsv}
-                className="w-full text-left p-3 bg-slate-950 hover:bg-slate-850 border border-slate-850 rounded-lg text-xs text-slate-200 flex items-center justify-between"
+                className="w-full text-left p-3 bg-[#0c0f17] hover:bg-[#182030] border border-[#20293a] rounded-lg text-xs text-slate-200 flex items-center justify-between"
               >
                 <span>Exportar Banco de Ítems (CSV)</span>
                 <Download className="w-4 h-4 text-slate-400" />
@@ -272,7 +272,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
 
               <button
                 onClick={handleDownloadErrorsCsv}
-                className="w-full text-left p-3 bg-slate-950 hover:bg-slate-850 border border-slate-850 rounded-lg text-xs text-slate-200 flex items-center justify-between"
+                className="w-full text-left p-3 bg-[#0c0f17] hover:bg-[#182030] border border-[#20293a] rounded-lg text-xs text-slate-200 flex items-center justify-between"
               >
                 <span>Exportar Registro de Errores E1-E20 (CSV)</span>
                 <Download className="w-4 h-4 text-slate-400" />
@@ -280,7 +280,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
 
               <button
                 onClick={handleDownloadReportMd}
-                className="w-full text-left p-3 bg-slate-950 hover:bg-slate-850 border border-slate-850 rounded-lg text-xs text-slate-200 flex items-center justify-between"
+                className="w-full text-left p-3 bg-[#0c0f17] hover:bg-[#182030] border border-[#20293a] rounded-lg text-xs text-slate-200 flex items-center justify-between"
               >
                 <span>Informe Ejecutivo de Rendimiento (Markdown)</span>
                 <Download className="w-4 h-4 text-slate-400" />
@@ -288,7 +288,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
 
               <button
                 onClick={handleDownloadQuizlet}
-                className="w-full text-left p-3 bg-slate-950 hover:bg-slate-850 border border-slate-850 rounded-lg text-xs text-slate-200 flex items-center justify-between"
+                className="w-full text-left p-3 bg-[#0c0f17] hover:bg-[#182030] border border-[#20293a] rounded-lg text-xs text-slate-200 flex items-center justify-between"
               >
                 <span>Exportar para Quizlet (Texto Plano)</span>
                 <Download className="w-4 h-4 text-slate-400" />
@@ -302,8 +302,8 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
       {/* 2. PEDAGOGICAL METHOD SUBTAB */}
       {/* ---------------------------------------------------- */}
       {activeSubTab === 'method' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-6 text-slate-300 text-xs sm:text-sm leading-relaxed">
-          <div className="flex items-center space-x-2 border-b border-slate-800 pb-3">
+        <div className="bg-[#121722] border border-[#20293a] rounded-xl p-6 space-y-6 text-slate-300 text-xs sm:text-sm leading-relaxed">
+          <div className="flex items-center space-x-2 border-b border-[#20293a] pb-3">
             <Brain className="w-5 h-5 text-indigo-400" />
             <h3 className="text-base font-bold text-white">
               Fundamentos de la Ciencia del Aprendizaje en OposiLab
@@ -311,7 +311,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
           </div>
 
           <div className="space-y-4">
-            <div className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+            <div className="p-4 bg-[#0c0f17] rounded-xl border border-[#20293a] space-y-1">
               <h4 className="font-bold text-indigo-300">
                 1. ¿Por qué Cover-and-Generate MCQ antes de ver opciones?
               </h4>
@@ -323,7 +323,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
               </p>
             </div>
 
-            <div className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+            <div className="p-4 bg-[#0c0f17] rounded-xl border border-[#20293a] space-y-1">
               <h4 className="font-bold text-indigo-300">
                 2. ¿Por qué se analizan los distractores y sus trampas?
               </h4>
@@ -336,7 +336,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
               </p>
             </div>
 
-            <div className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+            <div className="p-4 bg-[#0c0f17] rounded-xl border border-[#20293a] space-y-1">
               <h4 className="font-bold text-indigo-300">
                 3. ¿Por qué se evalúa la confianza (0 a 3)?
               </h4>
@@ -347,7 +347,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
               </p>
             </div>
 
-            <div className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+            <div className="p-4 bg-[#0c0f17] rounded-xl border border-[#20293a] space-y-1">
               <h4 className="font-bold text-indigo-300">
                 4. ¿Por qué los simulacros de examen completos NO están incluidos?
               </h4>
@@ -359,7 +359,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
               </p>
             </div>
 
-            <div className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+            <div className="p-4 bg-[#0c0f17] rounded-xl border border-[#20293a] space-y-1">
               <h4 className="font-bold text-indigo-300">
                 5. ¿Por qué intercalamos bloques en lugar de estudiar temas bloques?
               </h4>
@@ -373,7 +373,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
               </p>
             </div>
 
-            <div className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+            <div className="p-4 bg-[#0c0f17] rounded-xl border border-[#20293a] space-y-1">
               <h4 className="font-bold text-indigo-300">
                 6. ¿Por qué cada error se repara de forma distinta?
               </h4>
@@ -394,8 +394,8 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
       {/* 3. SRS SETTINGS SUBTAB */}
       {/* ---------------------------------------------------- */}
       {activeSubTab === 'srs' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-6">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="bg-[#121722] border border-[#20293a] rounded-xl p-6 space-y-6">
+          <div className="flex items-center justify-between border-b border-[#20293a] pb-3">
             <div className="flex items-center space-x-2">
               <Sliders className="w-5 h-5 text-indigo-400" />
               <h3 className="text-base font-bold text-white">
@@ -425,7 +425,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                     graduating_interval: parseInt(e.target.value) || 4,
                   })
                 }
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white"
+                className="w-full bg-[#0c0f17] border border-[#20293a] rounded-lg p-2 text-xs text-white"
               />
             </div>
 
@@ -443,7 +443,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                     max_new_items_per_day: parseInt(e.target.value) || 15,
                   })
                 }
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white"
+                className="w-full bg-[#0c0f17] border border-[#20293a] rounded-lg p-2 text-xs text-white"
               />
             </div>
           </div>
@@ -459,7 +459,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                     require_two_formats_for_graduation: e.target.checked,
                   })
                 }
-                className="rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-2 focus:ring-indigo-500"
+                className="rounded border-[#20293a] bg-[#0c0f17] text-indigo-600 focus:ring-2 focus:ring-indigo-500"
               />
               <span>
                 Exigir acierto en al menos 2 formatos diferentes para graduar un ítem (ej. MCQ + Cloze)
@@ -476,7 +476,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                     require_interleaved_success_for_graduation: e.target.checked,
                   })
                 }
-                className="rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-2 focus:ring-indigo-500"
+                className="rounded border-[#20293a] bg-[#0c0f17] text-indigo-600 focus:ring-2 focus:ring-indigo-500"
               />
               <span>Exigir al menos 1 acierto en bloque intercalado para graduación</span>
             </label>
@@ -497,8 +497,8 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
       {/* 4. AI & JEV DECISION ENGINE SETTINGS SUBTAB */}
       {/* ---------------------------------------------------- */}
       {activeSubTab === 'ai' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-6">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="bg-[#121722] border border-[#20293a] rounded-xl p-6 space-y-6">
+          <div className="flex items-center justify-between border-b border-[#20293a] pb-3">
             <div className="flex items-center space-x-2">
               <Zap className="w-5 h-5 text-amber-400" />
               <h3 className="text-base font-bold text-white">
@@ -514,7 +514,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
           </div>
 
           {/* Generative AI Provider Settings */}
-          <div className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-4">
+          <div className="p-4 bg-[#0c0f17] rounded-xl border border-[#20293a] space-y-4">
             <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
               1. Asistente Generativo (Chat & Generación de Borradores)
             </h4>
@@ -530,7 +530,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                       ai_provider: e.target.value as any,
                     })
                   }
-                  className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white"
+                  className="w-full bg-[#121722] border border-[#20293a] rounded-lg p-2 text-xs text-white"
                 >
                   <option value="gemini">Google Gemini (Recomendado)</option>
                   <option value="openrouter">OpenRouter / Modelos Externos</option>
@@ -550,14 +550,14 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                     })
                   }
                   placeholder="gemini-2.5-flash" aria-label="gemini-2.5-flash"
-                  className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white"
+                  className="w-full bg-[#121722] border border-[#20293a] rounded-lg p-2 text-xs text-white"
                 />
               </div>
             </div>
           </div>
 
           {/* Jev Decision Engine (Completely Optional) */}
-          <div className="p-4 bg-slate-950 rounded-xl border border-indigo-500/30 space-y-4">
+          <div className="p-4 bg-[#0c0f17] rounded-xl border border-indigo-500/30 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <div className="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-xs">
@@ -589,11 +589,11 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                   }
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                <div className="w-11 h-6 bg-[#182030] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
               </label>
             </div>
 
-            <div className="text-xs text-slate-400 space-y-2 bg-slate-900/60 p-3 rounded-lg border border-slate-800">
+            <div className="text-xs text-slate-400 space-y-2 bg-[#121722]/60 p-3 rounded-lg border border-[#20293a]">
               <div className="flex items-start space-x-2">
                 <span className="text-indigo-400 font-bold">•</span>
                 <span>

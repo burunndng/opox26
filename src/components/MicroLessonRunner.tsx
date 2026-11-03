@@ -129,7 +129,7 @@ export const MicroLessonRunner: React.FC<MicroLessonRunnerProps> = ({ topic, ato
           Este tema aún no tiene fragmentos de origen. Importa el texto o PDF en el Content Studio
           ("Crear fragmentos") para habilitar las micro-lecciones.
         </p>
-        <button onClick={onExit} className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm">
+        <button onClick={onExit} className="px-4 py-2 rounded-xl bg-[#182030] hover:bg-[#20293a] text-slate-200 text-sm">
           Volver
         </button>
       </div>
@@ -140,7 +140,7 @@ export const MicroLessonRunner: React.FC<MicroLessonRunnerProps> = ({ topic, ato
     const pct = totalRecalled.total > 0 ? Math.round((totalRecalled.recalled / totalRecalled.total) * 100) : 0;
     return (
       <div className="max-w-3xl mx-auto py-10 px-4">
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center space-y-5">
+        <div className="bg-[#121722] border border-[#20293a] rounded-2xl p-8 text-center space-y-5">
           <BrainCircuit className="w-12 h-12 text-indigo-400 mx-auto" />
           <h2 className="text-xl font-bold text-white">Estudio completado</h2>
           <p className="text-sm text-slate-300">
@@ -172,7 +172,7 @@ export const MicroLessonRunner: React.FC<MicroLessonRunnerProps> = ({ topic, ato
   return (
     <div className="max-w-3xl mx-auto pb-16 px-4">
       {/* Header */}
-      <div className="flex items-center justify-between py-4 border-b border-slate-800 mb-6">
+      <div className="flex items-center justify-between py-4 border-b border-[#20293a] mb-6">
         <div className="flex items-center space-x-2">
           <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 text-xs font-semibold">
             <BookOpen className="w-3.5 h-3.5" />
@@ -185,7 +185,7 @@ export const MicroLessonRunner: React.FC<MicroLessonRunnerProps> = ({ topic, ato
       </div>
 
       {/* Progress */}
-      <div className="w-full bg-slate-800 rounded-full h-1.5 mb-6">
+      <div className="w-full bg-[#182030] rounded-full h-1.5 mb-6">
         <div
           className="bg-indigo-500 h-1.5 rounded-full transition-all"
           style={{ width: `${((chunkIndex + (phase === 'feedback' ? 1 : 0)) / chunks.length) * 100}%` }}
@@ -199,7 +199,7 @@ export const MicroLessonRunner: React.FC<MicroLessonRunnerProps> = ({ topic, ato
 
       {phase === 'reading' && currentChunk && (
         <div className="space-y-5">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">
+          <div className="bg-[#121722] border border-[#20293a] rounded-2xl p-5 text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">
             {currentChunk.raw_text}
           </div>
           <button
@@ -224,7 +224,7 @@ export const MicroLessonRunner: React.FC<MicroLessonRunnerProps> = ({ topic, ato
             onChange={(e) => setRecallAnswer(e.target.value)}
             autoFocus
             placeholder="Escribe aquí la regla, los datos numéricos y las excepciones que recuerdes…" aria-label="Escribe aquí la regla, los datos numéricos y las excepciones que recuerdes…"
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 leading-relaxed"
+            className="w-full bg-[#0c0f17] border border-[#20293a] rounded-xl p-3.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 leading-relaxed"
           />
           <button
             onClick={handleReveal}
@@ -251,7 +251,7 @@ export const MicroLessonRunner: React.FC<MicroLessonRunnerProps> = ({ topic, ato
               <div className="text-lg font-bold text-rose-300 font-mono">{missed.length}</div>
               <div className="text-[10px] text-rose-400/80 uppercase">Fallados</div>
             </div>
-            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-center">
+            <div className="p-3 rounded-xl bg-[#121722] border border-[#20293a] text-center">
               <Lightbulb className="w-4 h-4 text-amber-400 mx-auto mb-1" />
               <div className="text-lg font-bold text-amber-300 font-mono">{createdCount}</div>
               <div className="text-[10px] text-slate-400 uppercase">Ítems creados</div>
@@ -301,7 +301,7 @@ export const MicroLessonRunner: React.FC<MicroLessonRunnerProps> = ({ topic, ato
 
           <button
             onClick={handleNextChunk}
-            className="w-full px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm transition flex items-center justify-center space-x-2"
+            className="w-full px-4 py-3 rounded-xl bg-[#182030] hover:bg-[#20293a] text-slate-200 font-semibold text-sm transition flex items-center justify-center space-x-2"
           >
             <span>{chunkIndex + 1 >= chunks.length ? 'Finalizar micro-lección' : 'Siguiente fragmento'}</span>
             <ArrowRight className="w-4 h-4" />

@@ -124,7 +124,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
   return (
     <div className="max-w-7xl mx-auto space-y-6 pb-16">
       {/* Header */}
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-lg shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="bg-[#121722] border border-[#20293a] p-6 rounded-lg shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2">
             <Database className="w-5 h-5 text-amber-500" />
@@ -155,7 +155,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
       </div>
 
       {/* Filter Toolbar */}
-      <div className="bg-slate-900 border border-slate-800 p-4 rounded-lg space-y-3">
+      <div className="bg-[#121722] border border-[#20293a] p-4 rounded-lg space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           <div className="relative">
             <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
@@ -164,7 +164,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Buscar por pregunta, artículo o regla..." aria-label="Buscar por pregunta, artículo o regla..."
-              className="w-full bg-slate-950 border border-slate-800 rounded-md pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+              className="w-full bg-[#0c0f17] border border-[#20293a] rounded-md pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
             />
           </div>
 
@@ -175,7 +175,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
               setSelectedCluster('all'); // clusters are scoped per topic
             }}
             aria-label="Filtrar por tema"
-            className="bg-slate-950 border border-slate-800 rounded-md px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500"
+            className="bg-[#0c0f17] border border-[#20293a] rounded-md px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500"
           >
             <option value="all">-- Todos los Temas --</option>
             {topics.map((t) => (
@@ -189,7 +189,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
             aria-label="Filtrar por tipo"
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-md px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500"
+            className="bg-[#0c0f17] border border-[#20293a] rounded-md px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500"
           >
             <option value="all">-- Todos los Formatos --</option>
             <option value="cover_and_generate_mcq">Cover & Generate MCQ</option>
@@ -206,7 +206,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
             aria-label="Filtrar por clúster"
             value={selectedCluster}
             onChange={(e) => setSelectedCluster(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-md px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500"
+            className="bg-[#0c0f17] border border-[#20293a] rounded-md px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500"
           >
             <option value="all">-- Todos los Clusters --</option>
             {visibleClusters.map((c) => (
@@ -220,7 +220,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
             aria-label="Filtrar por estado"
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-md px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500"
+            className="bg-[#0c0f17] border border-[#20293a] rounded-md px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-amber-500"
           >
             <option value="all">-- Todos los Estados --</option>
             <option value="validated">Validados</option>
@@ -233,7 +233,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
       {/* Items Table */}
       <div className="space-y-3">
         {filteredItems.length === 0 ? (
-          <div className="p-12 text-center bg-slate-900 border border-slate-800 rounded-lg text-slate-400">
+          <div className="p-12 text-center bg-[#121722] border border-[#20293a] rounded-lg text-slate-400">
             <p className="text-sm">No se han encontrado ítems con estos filtros.</p>
           </div>
         ) : (
@@ -245,7 +245,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
             return (
               <div
                 key={item.id}
-                className="p-5 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-lg transition flex flex-col md:flex-row md:items-start justify-between gap-4"
+                className="p-5 bg-[#121722] border border-[#20293a] hover:border-[#20293a] rounded-lg transition flex flex-col md:flex-row md:items-start justify-between gap-4"
               >
                 <div className="space-y-2 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
@@ -340,7 +340,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
                           className={`text-[11px] px-2 py-0.5 rounded font-mono ${
                             o.is_correct
                               ? 'bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold'
-                              : 'bg-slate-950 text-slate-400 border border-slate-800'
+                              : 'bg-[#0c0f17] text-slate-400 border border-[#20293a]'
                           }`}
                         >
                           {o.id}: {o.is_correct ? 'Correcta' : o.trap_type ? trapLabelEs(o.trap_type) : 'Distractor'}
@@ -353,7 +353,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
                 <div className="flex items-center space-x-2 shrink-0">
                   <button
                     onClick={() => handleAuditWithJev(item)}
-                    className="px-2.5 py-1.5 rounded-md bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-700 transition flex items-center space-x-1.5 text-xs"
+                    className="px-2.5 py-1.5 rounded-md bg-[#0c0f17] hover:bg-[#182030] text-slate-300 border border-[#20293a] transition flex items-center space-x-1.5 text-xs"
                     title="Auditar psicométricamente con Jev"
                   >
                     <Cpu className="w-3.5 h-3.5 text-amber-400" />
@@ -362,7 +362,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
 
                   <button
                     onClick={() => setActivePreview(item)}
-                    className="p-2 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
+                    className="p-2 rounded-md bg-[#182030] hover:bg-[#20293a] text-slate-300 transition"
                     title="Previsualizar en formato examen"
                   >
                     <Eye className="w-4 h-4" />
@@ -390,7 +390,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
 
                   <button
                     onClick={() => handleDeleteItem(item.id)}
-                    className="p-2 rounded-md text-slate-500 hover:text-rose-400 hover:bg-slate-800 transition"
+                    className="p-2 rounded-md text-slate-500 hover:text-rose-400 hover:bg-[#182030] transition"
                     title="Eliminar ítem"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -412,8 +412,8 @@ export const ItemBank: React.FC<ItemBankProps> = ({
           aria-modal="true"
           aria-labelledby="item-preview-title"
         >
-          <div className="bg-slate-900 border border-slate-800 rounded-lg max-w-2xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="bg-[#121722] border border-[#20293a] rounded-lg max-w-2xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-[#20293a] pb-3">
               <span id="item-preview-title" className="text-xs font-mono text-amber-500 font-bold uppercase">
                 Vista Previa de Ítem
               </span>
@@ -442,7 +442,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
                     className={`p-3 rounded-lg border text-xs leading-relaxed ${
                       opt.is_correct
                         ? 'bg-emerald-950/40 border-emerald-700 text-emerald-200'
-                        : 'bg-slate-950 border-slate-800 text-slate-300'
+                        : 'bg-[#0c0f17] border-[#20293a] text-slate-300'
                     }`}
                   >
                     <div className="font-bold mb-0.5">
@@ -484,15 +484,15 @@ export const ItemBank: React.FC<ItemBankProps> = ({
           aria-modal="true"
           aria-labelledby="jev-audit-title"
         >
-          <div className="bg-slate-900 border border-slate-700 rounded-lg max-w-2xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="bg-[#121722] border border-[#20293a] rounded-lg max-w-2xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[#20293a] pb-3">
               <div className="flex items-center space-x-2">
                 <Cpu className="w-5 h-5 text-amber-500" />
                 <span id="jev-audit-title" className="text-sm font-bold text-white tracking-tight">
                   Auditoría Psicométrica Jev
                 </span>
                 <span className="text-slate-500" aria-hidden="true">·</span>
-                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-950 text-slate-400 border border-slate-800">
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#0c0f17] text-slate-400 border border-[#20293a]">
                   typesafe/jev-1.13
                 </span>
               </div>
@@ -505,7 +505,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
               </button>
             </div>
 
-            <div className="p-3 bg-slate-950 rounded-md border border-slate-800">
+            <div className="p-3 bg-[#0c0f17] rounded-md border border-[#20293a]">
               <p className="text-xs font-semibold text-slate-200 font-legal-serif">{jevAuditItem.stem}</p>
               {jevAuditItem.legal_basis && (
                 <p className="text-[11px] font-mono text-amber-500 mt-1">
@@ -526,7 +526,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
             {jevAuditResult && (
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3 bg-slate-950 rounded-md border border-slate-800">
+                  <div className="p-3 bg-[#0c0f17] rounded-md border border-[#20293a]">
                     <span className="text-[10px] uppercase font-bold text-slate-400">
                       Noul: Enunciado Inequívoco
                     </span>
@@ -535,7 +535,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
                     </div>
                   </div>
 
-                  <div className="p-3 bg-slate-950 rounded-md border border-slate-800">
+                  <div className="p-3 bg-[#0c0f17] rounded-md border border-[#20293a]">
                     <span className="text-[10px] uppercase font-bold text-rose-400">
                       Noul: Riesgo Doble Llave
                     </span>
@@ -545,7 +545,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
                   </div>
                 </div>
 
-                <div className="p-3 bg-slate-950 rounded-md border border-slate-800 space-y-1">
+                <div className="p-3 bg-[#0c0f17] rounded-md border border-[#20293a] space-y-1">
                   <span className="text-[10px] uppercase font-bold text-amber-500">
                     Choice: Trampa Cognitiva Principal
                   </span>
@@ -557,7 +557,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
                   </div>
                 </div>
 
-                <div className="p-3 bg-slate-950 rounded-md border border-slate-800 flex items-center justify-between">
+                <div className="p-3 bg-[#0c0f17] rounded-md border border-[#20293a] flex items-center justify-between">
                   <div>
                     <span className="text-[10px] uppercase font-bold text-slate-400">
                       Score: Dificultad Psicométrica
