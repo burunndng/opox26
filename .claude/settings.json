@@ -1,0 +1,10 @@
+{
+  "extraKnownMarketplaces": {
+    "cpd-pleaseai-vite-plugins-vite": {
+      "source": {
+        "source": "url",
+        "url": "https://claudepluginhub.com/api/plugins/pleaseai-vite-plugins-vite/marketplace.json"
+      }
+    }
+  }
+}

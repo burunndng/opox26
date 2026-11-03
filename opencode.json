@@ -1,0 +1,13 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "oposilab-guardian": {
+      "mode": "all",
+      "description": "Oposilab quality-gate: build loop (`npm run lint` = `tsc --noEmit`), SQLite isolation (`tests/helpers/isolation.ts`), `docs/ACCEPTANCE.md` evidence mapping, P1–P6 tracking, config/review verification"
+    },
+    "oposilab-editor": {
+      "mode": "all",
+      "description": "Oposilab Spanish pedagogical content expert: subtitle→resumen (§1–§8, 🎯 markers, §7 `aviso de rigor`), `draft`→`active` promotion rules, pedagogical detectors (`learningDesignValidator`), BOE-legal anchors"
+    }
+  }
+}
