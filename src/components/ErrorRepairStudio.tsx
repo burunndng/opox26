@@ -175,7 +175,20 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
 
           {filteredErrors.length > 0 && (
             <button
-              onClick={() => onLaunchRepairSession(filteredErrors.map((e) => e.item_id))}
+              onClick={() => {
+                // Bulk guard: launching a repair session closes N error logs,
+                // effectively irreversible from here — confirm only when the
+                // user is bulk-closing a list they may still be studying.
+                if (
+                  filteredErrors.length > 5 &&
+                  !window.confirm(
+                    `¿Lanzar el bloque de reparación con ${filteredErrors.length} fallos? Se cerrarán esos errores al completar el bloque.`
+                  )
+                ) {
+                  return;
+                }
+                onLaunchRepairSession(filteredErrors.map((e) => e.item_id));
+              }}
               className="inline-flex items-center space-x-2 px-4 py-2 rounded-md bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold shadow transition"
             >
               <Play className="w-4 h-4" />
