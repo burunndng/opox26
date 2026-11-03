@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Database,
   Search,
@@ -19,6 +19,7 @@ import {
 import { Item, Cluster, ConfusionPair, ItemType, QualityWarning, JevItemAuditResult, Topic } from '../types.ts';
 import { api } from '../api.ts';
 import { trapLabelEs } from '../utils/trapLabels.ts';
+import { useFocusTrap } from '../utils/useFocusTrap.ts';
 
 interface ItemBankProps {
   items: Item[];
@@ -51,6 +52,11 @@ export const ItemBank: React.FC<ItemBankProps> = ({
   const [jevAuditItem, setJevAuditItem] = useState<Item | null>(null);
   const [jevAuditResult, setJevAuditResult] = useState<JevItemAuditResult | null>(null);
   const [jevAuditLoading, setJevAuditLoading] = useState(false);
+
+  const previewRef = useRef<HTMLDivElement | null>(null);
+  useFocusTrap(!!activePreview, () => setActivePreview(null), previewRef);
+  const jevAuditRef = useRef<HTMLDivElement | null>(null);
+  useFocusTrap(!!jevAuditItem, () => setJevAuditItem(null), jevAuditRef);
 
   const handleAuditWithJev = async (item: Item) => {
     setJevAuditItem(item);
@@ -395,14 +401,22 @@ export const ItemBank: React.FC<ItemBankProps> = ({
 
       {/* Preview Modal */}
       {activePreview && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div
+          ref={previewRef}
+          tabIndex={-1}
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm outline-none"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="item-preview-title"
+        >
           <div className="bg-slate-900 border border-slate-800 rounded-lg max-w-2xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <span className="text-xs font-mono text-amber-500 font-bold uppercase">
+              <span id="item-preview-title" className="text-xs font-mono text-amber-500 font-bold uppercase">
                 Vista Previa de Ítem
               </span>
               <button
                 onClick={() => setActivePreview(null)}
+                aria-label="Cerrar vista previa del ítem"
                 className="text-slate-400 hover:text-white text-xs font-bold"
               >
                 Cerrar (Esc)
@@ -459,12 +473,19 @@ export const ItemBank: React.FC<ItemBankProps> = ({
 
       {/* Jev Psychometric Audit Modal */}
       {jevAuditItem && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div
+          ref={jevAuditRef}
+          tabIndex={-1}
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm outline-none"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="jev-audit-title"
+        >
           <div className="bg-slate-900 border border-slate-700 rounded-lg max-w-2xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center space-x-2">
                 <Cpu className="w-5 h-5 text-amber-500" />
-                <span className="text-sm font-bold text-white tracking-tight">
+                <span id="jev-audit-title" className="text-sm font-bold text-white tracking-tight">
                   Auditoría Psicométrica Jev
                 </span>
                 <span className="text-slate-500" aria-hidden="true">·</span>
@@ -474,6 +495,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
               </div>
               <button
                 onClick={() => setJevAuditItem(null)}
+                aria-label="Cerrar auditoría psicométrica"
                 className="text-slate-400 hover:text-white text-xs font-bold"
               >
                 Cerrar

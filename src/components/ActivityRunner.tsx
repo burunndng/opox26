@@ -58,6 +58,7 @@ import { PretestDiagnosticMap } from './PretestDiagnosticMap.tsx';
 import { SessionHeatMap } from './SessionHeatMap.tsx';
 import { optionIdAtPosition, optionOrderSeed, orderOptions } from '../utils/optionOrder.ts';
 import { RUNNER_RENDERED_ITEM_TYPES } from '../utils/runnerRenderCoverage.ts';
+import { useFocusTrap } from '../utils/useFocusTrap.ts';
 import { trapLabelEs } from '../utils/trapLabels.ts';
 
 const EMPTY_OPTION_CHOICES: Array<{
@@ -322,6 +323,8 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
   // Session saving modal
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const saveModalRef = useRef<HTMLDivElement | null>(null);
+  useFocusTrap(isSaveModalOpen, () => setIsSaveModalOpen(false), saveModalRef);
   const [saveStatusMessage, setSaveStatusMessage] = useState<string | null>(null);
   const [saveStatusKind, setSaveStatusKind] = useState<'success' | 'error'>('success');
 
@@ -3248,15 +3251,23 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
       {/* SESSION SAVE & RESTORE MODAL */}
       {/* ---------------------------------------------------- */}
       {isSaveModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
+        <div
+          ref={saveModalRef}
+          tabIndex={-1}
+          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn outline-none"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="save-session-modal-title"
+        >
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center space-x-2">
                 <Save className="w-5 h-5 text-indigo-400" />
-                <h3 className="font-bold text-white text-base">Guardar / Restaurar Progreso</h3>
+                <h3 id="save-session-modal-title" className="font-bold text-white text-base">Guardar / Restaurar Progreso</h3>
               </div>
               <button
                 onClick={() => setIsSaveModalOpen(false)}
+                aria-label="Cerrar guardar o restaurar sesión"
                 className="text-slate-400 hover:text-white p-1"
               >
                 ✕

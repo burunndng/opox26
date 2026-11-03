@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   AlertOctagon,
   CheckCircle,
@@ -19,6 +19,7 @@ import {
 import { ErrorLog, Item, Topic } from '../types.ts';
 import { api } from '../api.ts';
 import { trapLabelEs } from '../utils/trapLabels.ts';
+import { useFocusTrap } from '../utils/useFocusTrap.ts';
 
 interface ErrorRepairStudioProps {
   errors: ErrorLog[];
@@ -65,6 +66,8 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
   const [selectedTopicId, setSelectedTopicId] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [isDossierOpen, setIsDossierOpen] = useState(false);
+  const dossierRef = useRef<HTMLDivElement | null>(null);
+  useFocusTrap(isDossierOpen, () => setIsDossierOpen(false), dossierRef);
   const [copiedDossier, setCopiedDossier] = useState(false);
 
   const itemMap = new Map(items.map((i) => [i.id, i]));
@@ -380,15 +383,22 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
 
       {/* Dossier Modal */}
       {isDossierOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div
+          ref={dossierRef}
+          tabIndex={-1}
+          className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 outline-none"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="dossier-modal-title"
+        >
           <div className="bg-slate-900 border border-slate-800 rounded-lg w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
             {/* Modal Header */}
             <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
               <div className="flex items-center space-x-2.5">
                 <BookOpen className="w-5 h-5 text-amber-500" />
                 <div>
-                  <h3 className="text-sm font-bold text-white">
-                    Cuaderno de Fallos & Trampas — Formato Impresión / Estudio Offline
+                  <h3 id="dossier-modal-title" className="text-sm font-bold text-white">
+                    Cuaderno de Fallos &amp; Trampas — Formato Impresión / Estudio Offline
                   </h3>
                   <p className="text-[11px] text-slate-400">
                     Dossier estructurado con reglas correctivas, taxonomía de errores y bases legales
@@ -415,6 +425,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
 
                 <button
                   onClick={() => setIsDossierOpen(false)}
+                  aria-label="Cerrar cuaderno de fallos"
                   className="p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition"
                 >
                   <X className="w-4 h-4" />

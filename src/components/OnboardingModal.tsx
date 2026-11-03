@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Play, SkipForward, ArrowRight } from 'lucide-react';
+import { useFocusTrap } from '../utils/useFocusTrap.ts';
 
 const STORAGE_KEY = 'oposilab_onboarding_completed';
 
@@ -44,6 +45,8 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
   onComplete,
 }) => {
   const [step, setStep] = useState(0);
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  useFocusTrap(isOpen, onClose, modalRef);
 
   if (!isOpen) return null;
 
@@ -68,7 +71,9 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fadeIn"
+      ref={modalRef}
+      tabIndex={-1}
+      className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fadeIn outline-none"
       role="dialog"
       aria-modal="true"
       aria-labelledby="onboarding-title"
