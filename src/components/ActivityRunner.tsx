@@ -1572,7 +1572,8 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
         </div>
 
         {/* Action Controls & Progress Meter (colapsable: layout P0) */}
-        <div className="flex items-center space-x-2 sm:space-x-3">
+        {/* Anchor context for the 'Más opciones' popover dropdown */}
+        <div className="relative flex items-center space-x-2 sm:space-x-3">
           <button
             onClick={() => setShowMoreOptions((prev) => !prev)}
             aria-expanded={showMoreOptions}
@@ -1715,6 +1716,39 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                 </div>
               )}
             </>
+          )}
+
+          {/* Pacing countdown chip: visible wherever the timer runs instead of
+              hiding the count inside the options popover (a11y P1). role=timer
+              announces the ticking. Colors escalate at 25% remaining and 0. */}
+          {isPacingActive && (
+            <div
+              role="timer"
+              className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-lg border text-xs font-mono font-bold transition ${
+                pacingTimeLeft === 0
+                  ? 'bg-rose-950/60 text-rose-300 border-rose-500/70'
+                  : pacingTimeLeft <= currentPacingBudget * 0.25
+                  ? 'bg-amber-950/60 text-amber-300 border-amber-500/70'
+                  : 'bg-[#0c0f17] text-slate-300 border-[#20293a]'
+              }`}
+              title={`Objetivo de ritmo: ${currentPacingBudget}s para este ítem${
+                pacingTimeLeft === 0
+                  ? ' — tiempo agotado; responde si confías o deja en blanco (0/B)'
+                  : ''
+              }`}
+            >
+              <Clock
+                className={`w-3.5 h-3.5 ${
+                  pacingTimeLeft === 0
+                    ? 'text-rose-400'
+                    : pacingTimeLeft <= currentPacingBudget * 0.25
+                    ? 'text-amber-400'
+                    : 'text-slate-400'
+                }`}
+              />
+              <span className="font-sans font-medium text-slate-400">Ritmo:</span>
+              <span>{pacingTimeLeft}s</span>
+            </div>
           )}
 
           {/* Mode B Streak Counter Pill (oculto mientras se responde — P0) */}
