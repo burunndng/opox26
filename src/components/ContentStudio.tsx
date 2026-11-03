@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { Atom, Cluster, ConfusionPair, AtomType, Topic, Item } from '../types.ts';
 import { api } from '../api.ts';
+import { ConfirmDialog } from './ConfirmDialog.tsx';
 import {
   auditItemPedagogicalQuality,
   PedagogicalDiagnostic,
@@ -40,6 +41,7 @@ interface ContentStudioProps {
   topics: Topic[];
   items?: Item[];
   onRefresh: () => void;
+  setToast?: (t: { message: string; kind: 'error' | 'info' }) => void;
 }
 
 export const ContentStudio: React.FC<ContentStudioProps> = ({
@@ -49,6 +51,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
   topics,
   items = [],
   onRefresh,
+  setToast,
 }) => {
   const [activeTab, setActiveTab] = useState<
     'atoms' | 'import' | 'clusters' | 'confusion_pairs' | 'validator'
@@ -83,6 +86,8 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
   const [setFilterCluster, setSetFilterCluster] = useState<string>('all');
   const [saveSuccessMessage, setSaveSuccessMessage] = useState<string | null>(null);
   const [saveErrorMessage, setSaveErrorMessage] = useState<string | null>(null);
+  const [deleteAtomConfirmOpen, setDeleteAtomConfirmOpen] = useState(false);
+  const [deleteAtomConfirmId, setDeleteAtomConfirmId] = useState<string>('');
   const [activeSetSubTab, setActiveSetSubTab] = useState<'atoms' | 'clusters' | 'confusion_pairs'>(
     'atoms'
   );
@@ -521,9 +526,8 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
   };
 
   const handleDeleteAtom = async (id: string) => {
-    if (!window.confirm('¿Seguro que deseas eliminar esta proposición legal atómica?')) return;
-    await api.deleteAtom(id);
-    onRefresh();
+    setDeleteAtomConfirmId(id);
+    setDeleteAtomConfirmOpen(true);
   };
 
   const handleSaveAuditedItemToBank = async () => {
@@ -1961,6 +1965,30 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
           ))}
         </div>
       )}
+
+    {deleteAtomConfirmOpen && (
+      <ConfirmDialog
+        isOpen={deleteAtomConfirmOpen}
+        onClose={() => {
+          setDeleteAtomConfirmOpen(false);
+          setDeleteAtomConfirmId('');
+        }}
+        onConfirm={async () => {
+          try {
+            await api.deleteAtom(deleteAtomConfirmId);
+            onRefresh();
+          } catch (e) {
+            setToast?.({ message: 'No se pudo eliminar la proposición atómica. Inténtalo de nuevo.', kind: 'error' });
+          }
+          setDeleteAtomConfirmOpen(false);
+          setDeleteAtomConfirmId('');
+        }}
+        title="Eliminar proposición atómica"
+        message="¿Seguro que deseas eliminar esta proposición legal atómica? La acción no se puede deshacer."
+        confirmLabel="Eliminar"
+        variant="danger"
+      />
+    )}
     </div>
   );
 };

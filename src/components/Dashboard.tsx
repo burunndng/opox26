@@ -23,6 +23,7 @@ import {
 import { AnalyticsStrip } from './AnalyticsStrip.tsx';
 import { getTopicBadge } from '../utils/topicBadge.ts';
 import { useAuth } from '../context/AuthContext.tsx';
+import { ConfirmDialog } from './ConfirmDialog.tsx';
 
 interface DashboardProps {
   dueStats: {
@@ -63,6 +64,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
 }) => {
   const { user, signInWithGoogle } = useAuth();
   const [recentSessions, setRecentSessions] = useState<SavedSessionState[]>([]);
+  const [dismissConfirmOpen, setDismissConfirmOpen] = useState(false);
+  const [dismissConfirmId, setDismissConfirmId] = useState<string>('');
 
   // Load paused sessions from localStorage
   const refreshRecentSessions = () => {
@@ -94,21 +97,27 @@ export const Dashboard: React.FC<DashboardProps> = ({
   }, []);
 
   const handleDismissSession = (sessionId: string) => {
-    if (!window.confirm('¿Descartar esta sesión? Se perderá el progreso no guardado.')) return;
-    const updated = recentSessions.filter((s) => s.id !== sessionId);
+    setDismissConfirmId(sessionId);
+    setDismissConfirmOpen(true);
+  };
+
+  const handleDismissConfirmed = async () => {
+    const updated = recentSessions.filter((s) => s.id !== dismissConfirmId);
     setRecentSessions(updated);
     try {
       localStorage.setItem('oposilab_recent_sessions', JSON.stringify(updated));
       const singleRaw = localStorage.getItem('oposilab_saved_session');
       if (singleRaw) {
         const parsed = JSON.parse(singleRaw);
-        if (parsed?.id === sessionId) {
+        if (parsed?.id === dismissConfirmId) {
           localStorage.removeItem('oposilab_saved_session');
         }
       }
     } catch {
       // ignore
     }
+    setDismissConfirmOpen(false);
+    setDismissConfirmId('');
   };
 
   // Helper for per-topic statistics and progress
@@ -151,6 +160,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const activePausedSession = recentSessions[0];
 
   return (
+    <>
     <div className="space-y-8 max-w-6xl mx-auto pb-16">
       {/* 1. Slim Paused Session Banner */}
       {activePausedSession && (
@@ -410,5 +420,21 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
     </div>
+
+    {dismissConfirmOpen && (
+      <ConfirmDialog
+        isOpen={dismissConfirmOpen}
+        onClose={() => {
+          setDismissConfirmOpen(false);
+          setDismissConfirmId('');
+        }}
+        onConfirm={handleDismissConfirmed}
+        title="Descartar sesión guardada"
+        message="¿Descartar esta sesión? Se perderá el progreso no guardado."
+        confirmLabel="Descartar"
+        variant="danger"
+      />
+    )}
+    </>
   );
 };

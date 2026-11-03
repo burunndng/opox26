@@ -20,6 +20,7 @@ import { ErrorLog, Item, Topic } from '../types.ts';
 import { api } from '../api.ts';
 import { trapLabelEs } from '../utils/trapLabels.ts';
 import { useFocusTrap } from '../utils/useFocusTrap.ts';
+import { ConfirmDialog } from './ConfirmDialog.tsx';
 
 interface ErrorRepairStudioProps {
   errors: ErrorLog[];
@@ -66,6 +67,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
   const [selectedTopicId, setSelectedTopicId] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [isDossierOpen, setIsDossierOpen] = useState(false);
+  const [repairConfirmOpen, setRepairConfirmOpen] = useState(false);
   const dossierRef = useRef<HTMLDivElement | null>(null);
   useFocusTrap(isDossierOpen, () => setIsDossierOpen(false), dossierRef);
   const [copiedDossier, setCopiedDossier] = useState(false);
@@ -149,6 +151,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
   };
 
   return (
+    <>
     <div className="max-w-7xl mx-auto space-y-6 pb-16">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-[#121722] border border-[#20293a] p-6 rounded-lg shadow-sm">
@@ -179,12 +182,8 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
                 // Bulk guard: launching a repair session closes N error logs,
                 // effectively irreversible from here — confirm only when the
                 // user is bulk-closing a list they may still be studying.
-                if (
-                  filteredErrors.length > 5 &&
-                  !window.confirm(
-                    `¿Lanzar el bloque de reparación con ${filteredErrors.length} fallos? Se cerrarán esos errores al completar el bloque.`
-                  )
-                ) {
+                if (filteredErrors.length > 5) {
+                  setRepairConfirmOpen(true);
                   return;
                 }
                 onLaunchRepairSession(filteredErrors.map((e) => e.item_id));
@@ -502,5 +501,21 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
         </div>
       )}
     </div>
+
+    {repairConfirmOpen && (
+      <ConfirmDialog
+        isOpen={repairConfirmOpen}
+        onClose={() => setRepairConfirmOpen(false)}
+        onConfirm={() => {
+          onLaunchRepairSession(filteredErrors.map((e) => e.item_id));
+          setRepairConfirmOpen(false);
+        }}
+        title="Lanzar bloque de reparación"
+        message={`¿Lanzar el bloque de reparación con ${filteredErrors.length} fallos? Se cerrarán esos errores al completar el bloque.`}
+        confirmLabel="Lanzar reparación"
+        variant="danger"
+      />
+    )}
+    </>
   );
 };

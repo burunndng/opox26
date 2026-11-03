@@ -40,6 +40,7 @@ import {
   ConfusionPair,
 } from '../types.ts';
 import { api } from '../api.ts';
+import { ConfirmDialog } from './ConfirmDialog.tsx';
 
 interface AiChatbotProps {
   topics: Topic[];
@@ -214,6 +215,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
       },
     ];
   });
+  const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
 
   const [inputText, setInputText] = useState<string>('');
   const [attachments, setAttachments] = useState<ChatAttachment[]>([]);
@@ -448,16 +450,19 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
   };
 
   const handleClearChat = () => {
-    if (window.confirm('¿Deseas vaciar el historial de esta conversación?')) {
-      setMessages([
-        {
-          id: 'welcome_new',
-          role: 'model',
-          content: 'Conversación reiniciada. Puedes escribir tu consulta o adjuntar un documento (PDF, Markdown, texto) para generar actividades.',
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        },
-      ]);
-    }
+    setClearConfirmOpen(true);
+  };
+
+  const handleClearChatConfirmed = () => {
+    setMessages([
+      {
+        id: 'welcome_new',
+        role: 'model',
+        content: 'Conversación reiniciada. Puedes escribir tu consulta o adjuntar un documento (PDF, Markdown, texto) para generar actividades.',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      },
+    ]);
+    setClearConfirmOpen(false);
   };
 
   const handleExportChat = () => {
@@ -478,6 +483,7 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
   };
 
   return (
+    <>
     <div id="ai-chatbot-container" className="flex flex-col h-[calc(100vh-140px)] min-h-[550px] bg-[#121722] rounded-2xl border border-[#20293a] shadow-sm overflow-hidden">
       {/* Header bar */}
       <div className="flex flex-wrap items-center justify-between px-5 py-3.5 bg-[#0c0f17] border-b border-[#20293a] gap-3">
@@ -1134,5 +1140,18 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
         </div>
       </div>
     </div>
+
+    {clearConfirmOpen && (
+      <ConfirmDialog
+        isOpen={clearConfirmOpen}
+        onClose={() => setClearConfirmOpen(false)}
+        onConfirm={handleClearChatConfirmed}
+        title="Vaciar historial de conversación"
+        message="¿Deseas vaciar el historial de esta conversación? Los mensajes se borrarán de forma permanente."
+        confirmLabel="Vaciar"
+        variant="danger"
+      />
+    )}
+    </>
   );
 };

@@ -561,6 +561,7 @@ export default function App() {
             topics={topics}
             items={items}
             onRefresh={loadData}
+            setToast={setToast}
           />
         )}
 

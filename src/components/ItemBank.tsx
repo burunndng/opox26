@@ -20,6 +20,7 @@ import { Item, Cluster, ConfusionPair, ItemType, QualityWarning, JevItemAuditRes
 import { api } from '../api.ts';
 import { trapLabelEs } from '../utils/trapLabels.ts';
 import { useFocusTrap } from '../utils/useFocusTrap.ts';
+import { ConfirmDialog } from './ConfirmDialog.tsx';
 
 interface ItemBankProps {
   items: Item[];
@@ -54,6 +55,8 @@ export const ItemBank: React.FC<ItemBankProps> = ({
   const [jevAuditItem, setJevAuditItem] = useState<Item | null>(null);
   const [jevAuditResult, setJevAuditResult] = useState<JevItemAuditResult | null>(null);
   const [jevAuditLoading, setJevAuditLoading] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string>('');
 
   const previewRef = useRef<HTMLDivElement | null>(null);
   useFocusTrap(!!activePreview, () => setActivePreview(null), previewRef);
@@ -113,13 +116,8 @@ export const ItemBank: React.FC<ItemBankProps> = ({
     searchTerm.trim().length > 0;
 
   const handleDeleteItem = async (id: string) => {
-    if (!window.confirm('¿Seguro que deseas eliminar este ítem de entrenamiento?')) return;
-    try {
-      await api.deleteItem(id);
-      onRefresh();
-    } catch (e) {
-      setToast?.({ message: 'No se pudo eliminar el ítem. Inténtalo de nuevo.', kind: 'error' });
-    }
+    setDeleteConfirmId(id);
+    setDeleteConfirmOpen(true);
   };
 
   const handleValidateItem = async (item: Item) => {
@@ -132,6 +130,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
   };
 
   return (
+    <>
     <div className="max-w-7xl mx-auto space-y-6 pb-16">
       {/* Header */}
       <div className="bg-[#121722] border border-[#20293a] p-6 rounded-lg shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -596,5 +595,30 @@ export const ItemBank: React.FC<ItemBankProps> = ({
         </div>
       )}
     </div>
+
+    {deleteConfirmOpen && (
+      <ConfirmDialog
+        isOpen={deleteConfirmOpen}
+        onClose={() => {
+          setDeleteConfirmOpen(false);
+          setDeleteConfirmId('');
+        }}
+        onConfirm={async () => {
+          try {
+            await api.deleteItem(deleteConfirmId);
+            onRefresh();
+          } catch (e) {
+            setToast?.({ message: 'No se pudo eliminar el ítem. Inténtalo de nuevo.', kind: 'error' });
+          }
+          setDeleteConfirmOpen(false);
+          setDeleteConfirmId('');
+        }}
+        title="Eliminar ítem de entrenamiento"
+        message="¿Seguro que deseas eliminar este ítem de entrenamiento? La acción no se puede deshacer."
+        confirmLabel="Eliminar"
+        variant="danger"
+      />
+    )}
+    </>
   );
 };
