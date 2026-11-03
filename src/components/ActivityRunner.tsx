@@ -1167,8 +1167,20 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
     return (
       <div className="max-w-3xl mx-auto py-10 px-4 text-center">
         <div className="bg-[#121722] border border-[#20293a] rounded-2xl p-6 sm:p-8 shadow-2xl">
-          <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center mx-auto mb-4">
-            <Award className="w-8 h-8 text-emerald-400" />
+          <div className={`w-16 h-16 rounded-full border flex items-center justify-center mx-auto mb-4 ${
+            baremoPenalty === 0
+              ? 'bg-amber-500/15 border-amber-500/30'
+              : netPercentage >= 50
+                ? 'bg-emerald-500/20 border-emerald-500/30'
+                : 'bg-slate-500/10 border-slate-500/30'
+          }`}>
+            <Award className={`w-8 h-8 ${
+              baremoPenalty === 0
+                ? 'text-amber-400'
+                : netPercentage >= 50
+                  ? 'text-emerald-400'
+                  : 'text-slate-400'
+            }`} />
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
             {mode === 'pretest'
@@ -1186,7 +1198,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               ? 'Práctica formativa sin penalización: el objetivo es acertar y asimilar la regla.'
               : `Con penalización de −${baremoPenalty
                   .toFixed(2)
-                  .replace('.', ',')} por fallo, como en el examen.`}
+                  .replace('.', ',')} por fallo, como en el examen. El corte real varía por convocatoria: el 50 % del máximo es solo una referencia orientativa.`}
           </p>
 
           {/* Baremo Selector Banner */}
@@ -1238,21 +1250,34 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                 </div>
               </div>
 
-              {/* Cut-off pass/fail badge */}
-              <div
-                className={`px-4 py-3 rounded-lg border flex flex-col items-center justify-center text-center ${
-                  isPass
-                    ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300'
-                    : 'bg-rose-950/40 border-rose-500/50 text-rose-300'
-                }`}
-              >
-                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
-                  Corte Est. (50%)
-                </span>
-                <span className="text-sm font-bold mt-0.5">
-                  {isPass ? 'APROBADO VIRTUAL' : 'NO SUPERA EL CORTE'}
-                </span>
-              </div>
+              {/* Verdict badge: mode-aware. Formative drills never get
+                  cut-off language (invented verdict on an arbitrary
+                  threshold); penalty sessions show the reference honestly. */}
+              {baremoPenalty === 0 ? (
+                <div className="px-4 py-3 rounded-lg border flex flex-col items-center justify-center text-center bg-indigo-950/40 border-indigo-500/40 text-indigo-300">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                    Práctica formativa
+                  </span>
+                  <span className="text-sm font-bold mt-0.5">
+                    Sin corte · objetivo de dominio
+                  </span>
+                </div>
+              ) : (
+                <div
+                  className={`px-4 py-3 rounded-lg border flex flex-col items-center justify-center text-center ${
+                    isPass
+                      ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300'
+                      : 'bg-rose-950/40 border-rose-500/50 text-rose-300'
+                  }`}
+                >
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                    Corte orientativo (50 %)
+                  </span>
+                  <span className="text-sm font-bold mt-0.5">
+                    {isPass ? 'APROBADO VIRTUAL' : 'NO SUPERA ESTE CORTE'}
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Score Component Breakdown Grid */}
