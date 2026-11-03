@@ -138,7 +138,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
             onClick={() => setShowWarningsOnly(!showWarningsOnly)}
             className={`px-3 py-1.5 rounded-md text-xs font-semibold flex items-center space-x-2 transition border ${
               showWarningsOnly
-                ? 'bg-amber-500 text-slate-950 border-amber-400 font-bold'
+                ? 'bg-amber-500 text-white border-amber-400 font-bold'
                 : 'bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20'
             }`}
           >

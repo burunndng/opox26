@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Play,
   AlertOctagon,
@@ -13,6 +13,7 @@ import {
   Swords,
 } from 'lucide-react';
 import type { Topic } from '../types.ts';
+import { OnboardingModal } from './OnboardingModal.tsx';
 
 interface StudySetupProps {
   topics: Topic[];
@@ -50,6 +51,20 @@ export const StudySetup: React.FC<StudySetupProps> = ({
   onStartDuel,
   onStartGuided,
 }) => {
+  // Distill P1: reducir opciones visibles en el punto de decisión (≤4).
+  // Plazos y Duelo son drills especializados; se revelan bajo demanda.
+  const [showMoreDrills, setShowMoreDrills] = useState(false);
+
+  // Onboard P2: bienvenida opcional para primerizos (se muestra una sola vez).
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    const completed = localStorage.getItem('oposilab_onboarding_completed') === 'true';
+    if (!completed) {
+      setShowOnboarding(true);
+    }
+  }, []);
+
   const scopeName =
     selectedTopicId === 'all'
       ? 'todo el temario'
@@ -203,40 +218,52 @@ export const StudySetup: React.FC<StudySetupProps> = ({
             </p>
           </button>
 
-          <button
-            onClick={onStartPlazosDrill}
-            className="text-left bg-[#121722] border border-[#20293a] hover:border-amber-700/60 rounded-lg p-4 transition min-h-[88px]"
-          >
-            <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-2 text-sm font-semibold text-slate-100">
-                <Percent className="w-4 h-4 text-amber-400" />
-                <span>Plazos y cuantías</span>
-              </span>
-              <ChevronRight className="w-4 h-4 text-slate-500" />
-            </div>
-            <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
-              Cifras, plazos y porcentajes: practica donde se pierden los puntos.
-              Sin penalización.
-            </p>
-          </button>
+          {showMoreDrills && (
+            <>
+              <button
+                onClick={onStartPlazosDrill}
+                className="text-left bg-[#121722] border border-[#20293a] hover:border-amber-700/60 rounded-lg p-4 transition min-h-[88px]"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="flex items-center space-x-2 text-sm font-semibold text-slate-100">
+                    <Percent className="w-4 h-4 text-amber-400" />
+                    <span>Plazos y cuantías</span>
+                  </span>
+                  <ChevronRight className="w-4 h-4 text-slate-500" />
+                </div>
+                <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
+                  Cifras, plazos y porcentajes: practica donde se pierden los puntos.
+                  Sin penalización.
+                </p>
+              </button>
 
-          <button
-            onClick={onStartDuel}
-            className="text-left bg-[#121722] border border-[#20293a] hover:border-violet-700/60 rounded-lg p-4 transition min-h-[88px]"
-          >
-            <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-2 text-sm font-semibold text-slate-100">
-                <Swords className="w-4 h-4 text-violet-400" />
-                <span>Duelo de conceptos</span>
-              </span>
-              <ChevronRight className="w-4 h-4 text-slate-500" />
-            </div>
-            <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
-              Parejas de conceptos que se confunden, enfrentadas una y otra vez
-              hasta distinguir la regla.
-            </p>
-          </button>
+              <button
+                onClick={onStartDuel}
+                className="text-left bg-[#121722] border border-[#20293a] hover:border-violet-700/60 rounded-lg p-4 transition min-h-[88px]"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="flex items-center space-x-2 text-sm font-semibold text-slate-100">
+                    <Swords className="w-4 h-4 text-violet-400" />
+                    <span>Duelo de conceptos</span>
+                  </span>
+                  <ChevronRight className="w-4 h-4 text-slate-500" />
+                </div>
+                <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
+                  Parejas de conceptos que se confunden, enfrentadas una y otra vez
+                  hasta distinguir la regla.
+                </p>
+              </button>
+            </>
+          )}
         </div>
+
+        {/* Distill P1: drills especializados bajo demanda para no saturar el punto de decisión */}
+        <button
+          onClick={() => setShowMoreDrills((prev) => !prev)}
+          className="mt-2 w-full text-left text-xs font-semibold text-blue-400 hover:text-blue-300 underline underline-offset-4 transition"
+        >
+          {showMoreDrills ? 'Menos formas de practicar ↑' : 'Más formas de practicar →'}
+        </button>
 
         <button
           onClick={() => guidedTopicId && onStartGuided(guidedTopicId)}
@@ -255,6 +282,18 @@ export const StudySetup: React.FC<StudySetupProps> = ({
           </p>
         </button>
       </div>
+
+    {/* Onboard P2: bienvenida opcional para primerizos (una sola vez). */}
+    <OnboardingModal
+      isOpen={showOnboarding}
+      onClose={() => setShowOnboarding(false)}
+      onComplete={() => {
+        setShowOnboarding(false);
+        onStartDue();
+      }}
+    />
+
     </div>
+
   );
 };

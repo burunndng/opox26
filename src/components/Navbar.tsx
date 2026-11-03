@@ -76,17 +76,23 @@ export const Navbar: React.FC<NavbarProps> = ({
         setShowMoreMenu(false);
       }
     };
-    const handleEscape = (event: KeyboardEvent) => {
+    const handleKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
+        setShowMoreMenu(false);
+        setShowMobileMore(false);
+      }
+      if (event.altKey && ['1', '2', '3'].includes(event.key)) {
+        const tab = event.key === '1' ? 'dashboard' : event.key === '2' ? 'runner' : 'errors';
+        setActiveTab(tab);
         setShowMoreMenu(false);
         setShowMobileMore(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleEscape);
+    document.addEventListener('keydown', handleKey);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('keydown', handleKey);
     };
   }, []);
 
@@ -144,19 +150,19 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header className="sticky top-0 z-40 bg-[#0c0f17]/95 backdrop-blur-md border-b border-[#20293a]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14">
-          {/* Zone 1: Single text element wordmark */}
+          {/* Zone 1: Wordmark — laboratorio cognitivo, identidad en índigo */}
           <div
             className="flex items-center space-x-3 cursor-pointer select-none"
             onClick={() => setActiveTab('dashboard')}
           >
-            <div className="w-8 h-8 rounded-md bg-blue-600/15 border border-blue-500/30 flex items-center justify-center text-blue-400">
-              <Scale className="w-4 h-4" />
+            <div className="w-9 h-9 rounded-md bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400">
+              <Scale className="w-5 h-5" />
             </div>
             <div className="flex items-baseline space-x-2">
-              <span className="font-bold text-base text-slate-100 tracking-tight font-legal-serif">
+              <span className="font-bold text-lg text-slate-100 tracking-tight font-legal-serif">
                 OposiLab
               </span>
-              <span className="text-xs text-slate-400 hidden lg:inline font-sans">
+              <span className="text-xs text-slate-300 hidden lg:inline font-sans">
                 Seguridad Social · Laboratorio Cognitivo
               </span>
             </div>

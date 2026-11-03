@@ -204,7 +204,7 @@ export const MicroLessonRunner: React.FC<MicroLessonRunnerProps> = ({ topic, ato
           </div>
           <button
             onClick={() => setPhase('retrieval')}
-            className="w-full px-4 py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-sm transition flex items-center justify-center space-x-2"
+            className="w-full px-4 py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm transition flex items-center justify-center space-x-2"
           >
             <BrainCircuit className="w-4 h-4" />
             <span>He terminado de leer — poner a prueba mi memoria</span>
@@ -282,7 +282,7 @@ export const MicroLessonRunner: React.FC<MicroLessonRunnerProps> = ({ topic, ato
                     <button
                       onClick={() => handleCreateRetrievalItem(m)}
                       disabled={creatingId === m.atomId}
-                      className="shrink-0 px-2.5 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-slate-950 text-[11px] font-bold transition flex items-center space-x-1"
+                      className="shrink-0 px-2.5 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white text-[11px] font-bold transition flex items-center space-x-1"
                       title="Crea un ítem de recuperación (borrador) que entra en la cola de repaso al validarlo"
                     >
                       <PlusCircle className="w-3.5 h-3.5" />

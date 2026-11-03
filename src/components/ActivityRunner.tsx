@@ -314,6 +314,11 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
   // FSRS indicator expansion
   const [showFsrsDetails, setShowFsrsDetails] = useState(false);
 
+  // Layout P0: colapsa controles secundarios de la barra superior para reducir
+  // la sobrecarga visual durante la respuesta (solo sale + baremo + puntuación
+  // neto quedan visibles; ritmo/exportar/guardar/progreso se revelan bajo demanda).
+  const [showMoreOptions, setShowMoreOptions] = useState(false);
+
   // Session saving modal
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [saveStatusMessage, setSaveStatusMessage] = useState<string | null>(null);
@@ -376,6 +381,13 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
     attemptLogs.length > 0 ||
     (initialResults?.total ?? 0) > 0 ||
     currentIndex > 0;
+
+  // P0: during answering, show a single read-only baremo pill instead of the
+  // full multi-button selector (all of which are disabled once locked) so the
+  // stem keeps the visual field. Resolve the active baremo config for the pill.
+  const selectedBaremo =
+    BAREMOS.find((b) => Math.abs(b.penaltyPerError - baremoPenalty) < 0.01) ??
+    BAREMOS[0];
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
   const isRecordingRef = useRef(false);
 
@@ -1485,13 +1497,15 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
   return (
     <div className="max-w-4xl mx-auto pb-16 px-4">
-      {/* Mode B Badge */}
-      <div className="flex items-center space-x-2 pb-2">
-        <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs font-semibold">
-          <Zap className="w-3.5 h-3.5" />
-          <span>Examen / Simulacro (Modo B)</span>
-        </span>
-      </div>
+      {/* Mode B Badge (oculto mientras se responde para no competir con el ítem — P0) */}
+      {stage !== 'answering' && (
+        <div className="flex items-center space-x-2 pb-2">
+          <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs font-semibold">
+            <Zap className="w-3.5 h-3.5" />
+            <span>Examen / Simulacro (Modo B)</span>
+          </span>
+        </div>
+      )}
 
       {/* Top Session Progress Bar & Controls */}
       <div className="flex items-center justify-between py-4 border-b border-slate-800 mb-6 gap-2">
@@ -1516,69 +1530,80 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
           </div>
         </div>
 
-        {/* Action Controls & Progress Meter */}
+        {/* Action Controls & Progress Meter (colapsable: layout P0) */}
         <div className="flex items-center space-x-2 sm:space-x-3">
-          {/* Generative Cover Toggle */}
           <button
-            onClick={() => setEnableGenerativeCover(!enableGenerativeCover)}
-            className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium border transition ${
-              enableGenerativeCover
-                ? 'bg-amber-500 text-slate-950 border-amber-500 font-semibold'
-                : 'bg-slate-900 hover:bg-slate-800 text-slate-400 border-slate-700'
+            onClick={() => setShowMoreOptions((prev) => !prev)}
+            aria-expanded={showMoreOptions}
+            aria-controls="runner-more-options"
+            className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium border transition bg-slate-900 hover:bg-slate-800 text-slate-400 border-slate-700"
+            title="Más opciones de sesión (ritmo, exportar, guardar, progreso)"
+          >
+            <Sliders className={`w-3.5 h-3.5 ${showMoreOptions ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">Más opciones</span>
+          </button>
+
+          <div
+            id="runner-more-options"
+            className={`absolute right-0 mt-2 w-64 rounded-lg border border-[#20293a] bg-[#121722] shadow-xl p-3 z-50 animate-fadeIn ${
+              showMoreOptions ? '' : 'hidden'
             }`}
-            title="Activar/desactivar redacción generativa previa a ver opciones (Cover & Generate)"
           >
-            <Brain className="w-3.5 h-3.5" />
-            <span className="hidden md:inline">Generativo: {enableGenerativeCover ? 'ON' : 'OFF'}</span>
-          </button>
-
-          {/* Pacing Sprint Timer Toggle */}
-          <button
-            onClick={() => setIsPacingActive(!isPacingActive)}
-            className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition ${
-              isPacingActive
-                ? pacingTimeLeft <= 10
-                  ? 'bg-rose-950/80 text-rose-300 border-rose-500 animate-pulse'
-                  : 'bg-amber-950/60 text-amber-300 border-amber-500/60'
-                : 'bg-slate-900 hover:bg-slate-800 text-slate-400 border-slate-700'
-            }`}
-            title={`Cronómetro de ritmo: ${currentPacingBudget}s para este ítem (adaptado a su tipo y dificultad)`}
-          >
-            <Clock className="w-3.5 h-3.5" />
-            <span>{isPacingActive ? `${pacingTimeLeft}s` : `Ritmo (${currentPacingBudget}s)`}</span>
-          </button>
-
-          {/* Direct JSON Session Export Button */}
-          <button
-            onClick={handleDownloadSessionJson}
-            className="flex items-center space-x-1.5 px-3 py-1.5 bg-indigo-950/60 hover:bg-indigo-900/80 text-indigo-300 hover:text-white border border-indigo-700/60 hover:border-indigo-500 rounded-lg text-xs font-semibold transition shadow-xs"
-            title="Exportar sesión actual (progreso y resultados) como archivo JSON para continuar en otro navegador"
-          >
-            <Download className="w-3.5 h-3.5 text-indigo-400" />
-            <span className="hidden sm:inline">Exportar JSON</span>
-          </button>
-
-          {/* Save / Pause Session Button */}
-          <button
-            onClick={() => setIsSaveModalOpen(true)}
-            className="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 rounded-lg text-xs font-medium transition shadow-xs"
-            title="Guardar o pausar el progreso de la sesión"
-          >
-            <Save className="w-3.5 h-3.5 text-indigo-400" />
-            <span className="hidden sm:inline">Guardar / Pausar</span>
-          </button>
-
-          {/* Progress bar */}
-          <div className="flex items-center space-x-2">
-            <div className="w-24 sm:w-36 h-2 bg-slate-800 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-indigo-500 rounded-full transition-all duration-300"
-                style={{ width: `${((currentIndex + 1) / items.length) * 100}%` }}
-              />
+            <div className="px-2 py-1 text-[10px] uppercase font-mono tracking-wider text-slate-500 border-b border-[#20293a] mb-2">
+              Opciones de sesión
             </div>
-            <span className="text-xs font-mono font-medium text-slate-300">
-              {Math.round(((currentIndex + 1) / items.length) * 100)}%
-            </span>
+            <div className="space-y-2">
+              <button
+                onClick={() => setEnableGenerativeCover(!enableGenerativeCover)}
+                className="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-md text-xs font-medium transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700"
+                title="Activar/desactivar redacción generativa previa a ver opciones (Cover & Generate)"
+              >
+                <Brain className="w-3.5 h-3.5" />
+                <span>Generativo: {enableGenerativeCover ? 'ON' : 'OFF'}</span>
+              </button>
+              <button
+                onClick={() => setIsPacingActive(!isPacingActive)}
+                className="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-md text-xs font-medium transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700"
+                title={`Cronómetro de ritmo: ${currentPacingBudget}s para este ítem (adaptado a su tipo y dificultad)`}
+              >
+                <Clock className="w-3.5 h-3.5" />
+                <span>
+                  {isPacingActive ? `${pacingTimeLeft}s` : `Ritmo (${currentPacingBudget}s)`}
+                </span>
+              </button>
+              <button
+                onClick={handleDownloadSessionJson}
+                className="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-md text-xs font-medium transition bg-indigo-950/60 hover:bg-indigo-900/80 text-indigo-300 border border-indigo-700/60"
+                title="Exportar sesión actual (progreso y resultados) como archivo JSON para continuar en otro navegador"
+              >
+                <Download className="w-3.5 h-3.5 text-indigo-400" />
+                <span>Exportar JSON</span>
+              </button>
+              <button
+                onClick={() => setIsSaveModalOpen(true)}
+                className="w-full text-left flex items-center space-x-2 px-3 py-2 rounded-md text-xs font-medium transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700"
+                title="Guardar o pausar el progreso de la sesión"
+              >
+                <Save className="w-3.5 h-3.5 text-indigo-400" />
+                <span>Guardar / Pausar</span>
+              </button>
+              <div className="pt-2 border-t border-[#20293a]/40">
+                <div className="flex items-center space-x-2">
+                  <div className="w-24 sm:w-36 h-2 bg-slate-800 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-indigo-500 rounded-full transition-all duration-300"
+                      style={{ width: `${((currentIndex + 1) / items.length) * 100}%` }}
+                    />
+                  </div>
+                  <span className="text-xs font-mono font-medium text-slate-300">
+                    {Math.round(((currentIndex + 1) / items.length) * 100)}%
+                  </span>
+                </div>
+                <span className="block text-[10px] text-slate-500 mt-1 font-mono">
+                  Progreso de la sesión
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1588,88 +1613,103 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center space-x-1.5 text-xs font-semibold text-slate-300">
             <Shield className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Baremo Oficial:</span>
+            <span>Baremo {baremoLocked ? 'fijado' : 'Oficial'}:</span>
           </div>
-          <div className="flex flex-wrap items-center gap-1.5">
-            {BAREMOS.map((b) => {
-              const isSelected = Math.abs(baremoPenalty - b.penaltyPerError) < 0.01;
-              return (
-                <button
-                  key={b.id}
-                  onClick={() => setBaremoPenalty(b.penaltyPerError)}
-                  disabled={baremoLocked}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-medium transition ${
-                    isSelected
-                      ? 'bg-indigo-600 text-white font-bold shadow-xs'
-                      : 'bg-slate-950 hover:bg-slate-800 text-slate-400 border border-slate-800'
-                  } disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-slate-950`}
-                  title={
-                    baremoLocked
-                      ? `Baremo fijado al registrar la primera respuesta (${b.label})`
-                      : `${b.label} — ${b.formulaDescription}`
-                  }
-                >
-                  {b.shortLabel}
-                </button>
-              );
-            })}
-          </div>
+          {baremoLocked ? (
+            // P0: read-only pill while locked — all preset buttons would be disabled anyway,
+            // so a single pill keeps the penalty context without cluttering the answering field.
+            <span className="font-mono text-indigo-300 px-2 py-1 rounded-lg bg-slate-950 border border-slate-800">
+              {selectedBaremo.shortLabel}
+            </span>
+          ) : (
+            <div className="flex flex-wrap items-center gap-1.5">
+              {BAREMOS.map((b) => {
+                const isSelected = Math.abs(baremoPenalty - b.penaltyPerError) < 0.01;
+                return (
+                  <button
+                    key={b.id}
+                    onClick={() => setBaremoPenalty(b.penaltyPerError)}
+                    disabled={baremoLocked}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-medium transition ${
+                      isSelected
+                        ? 'bg-indigo-600 text-white font-bold shadow-xs'
+                        : 'bg-slate-950 hover:bg-slate-800 text-slate-400 border border-slate-800'
+                    } disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-slate-950`}
+                    title={
+                      baremoLocked
+                        ? `Baremo fijado al registrar la primera respuesta (${b.label})`
+                        : `${b.label} — ${b.formulaDescription}`
+                    }
+                  >
+                    {b.shortLabel}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         <div className="flex items-center space-x-2">
-          {mode === 'sniper' && (
-            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/40 text-xs font-bold animate-pulse">
-              <Target className="w-3.5 h-3.5 text-rose-400" />
-              <span>Drill Sniper Activo</span>
-            </div>
+          {/* Mode badges (ocultos mientras se responde — P0: solo contexto de baremo + puntuación) */}
+          {stage !== 'answering' && (
+            <>
+              {mode === 'sniper' && (
+                <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/40 text-xs font-bold animate-pulse">
+                  <Target className="w-3.5 h-3.5 text-rose-400" />
+                  <span>Drill Sniper Activo</span>
+                </div>
+              )}
+
+              {mode === 'drill' && (
+                <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold">
+                  <Percent className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Drill enfocado</span>
+                </div>
+              )}
+
+              {mode === 'duel' && (
+                <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-violet-500/20 text-violet-300 border border-violet-500/40 text-xs font-bold">
+                  <Scale className="w-3.5 h-3.5 text-violet-400" />
+                  <span>Duelo de conceptos</span>
+                </div>
+              )}
+            </>
           )}
 
-          {mode === 'drill' && (
-            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold">
-              <Percent className="w-3.5 h-3.5 text-amber-400" />
-              <span>Drill enfocado</span>
-            </div>
-          )}
-
-          {mode === 'duel' && (
-            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-violet-500/20 text-violet-300 border border-violet-500/40 text-xs font-bold">
-              <Scale className="w-3.5 h-3.5 text-violet-400" />
-              <span>Duelo de conceptos</span>
-            </div>
-          )}
-
-          {/* Mode B Streak Counter Pill */}
-          <div
-            className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-lg border text-xs font-mono font-bold transition ${
-              currentStreak >= 3
-                ? 'bg-amber-950/60 text-amber-300 border-amber-500/70 shadow-xs'
-                : currentStreak > 0
-                ? 'bg-slate-950 text-amber-400 border-slate-800'
-                : 'bg-slate-950 text-slate-500 border-slate-800'
-            }`}
-            title={`Racha actual: ${currentStreak} aciertos consecutivos${
-              bestStreak > 0 ? ` (Mejor racha de la sesión: ${bestStreak})` : ''
-            }`}
-          >
-            <Flame
-              className={`w-3.5 h-3.5 ${
+          {/* Mode B Streak Counter Pill (oculto mientras se responde — P0) */}
+          {stage !== 'answering' && (
+            <div
+              className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-lg border text-xs font-mono font-bold transition ${
                 currentStreak >= 3
-                  ? 'text-amber-400 fill-amber-400 animate-pulse'
+                  ? 'bg-amber-950/60 text-amber-300 border-amber-500/70 shadow-xs'
                   : currentStreak > 0
-                  ? 'text-amber-400'
-                  : 'text-slate-600'
+                  ? 'bg-slate-950 text-amber-400 border-slate-800'
+                  : 'bg-slate-950 text-slate-500 border-slate-800'
               }`}
-            />
-            <span className="font-sans font-medium text-slate-400">Racha:</span>
-            <span>{currentStreak}</span>
-            {currentStreak >= 5 && (
-              <span className="text-[11px]" title="¡En racha de fuego!">
-                🔥
-              </span>
-            )}
-          </div>
+              title={`Racha actual: ${currentStreak} aciertos consecutivos${
+                bestStreak > 0 ? ` (Mejor racha de la sesión: ${bestStreak})` : ''
+              }`}
+            >
+              <Flame
+                className={`w-3.5 h-3.5 ${
+                  currentStreak >= 3
+                    ? 'text-amber-400 fill-amber-400 animate-pulse'
+                    : currentStreak > 0
+                    ? 'text-amber-400'
+                    : 'text-slate-600'
+                }`}
+              />
+              <span className="font-sans font-medium text-slate-400">Racha:</span>
+              <span>{currentStreak}</span>
+              {currentStreak >= 5 && (
+                <span className="text-[11px]" title="¡En racha de fuego!">
+                  🔥
+                </span>
+              )}
+            </div>
+          )}
 
-          {/* Live Net Score Pill */}
+          {/* Live Net Score Pill — siempre visible: es el contexto de penalización relevante al decidir responder u omitir */}
           {(() => {
             const correctCount = sessionResults.correct;
             const errorCount =
@@ -1753,7 +1793,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
               <div className="bg-[#121722] p-2.5 rounded border border-[#20293a]">
-                <span className="text-[10px] text-slate-400 uppercase">Probabilidad de Recuerdo (R)</span>
+                <span className="text-[11px] text-slate-300 uppercase">Probabilidad de Recuerdo (R)</span>
                 <div className="flex items-center space-x-2 mt-1">
                   <div className="flex-1 bg-slate-800 h-1.5 rounded-full overflow-hidden">
                     <div
@@ -1772,21 +1812,21 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               </div>
 
               <div className="bg-[#121722] p-2.5 rounded border border-[#20293a]">
-                <span className="text-[10px] text-slate-400 uppercase">Estabilidad (S)</span>
+                <span className="text-[11px] text-slate-300 uppercase">Estabilidad (S)</span>
                 <p className="text-sm font-bold text-slate-200 mt-0.5">
                   {fsrsInfo.stability?.toFixed(1) || '1.5'} días
                 </p>
               </div>
 
               <div className="bg-[#121722] p-2.5 rounded border border-[#20293a]">
-                <span className="text-[10px] text-slate-400 uppercase">Dificultad Intrínseca (D)</span>
+                <span className="text-[11px] text-slate-300 uppercase">Dificultad Intrínseca (D)</span>
                 <p className="text-sm font-bold text-amber-400 mt-0.5">
                   {fsrsInfo.difficulty?.toFixed(1) || '4.0'} / 10
                 </p>
               </div>
 
               <div className="bg-[#121722] p-2.5 rounded border border-[#20293a]">
-                <span className="text-[10px] text-slate-400 uppercase">Lapsos Previos</span>
+                <span className="text-[11px] text-slate-300 uppercase">Lapsos Previos</span>
                 <p className="text-sm font-bold text-rose-400 mt-0.5">
                   {fsrsInfo.lapses || 0} {fsrsInfo.lapses === 1 ? 'fallo' : 'fallos'}
                 </p>
@@ -2286,7 +2326,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
                   {rows.length > 0 ? (
                     <div className="space-y-2 text-xs">
-                      <div className="grid grid-cols-3 gap-2 pb-1 text-[10px] font-mono uppercase tracking-wider text-slate-500">
+                      <div className="grid grid-cols-3 gap-2 pb-1 text-xs font-mono uppercase tracking-wider text-slate-400">
                         <span>Criterio</span>
                         <span>A · {data.concept_a}</span>
                         <span>B · {data.concept_b}</span>
@@ -2379,7 +2419,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                           [pair.id]: e.target.value,
                         }))
                       }
-                      className="bg-slate-900 border border-slate-700 text-xs text-white rounded px-2.5 py-1.5 focus:outline-none disabled:opacity-50"
+                      className="bg-slate-900 border border-slate-700 text-xs text-white rounded px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50"
                     >
                       <option value="">-- Seleccionar valor --</option>
                       {(currentItem.number_sort_data?.items || []).map((o) => (
@@ -2406,7 +2446,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                         {!isRight && chosen && (
                           <span className="text-rose-400">Tu respuesta: {chosen}</span>
                         )}
-                        {pair.category && <span className="text-slate-500">{pair.category}</span>}
+                        {pair.category && <span className="text-slate-400">{pair.category}</span>}
                       </div>
                     );
                   })()}

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { BookPlus, X, Sparkles, FolderPlus, FileText } from 'lucide-react';
 import { api } from '../api.ts';
 import { Topic } from '../types.ts';
+import { useFocusTrap } from '../utils/useFocusTrap.ts';
 
 interface CreateTopicModalProps {
   isOpen: boolean;
@@ -14,6 +15,9 @@ export const CreateTopicModal: React.FC<CreateTopicModalProps> = ({
   onClose,
   onTopicCreated,
 }) => {
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  useFocusTrap(isOpen, onClose, modalRef);
+
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [sourceFile, setSourceFile] = useState('');
@@ -64,7 +68,14 @@ export const CreateTopicModal: React.FC<CreateTopicModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fadeIn">
+    <div
+      ref={modalRef}
+      tabIndex={-1}
+      className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fadeIn outline-none"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="create-topic-modal-title"
+    >
       <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-6 shadow-2xl">
         <div className="flex items-center justify-between border-b border-slate-800 pb-4">
           <div className="flex items-center space-x-2.5">
@@ -72,7 +83,7 @@ export const CreateTopicModal: React.FC<CreateTopicModalProps> = ({
               <FolderPlus className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">Añadir tema</h2>
+              <h2 id="create-topic-modal-title" className="text-base font-bold text-white">Añadir tema</h2>
               <p className="text-xs text-slate-400">
                 Organiza y estudia módulos independientes (estilo Sets de Quizlet)
               </p>
@@ -81,6 +92,7 @@ export const CreateTopicModal: React.FC<CreateTopicModalProps> = ({
           <button
             onClick={onClose}
             className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            aria-label="Cerrar creación de tema"
           >
             <X className="w-5 h-5" />
           </button>

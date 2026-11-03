@@ -94,6 +94,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   }, []);
 
   const handleDismissSession = (sessionId: string) => {
+    if (!window.confirm('¿Descartar esta sesión? Se perderá el progreso no guardado.')) return;
     const updated = recentSessions.filter((s) => s.id !== sessionId);
     setRecentSessions(updated);
     try {

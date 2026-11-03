@@ -1524,7 +1524,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   type="button"
                   onClick={handleExtractFullSet}
                   disabled={isExtracting || !sourceText.trim()}
-                  className="px-5 py-2.5 bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-slate-950 rounded-md text-xs font-bold transition flex items-center space-x-2 shadow-sm"
+                  className="px-5 py-2.5 bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white rounded-md text-xs font-bold transition flex items-center space-x-2 shadow-sm"
                 >
                   <Wand2 className="w-4 h-4" />
                   <span>{isExtracting ? 'Analizando texto normativo...' : 'Generar Set Completo en 1 Clic'}</span>

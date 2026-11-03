@@ -457,7 +457,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                     require_two_formats_for_graduation: e.target.checked,
                   })
                 }
-                className="rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-0"
+                className="rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-2 focus:ring-indigo-500"
               />
               <span>
                 Exigir acierto en al menos 2 formatos diferentes para graduar un ítem (ej. MCQ + Cloze)
@@ -474,7 +474,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
                     require_interleaved_success_for_graduation: e.target.checked,
                   })
                 }
-                className="rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-0"
+                className="rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-2 focus:ring-indigo-500"
               />
               <span>Exigir al menos 1 acierto en bloque intercalado para graduación</span>
             </label>

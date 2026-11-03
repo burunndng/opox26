@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   X,
   Cpu,
@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { Item, Atom, Topic, Cluster, ConfusionPair } from '../types.ts';
 import { api } from '../api.ts';
+import { useFocusTrap } from '../utils/useFocusTrap.ts';
 
 interface JevLabModalProps {
   isOpen: boolean;
@@ -43,6 +44,9 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
   clusters,
   confusionPairs,
 }) => {
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  useFocusTrap(isOpen, onClose, modalRef);
+
   const [activeTab, setActiveTab] = useState<
     'item_audit' | 'attempt_triage' | 'atom_classify' | 'cascade' | 'custom_sandbox'
   >('item_audit');
@@ -219,7 +223,14 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div
+      ref={modalRef}
+      tabIndex={-1}
+      className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto outline-none"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="jev-modal-title"
+    >
       <div className="bg-slate-900 border border-indigo-500/40 w-full max-w-5xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
         {/* Header */}
         <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-900 p-5 border-b border-indigo-500/30 flex items-center justify-between">
@@ -229,7 +240,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
             </div>
             <div>
               <div className="flex items-center space-x-2 flex-wrap gap-y-1">
-                <h2 className="text-xl font-bold text-white tracking-tight">
+                <h2 id="jev-modal-title" className="text-xl font-bold text-white tracking-tight">
                   Jev Decision Engine
                 </h2>
                 <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
@@ -250,6 +261,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
           <button
             onClick={onClose}
             className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition"
+            aria-label="Cerrar motor de decisiones Jev"
           >
             <X className="w-5 h-5" />
           </button>
@@ -511,7 +523,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
                       type="checkbox"
                       checked={triageIsCorrect}
                       onChange={(e) => setTriageIsCorrect(e.target.checked)}
-                      className="rounded text-indigo-600 focus:ring-0"
+                      className="rounded text-indigo-600 focus:ring-2 focus:ring-indigo-500"
                     />
                     <span>¿Fue correcta la opción marcada?</span>
                   </label>
@@ -869,6 +881,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
           <button
             onClick={onClose}
             className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg transition"
+            aria-label="Cerrar motor de decisiones Jev"
           >
             Cerrar
           </button>

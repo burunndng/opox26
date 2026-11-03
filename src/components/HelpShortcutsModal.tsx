@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { HelpCircle, X, Keyboard, Sparkles } from 'lucide-react';
+import { useFocusTrap } from '../utils/useFocusTrap.ts';
 
 interface HelpModalProps {
   isOpen: boolean;
@@ -7,6 +8,9 @@ interface HelpModalProps {
 }
 
 export const HelpShortcutsModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  useFocusTrap(isOpen, onClose, modalRef);
+
   if (!isOpen) return null;
 
   const shortcuts = [
@@ -16,17 +20,25 @@ export const HelpShortcutsModal: React.FC<HelpModalProps> = ({ isOpen, onClose }
     { key: '0, 1, 2, 3', desc: 'Calificar nivel de certeza o confianza metacognitiva' },
     { key: 'Esc', desc: 'Cerrar ventanas modales o salir al panel' },
     { key: '?', desc: 'Abrir esta guía de atajos' },
+    { key: 'Alt+1/2/3', desc: 'Ir a Panel / Test / Reparación' },
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div
+      ref={modalRef}
+      tabIndex={-1}
+      className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm outline-none"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="help-modal-title"
+    >
       <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl">
         <div className="flex items-center justify-between border-b border-slate-800 pb-3">
           <div className="flex items-center space-x-2">
             <Keyboard className="w-5 h-5 text-indigo-400" />
-            <h3 className="text-base font-bold text-white">Atajos de Teclado Rápidos</h3>
+            <h3 id="help-modal-title" className="text-base font-bold text-white">Atajos de Teclado Rápidos</h3>
           </div>
-          <button onClick={onClose} className="p-1 rounded text-slate-400 hover:text-white">
+          <button onClick={onClose} className="p-1 rounded text-slate-400 hover:text-white" aria-label="Cerrar guía de atajos">
             <X className="w-5 h-5" />
           </button>
         </div>

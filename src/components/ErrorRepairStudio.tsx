@@ -356,7 +356,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
                 <div className="flex items-center space-x-2 shrink-0">
                   <button
                     onClick={() => handleRepairItem(err.item_id)}
-                    className="px-4 py-2 rounded-md bg-amber-600 hover:bg-amber-500 text-slate-950 text-xs font-semibold shadow transition flex items-center space-x-1.5"
+                    className="px-4 py-2 rounded-md bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold shadow transition flex items-center space-x-1.5"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
                     <span>Reparar Ahora</span>
@@ -407,7 +407,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
 
                 <button
                   onClick={handlePrintDossier}
-                  className="px-3 py-1.5 rounded-md bg-amber-600 hover:bg-amber-500 text-slate-950 text-xs font-semibold shadow transition flex items-center space-x-1.5"
+                  className="px-3 py-1.5 rounded-md bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold shadow transition flex items-center space-x-1.5"
                 >
                   <Printer className="w-3.5 h-3.5" />
                   <span>Imprimir / PDF</span>
