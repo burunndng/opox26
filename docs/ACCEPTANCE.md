@@ -3,10 +3,14 @@
 Estado verificado en la última revisión. "Test" = prueba automatizada en `tests/`;
 "Manual" = comprobación con pasos concretos. Nada se declara funcionando sin evidencia.
 
-> Hardening de auditoría aplicado el 2026-10-23 (FIX 1–9); las llamadas Jev de `server.ts` se
-> realinearon con las firmas de `JevClient` el 2026-10-26 tras descartar su WIP no commiteado.
-> Recuento actual: **172/172** pruebas en 37 suites — la medición original de la auditoría
-> (183/40) incluía 11 pruebas en 3 suites de ese WIP. Detalle en `docs/audit/2026-10-23/REPORT.md`.
+> **Revisión 2026-11-03:** `npm run lint` limpio, `npm test` **210/210 en 40 suites** y
+> `npm run build` OK. La spec §18 fija 23 criterios; este documento añade 7 extensiones del
+> proyecto (24–30) y 5 verificaciones de la pasada de UX/accesibilidad (31–35).
+> Estado: ✅ verificado · 🟡 cobertura parcial.
+>
+> Nota histórica: el recuento 172/37 correspondía a la revisión del 2026-10-26 tras descartar
+> un WIP no commiteado, y 183/40 a la auditoría del 2026-10-23 (medida con ese WIP presente).
+> Detalle en `docs/audit/2026-10-23/REPORT.md`.
 
 | # | Criterio | Estado | Evidencia |
 |---|---|---|---|
@@ -30,20 +34,25 @@ Estado verificado en la última revisión. "Test" = prueba automatizada en `test
 | 18 | Calibración de confianza medida y mostrada | ✅ | `src/utils/analytics.ts` + `AnalyticsStrip` embebido en el Dashboard; alertas textuales — `tests/analytics.test.ts` D1–D4 |
 | 19 | Analítica: clústeres débiles, pares, confident-wrong, errores numéricos | ✅ | Motor de analítica (heat maps, matrices, alertas) + `SessionHeatMap` — `tests/analytics.test.ts` D5–D10 |
 | 20 | Exportar a Anki y CSV | ✅ | `/api/export/anki`, `/api/export/csv-items`, `/api/export/csv-errors`, Quizlet, backup JSON — test 12; muestra real en `examples/anki_sample.tsv` |
-| 21 | Seed Tema 7 carga correctamente | ✅ | `server/seedData.ts` (100 ítems: 25/20/15/10/10/8/6/6) + `seedDataTema1.ts` + 6 de retrieval/pretest — test 1 |
-| 30 | Import JSON/CSV de ítems con validación y duplicates | ✅ | `POST /api/import/items` (`server/importItems.ts`, `makeImportItemsHandler`): validación por ítem contra `itemInput`, detección de duplicados (id o stem+tema), reporte de imported/duplicates/errors, `skip_duplicates`; CSV con comillas escapadas — tests 15, 15b, 15c, 15d en `tests/oposilab.test.ts` |
-| 22 | Tests unitarios de scheduling, interleaving, validación, cloze, errores | ✅ | `tests/oposilab.test.ts` (1–19), `sqlite` (A1–A10), `pipeline` (B1–B10), `retrieval` (C11–C16), `analytics` (D1–D10), `eligibility` (E1–E4), `seed-integrity` (F1–F10), `queue-order` (G1–G7), `option-order` (O1–O5), `practice-pools` (P1–P6), `seed-reconcile` (R1–R4), `validation-warnings` (V1–V4), `validation-gate` (W1–W7), `scorer-hardening` (11), `srs-graduation` (G1–G4), `interleaving-hardening` (I1–I2), `schema-contracts` (14), `sqlite-migrations` (M1–M4) — **182/182** (2026-10-26, tras P3) |
+| 21 | Seed Tema 7 carga correctamente | ✅ | `server/seedData.ts` (100 ítems: 25/20/15/10/10/8/6/6) + bancos de Tema 1, Tema 3, Tema 8, Tema 8 II, Tema 15, Tema 16 y Tema 3 General + 6 de retrieval/pretest: **402 ítems sembrados / 408 elegibles** — test 1, `tests/seed-reconcile.test.ts` R1, `tests/seed-integrity.test.ts` F11–F12 |
+| 22 | Tests unitarios de scheduling, interleaving, validación, cloze, errores | ✅ | 25 archivos en `tests/`: `oposilab` (1–19 + 15b–15d), `sqlite` (A1–A10), `pipeline` (B1–B10), `retrieval` (C11–C16), `analytics` (D1–D10), `eligibility` (E1–E4), `seed-integrity` (F1–F12), `queue-order` (G1–G7), `option-order` (O1–O5), `practice-pools` (P1–P6), `seed-reconcile` (R1–R18), `validation-warnings` (V1–V4), `validation-gate` (W1–W7), `drill-selectors`, `non-mcq-evaluation`, `jev-normalize`, `seed-sync-content`, `scorer-hardening`, `srs-graduation` (G1–G4), `interleaving-hardening` (I1–I2), `schema-contracts`, `sqlite-migrations` (M1–M4), `persistence`, `tema8-bank`, `tema8ip-bank` — **210/210 en 40 suites** (2026-11-03) |
 | 23 | README explica el uso | ✅ | `README.md` (español): instalación, base de datos, Content Studio, estudios, atajos, exportación, IA opcional, tests |
 | 24 | Cuantías 2026 verificadas en fuente oficial | ✅ | [BOE-A-2026-2548](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-2548) (RDL 3/2026, 3-feb): revalorización 2,7 %; tope 3.359,60 €/mes · 47.034,40 €/año; PNC 8.803,20 €/año en 14 pagas (RD 357/1991 art. 14.1); límites de ingresos 9.442,00 €/11.013,00 €. `figure_status` en 13 ítems del clúster `importes_2026` — `tests/seed-integrity.test.ts` F7 |
-| 25 | Práctica solo con contenido elegible y reconciliación de seeds | ✅ | Predicado compartido `isPracticeEligible` aplicado en `server/scheduler.ts` (due stats/cola/bloques) y en pools de cliente (`src/utils/practicePools.ts`, `src/utils/sniperFilter.ts`); metadatos de seeds sin intentos se reconcilian al arrancar — `tests/eligibility.test.ts` E1–E4, `tests/seed-reconcile.test.ts` R1–R4, `tests/practice-pools.test.ts` P1–P6 |
+| 25 | Práctica solo con contenido elegible y reconciliación de seeds | ✅ | Predicado compartido `isPracticeEligible` aplicado en `server/scheduler.ts` (due stats/cola/bloques) y en pools de cliente (`src/utils/practicePools.ts`, `src/utils/sniperFilter.ts`); metadatos de seeds sin intentos se reconcilian al arrancar — `tests/eligibility.test.ts` E1–E4, `tests/seed-reconcile.test.ts` R1–R18, `tests/practice-pools.test.ts` P1–P6 |
 | 26 | Orden de opciones por encuentro con atajos posicionales | ✅ | `src/utils/optionOrder.ts` (FNV-1a + mulberry32) conserva IDs estables; etiquetas A/B/C/D y teclas 1–4 siguen la posición mostrada (MCQ, cloze con opciones, two-tier, fact-variant) — `tests/option-order.test.ts` O1–O5 |
-| 27 | Integridad del banco de seeds | ✅ | `tests/seed-integrity.test.ts` F1–F10: una sola correcta e IDs únicos, distribución canónica ≤40 %, correcta ≤1,25× media de distractores, explicación y trampa por distractor, base legal y stems únicos por formato, referencias resueltas a clústeres/pares (F8–F9) y átomos normalizados (F10) |
+| 27 | Integridad del banco de seeds | ✅ | `tests/seed-integrity.test.ts` F1–F12: una sola correcta e IDs únicos, distribución canónica ≤40 %, correcta ≤1,25× media de distractores, explicación y trampa por distractor, base legal y stems únicos por formato, referencias resueltas a clústeres/pares (F8–F9), átomos normalizados (F10), todo ítem resuelve a un topic registrado (F11) y la separación Tema 15/16 sigue el ancla legal (F12) |
 | 28 | Endpoint de avisos de validación completo | ✅ | `server/validationWarnings.ts` compone chequeos inline ∪ pedagógicos, deduplica por `(item_id, rule)` y añade aviso no crítico de cuantía estimada; `server.ts` sirve el helper — `tests/validation-warnings.test.ts` V1–V4 + smoke API |
 | 29 | Cola diaria intercalada con tope de nuevos | ✅ | `server/queueOrder.ts` + `getDueQueue` (excluye vencidas futuras salvo `new`, omite suspendidas, cap `max_new_items_per_day`) — `tests/queue-order.test.ts` G1–G7; día 1 sobre seeds reales: 15 ítems sin triplete de formato |
+| 30 | Import JSON/CSV de ítems con validación y duplicates | ✅ | `POST /api/import/items` (`server/importItems.ts`, `makeImportItemsHandler`): validación por ítem contra `itemInput`, detección de duplicados (id o stem+tema), reporte de imported/duplicates/errors, `skip_duplicates`; CSV con comillas escapadas — tests 15, 15b, 15c, 15d en `tests/oposilab.test.ts` |
+| 31 | Onboarding de primer arranque | ✅ | `OnboardingModal.tsx` (4 pasos: bienvenida, baremo +1/−0,25, confianza 0–3, primer test) disparado desde `StudySetup.tsx`; se recuerda en `localStorage: oposilab_onboarding_completed`. Manual: borrar la clave y recargar |
+| 32 | Diálogos modales accesibles | 🟡 | `src/utils/useFocusTrap.ts` (focus-in, Tab/Shift+Tab, Esc y restauración de foco) aplicado a `CreateTopicModal`, `HelpShortcutsModal`, `InterleavedBlockModal` y `JevLabModal`, con `role="dialog"`, `aria-modal` y `aria-labelledby`. Pendiente: `OnboardingModal` y los overlays de `ItemBank` / dossier de `ErrorRepairStudio` |
+| 33 | Drills formativos Plazos/Cuantías y Duelo | ✅ | `src/utils/drillSelectors.ts` + handlers en `App.tsx`; `ActivityRunner` modos `drill`/`duel` con baremo 0 bloqueado, banner A-vs-B y pista/trampa solo en feedback — `tests/drill-selectors.test.ts` (10 pruebas) |
+| 34 | Filtros por tema en banco y reparación | ✅ | `ItemBank.tsx` y `ErrorRepairStudio.tsx` filtran por `topic_id` (commit `1e5eea9`); comprobación manual: cambiar de tema y verificar que lista y contadores se reducen |
+| 35 | Separación Tema 15/16 y banco Tema 3 General | ✅ | `seedDataTema15.ts` deriva el topic del ancla legal (Ley 40 → Tema 15, Ley 39 → Tema 16); `server/seedDataTema3General.ts` añade 24 ítems TC; guardas `seed-integrity` F11–F12 y `seed-reconcile` R18; total 408 elegibles |
 
 ## Pendientes declarados (fuera de alcance o diferido)
 
-- **Playwright E2E**: no implementado (no requerido como bloqueante; las 172 pruebas son unitarias/integración).
+- **Playwright E2E**: no implementado (no requerido como bloqueante; las 210 pruebas son unitarias/integración).
 - **Ejercicios de comprobación manual sin cobertura automática**: caminar por cada tipo de actividad en la UI (criterios 7–14 se validan por código + tests del scorer, no por E2E).
 - **`package.json` conserva el nombre `react-example`** (herencia del scaffold; sin efecto funcional).
-- **La suite original (`tests/oposilab.test.ts`) opera sobre la base real**; aíslala con `OPOSILAB_DATA_DIR` si conv practice en paralelo (recomendación del plan, fase de mantenimiento).
+- **Cobertura de diálogos incompleta**: `useFocusTrap` aún no está en `OnboardingModal` ni en los overlays antiguos de `ItemBank`/`ErrorRepairStudio` (criterio 32, 🟡).

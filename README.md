@@ -22,13 +22,16 @@ npm run dev
 ```
 
 Abre **http://localhost:3000**. La base de datos se inicializa sola en el primer arranque y se cargan
-las semillas (Tema 7 de Seguridad Social + Tema 1 CE 1978).
+las semillas de los ocho temas incluidos: Tema 7 (Régimen General), Tema 1 CE, Tema 3 específico
+(afiliación), Tema 8 específico (IT), Tema 8 II (incapacidad permanente), Tema 15 (Ley 40/2015),
+Tema 16 (Ley 39/2015) y Tema 3 general (Tribunal Constitucional). En total, 402 ítems sembrados y
+408 ítems elegibles para práctica (incluye retrieval/pretest).
 
 Otros comandos:
 
 ```bash
 npm run lint     # tsc --noEmit (0 errores exigido)
-npm test         # 182 pruebas (node:test vía tsx)
+npm test         # 210 pruebas / 40 suites (node:test vía tsx)
 npm run build    # bundle de producción; npm start lo sirve
 ```
 
@@ -41,7 +44,7 @@ npm run build    # bundle de producción; npm start lo sirve
   ```bash
   npx tsx scripts/migrate-json-to-sqlite.ts [ruta/al/oposilab.db.json]
   ```
-- Aislar otra base (tests, Copelandias): `OPOSILAB_DATA_DIR=/ruta npm run dev`.
+- Aislar otra base (tests, pruebas manuales): `OPOSILAB_DATA_DIR=/ruta npm run dev`.
 - Copia de seguridad: *Ajustes → Exportar backup JSON* (e *Importar backup* la restaura).
 
 ## Content Studio: del texto al banco de reactivos
@@ -60,19 +63,26 @@ npm run build    # bundle de producción; npm start lo sirve
 
 ## Modos de estudio
 
+En el primer arranque, una bienvenida de 4 pasos explica el baremo (+1 / −0,25) y la calificación de
+confianza (0–3). Se puede saltar y no vuelve a aparecer (`localStorage: oposilab_onboarding_completed`).
+
 | Modo | Para qué |
 |---|---|
+| **Empezar test** | Punto de entrada recomendado: mezcla el repaso pendiente (SRS) con preguntas nuevas y aplica −0,25 por fallo. |
+| **Simulacro con penalización** | 15 preguntas difíciles con −0,25 por fallo, como en el examen. No es un examen completo (decisión metodológica). |
 | **Repaso espaciado (SRS)** | Cola diaria con reaprendizaje sucesivo: 3 aciertos separados, 2 formatos distintos, 1 acierto intercalado, confianza ≥ 2 y sin "confident-wrong" reciente para graduar. |
-| **Pretest diagnóstico** | 10 ítems sin etiquetas; al terminar: mapa de clústeres fuertes/débiles, pares de confusión probables, enfoque recomendado y botón **"Reparar ahora"**. |
-| **Micro-lección (recuperación primero)** | Lee un fragmento → escribe la regla de memoria → se revela → se compara con los átomos clave; cada fallo genera un ítem de repaso. |
+| **Test de nivel (pretest)** | 10 ítems sin etiquetas; al terminar: mapa de clústeres fuertes/débiles, pares de confusión probables, enfoque recomendado y botón **"Reparar ahora"**. |
+| **Estudio guiado (micro-lección)** | Lee un fragmento → escribe la regla de memoria → se revela → se compara con los átomos clave; cada fallo genera un ítem de repaso. |
 | **Modo A / Modo B** | Codificación con andamiaje (Modo A) antes del reconocimiento baremo −0,25 (Modo B), con requeue de los fallos. |
-| **Bloque intercalado** | 10–30 ítems mezclando temas, formatos y mantenimiento; nunca más de 2 seguidos del mismo clúster. |
-| **Taller de reparación** | Errores abiertos, confident-wrong y conocimiento frágil; cada tipo de error (E1–E20) se repara con la actividad que lo corrige. |
+| **Mezclar temas (bloque intercalado)** | 10–30 ítems mezclando temas, formatos y mantenimiento; nunca más de 2 seguidos del mismo clúster. |
+| **Repasar fallos (taller de reparación)** | Errores abiertos, confident-wrong y conocimiento frágil; cada tipo de error (E1–E20) se repara con la actividad que lo corrige. |
 | **Drill Sniper** | Anti-trampa: solo números, solo confident-wrong o alta interferencia. |
+| **Plazos y cuantías** | Drill formativo de cifras, plazos y porcentajes (ítems numéricos/temporales, errores E6 propios primero). Sin penalización. |
+| **Duelo de conceptos** | Rondas contiguas de pares de confusión (A vs. B); la pista discriminante y la trampa común solo se revelan en el feedback. Sin penalización. |
 
 ### Atajos de teclado
 
-`Espacio` revelar/seguir · `H` pedir pista · `1–4` elegir opción · `0–3` confianza · `Esc` salir/cerrar · `?` ayuda.
+`Espacio` revelar/seguir · `H` pedir pista · `1–4` elegir opción · `0–3` confianza · `Esc` salir/cerrar · `?` ayuda · `Alt+1/2/3` ir a Panel / Test / Reparación.
 
 ### Confianza (0–3)
 
@@ -107,26 +117,32 @@ sesión y calidad del banco. Activa el **alto contraste** con el botón del Navb
   framework no aportaba nada pedagógicamente y el proyecto ya funcionaba).
 - **SQLite con `node:sqlite`** (sin dependencias nativas) en lugar de better-sqlite3: cero compilación,
   una promesa de "un comando" real.
-- **Sin Drizzle** y **sin Vitest**: repositorios tipados sobre `node:sqlite` y las 182 pruebas con
-  `node:test` cubren lo necesario con menos machinery.
-- **Módulos puros y testeados**: `server/scheduler.ts` (SRS + intercalado), `server/heuristics.ts`
-  (sugerencias offline), `server/pdfImport.ts`, `src/scoring/evaluateItem.ts`, `src/utils/analytics.ts`,
-  `src/utils/retrievalMatch.ts`.
-- `docs/ACCEPTANCE.md` traza los 29 criterios de aceptación de la spec a su evidencia.
+- **Sin Drizzle** y **sin Vitest**: repositorios tipados sobre `node:sqlite` y las 210 pruebas en
+  40 suites con `node:test` cubren lo necesario con menos machinery.
+- **Módulos puros y testeados**: `server/scheduler.ts` (SRS + intercalado), `server/queueOrder.ts`
+  (cola diaria), `server/validationWarnings.ts`, `server/importItems.ts`, `server/heuristics.ts`
+  (sugerencias offline), `server/pdfImport.ts`, `src/scoring/evaluateItem.ts`,
+  `src/utils/analytics.ts`, `src/utils/retrievalMatch.ts`, `src/utils/drillSelectors.ts`,
+  `src/utils/repairRouting.ts`, `src/utils/optionOrder.ts` y `src/utils/useFocusTrap.ts`.
+- `docs/ACCEPTANCE.md` traza los 23 criterios de la spec §18 más las extensiones del proyecto
+  (35 criterios en total) a su evidencia.
 
 ## Estructura (resumen)
 
 ```
 server.ts               API Express + Vite
-server/                 sqlite/, scheduler, exporter, ai, jev, heuristics, pdfImport, semillas
-src/components/         Dashboard, ActivityRunner, ContentStudio, ItemBank, RepairStudio,
-                        MicroLessonRunner, PretestDiagnosticMap, AnalyticsStrip, SessionHeatMap…
-src/utils/              analytics, retrievalMatch, learningDesignValidator
+server/                 sqlite/, scheduler, queueOrder, exporter, importItems, ai, jev,
+                        validationWarnings, heuristics, pdfImport, semillas por tema
+src/components/         Dashboard, StudySetup, ActivityRunner, OnboardingModal, ContentStudio,
+                        ItemBank, ErrorRepairStudio, MicroLessonRunner, PretestDiagnosticMap,
+                        AnalyticsStrip, SessionHeatMap…
+src/utils/              analytics, retrievalMatch, learningDesignValidator, drillSelectors,
+                        repairRouting, optionOrder, practicePools, useFocusTrap
 src/scoring/            evaluateItem (cloze, spot-error, two-tier, number-sort…)
-tests/                  182 pruebas (unit + integración)
+tests/                  210 pruebas en 40 suites (unit + integración)
 data/                   SQLite local (no versionado)
 examples/               exportaciones reales de ejemplo
-docs/                   ACCEPTANCE.md, plans/
+docs/                   ACCEPTANCE.md, AUDIT-UX-LEARNING.md, audit/, plans/
 ```
 
 ## Licencia y privacidad

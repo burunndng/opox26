@@ -4,9 +4,10 @@ Local-first cognitive trainer for Spanish oposición MCQs (Seguridad Social). No
 
 Key documents (read before planning work):
 - `docs/SPEC.md` — full product specification (§1–§22). Authoritative for *behavior*, **not** for stack (see warning below).
-- `implementation_plan.md` — working plan (P1–P6 priorities, current state, ADRs). Check §1 before starting any task.
-- `docs/ACCEPTANCE.md` — acceptance criteria → evidence mapping. Update it when acceptance status changes.
+- `implementation_plan.md` — working plan (P1–P6 priorities, current state, ADRs). P1–P6 are complete; check §1 and §1.9 for the current verified baseline.
+- `docs/ACCEPTANCE.md` — acceptance criteria → evidence mapping (35 criteria). Update it when acceptance status changes.
 - `README.md` — user-facing docs in Spanish.
+- `docs/AUDIT-UX-LEARNING.md` — dated UX/learning audit (2026-10-31, historical counts); useful for design rationale.
 
 ## Commands
 
@@ -14,12 +15,12 @@ Key documents (read before planning work):
 npm install --legacy-peer-deps   # peer-dep conflicts otherwise; npm is the documented flow
 npm run dev                      # tsx server.ts → http://localhost:3000
 npm run lint                     # despite the name: ONLY tsc --noEmit. No ESLint exists. 0 errors expected
-npm test                         # node:test via tsx, ~2s
+npm test                         # node:test via tsx, ~5s, 210 tests / 40 suites
 npm run build                    # vite build + esbuild server bundle → dist/server.cjs; npm start serves it
 ```
 
 - Dev server is a single process: Express API + Vite middleware (server.ts). No separate frontend port.
-- Verification order: `npm run lint` → `npm test`.
+- Verification order: `npm run lint` → `npm test`; add `npm run build` when touching server/runtime or before claiming a release is ready.
 - Single test file: `npx tsx --test tests/sqlite.test.ts`. Filter by name: add `--test-name-pattern="<pattern>"`.
 - Node ≥ 22.5 required (uses built-in `node:sqlite`).
 
@@ -42,11 +43,17 @@ npm run build                    # vite build + esbuild server bundle → dist/s
 ## Architecture map
 
 - `server.ts` (root) — all Express routes + Zod validation (schemas in `src/schemas/`) + Vite middleware.
-- `server/` — `db.ts` (repositories, `recordAttempt`, SRS state updates), `sqlite/` (connection, persist), `scheduler.ts` (`SchedulingEngine`, `InterleavingEngine`), `heuristics.ts` (offline atom suggestions), `pdfImport.ts`, `exporter.ts`, `ai.ts`, `jev.ts`, `seedData*.ts` (idempotent seeds).
-- `src/` — React app. `components/ActivityRunner.tsx` is the unified runner for all item formats; scoring lives in `src/scoring/evaluateItem.ts` (cloze, spot-error, two-tier, number-sort…), analytics in `src/utils/analytics.ts`.
+- `server/` — `db.ts` (repositories, `recordAttempt`, SRS state updates), `sqlite/` (connection, persist), `scheduler.ts` (`SchedulingEngine`, `InterleavingEngine`), `queueOrder.ts` (daily queue + new-item cap), `validationWarnings.ts`, `importItems.ts` (JSON/CSV item import), `heuristics.ts` (offline atom suggestions), `pdfImport.ts`, `exporter.ts`, `ai.ts`, `jev.ts`, `seedData*.ts` (idempotent seeds, one file per bank/topic).
+- `src/` — React app. `components/ActivityRunner.tsx` is the unified runner for all item formats; `components/StudySetup.tsx` is the study entry screen (+ `OnboardingModal.tsx`); scoring lives in `src/scoring/evaluateItem.ts` (cloze, spot-error, two-tier, number-sort…), analytics in `src/utils/analytics.ts`. Newer pure modules: `drillSelectors.ts` (Plazos/Duelo), `repairRouting.ts`, `optionOrder.ts`, `practicePools.ts`, `useFocusTrap.ts`.
 - **Domain types are shared**: `src/types.ts` holds the data model and is imported by both server and client.
 - Path alias `@/` → repo root (tsconfig + vite).
 - `scripts/` = one-off seed-generation utilities (several in Python). Not part of runtime or tests.
+
+## UI / accessibility conventions
+
+- Modals should be real dialogs: `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, a ref with `tabIndex={-1}`, and `useFocusTrap(isOpen, onClose, ref)`.
+- Current coverage: `CreateTopicModal`, `HelpShortcutsModal`, `InterleavedBlockModal`, `JevLabModal`. Still pending: `OnboardingModal` and the older `ItemBank` / `ErrorRepairStudio` overlays.
+- Keep the answer-time surface minimal: baremo + net score stay visible; secondary controls belong behind the collapsible "Más opciones" panel.
 
 ## Conventions
 

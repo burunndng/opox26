@@ -1,10 +1,19 @@
-# OposiLab MCQ Trainer — Implementation Plan v3
+# OposiLab MCQ Trainer — Implementation Plan v4
 
 > **For agentic workers:** Execute the priorities in order, use the listed verification commands, and stop at each acceptance gate before starting the next priority.
 
-**Date:** 2026-09-23 (rev 3)
-**Scope:** Complete the existing app against the AGENTS.md specification (§1–§22).
+**Date:** 2026-11-03 (rev 4)
+**Scope:** Complete the existing app against `docs/SPEC.md` (§1–§22).
 **North star:** cognitive training for MCQ discrimination (NOT a generic quiz app; NO full mock exams).
+
+> **Rev 4 changes (2026-11-03):** P4, P5 and P6 are marked complete with
+> current evidence; the verified baseline is **210/210 tests in 40 suites**,
+> `tsc --noEmit` clean and `npm run build` OK. New §1.9 records the
+> UX/accessibility pass (onboarding, focus trap, distilled study setup and
+> collapsible runner controls). Content is now eight seed topics / 402 seeded
+> items / 408 practice-eligible items. The rev 3 priorities and historical
+> counts below are kept as an audit trail; §1.8's note about blocked lint/build
+> is superseded by §1.9.
 
 > **Rev 3 changes:** remaining work re-ordered by user priority (§6): security
 > work is **explicitly deferred**; active priorities are (a) restart data loss,
@@ -19,21 +28,21 @@
 
 ---
 
-## 1. Current State (verified 2026-09-23 · refreshed 2026-10-23)
+## 1. Current State (verified 2026-09-23 · refreshed 2026-11-03)
 
-The app is a broad local-first prototype. The table distinguishes verified behavior from surfaces that still need focused verification; historical phase notes are not acceptance evidence.
+The app is a complete local-first implementation: P1–P6 are closed and the table below records verified behavior with its evidence. Historical phase notes are audit trail, not acceptance evidence.
 
 | Area | Current status | Evidence / next focus |
 |---|---|---|
 | Stack | Vite 8 + React 19 + Express 4 + TypeScript, `npm run dev` = `tsx server.ts` | `package.json` |
 | Persistence | SQLite exists; restart behavior now covered by an isolated two-boot regression test | `server/db.ts`, `tests/persistence.test.ts` |
-| Tests | Full suite green and fully isolated — **182 tests / 38 suites** (2026-10-26, tras P3-c; `npm test` provably never touches the live DB) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
-| Data model | Core types and SQLite tables exist; tag/join behavior and seed relationships need an audit | `src/types.ts`, `server/sqlite/connection.ts` |
-| Activity surfaces | Runner branches exist for the required formats; production scoring parity is the active P4 work | `src/components/ActivityRunner.tsx`, `src/scoring/evaluateItem.ts` |
-| Content pipeline | Text/PDF import and heuristic atom suggestions exist; validation eligibility and provenance need enforcement | `server/pdfImport.ts`, `server/heuristics.ts`, `ContentStudio.tsx` |
-| Scheduler | SRS and interleaving modules exist; due filters, format graduation, maintenance, and constraints need tests | `server/scheduler.ts`, `server/db.ts` |
-| Seed | Seed inventory exists; topic/source/status/link integrity is pending P3 | `server/seedData.ts`, `server/seedDataRetrieval.ts` |
-| Export/import | Exporters exist; structured import and exact note-field compatibility remain pending P6 | `server/exporter.ts`, `server.ts` |
+| Tests | Full suite green and fully isolated — **210 tests / 40 suites** (2026-11-03; `npm test` provably never touches the live DB) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
+| Data model | Core types and SQLite tables stable; seed relationships are guarded by the integrity/reconcile suites | `src/types.ts`, `server/sqlite/connection.ts`, `tests/seed-integrity.test.ts` F1–F12, `tests/seed-reconcile.test.ts` R1–R18 |
+| Activity surfaces | All required formats wired to production scorers; cognitive-state / near-miss / quadrant evaluation complete (P4) | `src/components/ActivityRunner.tsx`, `src/scoring/evaluateItem.ts`, `tests/non-mcq-evaluation.test.ts`, `tests/scorer-hardening.test.ts` |
+| Content pipeline | Text/PDF import, offline atom suggestions, eligibility filter and quality-gated promotion enforced (P3) | `server/pdfImport.ts`, `server/heuristics.ts`, `server/validationWarnings.ts`, `ContentStudio.tsx`, `tests/validation-gate.test.ts` |
+| Scheduler | Due filter, daily new-item cap, graduation flags, maintenance and deterministic interleaving covered (P5) | `server/scheduler.ts`, `server/queueOrder.ts`, `tests/queue-order.test.ts` G1–G7, `tests/srs-graduation.test.ts`, `tests/interleaving-hardening.test.ts` |
+| Seed | Eight topics / 402 seeded items / 408 practice-eligible; topic split and legacy re-homing guarded | `server/seedData*.ts`, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` R18 |
+| Export/import | Anki/CSV/Quizlet/Markdown/backup plus validated JSON/CSV item import (P6) | `server/exporter.ts`, `server/importItems.ts`, `tests/oposilab.test.ts` 12, 15–15d |
 
 ### 1.3 Content — Tema 8 (II) IP gap audit vs. class 21-10 (2026-10-31)
 
@@ -57,7 +66,19 @@ New topic `topic_constitucion_tema_3` ("Constitución Española - Tema 3: Bloque
 
 ### 1.8 Content — Tema 16 gap audit vs. class 28-10 pt2 (2026-11-03)
 
-Audit of `resumen 28-10 pt2` (Ley 39/2015: arts. 13-14, 19, 21-25, 30-33 y 53) against `topic_tema16` (40 items). Closed 18 gaps with manually authored, validated items (`item-t15-77…94`) in `server/seedDataTema15.ts` (`seedItemsTema16Extra`, appended last in `seedItems`): plazo supletorio de 3 meses (21.3); dies a quo de oficio = fecha del acuerdo (21.3.a, caso 10/4→10/8); dies a quo a solicitud = entrada en registro competente (21.3.b, caso 10/4→12/4); excepciones de silencio desestimatorio (24.1); silencio estimatorio = acto finalizador y resolución posterior confirmatoria (24.2-24.3); certificado de silencio a petición = 15 días desde el día siguiente a la entrada en registro competente (24.4, caso 24/29-10); caducidad y archivo en procedimientos de gravamen (25.1.b); suspensión obligatoria por recusación/actuaciones complementarias (22.2); tope de 3 meses del informe preceptivo (22.1.d); ampliación del art. 23 limitada al plazo de tramitación y sin recurso; ampliación del art. 32 = mitad del plazo y antes del vencimiento; inimpugnabilidad del acuerdo de urgencia (33.2); días hábiles salvo ley/UE (30.2); último día inhábil → primer día hábil siguiente (30.5); presentación en registro electrónico inhábil → primera hora del primer día hábil (31.2.b); art. 14.2.c limitado al ejercicio de la actividad profesional; art. 13 vs. 53.1.f (trampa recurrente); art. 14.3 basta reglamento. BOE-verified anchors (Ley 39/2015, arts. 21-25, 30-33, 53). Totals: seed-reconcile R1 390→**408** (36 Tema 15 + 58 Tema 16). `npm test` 210/210 across 40 suites and the targeted seed suites 42/42 pass; at commit time `npm run lint` and `npm run build` were blocked only by unrelated uncommitted component work from a parallel workstream (`OnboardingModal.tsx`, `StudySetup.tsx`), not by this batch.
+Audit of `resumen 28-10 pt2` (Ley 39/2015: arts. 13-14, 19, 21-25, 30-33 y 53) against `topic_tema16` (40 items). Closed 18 gaps with manually authored, validated items (`item-t15-77…94`) in `server/seedDataTema15.ts` (`seedItemsTema16Extra`, appended last in `seedItems`): plazo supletorio de 3 meses (21.3); dies a quo de oficio = fecha del acuerdo (21.3.a, caso 10/4→10/8); dies a quo a solicitud = entrada en registro competente (21.3.b, caso 10/4→12/4); excepciones de silencio desestimatorio (24.1); silencio estimatorio = acto finalizador y resolución posterior confirmatoria (24.2-24.3); certificado de silencio a petición = 15 días desde el día siguiente a la entrada en registro competente (24.4, caso 24/29-10); caducidad y archivo en procedimientos de gravamen (25.1.b); suspensión obligatoria por recusación/actuaciones complementarias (22.2); tope de 3 meses del informe preceptivo (22.1.d); ampliación del art. 23 limitada al plazo de tramitación y sin recurso; ampliación del art. 32 = mitad del plazo y antes del vencimiento; inimpugnabilidad del acuerdo de urgencia (33.2); días hábiles salvo ley/UE (30.2); último día inhábil → primer día hábil siguiente (30.5); presentación en registro electrónico inhábil → primera hora del primer día hábil (31.2.b); art. 14.2.c limitado al ejercicio de la actividad profesional; art. 13 vs. 53.1.f (trampa recurrente); art. 14.3 basta reglamento. BOE-verified anchors (Ley 39/2015, arts. 21-25, 30-33, 53). Totals: seed-reconcile R1 390→**408** (36 Tema 15 + 58 Tema 16). `npm test` 210/210 across 40 suites and the targeted seed suites 42/42 pass; at commit time `npm run lint` and `npm run build` were blocked only by unrelated uncommitted component work from a parallel workstream (`OnboardingModal.tsx`, `StudySetup.tsx`), not by this batch. **Resuelto el 2026-11-03:** lint, build y 210/210 verdes con ese trabajo integrado (ver §1.9).
+
+### 1.9 UX/accesibilidad — pasada 2026-11-03 (árbol de trabajo)
+
+Pasada de diseño/UX sobre `src/App.tsx` y los componentes compuestos. Cambios verificados en el árbol (sin commit al cierre de esta revisión):
+
+- **Onboarding de primer arranque:** `OnboardingModal.tsx` (4 pasos: bienvenida, baremo +1/−0,25, confianza 0–3 y arranque del primer test) disparado desde `StudySetup.tsx` y recordado en `localStorage` (`oposilab_onboarding_completed`); se puede saltar.
+- **Accesibilidad de diálogos:** `src/utils/useFocusTrap.ts` (focus-in, ciclo Tab/Shift+Tab, Esc y restauración de foco) cableado en `CreateTopicModal`, `HelpShortcutsModal`, `InterleavedBlockModal` y `JevLabModal`, con `role="dialog"`, `aria-modal` y `aria-labelledby`. Pendiente: `OnboardingModal` y los overlays antiguos de `ItemBank`/`ErrorRepairStudio`.
+- **Punto de decisión destilado:** `StudySetup` muestra cuatro formas principales; Plazos/Cuantías y Duelo se revelan bajo "Más formas de practicar". El runner colapsa ritmo/exportar/guardar/progreso en "Más opciones" y sustituye el selector de baremo por una pill de solo lectura cuando queda bloqueado.
+- **Navegación y feedback:** atajos `Alt+1/2/3` a Panel/Test/Reparación; confirmación antes de descartar una sesión; foco visible y etiquetas de contraste ajustadas en controles.
+- **Contenido:** sin cambios de ítems en esta pasada.
+
+Verificación: `npm run lint` limpio, `npm test` **210/210 en 40 suites**, `npm run build` OK. `docs/ACCEPTANCE.md` criterios 31–35 recogen la evidencia; el criterio 32 queda 🟡 por la cobertura parcial de diálogos.
 
 ### 1.1 Hardening de auditoría — 2026-10-23
 
@@ -85,8 +106,9 @@ descartó a posteriori y 11 pruebas en 3 suites nunca fueron parte del repo. Ade
 TS2554 en HEAD. Las llamadas se restauraron a las firmas 1–2 argumentos de `JevClient`
 (`/api/jev/audit-item`, `diagnose-attempt`, `classify-atom`, `verify-cascade`).
 
-Recuento vigente: **172/172 en 37 suites**, `npm run lint` limpio. `REPORT.md` y sus logs se
-conservan como registro histórico (medidos con el WIP presente).
+Recuento de esa revisión: **172/172 en 37 suites**, `npm run lint` limpio. Recuento actual:
+**210/210 en 40 suites** (2026-11-03, §1.9). `REPORT.md` y sus logs se conservan como registro
+histórico (medidos con el WIP presente).
 
 ---
 
@@ -255,7 +277,7 @@ Confirmed in this work session:
 - `npm run lint` passes after the boot fix.
 - `tests/persistence.test.ts` passes 2/2 using a child-process probe and an isolated `OPOSILAB_DATA_DIR`; the live `data/oposilab.db` is not used.
 - `server/db.ts:112-190` now performs a full seed only when both topics and items are empty; existing data follows the additive merge path.
-- P2 complete: the full suite (58 tests *en esa revisión*; hoy **172** — ver §1.2) runs green in isolated temp databases with `OPOSILAB_OFFLINE=1` (no AI/Jev network); md5 of the live `data/oposilab.db` is unchanged across `npm test`. Two isolation bugs were found and fixed en route: (1) `server/db.ts` captured its DB path at import time, defeating env overrides, and (2) `server/db.ts` ran `db.init()` at module scope, seeding the default-path DB on mere import. Both are regression-guarded (P2.3) and the module now auto-initializes lazily on first access via a Proxy.
+- P2 complete: the full suite (58 tests *en esa revisión*; hoy **210** — ver §1.9) runs green in isolated temp databases with `OPOSILAB_OFFLINE=1` (no AI/Jev network); md5 of the live `data/oposilab.db` is unchanged across `npm test`. Two isolation bugs were found and fixed en route: (1) `server/db.ts` captured its DB path at import time, defeating env overrides, and (2) `server/db.ts` ran `db.init()` at module scope, seeding the default-path DB on mere import. Both are regression-guarded (P2.3) and the module now auto-initializes lazily on first access via a Proxy.
 - Deferred with their fixes: replacing inline scorer/SRS test reimplementations lands with the P4 production scorers; due-filter, daily-limit, and seed-integrity assertions land with the P3/P5 fixes they verify (kept green intentionally).
 
 Global constraints:
@@ -300,7 +322,7 @@ Global constraints:
 - Every suite now runs against a fresh temp `OPOSILAB_DATA_DIR`; verified by md5-checksumming the live DB across a full `npm test` run.
 - `server/db.ts` resolves its DB path lazily and no longer runs `db.init()` at module scope (the import-time seeding bug is guarded by test P2.3).
 - AI/Jev clients honor `OPOSILAB_OFFLINE=1` and use deterministic local fallbacks; no test can spend network credits.
-- Full suite green: 58 tests / 11 suites *(rev 2026-09; hoy 172/37 — ver §1.2)*.
+- Full suite green: 58 tests / 11 suites *(rev 2026-09; hoy 210/40 — ver §1.9)*.
 
 **Verification:**
 - `npm test` (live `data/oposilab.db` md5 unchanged before/after)
@@ -357,7 +379,7 @@ Global constraints:
 
 **Status de P3:** ✅ COMPLETO.
 
-### P4 — Correct the core activity loop
+### P4 — Correct the core activity loop ✅ DONE (2026-10-26)
 
 **Files:**
 - `src/scoring/evaluateItem.ts`
@@ -378,7 +400,9 @@ Global constraints:
 - Feedback distinguishes exact, near-miss, lucky, fragile, and misconception outcomes.
 - Activity tests exercise the same functions used by the UI.
 
-### P5 — Complete SRS, interleaving, errors, and repair
+**Verificación (2026-11-03):** `src/scoring/evaluateItem.ts` cubre los 10 `ItemType`; la evaluación de estado cognitivo, near-miss, cuadrantes two-tier, retrieval y spot-guard está implementada (commit `353a42b`). Evidencia: `tests/non-mcq-evaluation.test.ts`, `tests/scorer-hardening.test.ts`, `tests/oposilab.test.ts` (5–7), `src/utils/retrievalMatch.ts`. `npm test` 210/210; lint limpio.
+
+### P5 — Complete SRS, interleaving, errors, and repair ✅ DONE (2026-10-26)
 
 **Files:**
 - `server/scheduler.ts`
@@ -399,9 +423,9 @@ Global constraints:
 - Due queues never present future items.
 - Graduation is reachable through actual UI activity formats, not synthetic test inputs.
 - Error status transitions and repair completion are persisted and tested.
-- Verificación P5: `npm run lint` limpio, `npm test` 182/182, WP1–WP6 implementados (filtro de vencidos/tope de nuevos en `getDueQueue`, bloqueo de graduación en `confident-wrong` abierto del mismo ítem, auto-log de aciertos con baja confianza sin cambio de programación, enrutamiento de reparación E1–E9 vía `src/utils/repairRouting.ts`).
+- Verificación P5 (actualizada 2026-11-03): `npm run lint` limpio, `npm test` 210/210 en 40 suites, WP1–WP6 implementados (filtro de vencidos/tope de nuevos en `getDueQueue`, bloqueo de graduación en `confident-wrong` abierto del mismo ítem, auto-log de aciertos con baja confianza sin cambio de programación, enrutamiento de reparación E1–E9 vía `src/utils/repairRouting.ts`).
 
-### P6 — Finish import/export, UX, and evidence
+### P6 — Finish import/export, UX, and evidence ✅ DONE (import/export 2026-10-27 · UX 2026-11-03)
 
 **Files:**
 - `server/exporter.ts`
@@ -422,7 +446,7 @@ Global constraints:
 - Import/export round trips preserve item IDs, links, status, and feedback metadata.
 - A browser smoke flow covers import → validate → practice → feedback → restart persistence.
 - `npm run lint`, `npm test`, and `npm run build` pass from a clean checkout.
-- Verificación P6: import JSON/CSV de ítems implementado en `POST /api/import/items` (`server/importItems.ts` + `makeImportItemsHandler`) con validación por ítem (`itemInput`), detección de duplicados (id o stem+tema) y reporte de errores; 4 nuevas pruebas en `tests/oposilab.test.ts` (15, 15b, 15c, 15d); 186/182→186 tests verdes, lint limpio, build OK.
+- Verificación P6 (actualizada 2026-11-03): import JSON/CSV de ítems implementado en `POST /api/import/items` (`server/importItems.ts` + `makeImportItemsHandler`) con validación por ítem (`itemInput`), detección de duplicados (id o stem+tema) y reporte de errores; 4 pruebas en `tests/oposilab.test.ts` (15, 15b, 15c, 15d). Pasada UX/accesibilidad en §1.9. `npm run lint` limpio, `npm test` **210/210 en 40 suites**, `npm run build` OK.
 
 ---
 
@@ -442,4 +466,4 @@ Global constraints:
 
 **Non-goals:** no full mock exams, leaderboards, cloud-account dependency, payments, mobile-native app, or black-box AI content without human validation.
 
-**Execution order:** P1 → P2 → P3 → P4 → P5 → P6. Keep the app runnable and the working tree reviewable after each priority.
+**Execution order:** P1 → P2 → P3 → P4 → P5 → P6 — all complete as of 2026-11-03. Future work should keep the app runnable and the working tree reviewable after each change.

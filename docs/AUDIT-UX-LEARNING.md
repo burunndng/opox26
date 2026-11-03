@@ -6,6 +6,11 @@
 > `docs/SPEC.md`, `README.md`, seed banks (339 items, 197 tests pass, lint clean), live server `:3000`.
 > This is a review artifact, not a spec change.
 
+> **Estado posterior (2026-11-03):** las 10 acciones del Top-10 están implementadas. Los recuentos
+> de este documento (339 ítems, 197 pruebas) son históricos: la suite actual es **210/210 en
+> 40 suites**, con onboarding de primer arranque, drills Plazos/Duelo y focus trap en los modales
+> principales (cobertura de diálogos aún parcial). Ver `docs/ACCEPTANCE.md` criterios 31–35.
+
 ---
 
 ## Executive Summary
