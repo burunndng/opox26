@@ -35,6 +35,7 @@ import {
   seedTopicTema16,
   seedSourceChunksTema15,
   seedItemsTema15,
+  seedItemsTema16Extra,
 } from './seedDataTema15.ts';
 import {
   seedTopicTema3General,
@@ -6573,4 +6574,6 @@ export const seedItems: Item[] = rebalanceCanonicalMcqOptions([
   // the middle would reshuffle the stored option order of other topics.
   ...seedItemsTema8IP,
   ...seedItemsTema3General,
+  // Tema 16 gap-audit batch (§1.8), appended last for the same reason as above.
+  ...seedItemsTema16Extra,
 ]);
