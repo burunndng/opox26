@@ -235,6 +235,8 @@ interface ActivityRunnerProps {
   confusionPairs?: ConfusionPair[];
   /** Routes weak pretest items into a Repair Studio session */
   onLaunchRepair?: (itemIds: string[]) => void;
+  /** Non-blocking failure surface for record/delete/validate calls */
+  setToast?: (t: { message: string; kind: 'error' | 'info' }) => void;
   onExit: () => void;
   onFinished: (stats: { total: number; correct: number; avgConfidence: number }) => void;
 }
@@ -250,6 +252,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
   clusters,
   confusionPairs,
   onLaunchRepair,
+  setToast,
   onExit,
   onFinished,
 }) => {
@@ -925,7 +928,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
     try {
       await api.recordAttempt(attempt);
     } catch (e) {
-      console.error('Failed to record blank attempt:', e);
+      setToast?.({ message: 'No se pudo guardar el intento en blanco. Inténtalo de nuevo.', kind: 'error' });
     }
 
     const log: SessionAttemptLog = {
@@ -998,7 +1001,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
     try {
       await api.recordAttempt(attempt);
     } catch (e) {
-      console.error('Failed to record attempt:', e);
+      setToast?.({ message: 'No se pudo guardar el intento. Inténtalo de nuevo.', kind: 'error' });
     }
 
     const isAnsCorrect = result.correct;

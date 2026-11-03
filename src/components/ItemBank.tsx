@@ -29,6 +29,7 @@ interface ItemBankProps {
   warnings: QualityWarning[];
   onRefresh: () => void;
   onPreviewItem: (item: Item) => void;
+  setToast?: (t: { message: string; kind: 'error' | 'info' }) => void;
 }
 
 export const ItemBank: React.FC<ItemBankProps> = ({
@@ -39,6 +40,7 @@ export const ItemBank: React.FC<ItemBankProps> = ({
   warnings,
   onRefresh,
   onPreviewItem,
+  setToast,
 }) => {
   const [selectedTopicId, setSelectedTopicId] = useState<string>('all');
   const [selectedType, setSelectedType] = useState<string>('all');
@@ -112,12 +114,20 @@ export const ItemBank: React.FC<ItemBankProps> = ({
 
   const handleDeleteItem = async (id: string) => {
     if (!window.confirm('¿Seguro que deseas eliminar este ítem de entrenamiento?')) return;
-    await api.deleteItem(id);
-    onRefresh();
+    try {
+      await api.deleteItem(id);
+      onRefresh();
+    } catch (e) {
+      setToast?.({ message: 'No se pudo eliminar el ítem. Inténtalo de nuevo.', kind: 'error' });
+    }
   };
 
   const handleValidateItem = async (item: Item) => {
-    await api.updateItem(item.id, { status: 'validated' });
+    try {
+      await api.updateItem(item.id, { status: 'validated' });
+    } catch (e) {
+      setToast?.({ message: 'No se pudo validar el ítem. Inténtalo de nuevo.', kind: 'error' });
+    }
     onRefresh();
   };
 

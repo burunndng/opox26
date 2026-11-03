@@ -10,6 +10,7 @@ interface InterleavedBlockModalProps {
   onLaunchBlock: (items: Item[]) => void;
   topics?: Topic[];
   defaultTopicId?: string;
+  setToast?: (t: { message: string; kind: 'error' | 'info' }) => void;
 }
 
 export const InterleavedBlockModal: React.FC<InterleavedBlockModalProps> = ({
@@ -18,6 +19,7 @@ export const InterleavedBlockModal: React.FC<InterleavedBlockModalProps> = ({
   onLaunchBlock,
   topics = [],
   defaultTopicId,
+  setToast,
 }) => {
   const modalRef = useRef<HTMLDivElement | null>(null);
   useFocusTrap(isOpen, onClose, modalRef);
@@ -50,7 +52,7 @@ export const InterleavedBlockModal: React.FC<InterleavedBlockModalProps> = ({
       onLaunchBlock(blockItems);
       onClose();
     } catch (err) {
-      console.error('Failed to generate interleaved block:', err);
+      setToast?.({ message: 'No se pudo generar el bloque intercalado. Inténtalo de nuevo.', kind: 'error' });
     } finally {
       setIsGenerating(false);
     }

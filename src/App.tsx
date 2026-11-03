@@ -538,6 +538,7 @@ export default function App() {
               setRunnerSessionId(undefined);
               loadData();
             }}
+            setToast={setToast}
           />
           )
         )}
@@ -577,6 +578,7 @@ export default function App() {
               setRunnerMode('activity_specific');
               setActiveTab('runner');
             }}
+            setToast={setToast}
           />
         )}
 
@@ -608,6 +610,7 @@ export default function App() {
         onLaunchBlock={handleLaunchInterleavedBlock}
         topics={topics}
         defaultTopicId={selectedTopicId !== 'all' ? selectedTopicId : undefined}
+        setToast={setToast}
       />
 
       <CreateTopicModal
