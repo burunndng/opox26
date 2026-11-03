@@ -51,8 +51,10 @@ npm run build                    # vite build + esbuild server bundle → dist/s
 
 ## UI / accessibility conventions
 
-- Modals should be real dialogs: `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, a ref with `tabIndex={-1}`, and `useFocusTrap(isOpen, onClose, ref)`.
-- Current coverage: `CreateTopicModal`, `HelpShortcutsModal`, `InterleavedBlockModal`, `JevLabModal`. Still pending: `OnboardingModal` and the older `ItemBank` / `ErrorRepairStudio` overlays.
+- Modals must be real dialogs: `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, a ref with `tabIndex={-1}`, and `useFocusTrap(isOpen, onClose, ref)`. Enforced by `tests/modal-a11y.test.ts` (every `fixed inset-0 z-50` overlay).
+- Every form control needs an accessible name — `aria-label`, `htmlFor` pairing, or `<label>` wrapping. Enforced by `tests/form-labeling.test.ts`.
+- CTAs are unified on indigo (`bg-indigo-600 hover:bg-indigo-500`); emerald is reserved for approval/status semantics. Surfaces use the token trio (`#0c0f17` canvas / `#121722` card / `#20293a` border). Enforced informally — follow existing tokens; no new colors.
+- `prefers-reduced-motion` is honored globally (`src/index.css`); keyboard users get a skip link to `#main`; icon-only buttons are ≥36px (44px destructive).
 - Keep the answer-time surface minimal: baremo + net score stay visible; secondary controls belong behind the collapsible "Más opciones" panel.
 
 ## Conventions
