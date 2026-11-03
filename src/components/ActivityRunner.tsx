@@ -3129,7 +3129,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
               if (isBlankAttempt) {
                 return (
-                  <div className="p-4 rounded-xl border flex items-center space-x-3 bg-amber-950/30 border-amber-800 text-amber-300">
+                  <div role="status" aria-live="polite" className="p-4 rounded-xl border flex items-center space-x-3 bg-amber-950/30 border-amber-800 text-amber-300">
                     <Shield className="w-6 h-6 text-amber-400 shrink-0" />
                     <div>
                       <div className="font-bold text-sm">
@@ -3148,6 +3148,8 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
               return (
                 <div
+                  role="status"
+                  aria-live="polite"
                   className={`p-4 rounded-xl border flex items-center space-x-3 ${
                     isCorrect
                       ? 'bg-emerald-950/30 border-emerald-800 text-emerald-300'
