@@ -280,6 +280,11 @@ export default function App() {
     setRunnerTitle(`Repaso de fallos (${repairItems.length})`);
     setRunnerMode('repair');
     setRunnerBaremoPenalty(0.25);
+    setRunnerInitialIndex(0);
+    setRunnerInitialResults(undefined);
+    // New session id → ActivityRunner remounts (its key), so a repair launched
+    // from a finished summary never keeps the old index/results/sessionComplete.
+    setRunnerSessionId(`repair-${Date.now()}`);
     setActiveTab('runner');
   };
 
@@ -494,6 +499,7 @@ export default function App() {
             />
           ) : (
           <ActivityRunner
+            key={runnerSessionId ?? 'runner'}
             items={runnerItems}
             title={runnerTitle}
             mode={runnerMode}
