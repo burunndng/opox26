@@ -57,6 +57,7 @@ import { ModeAStudyRunner } from './ModeAStudyRunner.tsx';
 import { PretestDiagnosticMap } from './PretestDiagnosticMap.tsx';
 import { SessionHeatMap } from './SessionHeatMap.tsx';
 import { optionIdAtPosition, optionOrderSeed, orderOptions } from '../utils/optionOrder.ts';
+import { RUNNER_RENDERED_ITEM_TYPES } from '../utils/runnerRenderCoverage.ts';
 import { trapLabelEs } from '../utils/trapLabels.ts';
 
 const EMPTY_OPTION_CHOICES: Array<{
@@ -452,9 +453,18 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
     () => buildFactVariantChoices(currentItem),
     [currentItem?.id, currentItem?.options, currentItem?.fact_variant_data],
   );
+  // P0 fix: seeded retrieval_prompt / pretest_item items are free-text (no
+  // options); user-imported variants may carry options and use the MCQ path.
+  const isFreeTextRetrieval =
+    (currentItem?.item_type === 'retrieval_prompt' ||
+      currentItem?.item_type === 'pretest_item') &&
+    itemOptions.length === 0;
+
   const hasPositionalOptionShortcuts =
     currentItem?.item_type === 'cover_and_generate_mcq' ||
-    currentItem?.item_type === 'pretest_item' ||
+    ((currentItem?.item_type === 'pretest_item' ||
+      currentItem?.item_type === 'retrieval_prompt') &&
+      itemOptions.length > 0) ||
     currentItem?.item_type === 'cloze' ||
     currentItem?.item_type === 'two_tier' ||
     currentItem?.item_type === 'fact_variant';
@@ -954,6 +964,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
         numberSortMatches,
         spotSelectedSpanId: spotSelectedSpan,
         userReasoning,
+        generatedAnswer,
       },
       level
     );
@@ -965,7 +976,9 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
       user_response:
         currentItem.item_type === 'cloze' && Object.keys(clozeInputs).length > 0
           ? JSON.stringify(clozeInputs)
-          : clozeInput || selectedOption || spotSelectedSpan || JSON.stringify(numberSortMatches),
+          : isFreeTextRetrieval
+            ? generatedAnswer
+            : clozeInput || selectedOption || spotSelectedSpan || JSON.stringify(numberSortMatches),
       generated_answer_before_options: generatedAnswer,
       selected_option: selectedOption || undefined,
       reasoning_response: userReasoning || undefined,
@@ -2848,6 +2861,138 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
             </div>
           );
         })()}
+
+        {/* ---------------------------------------------------- */}
+        {/* 8. RETRIEVAL PROMPT & PRETEST ITEM (free-text or MCQ) */}
+        {/* ---------------------------------------------------- */}
+        {(currentItem.item_type === 'retrieval_prompt' ||
+          currentItem.item_type === 'pretest_item') && (() => {
+          const hasOpts = itemOptions.length > 0;
+          const instruction =
+            currentItem.prompt_before_options ||
+            'Escribe de memoria la regla, plazo u órgano antes de comprobar.';
+          return (
+            <div className="space-y-4">
+              <div className="flex items-start gap-2.5 rounded-lg border border-[#20293a] bg-[#121722]/60 px-4 py-3">
+                <Brain className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
+                <p className="text-xs text-slate-400 leading-relaxed">{instruction}</p>
+              </div>
+
+              {stage === 'answering' && !hasOpts && (
+                <div className="space-y-3">
+                  <textarea
+                    value={generatedAnswer}
+                    onChange={(e) => setGeneratedAnswer(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey && generatedAnswer.trim()) {
+                        e.preventDefault();
+                        setStage('confidence');
+                      }
+                    }}
+                    placeholder="Escribe aquí tu respuesta de memoria..."
+                    rows={4}
+                    className="w-full bg-[#121722] border border-[#20293a] rounded-md p-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition"
+                    autoFocus
+                  />
+                  <div className="flex items-center justify-between">
+                    <button
+                      type="button"
+                      onClick={handleBlankSubmit}
+                      className="text-[11px] text-slate-500 hover:text-slate-300 underline underline-offset-2"
+                    >
+                      Dejar en blanco
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setStage('confidence')}
+                      disabled={!generatedAnswer.trim()}
+                      className="px-5 py-2.5 rounded-md bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs font-semibold shadow-xs transition"
+                    >
+                      Ver respuesta (Intro)
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {stage === 'answering' && hasOpts && (
+                <div className="grid grid-cols-1 gap-2.5">
+                  {orderedItemOptions.map((opt, index) => (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => handleSubmitOption(opt.id)}
+                      className="w-full text-left p-3.5 rounded-xl bg-[#0c0f17] border border-[#20293a] hover:border-blue-500 text-xs text-slate-200 flex items-center space-x-3"
+                    >
+                      <span className="w-5 h-5 rounded bg-slate-800 flex items-center justify-center font-bold shrink-0">
+                        {index + 1}
+                      </span>
+                      <span>{opt.text}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {stage === 'feedback' && !hasOpts && (
+                <div className="p-4 bg-[#0c0f17] border border-[#20293a] rounded-md space-y-2 text-xs">
+                  <div>
+                    <span className="font-semibold text-blue-400">Tu respuesta: </span>
+                    <span className="text-slate-300">{generatedAnswer || '(en blanco)'}</span>
+                  </div>
+                  <div>
+                    <span className="font-semibold text-emerald-400">Respuesta modelo: </span>
+                    <span className="text-slate-200">
+                      {currentItem.correct_answer || currentItem.rule_statement}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {stage === 'feedback' && hasOpts && (
+                <div className="grid grid-cols-1 gap-2.5">
+                  {orderedItemOptions.map((opt, index) => {
+                    const isSelected = selectedOption === opt.id;
+                    const style = opt.is_correct
+                      ? 'bg-emerald-950/40 border-emerald-500 text-emerald-100'
+                      : isSelected
+                        ? 'bg-rose-950/40 border-rose-500 text-rose-100'
+                        : 'bg-[#0c0f17]/50 border-[#20293a]/40 text-slate-500 opacity-60';
+                    return (
+                      <div
+                        key={opt.id}
+                        className={`p-3.5 rounded-xl border text-xs flex items-center space-x-3 ${style}`}
+                      >
+                        <span className="w-5 h-5 rounded bg-slate-800/60 flex items-center justify-center font-bold shrink-0">
+                          {index + 1}
+                        </span>
+                        <span>{opt.text}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })()}
+
+        {/* Runtime guard: a type added without a render block degrades loudly. */}
+        {!RUNNER_RENDERED_ITEM_TYPES.includes(currentItem.item_type) && (
+          <div
+            role="alert"
+            className="p-4 rounded-xl border border-amber-700/70 bg-amber-950/40 text-xs text-amber-200 space-y-3"
+          >
+            <p>
+              Tipo de ítem sin soporte en el visor: <strong>{currentItem.item_type}</strong>.
+              Actualiza la app o reporta este problema.
+            </p>
+            <button
+              type="button"
+              onClick={handleNextItem}
+              className="px-4 py-2 rounded-md bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition"
+            >
+              Saltar ítem
+            </button>
+          </div>
+        )}
 
         {/* ---------------------------------------------------- */}
         {/* CONFIDENCE RATING STAGE (0-3) */}

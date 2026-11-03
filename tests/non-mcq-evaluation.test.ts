@@ -1,6 +1,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { seedItems } from '../server/seedData.ts';
+import { seedItemsRetrieval } from '../server/seedDataRetrieval.ts';
 import { evaluateItem } from '../src/scoring/evaluateItem.ts';
 import type { Item } from '../src/types.ts';
 
@@ -97,5 +98,69 @@ describe('Non-MCQ feedback and evaluation', () => {
     assert.equal(item.correct_answer, 'A');
     assert.equal(evaluateItem(item, { selectedOption: 'A' }, 2).correct, true);
     assert.equal(evaluateItem(item, { selectedOption: 'B' }, 2).correct, false);
+  });
+
+  test('free-text retrieval_prompt scores generatedAnswer via generative match', () => {
+    const item = seedItemsRetrieval.find((candidate) => candidate.item_type === 'retrieval_prompt');
+    assert.ok(item, 'no free-text retrieval_prompt in seed');
+    const target = item.rule_statement;
+    assert.ok(target, 'seed retrieval item lacks rule_statement');
+    assert.equal(evaluateItem(item, { generatedAnswer: target }, 2).correct, true);
+    assert.equal(
+      evaluateItem(item, { generatedAnswer: target }, 2).generativeMatch,
+      true
+    );
+    assert.equal(
+      evaluateItem(item, { generatedAnswer: 'zzzz qqqq' }, 2).correct,
+      false
+    );
+  });
+
+  test('free-text retrieval with confidence 3 and a miss is E8 confident-wrong', () => {
+    const item = seedItemsRetrieval.find((candidate) => candidate.item_type === 'retrieval_prompt');
+    assert.ok(item);
+    const wrong = evaluateItem(item, { generatedAnswer: 'zzzz qqqq' }, 3);
+    assert.equal(wrong.correct, false);
+    assert.equal(wrong.errorCode, 'E8');
+    assert.equal(wrong.cognitiveState, 'confident_misconception');
+  });
+
+  test('free-text pretest_item scores generatedAnswer', () => {
+    const item = seedItemsRetrieval.find((candidate) => candidate.item_type === 'pretest_item');
+    assert.ok(item, 'no free-text pretest_item in seed');
+    const target = item.rule_statement;
+    assert.ok(target);
+    assert.equal(evaluateItem(item, { generatedAnswer: target }, 2).correct, true);
+    assert.equal(
+      evaluateItem(item, { generatedAnswer: 'zzzz qqqq' }, 1).correct,
+      false
+    );
+    assert.equal(
+      evaluateItem(item, { generatedAnswer: 'zzzz qqqq' }, 1).expectedDisplay,
+      item.correct_answer || item.rule_statement
+    );
+  });
+
+  test('cover-and-generate receives generatedAnswer for the pre-reveal match', () => {
+    // Regression: the runner records generated_answer_before_options but never
+    // passed it to evaluateItem, so generativeMatch was always false.
+    const item = findItem('item-mcq-1');
+    const correctText = item.options?.find((option) => option.is_correct)?.text;
+    assert.ok(correctText, 'item-mcq-1 lacks a correct option text');
+    assert.equal(
+      evaluateItem(item, { selectedOption: 'A', generatedAnswer: correctText! }, 2)
+        .cognitiveState,
+      'mastered'
+    );
+    // No generative text -> lucky_recognition (unchanged legacy behavior).
+    assert.equal(
+      evaluateItem(item, { selectedOption: 'A' }, 2).cognitiveState,
+      'lucky_recognition'
+    );
+    assert.equal(
+      evaluateItem(item, { selectedOption: 'A', generatedAnswer: 'zzzz qqqq' }, 2)
+        .cognitiveState,
+      'lucky_recognition'
+    );
   });
 });
