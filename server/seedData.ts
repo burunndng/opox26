@@ -36,6 +36,14 @@ import {
   seedSourceChunksTema15,
   seedItemsTema15,
 } from './seedDataTema15.ts';
+import {
+  seedTopicTema3General,
+  seedSourceChunksTema3General,
+  seedClustersTema3General,
+  seedConfusionPairsTema3General,
+  seedAtomsTema3General,
+  seedItemsTema3General,
+} from './seedDataTema3General.ts';
 
 export const seedTopic: Topic = {
   "id": "topic_seguridad_social_tema_7",
@@ -47,7 +55,7 @@ export const seedTopic: Topic = {
   "updated_at": "2026-03-01T10:00:00Z"
 };
 
-export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8, seedTopicTema8IP, seedTopicTema15, seedTopicTema16];
+export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8, seedTopicTema8IP, seedTopicTema15, seedTopicTema16, seedTopicTema3General];
 
 const seedSourceChunksTema7: SourceChunk[] = [
   {
@@ -104,6 +112,7 @@ export const seedSourceChunks: SourceChunk[] = [
   ...seedSourceChunksTema8,
   ...seedSourceChunksTema8IP,
   ...seedSourceChunksTema15,
+  ...seedSourceChunksTema3General,
 ];
 
 const seedClustersTema7: Cluster[] = [
@@ -214,7 +223,7 @@ const seedClustersTema7: Cluster[] = [
   }
 ];
 
-export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3, ...seedClustersTema8, ...seedClustersTema8IP];
+export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3, ...seedClustersTema8, ...seedClustersTema8IP, ...seedClustersTema3General];
 
 const seedConfusionPairsTema7: ConfusionPair[] = [
   {
@@ -469,6 +478,7 @@ export const seedConfusionPairs: ConfusionPair[] = [
   ...seedConfusionPairsTema3,
   ...seedConfusionPairsTema8,
   ...seedConfusionPairsTema8IP,
+  ...seedConfusionPairsTema3General,
 ];
 
 const seedAtomsTema7: Atom[] = [
@@ -1192,6 +1202,7 @@ export const seedAtoms: Atom[] = [
   })),
   ...seedAtomsTema1,
   ...seedAtomsTema3,
+  ...seedAtomsTema3General,
 ];
 
 const seedItemsTema7: Item[] = [
@@ -6561,4 +6572,5 @@ export const seedItems: Item[] = rebalanceCanonicalMcqOptions([
   // canonical correct-option position by index, so inserting Tema 8 (II) in
   // the middle would reshuffle the stored option order of other topics.
   ...seedItemsTema8IP,
+  ...seedItemsTema3General,
 ]);
