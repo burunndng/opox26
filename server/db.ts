@@ -124,9 +124,20 @@ class LocalDatabase {
       // Merge any missing seed topics, chunks, clusters, confusion pairs, atoms, and items (e.g. Tema 1)
       let hasNewSeeds = false;
       for (const t of seedTopics) {
-        if (!this.data.topics.some((existing) => existing.id === t.id)) {
+        const existingIdx = this.data.topics.findIndex((existing) => existing.id === t.id);
+        if (existingIdx === -1) {
           this.data.topics.push(t);
           hasNewSeeds = true;
+        } else {
+          // Seed-owned topic records: keep display metadata in sync with the
+          // seed (renames such as the Tema 15/16 split). User-created topics
+          // are never in seedTopics, so they are untouched.
+          const existing = this.data.topics[existingIdx];
+          if (existing.name !== t.name || existing.description !== t.description) {
+            existing.name = t.name;
+            existing.description = t.description;
+            hasNewSeeds = true;
+          }
         }
       }
       for (const sc of seedSourceChunks) {
@@ -240,23 +251,33 @@ class LocalDatabase {
             });
           }
           hasNewSeeds = true;
-        } else if (!this.data.activityAttempts.some((attempt) => attempt.item_id === it.id)) {
+        } else {
           const existing = this.data.items[existingIdx];
-          let changed = false;
-          for (const field of contentSyncFields) {
-            if (!(field in it)) continue;
-            const seedValue = (it as any)[field];
-            if (JSON.stringify((existing as any)[field]) !== JSON.stringify(seedValue)) {
-              (existing as any)[field] = seedValue;
+          // Topic placement is seed-owned syllabus metadata (same rule as the
+          // atom topic_id reconciliation above), so seed topic splits — e.g.
+          // the Tema 15 → Tema 16 Ley 39/2015 separation — reach existing
+          // databases even for items the candidate already attempted.
+          if (it.topic_id && existing.topic_id !== it.topic_id) {
+            existing.topic_id = it.topic_id;
+            hasNewSeeds = true;
+          }
+          if (!this.data.activityAttempts.some((attempt) => attempt.item_id === it.id)) {
+            let changed = false;
+            for (const field of contentSyncFields) {
+              if (!(field in it)) continue;
+              const seedValue = (it as any)[field];
+              if (JSON.stringify((existing as any)[field]) !== JSON.stringify(seedValue)) {
+                (existing as any)[field] = seedValue;
+                changed = true;
+              }
+            }
+            if (existing.status !== it.status || existing.figure_status !== it.figure_status) {
+              existing.status = it.status;
+              existing.figure_status = it.figure_status;
               changed = true;
             }
+            if (changed) hasNewSeeds = true;
           }
-          if (existing.status !== it.status || existing.figure_status !== it.figure_status) {
-            existing.status = it.status;
-            existing.figure_status = it.figure_status;
-            changed = true;
-          }
-          if (changed) hasNewSeeds = true;
         }
       }
       if (hasNewSeeds) {

@@ -118,6 +118,23 @@ if (mode === 'set-stale-format-data' || mode === 'set-stale-format-data-with-att
   }
 }
 
+if (mode === 'set-legacy-topic-with-attempt') {
+  const seed = data.items.find((item) => item.id === targetId);
+  if (!seed) throw new Error(`Missing seed item ${targetId}`);
+  // Simulate a database created before the Tema 15/16 split: the item still
+  // sits in topic_tema15 and has study state attached.
+  db.updateItem(targetId, { topic_id: 'topic_tema15' });
+  db.recordAttempt({
+    item_id: targetId,
+    activity_type: seed.item_type,
+    confidence: 1,
+    correct: true,
+    used_hint: false,
+    was_interleaved: false,
+    was_timed: false,
+  });
+}
+
 const updatedData = db.getAllData();
 const seedIds = new Set(seeds.map((item) => item.id));
 const seedRecords = updatedData.items.filter((item) => seedIds.has(item.id));
@@ -161,6 +178,7 @@ const state = {
   draftIds: seedRecords.filter((item) => item.status === 'draft').map((item) => item.id),
   targetStatus: target?.status ?? null,
   targetFigureStatus: target?.figure_status ?? null,
+  targetTopicId: target?.topic_id ?? null,
   targetAttemptCount: updatedData.activityAttempts.filter((attempt) => attempt.item_id === targetId).length,
   targetContent: citationContent(target),
   seedContent: citationContent(seedDef),

@@ -17,6 +17,10 @@ const TOPIC_BADGES: Array<{ match: string; subject: string; block?: 'Especifico'
   { match: 'seguridad_social_tema_8', subject: 'Seguridad Social', block: 'Especifico' },
   { match: 'seguridad_social_tema_7', subject: 'Seguridad Social' },
   { match: 'constitucion_tema_1', subject: 'Derecho Constitucional' },
+  // Régimen jurídico administrativo (bloque general): Tema 15 = Ley 40/2015,
+  // Tema 16 = Ley 39/2015.
+  { match: 'tema15', subject: 'Derecho Administrativo' },
+  { match: 'tema16', subject: 'Derecho Administrativo' },
 ];
 
 export interface TopicBadge {

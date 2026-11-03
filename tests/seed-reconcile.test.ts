@@ -30,6 +30,7 @@ interface SeedState {
   draftIds: string[];
   targetStatus: string | null;
   targetFigureStatus: string | null;
+  targetTopicId: string | null;
   targetAttemptCount: number;
   targetContent: CitationContent | null;
   seedContent: CitationContent | null;
@@ -64,8 +65,9 @@ describe('Boot reconciliation for untouched seed items (isolated)', () => {
   test('R1: fresh database seeds 366 practice-eligible items and no drafts', () => {
     const state = runProbe(freshCaseDir('fresh'), 'snapshot');
     // 113 core items + 49 Tema 3 (afiliación e inscripción) items + 70 Tema 8 (incapacidad temporal) items
-    // + 52 Tema 8 (II) (incapacidad permanente) items + 76 Tema 15 (acto administrativo, con 6 nuevos de 28-10) items + 6 retrieval/pretest items.
-    assert.equal(state.seedCount, 366, '113 core items plus 49 Tema 3 items plus 70 Tema 8 items plus 52 Tema 8 (II) items plus 76 Tema 15 items plus 6 retrieval/pretest items are seeded');
+    // + 52 Tema 8 (II) (incapacidad permanente) items + 36 Tema 15 (Ley 40/2015) + 40 Tema 16 (Ley 39/2015,
+    // separación del banco original de 76) items + 6 retrieval/pretest items.
+    assert.equal(state.seedCount, 366, '113 core items plus 49 Tema 3 items plus 70 Tema 8 items plus 52 Tema 8 (II) items plus 76 Tema 15/16 items plus 6 retrieval/pretest items are seeded');
     assert.equal(state.eligibleCount, 366);
     assert.deepEqual(state.draftIds, []);
   });
@@ -174,6 +176,16 @@ describe('Boot reconciliation for untouched seed items (isolated)', () => {
     const state = runProbe(dir, 'snapshot', 'item-numsort-7');
     assert.equal(state.targetAttemptCount, 1);
     assert.notDeepEqual(state.targetFormatData, state.seedFormatData);
+  });
+
+  test('R18: boot re-homes a legacy topic_tema15 item to its seed topic even when attempted', () => {
+    const dir = freshCaseDir('legacy-topic');
+    // item-t15-1 is anchored in Ley 39/2015, so the seed places it in topic_tema16.
+    runProbe(dir, 'set-legacy-topic-with-attempt', 'item-t15-1');
+
+    const state = runProbe(dir, 'snapshot', 'item-t15-1');
+    assert.equal(state.targetTopicId, 'topic_tema16', 'seed topic placement must win on boot');
+    assert.equal(state.targetAttemptCount, 1, 'the attempt must survive the re-home');
   });
 });
 

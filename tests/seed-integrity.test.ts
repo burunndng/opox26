@@ -236,4 +236,33 @@ describe('Seed-bank integrity', () => {
 
     assert.deepEqual(failures, [], `Atoms failing provenance/difficulty checks: ${failures.join(', ')}`);
   });
+
+  test('F11: every seed item resolves to a registered seed topic', () => {
+    const topicIds = new Set(seedTopics.map((topic) => topic.id));
+    const failures = allSeedItems
+      .filter((item) => !item.topic_id || !topicIds.has(item.topic_id))
+      .map((item) => `${item.id} -> ${item.topic_id}`);
+
+    assert.deepEqual(failures, [], `Items with unregistered topic:\n${failures.join('\n')}`);
+  });
+
+  test('F12: the Tema 15/16 split follows the legal anchor (Ley 39/2015 → topic_tema16)', () => {
+    const split = allSeedItems.filter(
+      (item) => item.topic_id === 'topic_tema15' || item.topic_id === 'topic_tema16',
+    );
+    assert.ok(
+      split.length >= 70,
+      `expected both régimen jurídico topics to be populated, found ${split.length} items`,
+    );
+
+    const failures: string[] = [];
+    for (const item of split) {
+      const legal = item.legal_basis ?? '';
+      const expected = /39\/2015|203\/2021/.test(legal) ? 'topic_tema16' : 'topic_tema15';
+      if (item.topic_id !== expected) {
+        failures.push(`${item.id} [${legal}] in ${item.topic_id}, expected ${expected}`);
+      }
+    }
+    assert.deepEqual(failures, [], `Tema 15/16 split violations:\n${failures.join('\n')}`);
+  });
 });

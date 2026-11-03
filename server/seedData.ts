@@ -32,6 +32,7 @@ import {
 import { seedItemsTema8IP } from './seedDataTema8IP.ts';
 import {
   seedTopicTema15,
+  seedTopicTema16,
   seedSourceChunksTema15,
   seedItemsTema15,
 } from './seedDataTema15.ts';
@@ -46,7 +47,7 @@ export const seedTopic: Topic = {
   "updated_at": "2026-03-01T10:00:00Z"
 };
 
-export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8, seedTopicTema8IP, seedTopicTema15];
+export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8, seedTopicTema8IP, seedTopicTema15, seedTopicTema16];
 
 const seedSourceChunksTema7: SourceChunk[] = [
   {
