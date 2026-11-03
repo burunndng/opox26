@@ -78,7 +78,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
       aria-modal="true"
       aria-labelledby="onboarding-title"
     >
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl">
+      <div className="bg-[#121722] border border-[#20293a] rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">

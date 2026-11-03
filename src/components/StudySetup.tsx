@@ -101,7 +101,7 @@ export const StudySetup: React.FC<StudySetupProps> = ({
         )}
         <button
           onClick={onStartDue}
-          className="w-full flex items-center justify-center space-x-2 py-3.5 px-4 rounded-md bg-blue-600 hover:bg-blue-500 text-white font-semibold text-base shadow-xs transition min-h-[52px]"
+          className="w-full flex items-center justify-center space-x-2 py-3.5 px-4 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-base shadow-xs transition min-h-[52px]"
         >
           <Play className="w-5 h-5 fill-current" />
           <span>Empezar test</span>

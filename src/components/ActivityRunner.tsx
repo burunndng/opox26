@@ -1971,7 +1971,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                   </span>
                   <button
                     onClick={handleRevealOptions}
-                    className="px-5 py-2.5 rounded-md bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-xs transition"
+                    className="px-5 py-2.5 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-xs transition"
                   >
                     Revelar Opciones (Espacio)
                   </button>
@@ -2909,7 +2909,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                       type="button"
                       onClick={() => setStage('confidence')}
                       disabled={!generatedAnswer.trim()}
-                      className="px-5 py-2.5 rounded-md bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs font-semibold shadow-xs transition"
+                      className="px-5 py-2.5 rounded-md bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs font-semibold shadow-xs transition"
                     >
                       Ver respuesta (Intro)
                     </button>
@@ -3237,7 +3237,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               </span>
               <button
                 onClick={handleNextItem}
-                className="px-6 py-2.5 rounded-md bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition flex items-center space-x-1.5 shadow-xs"
+                className="px-6 py-2.5 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition flex items-center space-x-1.5 shadow-xs"
               >
                 <span>Siguiente Ítem</span>
                 <ChevronRight className="w-4 h-4" />

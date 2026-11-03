@@ -178,7 +178,7 @@ export const InterleavedBlockModal: React.FC<InterleavedBlockModalProps> = ({
           <button
             onClick={handleGenerate}
             disabled={isGenerating}
-            className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow transition disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow transition disabled:opacity-50"
           >
             {isGenerating ? 'Generando Bloque...' : 'Comenzar Bloque Intercalado'}
           </button>

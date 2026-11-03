@@ -351,7 +351,7 @@ export const ModeAStudyRunner: React.FC<ModeAStudyRunnerProps> = ({
                     {checkedResult ? (
                       <button
                         onClick={() => handleAdvanceModeA(true)}
-                        className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition flex items-center space-x-2 shadow-md cursor-pointer"
+                        className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm transition flex items-center space-x-2 shadow-md cursor-pointer"
                       >
                         <span>
                           {isLastInQueue ? 'Finalizar Lote de Aprendizaje' : 'Siguiente reactivo del lote'}

@@ -416,7 +416,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             ) : (
               <button
                 onClick={() => signInWithGoogle()}
-                className="flex items-center space-x-1 px-2.5 py-1 rounded-md bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition shadow-xs"
+                className="flex items-center space-x-1 px-2.5 py-1 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition shadow-xs"
                 title="Sincronizar en la nube"
               >
                 <LogIn className="w-3.5 h-3.5" />

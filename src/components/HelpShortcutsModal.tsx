@@ -33,8 +33,8 @@ export const HelpShortcutsModal: React.FC<HelpModalProps> = ({ isOpen, onClose }
       aria-modal="true"
       aria-labelledby="help-modal-title"
     >
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+      <div className="bg-[#121722] border border-[#20293a] rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-[#20293a] pb-3">
           <div className="flex items-center space-x-2">
             <Keyboard className="w-5 h-5 text-indigo-400" />
             <h3 id="help-modal-title" className="text-base font-bold text-white">Atajos de Teclado Rápidos</h3>

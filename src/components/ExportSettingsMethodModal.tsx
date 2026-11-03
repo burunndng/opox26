@@ -162,7 +162,7 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
 
             <button
               onClick={handleFetchAnki}
-              className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold shadow transition"
+              className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold shadow transition"
             >
               Generar Archivos TSV para Anki
             </button>

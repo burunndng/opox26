@@ -171,7 +171,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <div className="flex items-center space-x-2 shrink-0">
             <button
               onClick={() => onResumeSession && onResumeSession(activePausedSession)}
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-md bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-xs transition"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-xs transition"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Reanudar sesión</span>
@@ -360,7 +360,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <div className="mt-5 pt-3 border-t border-[#20293a] space-y-2">
                   <button
                     onClick={() => onStartTopicDue && onStartTopicDue(topic.id)}
-                    className="w-full flex items-center justify-center space-x-2 py-3 px-3 rounded-md bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm shadow-xs transition min-h-[44px]"
+                    className="w-full flex items-center justify-center space-x-2 py-3 px-3 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm shadow-xs transition min-h-[44px]"
                   >
                     <Play className="w-3.5 h-3.5 fill-current" />
                     <span>Empezar test</span>
