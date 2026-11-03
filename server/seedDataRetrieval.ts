@@ -19,7 +19,7 @@ export const seedItemsRetrieval: Item[] = [
     stem: 'Escribe de memoria: ¿prescripción o caducidad? objeto, plazo y cómputo de cada una.',
     prompt_before_options: 'No mires el texto: distingue primero el objeto jurídico y después el plazo.',
     correct_answer:
-      'Prescripción: extinguishión del derecho al reconocimiento, 5 años desde el día siguiente al hecho causante (art. 53). Caducidad: extinción del derecho al percibo, 1 año (art. 54).',
+      'Prescripción: extinción del derecho al reconocimiento, 5 años desde el día siguiente al hecho causante (art. 53). Caducidad: extinción del derecho al percibo, 1 año (art. 54).',
     legal_basis: 'Arts. 53 y 54 TRLGSS',
     rule_statement: 'Prescripción 5 años (reconocimiento) vs caducidad 1 año (percibo).',
     why_correct: 'El objeto jurídico determina el plazo: reconocimiento = 5 años; percibo = 1 año.',

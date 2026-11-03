@@ -147,8 +147,8 @@ export function PretestDiagnosticMap({ items, attemptLogs, clusters, confusionPa
             <div className="flex items-start space-x-2 p-2.5 rounded-lg bg-amber-950/30 border border-amber-800/40 text-xs text-amber-200">
               <ShieldAlert className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
               <span>
-                <strong>{diagnostics.confidentWrong.length} confident-wrong</strong>: concepciones erróneas con alta
-                confianza detectadas. El Repair Studio los ha marcado con prioridad crítica.
+                <strong>{diagnostics.confidentWrong.length} con confianza máxima</strong>: concepciones erróneas con alta
+                confianza detectadas. El panel "Mis fallos" los ha marcado con prioridad crítica.
               </span>
             </div>
           )}

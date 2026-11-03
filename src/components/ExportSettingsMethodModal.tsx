@@ -342,8 +342,8 @@ export const ExportSettingsMethodModal: React.FC<ExportSettingsProps> = ({
               </h4>
               <p className="text-slate-400 text-xs leading-relaxed">
                 Los exámenes de oposición castigan las respuestas erróneas con un tercio de penalización.
-                El fallo más destructivo no es la duda, sino la convicción falsa ("Confident-Wrong" o
-                E8). OposiLab bloquea la graduación de un ítem si el usuario yerra con convicción alta.
+                El fallo más destructivo no es la duda, sino la convicción falsa (error con confianza
+                máxima, código E8). OposiLab bloquea la graduación de un ítem si el usuario yerra con convicción alta.
               </p>
             </div>
 

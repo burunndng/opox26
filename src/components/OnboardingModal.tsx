@@ -23,7 +23,7 @@ const STEPS: OnboardingStep[] = [
   },
   {
     title: 'Califica tu confianza (0–3)',
-    body: 'Tras cada respuesta indica tu certeza: 0 = al azar, 3 = absolutamente seguro. Fallar con confianza máxima se marca como "confident-wrong" y va al Repair Studio.',
+    body: 'Tras cada respuesta indica tu certeza: 0 = al azar, 3 = absolutamente seguro. Fallar con confianza máxima se marca como "error con confianza máxima" (confident-wrong) y va a "Mis fallos".',
     icon: ArrowRight,
   },
   {

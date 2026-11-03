@@ -120,7 +120,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
     const openErrors = errors.filter((e) => e.status === 'open');
 
     let md = `# CUADERNO DE FALLOS Y TRAMPAS — OPOSILAB (SEGURIDAD SOCIAL)\n`;
-    md += `Generado: ${new Date().toLocaleDateString('es-ES')} | Total Errores Abiertos: ${openErrors.length} | Confident-Wrong (Críticos): ${confidentErrors.length}\n\n`;
+    md += `Generado: ${new Date().toLocaleDateString('es-ES')} | Total Errores Abiertos: ${openErrors.length} | Con confianza máxima (críticos): ${confidentErrors.length}\n\n`;
     md += `---\n\n`;
 
     md += `## 1. REGLAS CORRECTIVAS Y TRAMPAS FRECUENTES\n\n`;
@@ -242,7 +242,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
                 : 'bg-slate-900 text-slate-400 hover:text-white'
             }`}
           >
-            Confident-Wrong ({errors.filter((e) => e.confidence === 3).length})
+            Con confianza máxima ({errors.filter((e) => e.confidence === 3).length})
           </button>
           <button
             onClick={() => setFilterTab('repaired')}
@@ -452,7 +452,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
                 <div>
                   <h4 className="font-bold text-white text-sm">Resumen Ejecutivo de Errores Activos</h4>
                   <p className="text-slate-400 mt-0.5">
-                    Total mostrados: <strong className="text-white tabular-nums">{filteredErrors.length}</strong> · Confident-Wrong: <strong className="text-rose-400 tabular-nums">{filteredErrors.filter(e => e.confidence === 3).length}</strong>
+                    Total mostrados: <strong className="text-white tabular-nums">{filteredErrors.length}</strong> · Con confianza máxima: <strong className="text-rose-400 tabular-nums">{filteredErrors.filter(e => e.confidence === 3).length}</strong>
                   </p>
                 </div>
                 <span className="text-[11px] font-mono px-2.5 py-1 bg-amber-500/10 text-amber-300 rounded border border-amber-500/30">

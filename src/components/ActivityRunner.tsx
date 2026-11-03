@@ -1347,7 +1347,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                     <ShieldAlert className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                     <div>
                       <strong className="text-amber-300">
-                        {confidentWrongAttempts.length} {confidentWrongAttempts.length === 1 ? 'error crítico' : 'errores críticos'} Confident-Wrong (confianza 3):
+                        {confidentWrongAttempts.length} {confidentWrongAttempts.length === 1 ? 'error crítico' : 'errores críticos'} con confianza máxima (3):
                       </strong>{' '}
                       Reactivos en los que estabas convencido pero caíste en la trampa legal. Han sido encolados en el Repair Studio para desmantelar la concepción errónea.
                       {onLaunchRepair && confidentWrongItemIds.length > 0 && (
@@ -3109,7 +3109,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                     </div>
                     {isConfidentWrong && (
                       <div className="text-xs text-rose-400 mt-0.5 font-semibold">
-                        ⚠️ Alerta "Confident-Wrong": Has fallado con seguridad máxima (3). Este ítem ha
+                        ⚠️ Alerta — error con confianza máxima: Has fallado con seguridad máxima (3). Este ítem ha
                         sido puesto en cuarentena con prioridad crítica para erradicar el sesgo.
                       </div>
                     )}

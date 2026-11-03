@@ -86,7 +86,7 @@ export const CalibrationAnalytics: React.FC<CalibrationAnalyticsProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-slate-900 border border-rose-900/40 rounded-lg p-5 shadow-sm bg-rose-950/10">
           <div className="flex items-center justify-between text-rose-400 mb-1">
-            <span className="text-xs font-bold uppercase tracking-wider">Confident-Wrong</span>
+            <span className="text-xs font-bold uppercase tracking-wider">Errores con confianza máxima</span>
             <AlertOctagon className="w-4 h-4 text-rose-500" />
           </div>
           <div className="text-3xl font-extrabold text-rose-300 tabular-nums">

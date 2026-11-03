@@ -67,7 +67,7 @@ export const AnalyticsStrip: React.FC<AnalyticsStripProps> = ({
               className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-[11px] font-semibold transition flex items-center space-x-1.5"
             >
               <Wrench className="w-3 h-3" />
-              <span>Reparar ({indices.confidentWrong} confident-wrong)</span>
+              <span>Reparar ({indices.confidentWrong} con confianza máxima)</span>
             </button>
           )}
           <button
