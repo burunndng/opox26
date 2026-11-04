@@ -45,6 +45,13 @@ import {
   seedAtomsTema3General,
   seedItemsTema3General,
 } from './seedDataTema3General.ts';
+import {
+  seedTopicTema9,
+  seedSourceChunksTema9,
+  seedClustersTema9,
+  seedConfusionPairsTema9,
+} from './seedDataTema9Meta.ts';
+import { seedItemsTema9 } from './seedDataTema9.ts';
 
 export const seedTopic: Topic = {
   "id": "topic_seguridad_social_tema_7",
@@ -56,7 +63,7 @@ export const seedTopic: Topic = {
   "updated_at": "2026-03-01T10:00:00Z"
 };
 
-export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8, seedTopicTema8IP, seedTopicTema15, seedTopicTema16, seedTopicTema3General];
+export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8, seedTopicTema8IP, seedTopicTema15, seedTopicTema16, seedTopicTema3General, seedTopicTema9];
 
 const seedSourceChunksTema7: SourceChunk[] = [
   {
@@ -114,6 +121,7 @@ export const seedSourceChunks: SourceChunk[] = [
   ...seedSourceChunksTema8IP,
   ...seedSourceChunksTema15,
   ...seedSourceChunksTema3General,
+  ...seedSourceChunksTema9,
 ];
 
 const seedClustersTema7: Cluster[] = [
@@ -224,7 +232,7 @@ const seedClustersTema7: Cluster[] = [
   }
 ];
 
-export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3, ...seedClustersTema8, ...seedClustersTema8IP, ...seedClustersTema3General];
+export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3, ...seedClustersTema8, ...seedClustersTema8IP, ...seedClustersTema3General, ...seedClustersTema9];
 
 const seedConfusionPairsTema7: ConfusionPair[] = [
   {
@@ -480,6 +488,7 @@ export const seedConfusionPairs: ConfusionPair[] = [
   ...seedConfusionPairsTema8,
   ...seedConfusionPairsTema8IP,
   ...seedConfusionPairsTema3General,
+  ...seedConfusionPairsTema9,
 ];
 
 const seedAtomsTema7: Atom[] = [
@@ -6576,4 +6585,6 @@ export const seedItems: Item[] = rebalanceCanonicalMcqOptions([
   ...seedItemsTema3General,
   // Tema 16 gap-audit batch (§1.8), appended last for the same reason as above.
   ...seedItemsTema16Extra,
+  // Tema 9 — nacimiento y cuidado (2026-11-04 gap audit), appended last.
+  ...seedItemsTema9,
 ]);

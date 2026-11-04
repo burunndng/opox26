@@ -24,8 +24,8 @@ npm run dev
 Abre **http://localhost:3000**. La base de datos se inicializa sola en el primer arranque y se cargan
 las semillas de los ocho temas incluidos: Tema 7 (Régimen General), Tema 1 CE, Tema 3 específico
 (afiliación), Tema 8 específico (IT), Tema 8 II (incapacidad permanente), Tema 15 (Ley 40/2015),
-Tema 16 (Ley 39/2015) y Tema 3 general (Tribunal Constitucional). En total, 402 ítems sembrados y
-408 ítems elegibles para práctica (incluye retrieval/pretest).
+Tema 16 (Ley 39/2015), Tema 9 específico (nacimiento y cuidado) y Tema 3 general (Tribunal Constitucional). En total, 426 ítems sembrados y
+432 ítems elegibles para práctica (incluye retrieval/pretest).
 
 Otros comandos:
 
