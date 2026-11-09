@@ -14,7 +14,7 @@ export const seedTopicTema9: Topic = {
   name: 'Tema 9 Específico — Nacimiento y cuidado de menor y prestaciones familiares',
   description:
     'Subsidio contributivo de nacimiento y cuidado de menor, no contributivo, corresponsable del lactante, riesgos durante embarazo y lactancia, asignación por hijo con discapacidad, pagos únicos (numerosa/monoparental, múltiple) y cuidado de menores con cáncer o enfermedad grave.',
-  source_file: 'RESUMEN Y NOTAS TEMA 9 especifico 4-11.txt / Diaposiivas tema 9 ss.md / Supuesto repaso t. 9 especif,.pdf.md',
+  source_file: 'RESUMEN Y NOTAS TEMA 9 especifico 4-11.txt / RESUMEN Y NOTAS TTEMA 9 especifico 4-11 parte 2.txt / Diaposiivas tema 9 ss.md / Supuesto repaso t. 9 especif,.pdf.md',
   status: 'active',
   created_at: now,
   updated_at: now,

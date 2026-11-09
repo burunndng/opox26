@@ -2,10 +2,11 @@ import type { Item, MCQOption, TrapType, CognitiveOperation } from '../src/types
 
 /**
  * Tema 9 Específico — Nacimiento y cuidado de menor y prestaciones familiares.
- * 56 items (2026-11-04 gap audit + ampliación a cobertura completa). Source: resumen/notas de clase (4-11) §§1-5,
+ * 61 items (2026-11-04 gap audit + ampliación a cobertura completa + 2026-11-09 parte-2 gap audit).
+ * Source: resumen/notas de clase (4-11) §§1-5, resumen parte 2 (4-11),
  * "Supuesto repaso t. 9 especif,.pdf.md" (preguntas oficiales adaptadas),
  * diapositivas T9 y parte 2 (11-04). Clusters/pairs registered in seedDataTema9Meta.ts.
- * Key balance: A=14 / B=14 / C=14 / D=14; no runs >2 (cycle matches global).
+ * Key balance: A=16 / B=15 / C=15 / D=15; no runs >2 (cycle matches global).
  */
 
 type OptionSpec = { text: string; trap: TrapType; why: string };
@@ -1009,6 +1010,95 @@ const questionBank: Question[] = [
     legal: 'Art. 8 RD 295/2009',
     cluster: 'cluster_nacimiento_no_delegado',
     difficulty: 3,
+  },
+  // ── J. Parte-2 gap audit 2026-11-09 (carencia agrupada, ventana BR <12m, informe CUTE, modos art. 191.2, secuencia art. 186) ──
+  {
+    stem: 'Para la IT de la semana 39, el corresponsable del cuidado del lactante y la reducción de jornada por cuidado de hijo con cáncer, ¿qué periodo mínimo de cotización se exige?',
+    prompt: 'Agrupa las tres prestaciones bajo la carencia de la prestación por nacimiento.',
+    key: 'A',
+    correct: {
+      text: 'Los mismos que para nacimiento: exención antes de los 21 años; 90/180 desde los 21; 180/360 desde los 26',
+      rule: 'El art. 172.a TRLGSS remite la carencia de la IT por gestación desde la semana 39 al art. 178.1; el art. 184 TRLGSS exige para el corresponsable del lactante los mismos requisitos que la prestación por nacimiento; y el art. 191.1 TRLGSS repite esa exigencia para el subsidio por cuidado de menores con cáncer. Los tres operan, por tanto, con la graduación por edad del art. 178: sin carencia antes de 21 años, 90 días en 7 años o 180 en total de 21 a 26, y 180 en 7 años o 360 en total desde los 26.',
+    },
+    distractors: [
+      { text: 'La IT de la semana 39 y el lactante exigen 180 días en los cinco años anteriores, como la IT común, y el cuidado de cáncer no exige carencia', trap: 'conceptual_merger', why: 'La semana 39 remite al art. 178.1 (siete años), no a la carencia ordinaria del art. 172.1; el subsidio de cáncer sí exige los mismos requisitos que el nacimiento (art. 191.1).' },
+      { text: 'Ninguno en ningún caso: las tres prestaciones solo exigen alta y afiliación, sin periodo mínimo de cotización para ninguna edad', trap: 'overbroad_statement', why: 'La exención total solo alcanza a los menores de 21 años; a partir de esa edad las tres exigen los tramos del art. 178.' },
+      { text: '90 días en los siete años anteriores o 180 en la vida laboral para todas las edades, idéntico en las tres prestaciones', trap: 'numeric_substitution', why: 'Los 90/180 son el tramo de 21 a menos de 26 años; desde los 26 son 180/360 y antes de los 21 no se exige nada.' },
+    ],
+    legal: 'Arts. 172 y 178 TRLGSS; Arts. 184 y 191 TRLGSS',
+    cluster: 'cluster_nacimiento_carencia',
+    pair: 'pair_carencia_cotizacion',
+    difficulty: 4,
+  },
+  {
+    stem: 'Una persona se da de alta el 8 de enero y causa derecho a la prestación por nacimiento el 8 de noviembre. ¿Qué periodo de bases se suma con antigüedad inferior a 12 meses?',
+    prompt: 'Delimita la ventana de bases: desde la fecha de alta hasta el último día con anterioridad al mes previo.',
+    key: 'B',
+    correct: {
+      text: 'Desde la fecha de alta hasta el 30 de septiembre, último día con anterioridad al mes previo (octubre)',
+      rule: 'El art. 248.1.b TRLGSS toma las bases acreditadas con anterioridad al mes previo al hecho causante; con hecho causante en noviembre, el mes previo es octubre, así que el periodo cierra el 30 de septiembre y, con antigüedad inferior a 12 meses, se parte de la fecha de alta (8 de enero) dividiendo después entre los días naturales de ese periodo.',
+    },
+    distractors: [
+      { text: 'De septiembre de 2025 a septiembre de 2026, porque de septiembre a septiembre hay exactamente 12 meses hacia atrás', trap: 'temporal_confusion', why: 'Ese recuento incluye dos veces el mes de referencia y resultan 13 meses; además, con alta el 8 de enero no existen bases de todo ese periodo.' },
+      { text: 'Del 1 de octubre de 2025 al 30 de septiembre de 2026, los doce meses naturales completos anteriores al mes previo', trap: 'rule_exception_swap', why: 'Los doce meses naturales son la regla general con antigüedad de 12 meses o más; con menor antigüedad se suman solo las bases desde la fecha de alta.' },
+      { text: 'Del 8 de noviembre de 2025 al 7 de noviembre de 2026, los doce meses inmediatamente anteriores al hecho causante, divididos entre 365', trap: 'wrong_start_date', why: 'La ventana no llega hasta la fecha del hecho causante ni parte de ella; cierra el 30 de septiembre y se divide entre los días naturales del periodo real.' },
+    ],
+    legal: 'Art. 248.1.b TRLGSS',
+    cluster: 'cluster_nacimiento_br',
+    pair: 'pair_br_nacimiento_it',
+    difficulty: 4,
+  },
+  {
+    stem: '¿Quién emite el informe que acredita el padecimiento de cáncer o enfermedad grave y la necesidad de cuidado en la prestación por cuidado de menores?',
+    prompt: 'Identifica el facultativo competente y el ámbito (primaria o especializada) del servicio público de salud.',
+    key: 'C',
+    correct: {
+      text: 'El facultativo de atención primaria o especializada del servicio público de salud de la comunidad autónoma',
+      rule: 'El art. 190.2 TRLGSS exige acreditar el padecimiento, la necesidad de hospitalización o tratamiento y el cuidado mediante informe del facultativo de atención primaria o especializada del servicio público de salud de la comunidad autónoma correspondiente; la versión que limita el informe a la atención primaria es más estrecha que la norma.',
+    },
+    distractors: [
+      { text: 'El facultativo de atención primaria del servicio público de salud, sin que valga un informe de atención especializada', trap: 'hyper_narrow_statement', why: 'El art. 190.2 admite expresamente el informe del facultativo de atención primaria o especializada; excluir la especializada contradice la letra de la norma.' },
+      { text: 'El equipo médico de la mutua o de la entidad gestora tras un reconocimiento propio, sin informe del servicio público de salud', trap: 'wrong_competent_body', why: 'La acreditación corresponde al servicio público de salud de la comunidad autónoma; mutua y entidad gestora reconocen y gestionan, no acreditan este informe.' },
+      { text: 'El médico del trabajo de la empresa, una vez comprobada por esta la reducción de jornada pactada con la persona trabajadora', trap: 'factual_misapplication', why: 'La empresa ejecuta la reducción, pero el informe clínico de acreditación lo emite el servicio público de salud, no la medicina laboral.' },
+    ],
+    legal: 'Art. 190.2 TRLGSS',
+    cluster: 'cluster_cuidado_cancer',
+    difficulty: 3,
+  },
+  {
+    stem: 'Cuando ambos progenitores reúnen las condiciones de beneficiarios por la misma persona causante, ¿de qué formas puede reconocerse el derecho a la prestación por cuidado de menores con cáncer?',
+    prompt: 'Distingue la modalidad legal de reconocimiento del requisito de personas distintas.',
+    key: 'D',
+    correct: {
+      text: 'A favor de una de ellas o a favor de ambas de forma alternativa o simultánea',
+      rule: 'El art. 191.2 TRLGSS dispone que, cuando concurran en ambas personas progenitoras las circunstancias de beneficiarias por la misma persona causante, el derecho a percibirla podrá ser reconocido a favor de una de ellas o a favor de ambas de forma alternativa o simultánea; exigir que cada una cuide a personas distintas solo procede cuando en la unidad familiar hay más de una persona a cargo.',
+    },
+    distractors: [
+      { text: 'A favor de una sola de ellas, porque para cobrar ambos a la vez cada uno debe cuidar a una persona distinta', trap: 'hyper_narrow_statement', why: 'Exigir personas distintas solo procede cuando hay más de una persona a cargo en la unidad familiar; por la misma persona causante el art. 191.2 admite el simultáneo.' },
+      { text: 'A favor de ambas únicamente de forma alternativa por turnos, porque el simultáneo quedó prohibido para la misma persona causante', trap: 'rule_exception_swap', why: 'La norma vigente admite expresamente el reconocimiento a ambas de forma alternativa o simultánea; el simultáneo por la misma persona causante es el supuesto del art. 192.' },
+      { text: 'A favor de quien reduzca en mayor porcentaje su jornada, con exclusión de la otra mientras dure el tratamiento continuado', trap: 'factual_misapplication', why: 'El art. 191.2 no jerarquiza por porcentaje de reducción; en simultáneo, el art. 192 fija a cada una un subsidio del 50 % de su propia base reguladora.' },
+    ],
+    legal: 'Art. 191.2 TRLGSS',
+    cluster: 'cluster_cuidado_cancer',
+    difficulty: 3,
+  },
+  {
+    stem: '¿Cuál es la secuencia que ha de darse para que la necesidad de cambiar de puesto de la persona trabajadora embarazada se convierta en situación protegida de riesgo durante el embarazo?',
+    prompt: 'Ordena el deber de cambio (art. 26.3 LPRL) antes de la imposibilidad o la no exigibilidad del cambio.',
+    key: 'A',
+    correct: {
+      text: 'Que la empresa haya propuesto la adaptación o el cambio y que este no resulte posible ni razonablemente exigible',
+      rule: 'El art. 186 TRLGSS define la situación protegida como la suspensión del contrato en los supuestos en que, debiendo la persona cambiar de puesto por otro compatible con su estado en los términos del art. 26.3 LPRL, dicho cambio no resulte técnica u objetivamente posible o no pueda razonablemente exigirse por motivos justificados. La secuencia es, por tanto: deber de cambio propuesto por la empresa → imposibilidad o no exigibilidad razonable del cambio.',
+    },
+    distractors: [
+      { text: 'Que la persona solicite la adaptación por escrito y la empresa no conteste en el plazo de quince días hábiles', trap: 'wrong_start_date', why: 'El art. 186 no parte de una solicitud formal sin respuesta, sino de que el cambio debido a puesto compatible no resulte posible.' },
+      { text: 'Que exista informe de la mutua o del médico que declare el riesgo, sin propuesta alguna de adaptación o cambio por la empresa', trap: 'exception_ignored', why: 'El informe acredita el estado, pero el art. 186 encadena el deber de cambiar (art. 26.3 LPRL) con la imposibilidad del cambio; sin ese intento no hay situación protegida por esta vía.' },
+      { text: 'Que la empresa proponga el cambio y este sea técnicamente imposible, sin admitir que no pueda razonablemente exigirse por motivos justificados', trap: 'partial_rule_accuracy', why: 'El art. 186 tutela también el segundo supuesto: que el cambio no pueda razonablemente exigirse por motivos justificados, no solo la imposibilidad técnica u objetiva.' },
+    ],
+    legal: 'Art. 186 TRLGSS; Art. 26.3 LPRL',
+    cluster: 'cluster_riesgos',
+    pair: 'pair_riesgo_embarazo_lactancia',
+    difficulty: 4,
   },
 ]
 
