@@ -3,7 +3,7 @@
 Estado verificado en la última revisión. "Test" = prueba automatizada en `tests/`;
 "Manual" = comprobación con pasos concretos. Nada se declara funcionando sin evidencia.
 
-> **Revisión 2026-11-03:** `npm run lint` limpio, `npm test` **210/210 en 40 suites** y
+> **Revisión 2026-11-10:** `npm run lint` limpio, `npm test` **318/318 en 43 suites** y
 > `npm run build` OK. La spec §18 fija 23 criterios; este documento añade 7 extensiones del
 > proyecto (24–30) y 5 verificaciones de la pasada de UX/accesibilidad (31–35).
 > Estado: ✅ verificado · 🟡 cobertura parcial.
@@ -35,7 +35,7 @@ Estado verificado en la última revisión. "Test" = prueba automatizada en `test
 | 19 | Analítica: clústeres débiles, pares, confident-wrong, errores numéricos | ✅ | Motor de analítica (heat maps, matrices, alertas) + `SessionHeatMap` — `tests/analytics.test.ts` D5–D10 |
 | 20 | Exportar a Anki y CSV | ✅ | `/api/export/anki`, `/api/export/csv-items`, `/api/export/csv-errors`, Quizlet, backup JSON — test 12; muestra real en `examples/anki_sample.tsv` |
 | 21 | Seed Tema 7 carga correctamente | ✅ | `server/seedData.ts` (100 ítems: 25/20/15/10/10/8/6/6) + bancos de Tema 1, Tema 3, Tema 8, Tema 8 II, Tema 15, Tema 16, Tema 3 General y Tema 9 (61) + 6 de retrieval/pretest: **463 ítems sembrados / 469 elegibles** — test 1, `tests/seed-reconcile.test.ts` R1, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` (actualizado 2026-11-09) |
-| 22 | Tests unitarios de scheduling, interleaving, validación, cloze, errores | ✅ | 25 archivos en `tests/`: `oposilab` (1–19 + 15b–15d), `sqlite` (A1–A10), `pipeline` (B1–B10), `retrieval` (C11–C16), `analytics` (D1–D10), `eligibility` (E1–E4), `seed-integrity` (F1–F12), `queue-order` (G1–G7), `option-order` (O1–O5), `practice-pools` (P1–P6), `seed-reconcile` (R1–R18), `validation-warnings` (V1–V4), `validation-gate` (W1–W7), `drill-selectors`, `non-mcq-evaluation`, `jev-normalize`, `seed-sync-content`, `scorer-hardening`, `srs-graduation` (G1–G4), `interleaving-hardening` (I1–I2), `schema-contracts`, `sqlite-migrations` (M1–M4), `persistence`, `tema8-bank`, `tema8ip-bank` — **210/210 en 40 suites** (2026-11-03) |
+| 22 | Tests unitarios de scheduling, interleaving, validación, cloze, errores | ✅ | 28 archivos en `tests/`: `oposilab` (1–19 + 15b–15d), `sqlite` (A1–A10), `pipeline` (B1–B10), `retrieval` (C11–C16), `analytics` (D1–D10), `eligibility` (E1–E4), `seed-integrity` (F1–F12), `queue-order` (G1–G7), `option-order` (O1–O5), `practice-pools` (P1–P6), `seed-reconcile` (R1–R18), `validation-warnings` (V1–V4), `validation-gate` (W1–W7), `drill-selectors`, `non-mcq-evaluation`, `jev-normalize`, `seed-sync-content`, `scorer-hardening`, `srs-graduation` (G1–G4), `interleaving-hardening` (I1–I2), `schema-contracts`, `sqlite-migrations` (M1–M4), `persistence`, `tema8-bank`, `tema8ip-bank`, `modal-a11y`, `form-labeling`, `renderer-coverage` — **318/318 en 43 suites** (2026-11-10) |
 | 23 | README explica el uso | ✅ | `README.md` (español): instalación, base de datos, Content Studio, estudios, atajos, exportación, IA opcional, tests |
 | 24 | Cuantías 2026 verificadas en fuente oficial | ✅ | [BOE-A-2026-2548](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-2548) (RDL 3/2026, 3-feb): revalorización 2,7 %; tope 3.359,60 €/mes · 47.034,40 €/año; PNC 8.803,20 €/año en 14 pagas (RD 357/1991 art. 14.1); límites de ingresos 9.442,00 €/11.013,00 €. `figure_status` en 13 ítems del clúster `importes_2026` — `tests/seed-integrity.test.ts` F7 |
 | 25 | Práctica solo con contenido elegible y reconciliación de seeds | ✅ | Predicado compartido `isPracticeEligible` aplicado en `server/scheduler.ts` (due stats/cola/bloques) y en pools de cliente (`src/utils/practicePools.ts`, `src/utils/sniperFilter.ts`); metadatos de seeds sin intentos se reconcilian al arrancar — `tests/eligibility.test.ts` E1–E4, `tests/seed-reconcile.test.ts` R1–R18, `tests/practice-pools.test.ts` P1–P6 |
@@ -52,7 +52,7 @@ Estado verificado en la última revisión. "Test" = prueba automatizada en `test
 
 ## Pendientes declarados (fuera de alcance o diferido)
 
-- **Playwright E2E**: no implementado (no requerido como bloqueante; las 210 pruebas son unitarias/integración).
+- **Playwright E2E**: no implementado (no requerido como bloqueante; las 318 pruebas son unitarias/integración).
 - **Ejercicios de comprobación manual sin cobertura automática**: caminar por cada tipo de actividad en la UI (criterios 7–14 se validan por código + tests del scorer, no por E2E).
 - **`package.json` conserva el nombre `react-example`** (herencia del scaffold; sin efecto funcional).
 - **Cobertura de diálogos incompleta**: `useFocusTrap` aún no está en `OnboardingModal` ni en los overlays antiguos de `ItemBank`/`ErrorRepairStudio` (criterio 32, 🟡).

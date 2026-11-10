@@ -36,7 +36,7 @@ The app is a complete local-first implementation: P1–P6 are closed and the tab
 |---|---|---|
 | Stack | Vite 8 + React 19 + Express 4 + TypeScript, `npm run dev` = `tsx server.ts` | `package.json` |
 | Persistence | SQLite exists; restart behavior now covered by an isolated two-boot regression test | `server/db.ts`, `tests/persistence.test.ts` |
-| Tests | Full suite green and fully isolated — **210 tests / 40 suites** (2026-11-03; `npm test` provably never touches the live DB) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
+| Tests | Full suite green and fully isolated — **318 tests / 43 suites** (2026-11-10; `npm test` provably never touches the live DB) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
 | Data model | Core types and SQLite tables stable; seed relationships are guarded by the integrity/reconcile suites | `src/types.ts`, `server/sqlite/connection.ts`, `tests/seed-integrity.test.ts` F1–F12, `tests/seed-reconcile.test.ts` R1–R18 |
 | Activity surfaces | All required formats wired to production scorers; cognitive-state / near-miss / quadrant evaluation complete (P4) | `src/components/ActivityRunner.tsx`, `src/scoring/evaluateItem.ts`, `tests/non-mcq-evaluation.test.ts`, `tests/scorer-hardening.test.ts` |
 | Content pipeline | Text/PDF import, offline atom suggestions, eligibility filter and quality-gated promotion enforced (P3) | `server/pdfImport.ts`, `server/heuristics.ts`, `server/validationWarnings.ts`, `ContentStudio.tsx`, `tests/validation-gate.test.ts` |
@@ -76,7 +76,7 @@ Banco `seedDataTema9.ts` + meta `seedDataTema9Meta.ts` + registro en `seedData.t
 
 ### 1.11 Content — Tema 9 parte-2 gap audit vs. resumen parte 2 (2026-11-09)
 
-Auditoría de `RESUMEN Y NOTAS TTEMA 9 especifico 4-11 parte 2.txt` contra el banco de 56 ítems (baseline `7a2605b`), re-audito ítem a ítem antes de escribir: de los 12 gaps aprobados, 7 los cerró ya la ampliación `7a2605b` (parto múltiple, tramos de carencia, pago único, lactante, asignación, custodia/huérfanos, escolarización). Añadidos 5 ítems validados (`item-t9-57…61`): **57 (A)** carencia agrupada — IT semana 39 (art. 172.a remite al art. 178.1), corresponsable del lactante (art. 184, «mismos requisitos») y CUME (art. 191.1) comparten los tramos del art. 178 con exención <21 años; **58 (B)** ventana de bases con antigüedad <12 meses — alta 8-ene → hecho causante 8-nov → [8 ene, 30 sep], con distractor-trampa «de septiembre a septiembre = 13 meses» (art. 248.1.b); **59 (C)** informe del CUME = facultativo de atención primaria **o especializada** del SPS de la CA (art. 190.2); la versión más estrecha del profesor («solo primaria») va como distractor `hyper_narrow_statement`; **60 (D)** modos del art. 191.2 — a favor de una o de ambas de forma alternativa o simultánea; el requisito de «personas distintas» solo concurre con más de una persona a cargo; **61 (A)** secuencia del art. 186 + art. 26.3 LPRL — deber de cambio propuesto → imposibilidad o no exigibilidad razonable (incluye el segundo supuesto, ausente en `item-t9-13`). Anclas verificadas una sola vez contra BOE-A-2015-11724 (arts. 172/178/184/186/190.2/191.2/192/248.1.b) y art. 26.3 LPRL; slips del profesor codificados como distractores, nunca como clave. Keys A16/B15/C15/D15, sin runs >2; F3 ≤1,25× comprobado a mano. Totals: R1 464→**469**; `README.md`/`docs/ACCEPTANCE.md` 458/464→463/469. Diferido (acordado): G13 cónyuge si se casa (cubierto por `item-t9-51`), G14 CCAA/IMSERSO (`item-t9-48`), G15 intervalo 9-12 meses, tabla RG/TREBEP del §3.6 y contradicciones del profesor (360/180, redacción del 50 %, cifras del SMI, Victoria 4× SMI).
+Auditoría de `RESUMEN Y NOTAS TTEMA 9 especifico 4-11 parte 2.txt` contra el banco de 56 ítems (baseline `7a2605b`), re-audito ítem a ítem antes de escribir: de los 12 gaps aprobados, 7 los cerró ya la ampliación `7a2605b` (parto múltiple, tramos de carencia, pago único, lactante, asignación, custodia/huérfanos, escolarización). Añadidos 5 ítems validados (`item-t9-57…61`): **57 (A)** carencia agrupada — IT semana 39 (art. 172.a remite al art. 178.1), corresponsable del lactante (art. 184, «mismos requisitos») y CUME (art. 191.1) comparten los tramos del art. 178 con exención <21 años; **58 (B)** ventana de bases con antigüedad <12 meses — alta 8-ene → hecho causante 8-nov → [8 ene, 30 sep], con distractor-trampa «de septiembre a septiembre = 13 meses» (art. 248.1.b); **59 (C)** informe del CUME = facultativo de atención primaria **o especializada** del SPS de la CA (art. 190.2); la versión más estrecha del profesor («solo primaria») va como distractor `hyper_narrow_statement`; **60 (D)** modos del art. 191.2 — a favor de una o de ambas de forma alternativa o simultánea; el requisito de «personas distintas» solo concurre con más de una persona a cargo; **61 (A)** secuencia del art. 186 + art. 26.3 LPRL — deber de cambio propuesto → imposibilidad o no exigibilidad razonable (incluye el segundo supuesto, ausente en `item-t9-13`). Anclas verificadas una sola vez contra BOE-A-2015-11724 (arts. 172/178/184/186/190.2/191.2/192/248.1.b) y art. 26.3 LPRL; slips del profesor codificados como distractores, nunca como clave. Keys A16/B15/C15/D15, sin runs >2; F3 ≤1,25× comprobado a mano. Totals: R1 464→**469**; `README.md`/`docs/ACCEPTANCE.md` 458/464→463/469. Diferido (acordado): G13 cónyuge si se casa (cubierto por `item-t9-51`), G14 CCAA/IMSERSO (`item-t9-48`), G15 intervalo 9-12 meses, tabla RG/TREBEP del §3.6 y contradicciones del profesor (360/180, redacción del 50 %, cifras del SMI, Victoria 4× SMI). Verificación: `npm run lint` limpio; `npm test` **318/318 en 43 suites** (un `answer_in_stem` crítico detectado en `item-t9-58` en la pasada de puertas se corrigió reescribiendo la ventana como «desde la fecha de alta»); `npm run build` OK.
 
 > **Actualizado:** `server/seedDataTema9.ts` (61; clave A16/B15/C15/D15); `server/seedDataTema9Meta.ts` (`source_file` con la parte 2); `tests/seed-reconcile.test.ts` R1 (464→469); `implementation_plan.md` §1.11; `README.md` y `docs/ACCEPTANCE.md` (463/469).
 
@@ -84,13 +84,13 @@ Auditoría de `RESUMEN Y NOTAS TTEMA 9 especifico 4-11 parte 2.txt` contra el ba
 
 ## 2. Verification Evidence (current verified baseline)
 
-- `npm run lint`: `tsc --noEmit` limpio (última pasada 2026-11-03, ver §1.9).
-- `npm test`: **210/210 en 40 suites** (2026-11-03); con el lote Tema 9 la suite pasa (el R1 actualizado confirma 464).
+- `npm run lint`: `tsc --noEmit` limpio (última pasada 2026-11-10, ver §1.11).
+- `npm test`: **318/318 en 43 suites** (2026-11-10); el R1 actualizado confirma 469.
 - `tests/seed-integrity.test.ts`: F1–F12 verdes; F7 (figura/estimación) pasa porque ningún ítem de Tema 9 lleva cifras anuales vinculadas a años específicos.
 - `tests/tema8ip-bank.test.ts`: 52 ítems, claves 13/13/13/13; `tests/tema8-bank.test.ts`: 70 ítems, verde.
-- `tests/seed-reconcile.test.ts`: R1 actualizado a 464; los nuevos ítems se registran como `validated` con `source: 'manual'` y `item_type: 'cover_and_generate_mcq'`.
+- `tests/seed-reconcile.test.ts`: R1 actualizado a 469; los nuevos ítems se registran como `validated` con `source: 'manual'` y `item_type: 'cover_and_generate_mcq'`.
 
-> **Documentación sincronizada:** `README.md` (458/464) y `docs/ACCEPTANCE.md` (criterios 21/35, 458/464) actualizados en esta pasada.
+> **Documentación sincronizada:** `README.md` (463/469) y `docs/ACCEPTANCE.md` (criterios 21/22/35, 463/469) actualizados en esta pasada.
 
 Pasada de diseño/UX sobre `src/App.tsx` y los componentes compuestos. Cambios verificados en el árbol (sin commit al cierre de esta revisión):
 
@@ -129,7 +129,7 @@ TS2554 en HEAD. Las llamadas se restauraron a las firmas 1–2 argumentos de `Je
 (`/api/jev/audit-item`, `diagnose-attempt`, `classify-atom`, `verify-cascade`).
 
 Recuento de esa revisión: **172/172 en 37 suites**, `npm run lint` limpio. Recuento actual:
-**210/210 en 40 suites** (2026-11-03, §1.9). `REPORT.md` y sus logs se conservan como registro
+**318/318 en 43 suites** (2026-11-10, §1.11). `REPORT.md` y sus logs se conservan como registro
 histórico (medidos con el WIP presente).
 
 ---

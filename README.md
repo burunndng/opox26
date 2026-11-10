@@ -31,7 +31,7 @@ Otros comandos:
 
 ```bash
 npm run lint     # tsc --noEmit (0 errores exigido)
-npm test         # 210 pruebas / 40 suites (node:test vía tsx)
+npm test         # 318 pruebas / 43 suites (node:test vía tsx)
 npm run build    # bundle de producción; npm start lo sirve
 ```
 
@@ -117,8 +117,8 @@ sesión y calidad del banco. Activa el **alto contraste** con el botón del Navb
   framework no aportaba nada pedagógicamente y el proyecto ya funcionaba).
 - **SQLite con `node:sqlite`** (sin dependencias nativas) en lugar de better-sqlite3: cero compilación,
   una promesa de "un comando" real.
-- **Sin Drizzle** y **sin Vitest**: repositorios tipados sobre `node:sqlite` y las 210 pruebas en
-  40 suites con `node:test` cubren lo necesario con menos machinery.
+- **Sin Drizzle** y **sin Vitest**: repositorios tipados sobre `node:sqlite` y las 318 pruebas en
+  43 suites con `node:test` cubren lo necesario con menos machinery.
 - **Módulos puros y testeados**: `server/scheduler.ts` (SRS + intercalado), `server/queueOrder.ts`
   (cola diaria), `server/validationWarnings.ts`, `server/importItems.ts`, `server/heuristics.ts`
   (sugerencias offline), `server/pdfImport.ts`, `src/scoring/evaluateItem.ts`,
@@ -139,7 +139,7 @@ src/components/         Dashboard, StudySetup, ActivityRunner, OnboardingModal, 
 src/utils/              analytics, retrievalMatch, learningDesignValidator, drillSelectors,
                         repairRouting, optionOrder, practicePools, useFocusTrap
 src/scoring/            evaluateItem (cloze, spot-error, two-tier, number-sort…)
-tests/                  210 pruebas en 40 suites (unit + integración)
+tests/                  318 pruebas en 43 suites (unit + integración)
 data/                   SQLite local (no versionado)
 examples/               exportaciones reales de ejemplo
 docs/                   ACCEPTANCE.md, AUDIT-UX-LEARNING.md, audit/, plans/
