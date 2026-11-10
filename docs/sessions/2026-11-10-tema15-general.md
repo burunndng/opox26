@@ -6,7 +6,10 @@
   11 de Ley 39/2015 (`item-t15-135…145`, `topic_tema16`) en `server/seedDataTema15Extra.ts`
   (exports `seedItemsTema15Extra` y `seedItemsTema16Extra2`, añadidos al final de `seedItems`);
   nuevo guardián `tests/tema15-bank.test.ts` (B1–B12); bookkeeping sincronizado
-  (`seed-reconcile` R1 481→532, README/ACCEPTANCE 526/532).
+  (`seed-reconcile` R1 481→532, README/ACCEPTANCE 526/532). Todo el lote quedó commiteado en
+  **`3beff47`**, que lo agrupó con el fix del plugin `oposilab-handoff` de la sesión paralela: el
+  mensaje de ese commit (`fix(opencode): …`) **no describe el lote de contenido** — buscar aquí,
+  en `implementation_plan.md` §1.14 y en `tests/tema15-bank.test.ts` para localizarlo.
 - **Verificado:** `npm run lint` limpio; `npm test` 331/331 en 44 suites; `npm run build` OK.
   Anclas contrastadas contra el texto consolidado del BOE (Ley 40/2015 BOE-A-2015-10566, última
   actualización 02/08/2024; Ley 39/2015 BOE-A-2015-10565, 06/11/2024).
