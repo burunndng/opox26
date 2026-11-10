@@ -80,17 +80,23 @@ Auditoría de `RESUMEN Y NOTAS TTEMA 9 especifico 4-11 parte 2.txt` contra el ba
 
 > **Actualizado:** `server/seedDataTema9.ts` (61; clave A16/B15/C15/D15); `server/seedDataTema9Meta.ts` (`source_file` con la parte 2); `tests/seed-reconcile.test.ts` R1 (464→469); `implementation_plan.md` §1.11; `README.md` y `docs/ACCEPTANCE.md` (463/469).
 
+### 1.12 Content — Tema 3 parte-2 gap audit vs. resumen clase 9-11 T3&T4 (2026-11-10)
+
+Auditoría de `ESPECIFICO/Tema 3/resumen gemini.txt` (clase 9-11-26) contra el banco de 49 ítems (baseline `11b3d71`), deduplicada contra el TEST 3.1 (ya cubierto por los ítems 31-40) y contra las 10 preguntas del test en directo (§5 del resumen); §1 (logística) ignorada. Añadidos 12 ítems validados (`item-t3-50…61`) en `server/seedDataTema3.ts` (`seedItemsTema3Parte2`, concatena al final de `seedItems` para no alterar el ciclo canónico F2): **50** variación de datos de la afiliación = 3 días naturales ante cualquier Administración (art. 28 RIA; contraste con los 6 días del art. 32.3.2, par `pair_variacion_afiliacion_3d_vs_baja_variacion_6d`); **51** alta presunta en enfermedad común = asistencia sanitaria pero no subsidio por IT (art. 166.4 TRLGSS); **52** plazo sin precisar el cómputo → días hábiles supletorios (art. 30.2 LPAC); **53** en el RETA no cabe pluriempleo, alta única (art. 7 RIA verbatim + flag internal-source); **54** pluriactividad = alta obligatoria en dos o más regímenes distintos (art. 7 RIA, par `pair_pluriempleo_vs_pluriactividad`); **55** no solicitar la afiliación preceptiva = infracción administrativa LISOS (flag interno, sin artículo puntualizado); **56** NUSS ante la DP de la TGSS o Administración de la Seguridad Social (arts. 7 y 15 TRLGSS, par `pair_nuss_vs_ccc`); **57** convenio especial: 1 año para solicitarlo desde la baja (art. 3.1 Orden TAS/2865/2003 verificado; el chunk interno cita «arts. 4 y 5» para el mismo requisito — discrepancia anotada, chunk intacto); **58** causas tasadas del recurso de revisión (art. 125 LPAC, verbatim `RECURSOS.pdf`: error de hecho de los propios documentos, documentos posteriores esenciales, documentos/testimonios falsos, conducta punible en sentencia firme); **59** reposición: resolución y notificación en 1 mes (art. 124 LPAC, par `pair_alzada_vs_reposicion`); **60** el INSS no revoca por sí sus actos declarativos de derechos → declaración de lesividad y vía judicial, límite de 4 años (arts. 146.1 y 146.3 LRJS, ancla nueva); **61** solo la ITSS sanciona: la TGSS gestiona y recauda pero no multa (LISOS genérico, flag interno). Anclas BOE verificadas una sola vez: art. 28 RIA (BOE-A-1996-4447), art. 3.1 Orden TAS/2865/2003 (BOE-A-2003-19281), art. 30.2 LPAC y arts. 146.1/146.3 LRJS. Sin cifras €/% anuales (F7); F3 comprobado a mano (ratios 0,72-0,92) y sin fugas de la respuesta en los enunciados. Totals: R1 469→**481**; `README.md`/`docs/ACCEPTANCE.md` 463/469→475/481. Tier B diferido (acordado): afiliación indebida/devolución de cuotas, retención de la cuota obrera en el mes de pago, test P4 lugar del autónomo, legitimación de oficio, exclusiones art. 1.3 ET, presunción de laboralidad, CCC secundarios, baja temporal 56/59, caso 2 conocimiento previo, «no huelga → alta real»; fuera de alcance: tipos 28,30 %/MEI (Tema 4, cifras 2027 pendientes) y sucesión solidaria (Tema 5). Verificación: `npm run lint` limpio; `npm test` **318/318 en 43 suites**.
+
+> **Actualizado:** `server/seedDataTema3.ts` (61; nuevo export `seedItemsTema3Parte2`); `server/seedData.ts` (import + spread final); `tests/seed-reconcile.test.ts` R1 (469→481); `implementation_plan.md` §1.12; `README.md` y `docs/ACCEPTANCE.md` (475/481).
+
 ---
 
 ## 2. Verification Evidence (current verified baseline)
 
-- `npm run lint`: `tsc --noEmit` limpio (última pasada 2026-11-10, ver §1.11).
-- `npm test`: **318/318 en 43 suites** (2026-11-10); el R1 actualizado confirma 469.
-- `tests/seed-integrity.test.ts`: F1–F12 verdes; F7 (figura/estimación) pasa porque ningún ítem de Tema 9 lleva cifras anuales vinculadas a años específicos.
+- `npm run lint`: `tsc --noEmit` limpio (última pasada 2026-11-10, ver §1.12).
+- `npm test`: **318/318 en 43 suites** (2026-11-10); el R1 actualizado confirma 481.
+- `tests/seed-integrity.test.ts`: F1–F12 verdes; F7 (figura/estimación) pasa porque ningún ítem de Tema 9 ni el lote Tema 3 parte-2 lleva cifras anuales vinculadas a años específicos.
 - `tests/tema8ip-bank.test.ts`: 52 ítems, claves 13/13/13/13; `tests/tema8-bank.test.ts`: 70 ítems, verde.
-- `tests/seed-reconcile.test.ts`: R1 actualizado a 469; los nuevos ítems se registran como `validated` con `source: 'manual'` y `item_type: 'cover_and_generate_mcq'`.
+- `tests/seed-reconcile.test.ts`: R1 actualizado a 481; los nuevos ítems se registran como `validated` con `source: 'manual'` y `item_type: 'cover_and_generate_mcq'`.
 
-> **Documentación sincronizada:** `README.md` (463/469) y `docs/ACCEPTANCE.md` (criterios 21/22/35, 463/469) actualizados en esta pasada.
+> **Documentación sincronizada:** `README.md` (475/481) y `docs/ACCEPTANCE.md` (criterios 21/22/35, 475/481) actualizados en esta pasada.
 
 Pasada de diseño/UX sobre `src/App.tsx` y los componentes compuestos. Cambios verificados en el árbol (sin commit al cierre de esta revisión):
 

@@ -2727,3 +2727,490 @@ export const seedItemsTema3Extras: Item[] = [
     cognitive_operations: ['generative_retrieval', 'exception_detection'],
   }),
 ];
+
+/**
+ * Ampliacion por la auditoria de la clase del 9-11-26 (T3 y T4): 12 huecos que
+ * no estaban cubiertos por los 49 items anteriores ni por el test de clase.
+ * Se mantiene en un export aparte concatenado al FINAL de seedItems para no
+ * alterar la posicion canonica de los items ya existentes (ciclo F2).
+ *
+ * ANCLAS verificadas una sola vez (politica BOE-first):
+ *   - Art. 28 RIA: variacion de datos de la AFILIACION = 3 dias naturales
+ *     (BOE-A-1996-4447); los 6 dias del art. 32.3.2 RIA solo cubren baja y
+ *     variacion de trabajadores tras el RD 643/2026.
+ *   - Art. 30.2 LPAC (Ley 39/2015): si los plazos se señalan por dias sin
+ *     precisar, son habiles (excluye sabados, domingos y festivos).
+ *   - Orden TAS/2865/2003, art. 3.1: convenio especial, plazo de un ano desde
+ *     la baja/cese (BOE-A-2003-19281). NOTA: el chunk interno del banco cita
+ *     "arts. 4 y 5" para este mismo requisito; se cita aqui el art. 3 verificado.
+ *   - Art. 146.1 y 3 LRJS (Ley 36/2011): las entidades gestoras no pueden
+ *     revisar por si sus actos declarativos de derechos; limite de 4 anos.
+ * FLAGS internal-source (sin ancla BOE puntualizada, fuente de clase/hojas):
+ *   - "alta unica en el RETA" (item 53; el art. 7 RIA solo verbatimiza el
+ *     concepto de pluriempleo = cuenta ajena).
+ *   - Tipificacion LISOS generica (items 55 y 61; RDLeg 5/2000 sin articulo
+ *     concreto).
+ */
+export const seedItemsTema3Parte2: Item[] = [
+  buildMcq({
+    id: 'item-t3-50',
+    cluster_id: 'cluster_plazos_efectos_altas',
+    confusion_pair_id: 'pair_variacion_afiliacion_3d_vs_baja_variacion_6d',
+    stem: 'Un trabajador cambia de domicilio. El empresario debe ponerlo en conocimiento de la TGSS como variación de los datos de su afiliación. ¿Con qué plazo cuenta para comunicarlo?',
+    correct: {
+      text: 'Tres días naturales desde el hecho, ante cualquier Administración de la Seguridad Social.',
+      explanation:
+        'El art. 28 RIA fija tres días naturales, contados desde que la variación se produce, para comunicar las variaciones de datos de la afiliación, ante cualquier Administración de la Seguridad Social.',
+    },
+    distractors: [
+      {
+        text: 'Seis días naturales desde el hecho, ante la Dirección Provincial del centro de trabajo donde presta servicio el trabajador.',
+        trap_type: 'conceptual_merger',
+        explanation:
+          'Incorrecto. Los seis días naturales rigen desde el RD 643/2026 para bajas y variaciones de datos de los trabajadores (art. 32.3.2 RIA), no para las variaciones de la afiliación.',
+        condition_if_correct: 'Si la comunicación fuera una baja o una variación de datos con repercusión en la cotización.',
+      },
+      {
+        text: 'Tres días hábiles desde el hecho, excluyendo del cómputo sábados, domingos y días festivos.',
+        trap_type: 'numeric_substitution',
+        explanation:
+          'Incorrecto. El plazo se expresa en días naturales; el cómputo supletorio de días hábiles solo rige cuando la norma no determina el tipo de días.',
+        condition_if_correct: 'Si la norma no hubiera precisado que los días son naturales.',
+      },
+      {
+        text: 'Diez días naturales de antelación a la fecha en que el cambio deba surtir efectos ante la TGSS.',
+        trap_type: 'true_but_irrelevant',
+        explanation:
+          'Incorrecto. Ese plazo de antelación corresponde al cambio de entidad gestora o colaboradora para contingencias profesionales, no a las variaciones de datos de la afiliación.',
+        condition_if_correct: 'Si se tratara del cambio de entidad gestora o colaboradora.',
+      },
+    ],
+    legal_basis: 'Art. 28 RIA (RD 84/1996)',
+    rule_statement: 'Las variaciones de datos de la afiliación se comunican en tres días naturales desde que se producen, ante cualquier Administración de la Seguridad Social.',
+    corrective_rule: 'Afiliación (datos del trabajador): 3 días naturales ante cualquier Administración; baja/variación del trabajador: 6 días naturales.',
+    difficulty: 3,
+    cognitive_operations: ['generative_retrieval', 'numeric_precision'],
+  }),
+  buildMcq({
+    id: 'item-t3-51',
+    cluster_id: 'cluster_clases_alta',
+    stem: 'Un empresario no tramita el alta de un trabajador que cae de baja por una enfermedad común. ¿Qué cobertura le reconoce la situación de alta presunta?',
+    correct: {
+      text: 'Asistencia sanitaria, pero no prestación económica por incapacidad temporal.',
+      explanation:
+        'El art. 166.4 TRLGSS reconoce en el alta presunta prestación económica por IT solo por accidente de trabajo o enfermedad profesional; en enfermedad común alcanza únicamente la asistencia sanitaria.',
+    },
+    distractors: [
+      {
+        text: 'La prestación económica por incapacidad temporal desde el día siguiente al de la baja, además de la asistencia sanitaria.',
+        trap_type: 'overbroad_statement',
+        explanation:
+          'Incorrecto. En enfermedad común la presunción no alcanza la prestación económica por IT; sí la alcanza si la contingencia es accidente de trabajo o enfermedad profesional.',
+        condition_if_correct: 'Si la contingencia fuera accidente de trabajo o enfermedad profesional.',
+      },
+      {
+        text: 'Ninguna cobertura, ni siquiera asistencia sanitaria, hasta que el empresario subsane el alta.',
+        trap_type: 'hyper_narrow_statement',
+        explanation:
+          'Incorrecto. La asistencia sanitaria por enfermedad común, maternidad y accidente no laboral sí está reconocida en el alta presunta.',
+        condition_if_correct: 'Si la presunción no alcanzara a la asistencia sanitaria.',
+      },
+      {
+        text: 'Nada mientras no se acredite la relación laboral mediante sentencia judicial firme.',
+        trap_type: 'factual_misapplication',
+        explanation:
+          'Incorrecto. Los efectos del alta presunta operan de pleno derecho y no dependen de una declaración judicial previa.',
+        condition_if_correct: 'Si los efectos dependieran de un previo reconocimiento judicial de la relación.',
+      },
+    ],
+    legal_basis: 'Art. 166.4 TRLGSS',
+    rule_statement: 'El alta presunta en enfermedad común da asistencia sanitaria, pero no prestación económica por IT; esta solo cubre AT y EP.',
+    corrective_rule: 'Alta presunta + enfermedad común: sanidad sí, subsidio por IT no (el subsidio de IT es para AT/EP).',
+    difficulty: 3,
+    cognitive_operations: ['generative_retrieval', 'exception_detection'],
+  }),
+  buildMcq({
+    id: 'item-t3-52',
+    cluster_id: 'cluster_plazos_efectos_altas',
+    stem: 'Cuando una norma de la Seguridad Social señala un plazo por días sin precisar su naturaleza, y la ley específica no dispone otra cosa, el cómputo que procede es el de:',
+    correct: {
+      text: 'Días hábiles, excluyéndose del cómputo sábados, domingos y días festivos.',
+      explanation:
+        'El art. 30.2 LPAC (Ley 39/2015) establece que, siempre que una ley no exprese otro cómputo, los plazos señalados por días son hábiles, excluyéndose sábados, domingos y declarados festivos.',
+    },
+    distractors: [
+      {
+        text: 'Días naturales, computando consecutivamente todos los días del calendario, incluidos los festivos.',
+        trap_type: 'rule_exception_swap',
+        explanation:
+          'Incorrecto. Los días naturales solo se aplican cuando la norma lo dice expresamente; el cómputo supletorio son los días hábiles.',
+        condition_if_correct: 'Si la ley expresara que el plazo es de días naturales.',
+      },
+      {
+        text: 'Días laborables, entendiendo por tales los de trabajo efectivo según el calendario laboral de la empresa, con festivos incluidos.',
+        trap_type: 'familiar_wording_trap',
+        explanation:
+          'Incorrecto. El término legal supletorio es «hábil» (excluye sábados, domingos y festivos), no el «laborable» del calendario de la empresa.',
+        condition_if_correct: 'Si la norma empleara literalmente la expresión «días laborables».',
+      },
+      {
+        text: 'Días naturales salvo los festivos estatales, que quedan excluidos del cómputo.',
+        trap_type: 'exception_ignored',
+        explanation:
+          'Incorrecto. Además de los festivos se excluyen también sábados y domingos.',
+        condition_if_correct: 'Si solo se excluyeran los festivos del cómputo.',
+      },
+    ],
+    legal_basis: 'Art. 30.2 Ley 39/2015 (LPAC)',
+    rule_statement: 'Si un plazo se señala por días sin precisar el cómputo y la ley no dice lo contrario, es de días hábiles (sin sábados, domingos ni festivos).',
+    corrective_rule: 'Plazo sin especificar → días hábiles (excluye sábados, domingos y festivos); naturales solo si la norma lo dice.',
+    difficulty: 3,
+    cognitive_operations: ['generative_retrieval', 'numeric_precision'],
+  }),
+  buildMcq({
+    id: 'item-t3-53',
+    cluster_id: 'cluster_conceptos_basicos_laborales',
+    confusion_pair_id: 'pair_pluriempleo_vs_pluriactividad',
+    stem: 'Un trabajador por cuenta ajena que además desarrolla dos actividades por cuenta propia se da de alta en el RETA. ¿Se da en su caso la situación de pluriempleo?',
+    correct: {
+      text: 'No: en el RETA el alta es única y no cabe pluriempleo, sea cual sea el número de actividades.',
+      explanation:
+        'El pluriempleo presupone alta en un mismo régimen por cuenta ajena con dos o más empresarios (art. 7 RIA); en el RETA el alta es única, por lo que no puede darse esa situación.',
+    },
+    distractors: [
+      {
+        text: 'Sí, siempre que cada actividad se dé de alta con un código de actividad económica distinto dentro del propio RETA.',
+        trap_type: 'conceptual_merger',
+        explanation:
+          'Incorrecto. El RETA no admite dos asientos de alta: rige la alta única con independencia de las actividades ejercidas.',
+        condition_if_correct: 'Si el alta en el RETA se causara por actividad y no por persona.',
+      },
+      {
+        text: 'Sí, entre el RETA y el Régimen General, aplicándose el tope máximo de cotización de forma proporcional.',
+        trap_type: 'wrong_legal_object',
+        explanation:
+          'Incorrecto. Esa situación es pluriactividad —alta obligatoria en dos regímenes distintos—, no pluriempleo.',
+        condition_if_correct: 'Si se tratara de alta simultánea en regímenes distintos.',
+      },
+      {
+        text: 'No, pero solo cuando las dos actividades son idénticas; si fueran distintas cabría un segundo asiento de alta.',
+        trap_type: 'factual_misapplication',
+        explanation:
+          'Incorrecto. La unicidad del alta en el RETA no distingue entre actividades idénticas o distintas.',
+        condition_if_correct: 'Si la norma condicionara la unicidad del alta a la identidad de la actividad.',
+      },
+    ],
+    legal_basis: 'Art. 7 RIA; Régimen Especial de Trabajadores por Cuenta Propia (RETA)',
+    rule_statement: 'El pluriempleo (cuenta ajena, dos o más empresarios, un mismo régimen) no cabe en el RETA, donde el alta es única.',
+    corrective_rule: 'RETA = alta única, sin pluriempleo; la simultaneidad de regímenes es pluriactividad.',
+    difficulty: 4,
+    cognitive_operations: ['micro_discrimination', 'calibrated_decision'],
+  }),
+  buildMcq({
+    id: 'item-t3-54',
+    cluster_id: 'cluster_clases_alta',
+    confusion_pair_id: 'pair_pluriempleo_vs_pluriactividad',
+    stem: 'Para distinguir la pluriactividad del pluriempleo, la clave está en:',
+    correct: {
+      text: 'Los regímenes: pluriactividad es el alta obligatoria en dos o más regímenes distintos.',
+      explanation:
+        'La pluriactividad consiste en el alta obligatoria en dos o más regímenes de la Seguridad Social distintos; el pluriempleo, en cambio, es la alta en un mismo régimen con dos o más empresarios (art. 7 RIA).',
+    },
+    distractors: [
+      {
+        text: 'Los empresarios: son dos o más empresarios distintos, con independencia del régimen en que se cotiza.',
+        trap_type: 'wrong_legal_object',
+        explanation:
+          'Incorrecto. Esa es la definición de pluriempleo (cuenta ajena con dos o más empresarios en un mismo régimen), no de pluriactividad.',
+        condition_if_correct: 'Si la distinción se hiciera por el número de empresarios.',
+      },
+      {
+        text: 'La jornada: consiste en desarrollar simultáneamente dos actividades que superan la jornada máxima legal.',
+        trap_type: 'factual_misapplication',
+        explanation:
+          'Incorrecto. La pluriactividad no se define por la intensidad horaria sino por el alta en regímenes distintos.',
+        condition_if_correct: 'Si la norma la definiera por la duración de la prestación.',
+      },
+      {
+        text: 'El domicilio: son actividades ejercidas en centros de trabajo o sedes físicas distintas.',
+        trap_type: 'true_but_irrelevant',
+        explanation:
+          'Incorrecto. El lugar de prestación no integra el elemento distintivo entre ambas figuras.',
+        condition_if_correct: 'Si la distinción dependiera del lugar de ejercicio de las actividades.',
+      },
+    ],
+    legal_basis: 'Art. 7 RIA',
+    rule_statement: 'Pluriactividad = alta obligatoria en dos o más regímenes distintos; pluriempleo = dos o más empresarios dentro de un mismo régimen.',
+    corrective_rule: 'Regímenes distintos → pluriactividad; empresarios distintos en un mismo régimen → pluriempleo.',
+    difficulty: 3,
+    cognitive_operations: ['micro_discrimination', 'generative_retrieval'],
+  }),
+  buildMcq({
+    id: 'item-t3-55',
+    cluster_id: 'cluster_afiliacion_caracteres',
+    stem: 'El empresario incumple la obligación de solicitar la afiliación preceptiva de sus trabajadores. Si la Inspección lo levanta, ese incumplimiento se tipifica como:',
+    correct: {
+      text: 'Infracción administrativa tipificada en la LISOS (Ley de Infracciones y Sanciones en el Orden Social).',
+      explanation:
+        'El incumplimiento de la obligación de afiliación es infracción administrativa tipificada en la LISOS (RDLeg 5/2000); solo si fuera constitutiva de delito se trasladaría al orden penal.',
+    },
+    distractors: [
+      {
+        text: 'Delito contra la Seguridad Social, perseguido de oficio por el Ministerio Fiscal sin necesidad de denuncia previa.',
+        trap_type: 'overbroad_statement',
+        explanation:
+          'Incorrecto. Es infracción administrativa; la vía penal solo se abre si la conducta es constitutiva de infracción penal.',
+        condition_if_correct: 'Si la conducta fuera constitutiva de delito en los términos de la LISOS.',
+      },
+      {
+        text: 'Meramente contractual, dejada a la responsabilidad civil que pudiera derivarse del contrato de trabajo suscrito entre las partes.',
+        trap_type: 'wrong_legal_object',
+        explanation:
+          'Incorrecto. El ordenamiento tipifica la conducta como infracción administrativa sancionable, no como mero incumplimiento contractual.',
+        condition_if_correct: 'Si no hubiera sanción administrativa prevista para el incumplimiento.',
+      },
+      {
+        text: 'Infracción muy grave con inhabilitación especial para el empresario durante el plazo de dos años para el ejercicio de su actividad.',
+        trap_type: 'factual_misapplication',
+        explanation:
+          'Incorrecto. La LISOS no prevé esa consecuencia accesorio para este incumplimiento.',
+        condition_if_correct: 'Si la LISOS la calificara como infracción con esa sanción específica.',
+      },
+    ],
+    legal_basis: 'Art. 7 TRLGSS; LISOS (RDLeg 5/2000)',
+    rule_statement: 'No solicitar la afiliación preceptiva es infracción administrativa tipificada en la LISOS, no delito ni incumplimiento contractual.',
+    corrective_rule: 'Obligación de afiliación incumplida → infracción administrativa (LISOS); penal solo si constituye delito.',
+    difficulty: 3,
+    cognitive_operations: ['generative_retrieval', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t3-56',
+    cluster_id: 'cluster_afiliacion_caracteres',
+    confusion_pair_id: 'pair_nuss_vs_ccc',
+    stem: 'Un trabajador necesita obtener su número personal de afiliación (NUSS) y pregunta por la vía correcta para solicitarlo. ¿Ante quién debe dirigir la solicitud?',
+    correct: {
+      text: 'Ante la Dirección Provincial de la TGSS o la Administración de la Seguridad Social que corresponda.',
+      explanation:
+        'La solicitud del número personal de afiliación (NUSS) se presenta ante la Dirección Provincial de la TGSS o la Administración de la Seguridad Social correspondiente (arts. 7 y 15 TRLGSS).',
+    },
+    distractors: [
+      {
+        text: 'Ante la Dirección Provincial del INSS del domicilio del trabajador, que es la entidad competente para tramitarlo.',
+        trap_type: 'wrong_competent_body',
+        explanation:
+          'Incorrecto. El INSS es entidad gestora de prestaciones; el número personal de afiliación se solicita en la TGSS o Administración de la Seguridad Social.',
+        condition_if_correct: 'Si la competencia correspondiera a la entidad gestora de prestaciones.',
+      },
+      {
+        text: 'Ante la mutua colaboradora con la que la empresa haya suscrito el convenio de colaboración para contingencias profesionales.',
+        trap_type: 'wrong_competent_body',
+        explanation:
+          'Incorrecto. Las mutuas actúan como entidades colaboradoras en prestaciones; no tramitan el alta ni el número personal de afiliación.',
+        condition_if_correct: 'Si las mutuas llevaran la afiliación de sus asegurados.',
+      },
+      {
+        text: 'Ante la Inspección de Trabajo y Seguridad Social, que es el órgano competente para el alta del trabajador.',
+        trap_type: 'wrong_competent_body',
+        explanation:
+          'Incorrecto. La ITSS inspecciona y sanciona; las altas y el número de afiliación se gestionan administrativamente.',
+        condition_if_correct: 'Si la ITSS tramitara las altas en lugar de inspeccionar.',
+      },
+    ],
+    legal_basis: 'Arts. 7 y 15 TRLGSS',
+    rule_statement: 'El NUSS se solicita ante la Dirección Provincial de la TGSS o la Administración de la Seguridad Social, no ante INSS, mutuas ni Inspección.',
+    corrective_rule: 'NUSS → DP TGSS / Administración de la Seguridad Social; el CCC es el código de empresa (inscripción).',
+    difficulty: 3,
+    cognitive_operations: ['generative_retrieval', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t3-57',
+    cluster_id: 'cluster_convenio_especial',
+    stem: 'Tras causar baja en el Régimen General, un trabajador quiere suscribir un convenio especial con la Seguridad Social. ¿Cuál es el plazo máximo para presentar la solicitud?',
+    correct: {
+      text: 'Un año desde la fecha de la baja o del hecho que la motive, según el supuesto.',
+      explanation:
+        'El art. 3.1 de la Orden TAS/2865/2003 exige solicitar el convenio especial en el plazo de un año, computado según la causa de la baja (desde la fecha del hecho que la motive en cada supuesto).',
+    },
+    distractors: [
+      {
+        text: 'Tres meses desde la notificación de la resolución de baja dictada por la TGSS.',
+        trap_type: 'numeric_substitution',
+        explanation:
+          'Incorrecto. El plazo de suscripción es de un año; los tres meses son, por ejemplo, el plazo de interposición del recurso de revisión por sus causas especiales.',
+        condition_if_correct: 'Si el cómputo partiera de la notificación con un plazo genérico de tres meses.',
+      },
+      {
+        text: 'Dos años desde la fecha de la baja, ampliable mientras persista la situación que la motivó.',
+        trap_type: 'numeric_substitution',
+        explanation:
+          'Incorrecto. La norma fija un año, con cómputo según la causa de la baja.',
+        condition_if_correct: 'Si el plazo fuera doble o prorrogable por la causa de la baja.',
+      },
+      {
+        text: 'Sin plazo de caducidad: la solicitud puede presentarse en cualquier momento mientras no se agote la carencia de 1.080 días.',
+        trap_type: 'absolute_relative_confusion',
+        explanation:
+          'Incorrecto. Existe plazo de un año para solicitarlo; la carencia de 1.080 días en los doce años anteriores a la baja es requisito distinto.',
+        condition_if_correct: 'Si no hubiera plazo para la solicitud del convenio.',
+      },
+    ],
+    legal_basis: 'Orden TAS/2865/2003, art. 3.1',
+    rule_statement: 'Para suscribir el convenio especial hay que solicitarlo en el plazo de un año, computado según la causa de la baja.',
+    corrective_rule: 'Convenio especial → solicitud en 1 año desde la baja (cómputo según causa); cuidado con confundir con la carencia de 1.080 días.',
+    difficulty: 3,
+    cognitive_operations: ['generative_retrieval', 'numeric_precision'],
+  }),
+  buildMcq({
+    id: 'item-t3-58',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    stem: 'El recurso extraordinario de revisión solo procede por causas tasadas ante el órgano que dictó el acto firme. ¿Cuál de las siguientes es una de esas causas?',
+    correct: {
+      text: 'Que haya error de hecho resultante de los propios documentos incorporados al expediente.',
+      explanation:
+        'El art. 125.1.a) LPAC (Ley 39/2015) incluye entre las causas tasadas el error de hecho que resulte de los propios documentos del expediente; las demás son documentos posteriores esenciales, documentos o testimonios falsos y conducta punible declarada en sentencia firme.',
+    },
+    distractors: [
+      {
+        text: 'Que el interesado no haya comparecido en el procedimiento administrativo en el que se dictó el acto.',
+        trap_type: 'true_but_irrelevant',
+        explanation:
+          'Incorrecto. La falta de comparecencia no es causa de revisión; en su caso daría lugar a otros recursos o a nulidad de pleno derecho.',
+        condition_if_correct: 'Si la falta de comparecencia fuera causa tasada de revisión.',
+      },
+      {
+        text: 'Que el acto firme resulte desfavorable al interesado sin que este haya agotado la vía administrativa.',
+        trap_type: 'conceptual_merger',
+        explanation:
+          'Incorrecto. La revisión exige causas tasadas, no la mera desfavorabilidad ni el agotamiento de vías previas.',
+        condition_if_correct: 'Si procediera por ser el acto desfavorable sin agotar la vía.',
+      },
+      {
+        text: 'Que hayan transurrido cuatro años desde la notificación sin que el interesado lo impugnara.',
+        trap_type: 'temporal_confusion',
+        explanation:
+          'Incorrecto. Los plazos (cuatro años para el error de hecho; tres meses para las demás causas) marcan la caducidad para interponer la revisión, no son causa sustantiva.',
+        condition_if_correct: 'Si el vencimiento del plazo fuera una causa de revisión en sí mismo.',
+      },
+    ],
+    legal_basis: 'Art. 125 Ley 39/2015 (LPAC)',
+    rule_statement: 'Causas tasadas de la revisión: error de hecho de los propios documentos, documentos posteriores esenciales, documentos o testimonios falsos y conducta punible en sentencia firme.',
+    corrective_rule: 'Revisión → solo causas tasadas del art. 125 LPAC; los plazos de interposición (4 años / 3 meses) son del art. 126.',
+    difficulty: 4,
+    cognitive_operations: ['micro_discrimination', 'generative_retrieval'],
+  }),
+  buildMcq({
+    id: 'item-t3-59',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    confusion_pair_id: 'pair_alzada_vs_reposicion',
+    stem: 'Interpuesto un recurso de reposición contra un acto que pone fin a la vía administrativa, ¿qué plazo tiene el órgano para resolverlo y notificarlo?',
+    correct: {
+      text: 'Un mes desde la interposición para dictar y notificar la resolución.',
+      explanation:
+        'El art. 124 LPAC (Ley 39/2015) fija en un mes el plazo máximo para dictar y notificar la resolución del recurso de reposición; la alzada, en cambio, dispone de tres meses.',
+    },
+    distractors: [
+      {
+        text: 'Tres meses desde la interposición, en paridad con el plazo del recurso de alzada.',
+        trap_type: 'temporal_confusion',
+        explanation:
+          'Incorrecto. Tres meses es el plazo máximo de resolución de la alzada (art. 122 LPAC); en la reposición es de un mes.',
+        condition_if_correct: 'Si se aplicara el plazo del recurso de alzada.',
+      },
+      {
+        text: 'Un mes desde la notificación del acto impugnado, no desde la interposición.',
+        trap_type: 'wrong_start_date',
+        explanation:
+          'Incorrecto. El cómputo parte de la interposición del recurso, no de la notificación del acto recurrido.',
+        condition_if_correct: 'Si el plazo corriera desde la notificación del acto.',
+      },
+      {
+        text: 'Diez días hábiles desde la interposición, por aplicación del cómputo supletorio.',
+        trap_type: 'numeric_substitution',
+        explanation:
+          'Incorrecto. La ley fija expresamente un mes; el cómputo supletorio de días hábiles solo rige cuando no se determina el plazo.',
+        condition_if_correct: 'Si no hubiera plazo expreso de resolución.',
+      },
+    ],
+    legal_basis: 'Arts. 123 y 124 Ley 39/2015 (LPAC)',
+    rule_statement: 'La reposición se resuelve y notifica en el plazo máximo de un mes desde la interposición; la alzada, en tres meses.',
+    corrective_rule: 'Reposición → 1 mes para resolver y notificar; alzada → 3 meses. Interposición de ambos: 1 mes.',
+    difficulty: 3,
+    cognitive_operations: ['generative_retrieval', 'numeric_precision'],
+  }),
+  buildMcq({
+    id: 'item-t3-60',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    stem: 'El INSS quiere dejar sin efecto una resolución que reconoce una pensión —un acto declarativo de derechos— porque el beneficiario aportó datos falsos. ¿Cómo debe proceder?',
+    correct: {
+      text: 'No puede revocarla por sí: debe pedir la declaración de lesividad y acudir a la vía jurisdiccional.',
+      explanation:
+        'El art. 146.1 LRJS (Ley 36/2011) prohíbe a las entidades gestoras revisar por sí sus actos declarativos de derechos en perjuicio de los beneficiarios: deben solicitar la declaración de lesividad para acudir a la jurisdicción.',
+    },
+    distractors: [
+      {
+        text: 'Debe dictar resolución expresa de revisión de oficio y notificarla al beneficiario en el plazo de un mes.',
+        trap_type: 'rule_exception_swap',
+        explanation:
+          'Incorrecto. Las entidades gestoras no pueden revisar por sí sus actos declarativos de derechos en perjuicio del beneficiario (art. 146.1 LRJS).',
+        condition_if_correct: 'Si la entidad gestora pudiera autotutelarse frente a actos declarativos de derechos.',
+      },
+      {
+        text: 'Puede revocarla de oficio en cualquier tiempo mientras subsistan los datos falsos, sin intervención judicial.',
+        trap_type: 'absolute_relative_confusion',
+        explanation:
+          'Incorrecto. Además de la prohibición de autotutela, la revisión de oficio de estos actos está limitada a cuatro años desde la notificación (art. 146.3 LRJS).',
+        condition_if_correct: 'Si no hubiera prohibición de autotutela ni límite temporal.',
+      },
+      {
+        text: 'Solo puede solicitarla el beneficiario mediante recurso de reposición ante el mismo órgano que dictó el acto.',
+        trap_type: 'hyper_narrow_statement',
+        explanation:
+          'Incorrecto. El procedimiento puede iniciarse de oficio o a solicitud del interesado; lo que no puede es revocarlo el propio INSS por sí mismo.',
+        condition_if_correct: 'Si el control solo pudiera iniciarse a instancia del beneficiario.',
+      },
+    ],
+    legal_basis: 'Art. 146.1 y 3 LRJS (Ley 36/2011)',
+    rule_statement: 'Las entidades gestoras no pueden revisar por sí sus actos declarativos de derechos: deben pedir la declaración de lesividad y acudir a la jurisdicción; la revisión de oficio prescribe a los cuatro años.',
+    corrective_rule: 'Acto declarativo de derechos + perjuicio al beneficiario → el INSS no lo revoca: lesividad y vía judicial (límite 4 años).',
+    difficulty: 4,
+    cognitive_operations: ['exception_detection', 'calibrated_decision'],
+  }),
+  buildMcq({
+    id: 'item-t3-61',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    stem: 'La TGSS detecta el incumplimiento reiterado de las obligaciones de afiliación y alta por una empresa y quiere imponer una multa. ¿Qué potestad sancionadora tiene la Tesorería?',
+    correct: {
+      text: 'Ninguna: solo la Inspección de Trabajo y Seguridad Social puede sancionar.',
+      explanation:
+        'En el orden social, la potestad para imponer multas corresponde a la Inspección de Trabajo y Seguridad Social: la TGSS gestiona, recauda y propone, pero no sanciona.',
+    },
+    distractors: [
+      {
+        text: 'Puede imponer multas por infracciones graves previa propuesta de su dirección provincial.',
+        trap_type: 'wrong_competent_body',
+        explanation:
+          'Incorrecto. La potestad sancionadora corresponde a la Inspección de Trabajo y Seguridad Social, no a la TGSS.',
+        condition_if_correct: 'Si la TGSS tuviera competencia sancionadora propia.',
+      },
+      {
+        text: 'Puede retener cuotas de la empresa como sanción económica sustitutiva de la multa.',
+        trap_type: 'factual_misapplication',
+        explanation:
+          'Incorrecto. La recaudación de cuotas es función recaudatoria, no sancionadora; la multa la acuerda la Inspección.',
+        condition_if_correct: 'Si la sanción pudiera ejecutarse por vía recaudatoria.',
+      },
+      {
+        text: 'Puede solicitar al INSS la apertura del expediente sancionador, ya que comparten competencias.',
+        trap_type: 'wrong_competent_body',
+        explanation:
+          'Incorrecto. El INSS es entidad gestora de prestaciones; la sanción la acuerda la Inspección de Trabajo y Seguridad Social.',
+        condition_if_correct: 'Si la competencia sancionadora fuera de la entidad gestora.',
+      },
+    ],
+    legal_basis: 'LISOS (RDLeg 5/2000)',
+    rule_statement: 'La TGSS no tiene potestad sancionadora: gestiona, recauda y propone; multa e inspecciona solo la Inspección de Trabajo y Seguridad Social.',
+    corrective_rule: 'TGSS → gestiona y recauda; ITSS → inspecciona y sanciona (única con potestad para multar).',
+    difficulty: 3,
+    cognitive_operations: ['micro_discrimination', 'generative_retrieval'],
+  }),
+];

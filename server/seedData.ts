@@ -15,6 +15,7 @@ import {
   seedAtomsTema3,
   seedItemsTema3,
   seedItemsTema3Extras,
+  seedItemsTema3Parte2,
 } from './seedDataTema3.ts';
 import {
   seedTopicTema8,
@@ -6587,4 +6588,7 @@ export const seedItems: Item[] = rebalanceCanonicalMcqOptions([
   ...seedItemsTema16Extra,
   // Tema 9 — nacimiento y cuidado (2026-11-04 gap audit), appended last.
   ...seedItemsTema9,
+  // Tema 3 parte 2 — afiliación e inscripción (2026-11-09 class gap audit),
+  // appended last for the same canonical-position reason as above.
+  ...seedItemsTema3Parte2,
 ]);
