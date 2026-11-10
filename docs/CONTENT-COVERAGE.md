@@ -10,7 +10,7 @@ baseline; after each content batch, refresh the affected row here in the same co
 | Tema | Fuente (clase/resumen) | Ítems | Última auditoría | Estado |
 |---|---|---|---|---|
 | Tema 7 (Régimen General) | legacy seed | 100 | — | no recent audit entry |
-| Tema 1 (CE) | legacy seed | — | — | no recent audit entry |
+| Tema 1 (CE) | legacy seed | 13 | — | no recent audit entry |
 | Tema 3 específico (afiliación) | clase 9-11 T3&T4 (`ESPECIFICO/Tema 3/resumen gemini.txt`, outside repo) | 61 | 2026-11-10 (§1.12) | auditado |
 | Tema 8 específico (IT) | legacy bank, test-guarded (`tema8-bank.test.ts`) | 70 | — | no §1.x gap audit |
 | Tema 8 II (IP) | clase 21-10 (§1.3) | 52 | 2026-10-31 | auditado |
