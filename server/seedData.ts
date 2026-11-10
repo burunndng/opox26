@@ -39,6 +39,10 @@ import {
   seedItemsTema16Extra,
 } from './seedDataTema15.ts';
 import {
+  seedItemsTema15Extra,
+  seedItemsTema16Extra2,
+} from './seedDataTema15Extra.ts';
+import {
   seedTopicTema3General,
   seedSourceChunksTema3General,
   seedClustersTema3General,
@@ -6591,4 +6595,9 @@ export const seedItems: Item[] = rebalanceCanonicalMcqOptions([
   // Tema 3 parte 2 — afiliación e inscripción (2026-11-09 class gap audit),
   // appended last for the same canonical-position reason as above.
   ...seedItemsTema3Parte2,
+  // Tema 15/16 general — gap audit against the "Tema 15 general" source folder
+  // (2026-11-10): 40 Ley 40/2015 items + 11 Ley 39/2015 items, appended last
+  // for the same canonical-position reason as above.
+  ...seedItemsTema15Extra,
+  ...seedItemsTema16Extra2,
 ]);

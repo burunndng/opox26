@@ -62,14 +62,13 @@ function runProbe(dir: string, mode: string, itemId?: string): SeedState {
 describe('Boot reconciliation for untouched seed items (isolated)', () => {
   after(() => fs.rmSync(isolatedRoot, { recursive: true, force: true }));
 
-  test('R1: fresh database seeds 481 practice-eligible items and no drafts', () => {
+  test('R1: fresh database seeds 532 practice-eligible items and no drafts', () => {
     const state = runProbe(freshCaseDir('fresh'), 'snapshot');
-    // 113 core items + 61 Tema 3 (afiliación e inscripción) items + 70 Tema 8 (incapacidad temporal) items
-    // + 52 Tema 8 (II) (incapacidad permanente) items + 36 Tema 15 (Ley 40/2015) + 58 Tema 16 (Ley 39/2015:
-    // 40 de la separación del banco original de 76 + 18 del gap audit 28-10 pt2) items + 6 retrieval/pretest
-    // items + 24 Tema 3 General (TC) items + 56 Tema 9 items.
-    assert.equal(state.seedCount, 481, '113 core items plus 61 Tema 3 items plus 70 Tema 8 items plus 52 Tema 8 (II) items plus 76 Tema 15/16 items plus 6 retrieval/pretest items plus 24 Tema 3 General (TC) items plus 18 Tema 16 gap-audit items plus 56 Tema 9 (nacimiento y cuidado) items plus 5 Tema 9 parte-2 gap-audit items plus 12 Tema 3 parte-2 gap-audit items are seeded');
-    assert.equal(state.eligibleCount, 481);
+    // Per-topic breakdown lives in docs/CONTENT-COVERAGE.md (single source of truth);
+    // the totals below are: 113 core + 61 T3 + 70 T8 + 52 T8 II + 76 T15 + 69 T16
+    // + 24 T3 General + 61 T9 + 6 retrieval/pretest = 532.
+    assert.equal(state.seedCount, 532, '532 practice-eligible items; see docs/CONTENT-COVERAGE.md for the per-topic breakdown');
+    assert.equal(state.eligibleCount, 532);
     assert.deepEqual(state.draftIds, []);
   });
 

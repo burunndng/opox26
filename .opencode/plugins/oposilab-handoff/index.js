@@ -6,7 +6,7 @@
 import { Plugin } from "@opencode/plugin";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -64,11 +64,20 @@ function dirtyTree(dir) {
   }
 }
 
+// "Latest" = the diary named in the maintained §1 "Próximos pasos" pointer, NOT the
+// alphabetically last filename: two same-day diaries (…tema15-general.md vs
+// …tema3-parte2.md) do not sort chronologically by name. Fall back to newest mtime.
 function latestDiary(dir) {
+  const plan = readText(dir, "implementation_plan.md") || "";
+  const pointed = /latest session diary `(?:docs\/sessions\/)?([^`]+\.md)`/.exec(plan);
+  if (pointed && existsSync(join(dir, "docs", "sessions", pointed[1]))) return pointed[1];
   const d = join(dir, "docs", "sessions");
   if (!existsSync(d)) return null;
-  const files = readdirSync(d).filter((f) => f.endsWith(".md")).sort();
-  return files.length ? files[files.length - 1] : null;
+  const files = readdirSync(d).filter((f) => f.endsWith(".md"));
+  if (!files.length) return null;
+  return files
+    .map((f) => ({ f, t: statSync(join(d, f)).mtimeMs }))
+    .sort((a, b) => b.t - a.t || b.f.localeCompare(a.f))[0].f;
 }
 
 function nextStepLine(dir, file) {
@@ -107,6 +116,8 @@ function countLine(c) {
     ["eligible", c.readmeEligible, c.accEligible],
     ["tests", c.readmeTests, c.guardTests],
     ["suites", c.readmeSuites, c.guardSuites],
+    ["acc-tests", c.readmeTests, c.accTests],
+    ["acc-suites", c.readmeSuites, c.accSuites],
   ];
   const bad = pairs.filter(([, a, b]) => a != null && b != null && a !== b);
   if (c.r1Eligible != null && c.readmeEligible != null && c.r1Eligible !== c.readmeEligible) {
