@@ -4,6 +4,9 @@
 > **Date:** 2026-10-23
 > **Frozen revision (to pin at P0):** `71935c2` + uncommitted mercury-decide WIP (8 tracked files) + untracked
 > `docs/plans/2026-10-10-mercury-decide-integration.md`, `AGENTS.md`, `fix_types.cjs`, `patch_*.cjs`.
+> **Nota (2026-11-10):** the referenced files `docs/plans/2026-09-audit-hardening.md` and
+> `docs/plans/2026-10-10-mercury-decide-integration.md` were untracked WIP at audit time and
+> are not in this repository; this plan is kept as a historical record.
 > **Relation to prior work:** executes and supersedes the audit *method* of `docs/plans/2026-09-audit-hardening.md`
 > (whose critical-path fixes shipped); does not re-open closed findings without evidence.
 

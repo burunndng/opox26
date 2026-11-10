@@ -2,10 +2,12 @@
 
 > **For agentic workers:** Execute the priorities in order, use the listed verification commands, and stop at each acceptance gate before starting the next priority.
 
-**Date:** 2026-11-03 (rev 4)
+**Date:** 2026-11-10 (rev 5)
 **Scope:** Complete the existing app against `docs/SPEC.md` (§1–§22).
 **North star:** cognitive training for MCQ discrimination (NOT a generic quiz app; NO full mock exams).
 
+> **Rev 5 changes (2026-11-10):** Documentation-system pass — §1.9 heading restored; Verification Evidence renumbered §1.13 (ADRs keep §2); session diary (`docs/sessions/`) + content-coverage tracker (`docs/CONTENT-COVERAGE.md`) added; header dates refreshed. Design: `docs/design/2026-11-10-doc-system-design.md`.
+>
 > **Rev 4 changes (2026-11-03):** P4, P5 and P6 are marked complete with
 > current evidence; the verified baseline is **210/210 tests in 40 suites**,
 > `tsc --noEmit` clean and `npm run build` OK. New §1.9 records the
@@ -28,9 +30,12 @@
 
 ---
 
-## 1. Current State (verified 2026-09-23 · refreshed 2026-11-03)
+## 1. Current State (verified 2026-09-23 · refreshed 2026-11-10)
 
 The app is a complete local-first implementation: P1–P6 are closed and the table below records verified behavior with its evidence. Historical phase notes are audit trail, not acceptance evidence.
+
+> **Próximos pasos:** latest session diary `docs/sessions/2026-11-10-tema3-parte2.md`
+> (next-up: Tier B afiliación indebida — `docs/CONTENT-COVERAGE.md` §Tier B). Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
 
 | Area | Current status | Evidence / next focus |
 |---|---|---|
@@ -88,7 +93,7 @@ Auditoría de `ESPECIFICO/Tema 3/resumen gemini.txt` (clase 9-11-26) contra el b
 
 ---
 
-## 2. Verification Evidence (current verified baseline)
+### 1.13 Verification Evidence (current verified baseline)
 
 - `npm run lint`: `tsc --noEmit` limpio (última pasada 2026-11-10, ver §1.12).
 - `npm test`: **318/318 en 43 suites** (2026-11-10); el R1 actualizado confirma 481.
@@ -97,6 +102,8 @@ Auditoría de `ESPECIFICO/Tema 3/resumen gemini.txt` (clase 9-11-26) contra el b
 - `tests/seed-reconcile.test.ts`: R1 actualizado a 481; los nuevos ítems se registran como `validated` con `source: 'manual'` y `item_type: 'cover_and_generate_mcq'`.
 
 > **Documentación sincronizada:** `README.md` (475/481) y `docs/ACCEPTANCE.md` (criterios 21/22/35, 475/481) actualizados en esta pasada.
+
+### 1.9 Content/UX — onboarding, diálogos accesibles y StudySetup destilado (2026-11-03)
 
 Pasada de diseño/UX sobre `src/App.tsx` y los componentes compuestos. Cambios verificados en el árbol (sin commit al cierre de esta revisión):
 

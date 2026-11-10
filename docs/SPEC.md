@@ -1,3 +1,6 @@
+> **Staleness notice (2026-11-10):** this spec is authoritative for *behavior* (§1–§22), **not** for the stack. §6's Next.js / Drizzle / better-sqlite3 / Vitest were deliberately not adopted; the implementation uses Vite + React 19 + Express + `node:sqlite` + Zod + `node:test`. See `AGENTS.md` ("Hard constraints") and `README.md` ("Arquitectura").
+> For anything stack-shaped, AGENTS.md wins; this document fixes behavior only.
+
 You are a senior full-stack engineer, instructional designer, psychometrician, and Spanish administrative-law study-tool architect.
 
 Your job is to build me a local-first, free, open-source “super tool” for preparing for a Spanish oposición multiple-choice exam, specifically Seguridad Social, based on the learning-science principles and activity types described below.
