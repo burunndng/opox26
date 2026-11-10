@@ -7,7 +7,8 @@ Key documents (read before planning work):
 - `implementation_plan.md` — working plan (P1–P6 priorities, current state, ADRs). P1–P6 are complete; check §1 and §1.9 for the current verified baseline.
 - `docs/sessions/` — session diary (one file per working cycle, newest first); read the latest entry before starting work for continuity.
 - `docs/CONTENT-COVERAGE.md` — per-topic audit coverage matrix + Tier B deferred-content checklist.
-- `docs/design/` — design specs (canonical home; newest: `docs/design/2026-11-10-doc-system-design.md`).
+- `docs/design/` — design specs (canonical home; newest: `docs/design/2026-11-10-handoff-briefing-design.md`).
+- The oposilab-handoff plugin auto-briefs each session (latest diary entry + dirty-tree warning); `/handoff` closes a session.
 - `docs/ACCEPTANCE.md` — acceptance criteria → evidence mapping (35 criteria). Update it when acceptance status changes.
 - `README.md` — user-facing docs in Spanish.
 - `docs/AUDIT-UX-LEARNING.md` — dated UX/learning audit (2026-10-31, historical counts); useful for design rationale.
