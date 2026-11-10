@@ -19,7 +19,7 @@ Key documents (read before planning work):
 npm install --legacy-peer-deps   # peer-dep conflicts otherwise; npm is the documented flow
 npm run dev                      # tsx server.ts → http://localhost:3000
 npm run lint                     # despite the name: ONLY tsc --noEmit. No ESLint exists. 0 errors expected
-npm test                         # node:test via tsx, ~9s, 331 tests / 44 suites
+npm test                         # node:test via tsx, ~9s, 334 tests / 44 suites
 npm run build                    # vite build + esbuild server bundle → dist/server.cjs; npm start serves it
 ```
 

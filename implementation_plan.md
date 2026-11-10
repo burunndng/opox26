@@ -34,7 +34,7 @@
 
 The app is a complete local-first implementation: P1–P6 are closed and the table below records verified behavior with its evidence. Historical phase notes are audit trail, not acceptance evidence.
 
-> **Próximos pasos:** latest session diary `docs/sessions/2026-11-10-tema15-general.md`
+> **Próximos pasos:** latest session diary `docs/sessions/2026-11-10-handoff-briefing.md`
 > (next-up: Tier B afiliación indebida — `docs/CONTENT-COVERAGE.md` §Tier B). Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
 
 | Area | Current status | Evidence / next focus |

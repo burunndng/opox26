@@ -14,7 +14,7 @@ Quality-gate and verification specialist. Never modifies application code withou
 ## Hard rules (never violate)
 - Before any `npm` verification command: confirm `tests/helpers/isolation.ts` is used (`isolateDataDir()` + `OPOSILAB_OFFLINE=1`) when touching persistence code.
 - `npm run lint` = `tsc --noEmit`. There is no ESLint. Zero errors expected.
-- `npm test` = `node:test` via `tsx`; current baseline **331 tests / 44 suites** (~9 s). Do not assume Vitest or Jest patterns.
+- `npm test` = `node:test` via `tsx`; current baseline **334 tests / 44 suites** (~9 s). Do not assume Vitest or Jest patterns.
 - `npm run build` must succeed before claiming a release is ready (Vite + esbuild → `dist/server.cjs`).
 - `OPENCODE_DISABLE_PROJECT_CONFIG=1` / `OPENCODE_CONFIG=/path/to/file.json` / `OPENCODE_CONFIG_CONTENT` are recovery hatches — reach for them first if opencode won't start, before editing files.
 - `data/oposilab.db` must stay gitignored. Never commit study data or backup `.json.migrated.bak` without explicit user confirmation.
@@ -23,7 +23,7 @@ Quality-gate and verification specialist. Never modifies application code withou
 - `node:sqlite` connections load lazily via Proxy. Boot seeding is idempotent. Legacy JSON DB auto-migrates with `.json.migrated.bak` backup.
 
 ## What it knows
-- `tests/` has 29 `*.test.ts` files: `sqlite`, `sqlite-migrations`, `persistence`, `pipeline`, `oposilab`, `validation-gate`, `validation-warnings`, `seed-integrity`, `seed-reconcile`, `seed-sync-content`, `interleaving-hardening`, `queue-order`, `option-order`, `srs-graduation`, `scorer-hardening`, `non-mcq-evaluation`, `analytics`, `eligibility`, `practice-pools`, `retrieval`, `schema-contracts`, `drill-selectors`, `jev-normalize`, `tema8-bank`, `tema8ip-bank`, `modal-a11y`, `form-labeling`, `renderer-coverage`, `tema15-bank`.
+- `tests/` has 30 `*.test.ts` files: `sqlite`, `sqlite-migrations`, `persistence`, `pipeline`, `oposilab`, `validation-gate`, `validation-warnings`, `seed-integrity`, `seed-reconcile`, `seed-sync-content`, `interleaving-hardening`, `queue-order`, `option-order`, `srs-graduation`, `scorer-hardening`, `non-mcq-evaluation`, `analytics`, `eligibility`, `practice-pools`, `retrieval`, `schema-contracts`, `drill-selectors`, `jev-normalize`, `tema8-bank`, `tema8ip-bank`, `modal-a11y`, `form-labeling`, `renderer-coverage`, `tema15-bank`, `doc-freshness`.
 - `docs/ACCEPTANCE.md` evidence mapping (35 criteria; smoke transcript, isolation scan, schema drift, bank stats, route matrix, final verification log)
 - `implementation_plan.md` priorities P1–P6 (complete; §1 and §1.9 hold the current baseline), plus the latest `docs/sessions/` entry
 - `server/db.ts` (lazy init, WAL mode), `server/sqlite/`, `tests/fixtures/restart-probe.ts`
