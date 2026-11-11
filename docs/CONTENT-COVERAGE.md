@@ -2,7 +2,7 @@
 
 Tracks, per topic, which class summaries have been gap-audited against the seed bank and which
 content decisions are still deferred. Companion to `docs/ACCEPTANCE.md` (acceptance evidence)
-and `implementation_plan.md` §1.3–§1.12 (audit diary). Counts below are from the committed
+and `implementation_plan.md` §1.3–§1.15 (audit diary). Counts below are from the committed
 baseline; after each content batch, refresh the affected row here in the same commit.
 
 ## Matrix
@@ -11,7 +11,7 @@ baseline; after each content batch, refresh the affected row here in the same co
 |---|---|---|---|---|
 | Tema 7 (Régimen General) | legacy seed | 100 | — | no recent audit entry |
 | Tema 1 (CE) | legacy seed | 13 | — | no recent audit entry |
-| Tema 3 específico (afiliación) | clase 9-11 T3&T4 (`ESPECIFICO/Tema 3/resumen gemini.txt`, outside repo) | 61 | 2026-11-10 (§1.12) | auditado |
+| Tema 3 específico (afiliación) | clase 9-11 T3&T4 (`ESPECIFICO/Tema 3/resumen gemini.txt`, outside repo) | 69 | 2026-11-11 (§1.15) | auditado |
 | Tema 8 específico (IT) | legacy bank, test-guarded (`tema8-bank.test.ts`) | 70 | — | no §1.x gap audit |
 | Tema 8 II (IP) | clase 21-10 (§1.3) | 52 | 2026-10-31 | auditado |
 | Tema 15 (Ley 40/2015) | clase 28-10 pt1 (§1.4) + gap audit carpeta "Tema 15 general" (§1.14) | 76 | 2026-11-10 (§1.14) | auditado |
@@ -22,7 +22,8 @@ baseline; after each content batch, refresh the affected row here in the same co
 
 ## Tier B (deferred follow-up batches)
 
-- [ ] **Afiliación indebida + devolución de cuotas** (Tema 3) — strongest follow-up candidate, §1.12
+- [ ] Revisión de oficio por la TGSS (rectificación de errores materiales en actos de
+      encuadramiento) — sin anclaje BOE verificado en el batch de actos indebidos, §1.15
 - [ ] Cuotas 28/30 % y MEI, cifras 2027 (Tema 4) — outside Tema 3 scope, §1.12
 - [ ] Sucesión solidaria (Tema 5), §1.12
 - [ ] Intervalo 9–12 meses de carencia (Tema 9), §1.11 (G15)
@@ -36,6 +37,15 @@ baseline; after each content batch, refresh the affected row here in the same co
       arts. 13–33; representation, REA y poderes A/B/C quedan fuera de los dos bancos actuales, §1.14
 - [ ] **Técnicas de organización del Título III de la Ley 40/2015** (arts. 54–139) y potestad
       sancionadora (arts. 25–52) — otros temas del temario, §1.14
+
+### Closed in the Tema 3 actos-indebidos gap audit (§1.15)
+
+- [x] **Afiliación indebida + devolución de cuotas** (Tema 3) — arts. 57–62 RIA: reposición y
+      cuotas sin efecto (art. 59.1), devolución salvo ingreso malicioso con tope de 4 años
+      (art. 59.2), compra de prestaciones sin devolución, inscripción indebida y derivación a la
+      ITSS (art. 57), alta indebida sin régimen vs. con otro régimen (arts. 60.1 vs 60.2),
+      variación de datos indebida (art. 62), tarifación con error de la TGSS (art. 58.1) y baja
+      indebida con actividad continuada (art. 61.3.º)
 
 ### Closed in the "Tema 15 general" gap audit (§1.14)
 

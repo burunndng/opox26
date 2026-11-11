@@ -30,18 +30,18 @@
 
 ---
 
-## 1. Current State (verified 2026-09-23 · refreshed 2026-11-10)
+## 1. Current State (verified 2026-09-23 · refreshed 2026-11-11)
 
 The app is a complete local-first implementation: P1–P6 are closed and the table below records verified behavior with its evidence. Historical phase notes are audit trail, not acceptance evidence.
 
-> **Próximos pasos:** latest session diary `docs/sessions/2026-11-10-handoff-briefing.md`
-> (next-up: Tier B afiliación indebida — `docs/CONTENT-COVERAGE.md` §Tier B). Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
+> **Próximos pasos:** latest session diary `docs/sessions/2026-11-11-tema3-actos-indebidos.md`
+> (next-up: remaining Tier B rows — `docs/CONTENT-COVERAGE.md` §Tier B). Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
 
 | Area | Current status | Evidence / next focus |
 |---|---|---|
 | Stack | Vite 8 + React 19 + Express 4 + TypeScript, `npm run dev` = `tsx server.ts` | `package.json` |
 | Persistence | SQLite exists; restart behavior now covered by an isolated two-boot regression test | `server/db.ts`, `tests/persistence.test.ts` |
-| Tests | Full suite green and fully isolated — **331 tests / 44 suites** (2026-11-10; `npm test` provably never touches the live DB) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
+| Tests | Full suite green and fully isolated — **347 tests / 45 suites** (2026-11-11; `npm test` provably never touches the live DB) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
 | Data model | Core types and SQLite tables stable; seed relationships are guarded by the integrity/reconcile suites | `src/types.ts`, `server/sqlite/connection.ts`, `tests/seed-integrity.test.ts` F1–F12, `tests/seed-reconcile.test.ts` R1–R18 |
 | Activity surfaces | All required formats wired to production scorers; cognitive-state / near-miss / quadrant evaluation complete (P4) | `src/components/ActivityRunner.tsx`, `src/scoring/evaluateItem.ts`, `tests/non-mcq-evaluation.test.ts`, `tests/scorer-hardening.test.ts` |
 | Content pipeline | Text/PDF import, offline atom suggestions, eligibility filter and quality-gated promotion enforced (P3) | `server/pdfImport.ts`, `server/heuristics.ts`, `server/validationWarnings.ts`, `ContentStudio.tsx`, `tests/validation-gate.test.ts` |
@@ -105,17 +105,29 @@ Auditoría de la carpeta `GENERAL/Tema  15  general` (43 láminas de diapositiva
 
 > **Actualizado:** `server/seedDataTema15Extra.ts` (nuevo, 51 ítems); `server/seedData.ts` (import + spread final); `tests/tema15-bank.test.ts` (nuevo, B1–B12); `tests/seed-reconcile.test.ts` R1 (481→532); `implementation_plan.md` §1.14; `README.md` y `docs/ACCEPTANCE.md` (526/532, 331/44); `docs/CONTENT-COVERAGE.md` (matriz Tema 15/16 + Tier B); `docs/sessions/2026-11-10-tema15-general.md`.
 
+### 1.15 Content — Tema 3 actos indebidos y devolución de cuotas vs. clase 9-11 (2026-11-11)
+
+Auditoría del bloque de **efectos de los actos indebidos** de la clase 9-11 (`ESPECIFICO/Tema 3/resumen gemini.txt` §3.9, `Resumen clase 9-11 T3&T4 comun.txt` §4.9 y transcript 02:30–02:46) contra el banco de 61 ítems, deduplicada contra `TEST 3.1` (10 preguntas, sin contenido de actos indebidos) y contra las 10 preguntas del test en directo. Cierra el headliner de Tier B «afiliación indebida + devolución de cuotas». Añadidos **8 ítems validados** (`item-t3-62…69`) en `server/seedDataTema3.ts` (`seedItemsTema3Parte3`, añadido al final de `seedItems` para no alterar el ciclo canónico F2).
+
+**Los 8 ítems** (anclas verificadas contra el texto consolidado del BOE, RD 84/1996 BOE-A-1996-4447, actualización 30/07/2026, arts. 57–63 RIA): **62** afiliación indebida de persona excluida del campo de aplicación → reposición a la situación anterior y cuotas sin efecto alguno, hayan causado o no prestaciones (art. 59.1–2); **63** devolución de cuotas de buena fe → no anteriores a 4 años, deducidas las prestaciones indebidamente percibidas (art. 59.2); **64** compra de prestaciones (subida fraudulenta de la base) → ingreso malicioso, sin devolución (art. 59.2 in fine); **65** inscripción indebida con dolo/negligencia/morosidad → la TGSS da cuenta a la ITSS para el acta de infracción, nunca multa por sí misma (art. 57.2); **66** alta indebida de quien no debe figurar en ningún régimen → efectos del art. 59, frente al cómputo recíproco del art. 60.2 cuando sí procede otro régimen (art. 60.1); **67** variación de datos indebida → efectos desde la comunicación rectificadora o desde la fecha de la resolución (art. 62); **68** tarifación indebida por error de la TGSS → sin recargo y devolución del exceso, frente al régimen imputable al empresario (art. 58.1.1.º vs .2.º); **69** baja indebida con actividad continuada → no se interrumpe la obligación de cotizar, reclamación de cuotas ≤ 4 años, sea cual sea la causa (art. 61.3.º).
+
+**Hallazgos de la auditoría.** (a) El banco solo cubría los efectos temporales de la baja indebida (art. 61.2) y del alta indebida con otro régimen (art. 60.2); la **afiliación indebida (art. 59)**, la **devolución de cuotas** y la **derivación a la ITSS (art. 57.2)** no tenían ningún ítem. (b) El resumen mezcla los efectos de cada acto; los ítems los separan por acto (inscripción, afiliación, alta, variación, tarifación, baja) para que la discriminación sea testable. (c) **Diferido**: revisión de oficio por la TGSS (rectificación de errores materiales), sin ancla BOE puntual verificada en este lote — anotado en `docs/CONTENT-COVERAGE.md` §Tier B.
+
+**Verificación.** `npm run lint` limpio; `npm test` **347/347 en 45 suites** (nuevo `tests/tema3-bank.test.ts`, T1–T12: 69 ítems, serie de ids contigua 1–69, 4 opciones con una sola clave, sin fuga de respuesta en el enunciado, sin caracteres fuera del latín, explicación y tipo de trampa por distractor, trampas distintas en el lote, correct ≤1,25× la media de distractores, posición canónica ≤40 % y lote equilibrado 2/2/2/2, sin rachas ≥3, ancla RIA y clúster propios, y lote añadido al final de `seedItems`); `seed-reconcile` R1 532→**540**; `npm run build` OK.
+
+> **Actualizado:** `server/seedDataTema3.ts` (69; nuevo export `seedItemsTema3Parte3`); `server/seedData.ts` (import + spread final); `tests/tema3-bank.test.ts` (nuevo, T1–T12); `tests/seed-reconcile.test.ts` R1 (532→540); `implementation_plan.md` §1.15; `README.md` y `docs/ACCEPTANCE.md` (534/540, 347/45); `docs/CONTENT-COVERAGE.md` (matriz Tema 3 + Tier B); `AGENTS.md` y `.opencode/agent/oposilab-guardian.md` (347/45, 31 archivos); `docs/sessions/2026-11-11-tema3-actos-indebidos.md`.
+
 ---
 
 ### 1.13 Verification Evidence (current verified baseline)
 
-- `npm run lint`: `tsc --noEmit` limpio (última pasada 2026-11-10, ver §1.14).
-- `npm test`: **331/331 en 44 suites** (2026-11-10); el R1 actualizado confirma 532.
-- `tests/seed-integrity.test.ts`: F1–F12 verdes; F7 (figura/estimación) pasa porque ningún ítem de Tema 9, del lote Tema 3 parte-2 ni del lote Tema 15 general lleva cifras anuales vinculadas a años específicos.
-- `tests/tema8ip-bank.test.ts`: 52 ítems, claves 13/13/13/13; `tests/tema8-bank.test.ts`: 70 ítems, verde; `tests/tema15-bank.test.ts`: 145 ítems en los dos bancos del bloque general (76 Tema 15 + 69 Tema 16), verde.
-- `tests/seed-reconcile.test.ts`: R1 actualizado a 532; los nuevos ítems se registran como `validated` con `source: 'manual'` y `item_type: 'cover_and_generate_mcq'`.
+- `npm run lint`: `tsc --noEmit` limpio (última pasada 2026-11-11, ver §1.15).
+- `npm test`: **347/347 en 45 suites** (2026-11-11); el R1 actualizado confirma 540.
+- `tests/seed-integrity.test.ts`: F1–F12 verdes; F7 (figura/estimación) pasa porque ningún ítem de Tema 9, del lote Tema 3 parte-2/parte-3 ni del lote Tema 15 general lleva cifras anuales vinculadas a años específicos.
+- `tests/tema8ip-bank.test.ts`: 52 ítems, claves 13/13/13/13; `tests/tema8-bank.test.ts`: 70 ítems, verde; `tests/tema15-bank.test.ts`: 145 ítems en los dos bancos del bloque general (76 Tema 15 + 69 Tema 16), verde; `tests/tema3-bank.test.ts`: 69 ítems, T1–T12 verde.
+- `tests/seed-reconcile.test.ts`: R1 actualizado a 540; los nuevos ítems se registran como `validated` con `source: 'manual'` y `item_type: 'cover_and_generate_mcq'`.
 
-> **Documentación sincronizada:** `README.md` (475/481) y `docs/ACCEPTANCE.md` (criterios 21/22/35, 475/481) actualizados en esta pasada.
+> **Documentación sincronizada:** `README.md` (534/540) y `docs/ACCEPTANCE.md` (criterios 21/22/35, 534/540) actualizados en esta pasada.
 
 ### 1.9 Content/UX — onboarding, diálogos accesibles y StudySetup destilado (2026-11-03)
 

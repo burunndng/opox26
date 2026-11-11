@@ -16,6 +16,7 @@ import {
   seedItemsTema3,
   seedItemsTema3Extras,
   seedItemsTema3Parte2,
+  seedItemsTema3Parte3,
 } from './seedDataTema3.ts';
 import {
   seedTopicTema8,
@@ -6600,4 +6601,8 @@ export const seedItems: Item[] = rebalanceCanonicalMcqOptions([
   // for the same canonical-position reason as above.
   ...seedItemsTema15Extra,
   ...seedItemsTema16Extra2,
+  // Tema 3 parte 3 — efectos de actos indebidos y devolución de cuotas
+  // (2026-11-11 gap audit, arts. 57-62 RIA), appended last for the same
+  // canonical-position reason as above.
+  ...seedItemsTema3Parte3,
 ]);

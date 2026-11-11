@@ -3214,3 +3214,338 @@ export const seedItemsTema3Parte2: Item[] = [
     cognitive_operations: ['micro_discrimination', 'generative_retrieval'],
   }),
 ];
+
+/**
+ * Tema 3 parte 3 — efectos de los actos indebidos y devolución de cuotas
+ * (2026-11-11 gap audit vs. clase 9-11: resumen gemini §3.9, resumen común
+ * §4.9 y transcript 02:30–02:46). Closes the Tier B headliner
+ * "afiliación indebida + devolución de cuotas" (docs/CONTENT-COVERAGE.md).
+ *
+ * Anchors verified once against the consolidated BOE text of RD 84/1996
+ * (BOE-A-1996-4447, actualización 30/07/2026): arts. 57, 58.1, 59, 60.1,
+ * 61.3.º and 62 RIA. Appended last in `seedItemsTema3` (and last in
+ * `seedItems`) so `rebalanceCanonicalMcqOptions` does not reshuffle the
+ * stored option order of the existing items.
+ */
+export const seedItemsTema3Parte3: Item[] = [
+  buildMcq({
+    id: 'item-t3-62',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    stem: 'Se declara indebida la afiliación practicada sobre una persona que no resultaba comprendida en el campo de aplicación del sistema. ¿Qué efectos produce esa declaración?',
+    correct: {
+      text: 'Se repone a la situación previa y las cuotas ingresadas no surten efecto alguno.',
+      explanation:
+        'El art. 59.1 y 2 RIA determina la reposición a la situación existente anterior a la afiliación indebida y establece que las cotizaciones efectuadas no surten efecto alguno, hayan causado o no prestaciones.',
+    },
+    distractors: [
+      {
+        text: 'El alta sigue válida hasta el último día del mes de notificación, con cómputo recíproco de las cuotas con el Régimen procedente.',
+        trap_type: 'conceptual_merger',
+        explanation:
+          'Incorrecto. Ese régimen de validez hasta la notificación y cómputo recíproco corresponde al alta indebida en un Régimen distinto del procedente (art. 60.2 RIA), no a la afiliación indebida.',
+        condition_if_correct: 'Si la persona debiera figurar en otro Régimen del sistema.',
+      },
+      {
+        text: 'Las cuotas se anulan solo si la afiliación no ha causado prestación alguna durante los cuatro últimos años.',
+        trap_type: 'rule_exception_swap',
+        explanation:
+          'Incorrecto. Las cuotas no surten efecto alguno, hayan causado o no prestaciones; el cuatrienio limita la devolución, no el efecto de las cotizaciones.',
+        condition_if_correct: 'Si el efecto de las cuotas dependiera de que hubieran causado prestaciones.',
+      },
+      {
+        text: 'La declaración solo puede ser revisada de oficio por la propia TGSS, sin vía de impugnación alguna.',
+        trap_type: 'overbroad_statement',
+        explanation:
+          'Incorrecto. Los actos de la TGSS en estas materias son impugnables en la forma y plazos de la LPAC y la LJCA (art. 63.2 RIA).',
+        condition_if_correct: 'Si la norma cerrara la vía administrativa de impugnación.',
+      },
+    ],
+    legal_basis: 'Art. 59.1 y 2 RIA',
+    rule_statement:
+      'La afiliación indebida de personas excluidas del campo de aplicación repone la situación anterior y deja las cuotas sin efecto alguno, hayan causado o no prestaciones.',
+    corrective_rule:
+      'Afiliación indebida → reposición + cuotas sin efecto (art. 59); el cómputo recíproco es solo del alta indebida con otro Régimen (art. 60.2).',
+    difficulty: 3,
+    cognitive_operations: ['generative_retrieval', 'exception_detection'],
+  }),
+  buildMcq({
+    id: 'item-t3-63',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    stem: 'Ingresadas cuotas por una afiliación indebida sin ánimo fraudulento, los sujetos que las ingresaron piden su devolución. ¿Hasta dónde alcanza ese derecho?',
+    correct: {
+      text: 'A las no anteriores a cuatro años, deducidas las prestaciones indebidas percibidas.',
+      explanation:
+        'El art. 59.2 RIA reconoce el derecho a la devolución de las cuotas ingresadas por afiliación indebida salvo que lo fueran maliciosamente, previa deducción en todo caso del importe de las prestaciones indebidamente percibidas, siempre que unas y otras no sean anteriores a los últimos cuatro años.',
+    },
+    distractors: [
+      {
+        text: 'A todas las ingresadas en los últimos cinco años, con independencia de las prestaciones que se hubieran percibido.',
+        trap_type: 'numeric_substitution',
+        explanation:
+          'Incorrecto. El límite específico del art. 59.2 RIA es de cuatro años para cuotas y prestaciones; el de cinco años rige para el reconocimiento de prestaciones (art. 53.1 TRLGSS).',
+        condition_if_correct: 'Si se tratara del plazo de prescripción para el reconocimiento de prestaciones.',
+      },
+      {
+        text: 'A las que no hubieran causado prestación alguna, aunque se ingresaron hace más de cuatro años.',
+        trap_type: 'exception_ignored',
+        explanation:
+          'Incorrecto. El art. 59.2 RIA reconoce la devolución hayan causado o no prestaciones; lo determinante es el ánimo del ingreso y el límite temporal.',
+        condition_if_correct: 'Si la devolución exigiera que las cuotas no hubieran generado prestación.',
+      },
+      {
+        text: 'A las ingresadas por error de la propia Tesorería; si hubo negligencia del interesado, nunca procede.',
+        trap_type: 'hyper_narrow_statement',
+        explanation:
+          'Incorrecto. La exclusión legal es el ingreso malicioso, no la negligencia del interesado: el art. 59.2 RIA solo deniega la devolución si las cuotas se ingresaron maliciosamente.',
+        condition_if_correct: 'Si la norma condicionara la devolución a un error de la Administración.',
+      },
+    ],
+    legal_basis: 'Art. 59.2 RIA',
+    rule_statement:
+      'Las cuotas ingresadas por afiliación indebida se devuelven salvo ingreso malicioso, deducidas las prestaciones indebidamente percibidas, y nunca son anteriores a cuatro años.',
+    corrective_rule:
+      'Devolución de cuotas por afiliación indebida: buena fe sí, malicioso no; deducción de prestaciones indebidas; tope de 4 años.',
+    difficulty: 4,
+    cognitive_operations: ['numeric_precision', 'exception_detection'],
+  }),
+  buildMcq({
+    id: 'item-t3-64',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    stem: 'Un autónomo eleva de forma fraudulenta su base de cotización para conseguir una pensión más alta y, al descubrirse el fraude, exige la devolución de lo ingresado. ¿Procede su devolución?',
+    correct: {
+      text: 'No: las cuotas ingresadas maliciosamente no son devueltas.',
+      explanation:
+        'El art. 59.2 RIA excluye de la devolución las cuotas ingresadas maliciosamente; la compra de prestaciones mediante subida fraudulenta de la base es un ingreso de mala fe, por lo que no se genera derecho a su devolución.',
+    },
+    distractors: [
+      {
+        text: 'Sí, pero solo las cuotas correspondientes a los cuatro años anteriores a la reclamación.',
+        trap_type: 'rule_exception_swap',
+        explanation:
+          'Incorrecto. El límite de cuatro años se refiere a las cuotas de buena fe; las ingresadas maliciosamente quedan excluidas de la devolución en su totalidad.',
+        condition_if_correct: 'Si las cuotas se hubieran ingresado sin ánimo fraudulento.',
+      },
+      {
+        text: 'Sí, siempre que se devuelva también el importe de las prestaciones ya percibidas.',
+        trap_type: 'conceptual_merger',
+        explanation:
+          'Incorrecto. La deducción de las prestaciones indebidamente percibidas es un requisito de la devolución que procede en la buena fe; no convierte en devolvible un ingreso malicioso.',
+        condition_if_correct: 'Si el ingreso de las cuotas hubiera sido inocente.',
+      },
+      {
+        text: 'Solo cuando la Inspección sancione el fraude, pues la multa absorbe la devolución.',
+        trap_type: 'factual_misapplication',
+        explanation:
+          'Incorrecto. La devolución de cuotas y el expediente sancionador de la ITSS son vías independientes; la multa no sustituye ni condiciona la devolución.',
+        condition_if_correct: 'Si la sanción absorbiera las consecuencias económicas del fraude.',
+      },
+    ],
+    legal_basis: 'Art. 59.2 RIA',
+    rule_statement:
+      'Las cuotas ingresadas maliciosamente —como en la compra de prestaciones mediante subida fraudulenta de la base— no generan derecho a su devolución.',
+    corrective_rule:
+      'Ingreso malicioso de cuotas → sin devolución; ingreso inocente → devolución con deducción de prestaciones indebidas y tope de 4 años.',
+    difficulty: 3,
+    cognitive_operations: ['calibrated_decision', 'response_inhibition'],
+  }),
+  buildMcq({
+    id: 'item-t3-65',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    stem: 'En el expediente de una inscripción de empresa declarada indebida consta que el interesado obró con dolo y morosidad. ¿Qué trámite debe dar la TGSS a esos hechos?',
+    correct: {
+      text: 'Dar cuenta de ellos a la Inspección para que levante las actas de infracción pertinentes.',
+      explanation:
+        'El art. 57.2 RIA dispone que quien hubiere obrado con dolo, negligencia o morosidad queda sujeto a las responsabilidades que haya lugar, y que la TGSS dará cuenta de los hechos a la Inspección de Trabajo y Seguridad Social a efectos del levantamiento de las actas de infracción que procedan.',
+    },
+    distractors: [
+      {
+        text: 'Imponer directamente la multa que corresponda conforme a la LISOS, por su propia autoridad y sin intervención inspectora.',
+        trap_type: 'wrong_competent_body',
+        explanation:
+          'Incorrecto. La potestad sancionadora corresponde a la Inspección de Trabajo y Seguridad Social; la TGSS gestiona y recauda pero no multa (el mismo límite del art. 57.2 RIA).',
+        condition_if_correct: 'Si la TGSS ostentara potestad sancionadora propia.',
+      },
+      {
+        text: 'Anular la inscripción con efectos desde la fecha que fije la resolución que la declare indebida.',
+        trap_type: 'true_but_irrelevant',
+        explanation:
+          'Incorrecto. Es el régimen de efectos temporales del art. 57.1 RIA, cierto, pero no responde al trámite que debe seguirse ante la conducta dolosa del interesado.',
+        condition_if_correct: 'Si la pregunta versara sobre cuándo surte efectos la declaración.',
+      },
+      {
+        text: 'Suspender la inscripción hasta que la Inspección dicte resolución en el expediente sancionador.',
+        trap_type: 'temporal_confusion',
+        explanation:
+          'Incorrecto. Los efectos de la declaración no quedan en suspenso a la espera del expediente sancionador: la inscripción se anota con efectos desde la fecha fijada en la resolución (art. 57.1 RIA).',
+        condition_if_correct: 'Si la eficacia de la declaración dependiera del acta inspectora.',
+      },
+    ],
+    legal_basis: 'Art. 57.1 y 2 RIA',
+    rule_statement:
+      'Ante dolo, negligencia o morosidad en una inscripción indebida, la TGSS da cuenta de los hechos a la Inspección para el levantamiento de las actas de infracción; la sanción es de la Inspección.',
+    corrective_rule:
+      'Inscripción indebida + dolo/negligencia/morosidad → la TGSS deriva a la ITSS (acta de infracción); nunca multa por sí misma.',
+    difficulty: 3,
+    cognitive_operations: ['institutional_discrimination', 'generative_retrieval'],
+  }),
+  buildMcq({
+    id: 'item-t3-66',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    stem: 'Se declara indebida el alta en un Régimen de una persona que no debía figurar incluida en el campo de aplicación de ninguno de ellos. ¿Qué efectos produce ese alta indebida?',
+    correct: {
+      text: 'Los mismos que la afiliación indebida: reposición y cuotas sin efecto.',
+      explanation:
+        'El art. 60.1 RIA dispone que las altas indebidas de personas que no deben figurar incluidas en el campo de aplicación de ninguno de los Régimenes surtirán los efectos señalados en el art. 59 para las afiliaciones indebidas: reposición a la situación anterior y cuotas sin efecto, con devolución de buena fe limitada a cuatro años.',
+    },
+    distractors: [
+      {
+        text: 'El alta queda válida hasta el último día del mes de notificación, con cómputo recíproco de las cuotas.',
+        trap_type: 'conceptual_merger',
+        explanation:
+          'Incorrecto. Ese régimen (validez hasta la notificación y cómputo recíproco) es el del art. 60.2 RIA, aplicable cuando la persona sí está incluida en el campo de aplicación de otro Régimen distinto.',
+        condition_if_correct: 'Si la persona estuviera incluida en el campo de aplicación de otro Régimen.',
+      },
+      {
+        text: 'El alta se retrotrae al inicio del procedimiento que la declaró indebida, como en la baja indebida.',
+        trap_type: 'rule_exception_swap',
+        explanation:
+          'Incorrecto. La retroacción al inicio del procedimiento es el régimen de la baja indebida por causa ordinaria (art. 61.2 RIA); aquí rige el art. 59 vía art. 60.1.',
+        condition_if_correct: 'Si se tratara de una baja declarada indebida por causa ordinaria.',
+      },
+      {
+        text: 'Las cuotas se reclaman al empresario sin límite temporal, aunque hayan prescrito las prestaciones.',
+        trap_type: 'exception_ignored',
+        explanation:
+          'Incorrecto. Al aplicarse el art. 59, la devolución y reclamación de cuotas queda limitada a los últimos cuatro años (art. 59.2 RIA).',
+        condition_if_correct: 'Si la reclamación no estuviera sujeta al cuatrienio legal.',
+      },
+    ],
+    legal_basis: 'Art. 60.1 RIA',
+    rule_statement:
+      'El alta indebida de quien no debe figurar en ningún Régimen produce los efectos del art. 59 RIA: reposición y cuotas sin efecto; el cómputo recíproco es solo de quien sí está incluido en otro Régimen.',
+    corrective_rule:
+      'Alta indebida sin régimen aplicable → como afiliación indebida (art. 59); con otro régimen → válida hasta notificación y cómputo recíproco (art. 60.2).',
+    difficulty: 4,
+    cognitive_operations: ['micro_discrimination', 'exception_detection'],
+  }),
+  buildMcq({
+    id: 'item-t3-67',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    stem: 'Una variación de datos comunicada por la empresa es declarada indebida por la TGSS. ¿Desde cuándo surten efectos los datos ya rectificados en sus sistemas?',
+    correct: {
+      text: 'Desde la comunicación de los datos o, en su caso, desde la fecha que señale la resolución.',
+      explanation:
+        'El art. 62 RIA dispone que los datos rectificados en los sistemas de documentación de la TGSS surten efectos desde la comunicación de los mismos o, en su caso, desde la fecha señalada en la resolución que los hubiere declarado indebidos.',
+    },
+    distractors: [
+      {
+        text: 'Desde la fecha en que la empresa presentó originalmente la variación en plazo y forma ante la Dirección Provincial.',
+        trap_type: 'wrong_start_date',
+        explanation:
+          'Incorrecto. La fecha de la comunicación original no es el punto de partida cuando la variación se declara indebida; rige la comunicación rectificadora o la que fije la resolución.',
+        condition_if_correct: 'Si los efectos se retrotrajeran a la presentación originaria.',
+      },
+      {
+        text: 'Desde el día en que la TGSS tuvo conocimiento formal y acreditado de la irregularidad, aunque fuera anterior a la comunicación.',
+        trap_type: 'temporal_confusion',
+        explanation:
+          'Incorrecto. El conocimiento formal previo fija los efectos del alta practicada de oficio (arts. 35 y 36 RIA), no los de la variación de datos indebida.',
+        condition_if_correct: 'Si se tratara de un alta practicada de oficio por actuación inspectora.',
+      },
+      {
+        text: 'Desde el inicio del procedimiento administrativo en el que recaiga la resolución que declare la indebidez.',
+        trap_type: 'factual_misapplication',
+        explanation:
+          'Incorrecto. La fecha de inicio del procedimiento es el punto de partida de las formalizaciones y tarifaciones indebidas (art. 58.1 RIA), no de la variación de datos indebida.',
+        condition_if_correct: 'Si se tratara de una formalización o tarifación indebida.',
+      },
+    ],
+    legal_basis: 'Art. 62 RIA',
+    rule_statement:
+      'Los datos rectificados por una variación indebida surten efectos desde su comunicación o desde la fecha que señale la resolución que los declaró indebidos.',
+    corrective_rule:
+      'Variación indebida → comunicación de los datos o fecha de la resolución; no la presentación originaria ni el conocimiento previo.',
+    difficulty: 4,
+    cognitive_operations: ['generative_retrieval', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t3-68',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    stem: 'Una tarifación de protección por contingencias profesionales resulta indebida por un error de la propia Tesorería, sin dolo del empresario. ¿Qué se aplica a la diferencia de cuotas?',
+    correct: {
+      text: 'No se aplica recargo alguno y, en su caso, se devuelve el exceso.',
+      explanation:
+        'El art. 58.1.2.º RIA establece que cuando el origen de la tarifación indebida es imputable a error de la TGSS o, en general, de la Administración que no actúa como empresario, no se aplicará recargo alguno a la diferencia o, en su caso, se devolverá el exceso, sin perjuicio de resarcir los perjuicios ocasionados.',
+    },
+    distractors: [
+      {
+        text: 'Se aplica el recargo correspondiente a los ingresos realizados fuera de plazo sobre la diferencia.',
+        trap_type: 'rule_exception_swap',
+        explanation:
+          'Incorrecto. El recargo por ingreso fuera de plazo no procede cuando la diferencia deriva de un error de la Administración: el art. 58.1.2.º RIA excluye expresamente cualquier recargo.',
+        condition_if_correct: 'Si la diferencia fuera imputable al empresario o al ingreso fuera de plazo.',
+      },
+      {
+        text: 'Se reclaman las cuotas al empresario con efectos desde que concurrió la causa imputable.',
+        trap_type: 'conceptual_merger',
+        explanation:
+          'Incorrecto. Ese régimen (efectos desde la causa y reclamación de cuotas) es el de la tarifación indebida imputable al empresario (art. 58.1.1.º RIA), no la del error de la Tesorería.',
+        condition_if_correct: 'Si la tarifación indebida fuera imputable al empresario.',
+      },
+      {
+        text: 'Se anula la formalización sin efectos retroactivos y no procede devolución alguna del exceso.',
+        trap_type: 'hyper_narrow_statement',
+        explanation:
+          'Incorrecto. La resolución surte efectos desde el inicio del procedimiento y el exceso se devuelve; la exclusión de devolución opera solo con dolo, negligencia o morosidad (art. 58.2 RIA).',
+        condition_if_correct: 'Si el empresario hubiera actuado con dolo, negligencia o morosidad.',
+      },
+    ],
+    legal_basis: 'Art. 58.1 RIA',
+    rule_statement:
+      'Si la tarifación indebida es imputable a error de la TGSS, no se aplica recargo y se devuelve el exceso; si es imputable al empresario, la resolución surte efectos desde que concurrió la causa, con reclamación o devolución de cuotas.',
+    corrective_rule:
+      'Error de la TGSS → sin recargo y devolución del exceso; culpa del empresario → efectos desde la causa + reclamación de cuotas (art. 58.1).',
+    difficulty: 4,
+    cognitive_operations: ['institutional_discrimination', 'calibrated_decision'],
+  }),
+  buildMcq({
+    id: 'item-t3-69',
+    cluster_id: 'cluster_actos_indebidos_impugnaciones',
+    stem: 'Un trabajador sufre una baja indebida y sigue prestando servicios con independencia de la causa de la misma. ¿Cómo se comporta la obligación de cotizar durante ese periodo?',
+    correct: {
+      text: 'No se interrumpe, y las cuotas se reclaman con el límite de cuatro años.',
+      explanation:
+        'El art. 61.3.º RIA dispone que, cualquiera que sea la causa de la baja indebida, si continúa la prestación de servicios no quedará interrumpida la obligación de cotizar durante ese periodo, reclamándose las cuotas pertinentes siempre que no sean anteriores a los últimos cuatro años.',
+    },
+    distractors: [
+      {
+        text: 'Queda suspendida mientras dure la baja declarada indebida, sin exigir cotización por ese periodo.',
+        trap_type: 'overbroad_statement',
+        explanation:
+          'Incorrecto. La regla es la contraria: la obligación de cotizar no se interrumpe durante la baja indebida si la actividad continúa (art. 61.3.º RIA).',
+        condition_if_correct: 'Si el trabajador hubiera cesado realmente en la actividad.',
+      },
+      {
+        text: 'Se mantiene, pero solo se exigen las cuotas del año natural en que la baja fue causada.',
+        trap_type: 'numeric_substitution',
+        explanation:
+          'Incorrecto. El límite de la reclamación es de cuatro años, no del año natural en que se causó la baja (art. 61.3.º RIA).',
+        condition_if_correct: 'Si el límite de reclamación fuera de un año.',
+      },
+      {
+        text: 'Queda interrumpida si la baja se declara indebida por causa grave, hasta el alta retroactiva.',
+        trap_type: 'rule_exception_swap',
+        explanation:
+          'Incorrecto. La causa grave determina desde cuándo se considera en alta (art. 61.1.º RIA), pero la obligación de cotizar subsiste también durante ese periodo.',
+        condition_if_correct: 'Si la causa grave suspendiera la cotización.',
+      },
+    ],
+    legal_basis: 'Art. 61.3.º RIA',
+    rule_statement:
+      'Durante una baja indebida con actividad continuada no se interrumpe la obligación de cotizar y las cuotas se reclaman sin que sean anteriores a cuatro años, sea cual sea la causa.',
+    corrective_rule:
+      'Baja indebida + actividad continua → se cotiza igualmente; reclamación de cuotas ≤ 4 años; la causa grave solo fija desde cuándo se está en alta.',
+    difficulty: 3,
+    cognitive_operations: ['exception_detection', 'numeric_precision'],
+  }),
+];
