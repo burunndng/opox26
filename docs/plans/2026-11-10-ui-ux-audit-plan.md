@@ -156,16 +156,14 @@ on: clicks to core action, decisions required, moments of "what is this number?"
 (lint + test + build + manual smoke), so review stays easy and the parallel agent's content work
 is never blocked for long.
 
-## 5. Decision points (need user approval before P1 implementation)
+## 5. Decision points — APPROVED 2026-11-11
 
-- **D1 — Navbar topic selector:** remove (recommended) or keep and remove the StudySetup one?
-- **D2 — Practice modes:** cap visible modes at 1+3 (recommended) or 1+2?
-- **D3 — Consultor (AI chatbot):** move into "Herramientas" (recommended) or hide entirely when
-  no API key is configured?
-- **D4 — ContentStudio / JevLab / Export:** all three into "Herramientas" (recommended), or split
-  authoring tools (admin) from export (user) into two areas?
-- **D5 — Audit doc location:** `docs/UX-AUDIT-2026-11.md` (recommended, next to
-  `docs/AUDIT-UX-LEARNING.md`).
+- **D1 — Navbar topic selector:** ✅ remove the navbar select; StudySetup keeps the only control.
+- **D2 — Practice modes:** ✅ cap at 1 default CTA + ≤ 3 visible; rest behind "Más".
+- **D3 — Consultor (AI chatbot):** ✅ move into "Herramientas".
+- **D4 — ContentStudio / JevLab / Export:** ✅ split — user tools (Export, Consultor) vs
+  admin/authoring (Contenidos, Preguntas, JevLab), both under "Herramientas".
+- **D5 — Audit doc location:** ✅ `docs/UX-AUDIT-2026-11.md` (written, Pass A–D complete).
 
 ## 6. Verification plan (per batch)
 
