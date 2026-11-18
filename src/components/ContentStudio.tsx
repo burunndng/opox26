@@ -678,7 +678,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                   <div className="bg-[#0c0f17]/80 border border-[#20293a] p-3 rounded-xl">
                     <span className="text-xs font-bold text-amber-300 block">
-                      🎯 Pistas en el Enunciado (Answer Leakage)
+                      Pistas en el Enunciado (Answer Leakage)
                     </span>
                     <span className="text-[11px] text-slate-400">
                       Ocurre cuando el texto de la pregunta incluye la regla o palabra clave de la
@@ -687,7 +687,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   </div>
                   <div className="bg-[#0c0f17]/80 border border-[#20293a] p-3 rounded-xl">
                     <span className="text-xs font-bold text-indigo-300 block">
-                      🧠 Sobrecarga de Conceptos (Multi-Focal Overload)
+                      Sobrecarga de Conceptos (Multi-Focal Overload)
                     </span>
                     <span className="text-[11px] text-slate-400">
                       Ocurre cuando un único reactivo cruza $\ge 3$ decisiones normativas
@@ -706,25 +706,25 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 onClick={() => loadPreset('answer_in_stem')}
                 className="px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded text-[11px] font-medium transition"
               >
-                ⚠️ Pista en el Enunciado
+                Pista en el Enunciado
               </button>
               <button
                 onClick={() => loadPreset('overloaded')}
                 className="px-2.5 py-1 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded text-[11px] font-medium transition"
               >
-                ⚠️ Sobrecarga (4 dimensiones)
+                Sobrecarga (4 dimensiones)
               </button>
               <button
                 onClick={() => loadPreset('length_bias')}
                 className="px-2.5 py-1 bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 rounded text-[11px] font-medium transition"
               >
-                ⚠️ Sesgo de Longitud (+165%)
+                Sesgo de Longitud (+165%)
               </button>
               <button
                 onClick={() => loadPreset('optimal')}
                 className="px-2.5 py-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded text-[11px] font-medium transition"
               >
-                ✅ Ítem Óptimo (100 pts)
+                Ítem Óptimo (100 pts)
               </button>
             </div>
           </div>
@@ -919,7 +919,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-white flex items-center space-x-1.5">
-                        <span>🎯 Pista en el Enunciado</span>
+                        <span>Pista en el Enunciado</span>
                       </span>
                       {liveDiagnostic.answerInStem.detected ? (
                         <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40">
@@ -956,7 +956,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-white flex items-center space-x-1.5">
-                        <span>🧠 Sobrecarga Conceptual</span>
+                        <span>Sobrecarga Conceptual</span>
                       </span>
                       {liveDiagnostic.overloadedConcepts.detected ? (
                         <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
@@ -1016,7 +1016,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   {liveDiagnostic.absoluteWording.detected && (
                     <div className="p-3 rounded-xl bg-[#0c0f17] border border-[#20293a] text-xs text-slate-300 space-y-1">
                       <span className="font-semibold text-amber-400 block">
-                        ⚠️ Palabras absolutistas encontradas:
+                        Palabras absolutistas encontradas:
                       </span>
                       <p className="text-[11px] text-slate-400">
                         "{liveDiagnostic.absoluteWording.wordsFound.join('", "')}". Procura
@@ -1030,7 +1030,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 {liveDiagnostic.recommendations.length > 0 && (
                   <div className="p-3.5 bg-[#0c0f17] rounded-xl border border-[#20293a] space-y-2">
                     <span className="text-xs font-bold text-emerald-300 block">
-                      💡 Sugerencias de Reparación Instruccional
+                      Sugerencias de Reparación Instruccional
                     </span>
                     <ul className="space-y-1.5">
                       {liveDiagnostic.recommendations.map((rec, idx) => (
@@ -1477,7 +1477,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                 )}
                 {pdfImportError && (
                   <div className="p-2.5 bg-rose-950/40 border border-rose-800 rounded-lg text-rose-300">
-                    ⚠️ {pdfImportError} — puedes pegar el texto manualmente abajo.
+                    {pdfImportError} — puedes pegar el texto manualmente abajo.
                   </div>
                 )}
                 {pdfPages && !pdfImportError && (
@@ -1565,13 +1565,13 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                   <h4 className="text-sm font-bold text-white">{extractedSet.summary}</h4>
                   <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-slate-300">
                     <span className="px-2 py-0.5 bg-[#182030] rounded">
-                      📦 <strong>{extractedSet.clusters.filter((c) => c.selected).length}</strong> / {extractedSet.clusters.length} Clústeres
+                      <strong>{extractedSet.clusters.filter((c) => c.selected).length}</strong> / {extractedSet.clusters.length} Clústeres
                     </span>
                     <span className="px-2 py-0.5 bg-[#182030] rounded">
-                      ⚡ <strong>{extractedSet.atoms.filter((a) => a.selected).length}</strong> / {extractedSet.atoms.length} Átomos
+                      <strong>{extractedSet.atoms.filter((a) => a.selected).length}</strong> / {extractedSet.atoms.length} Átomos
                     </span>
                     <span className="px-2 py-0.5 bg-[#182030] rounded">
-                      ⚖️ <strong>{extractedSet.confusionPairs.filter((p) => p.selected).length}</strong> / {extractedSet.confusionPairs.length} Pares de Confusión
+                      <strong>{extractedSet.confusionPairs.filter((p) => p.selected).length}</strong> / {extractedSet.confusionPairs.length} Pares de Confusión
                     </span>
                   </div>
                 </div>

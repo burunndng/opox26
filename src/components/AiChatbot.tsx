@@ -363,8 +363,8 @@ Estoy especializado en el **Texto Refundido de la Ley General de la Seguridad So
         id: 'msg_err_' + Date.now(),
         role: 'model',
         content: isQuota
-          ? `⚠️ **Límite de Cuota de Gemini API Alcanzado (Error 429 RESOURCE_EXHAUSTED)**\n\nTu clave de API de Gemini ha consumido la cuota gratuita por minuto o mensual del proveedor.\n\n💡 **Alternativas directas para continuar:**\n1. **Activa OpenRouter:** Pulsa el botón **OpenRouter (openrouter/free)** en la barra superior para continuar generando ítems gratis sin consumir cuota de Gemini.\n2. **Modo local:** OposiLab puede seguir estructurando ejercicios con el motor cognitivo local sin requerir conexión externa.`
-          : `⚠️ **Ha ocurrido un problema al comunicar con el servicio:**\n\n${errMsg}\n\n*Si estás usando tu propia clave, asegúrate de que esté configurada correctamente en el archivo \`.env\`.*`,
+          ? `**Límite de Cuota de Gemini API Alcanzado (Error 429 RESOURCE_EXHAUSTED)**\n\nTu clave de API de Gemini ha consumido la cuota gratuita por minuto o mensual del proveedor.\n\n**Alternativas directas para continuar:**\n1. **Activa OpenRouter:** Pulsa el botón **OpenRouter (openrouter/free)** en la barra superior para continuar generando ítems gratis sin consumir cuota de Gemini.\n2. **Modo local:** OposiLab puede seguir estructurando ejercicios con el motor cognitivo local sin requerir conexión externa.`
+          : `**Ha ocurrido un problema al comunicar con el servicio:**\n\n${errMsg}\n\n*Si estás usando tu propia clave, asegúrate de que esté configurada correctamente en el archivo \`.env\`.*`,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         error: isQuota ? 'Cuota de API agotada (429)' : 'Error de conexión',
       };

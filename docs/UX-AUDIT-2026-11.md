@@ -5,8 +5,12 @@
 > Predecessor: `docs/AUDIT-UX-LEARNING.md` (2026-10-31) — **its Top-10 and A1–A7/B1 are all
 > closed in current code** (verified below); this audit supersedes it for UI/UX matters.
 >
-> **Implementation status (2026-11-18): P0 landed.** F1 truth fix + dead-code removal + regression
-> test `tests/topic-counts.test.ts` (T1–T4). See commit log for the hash. P1/P2 remain.
+> **Implementation status (2026-11-18): P0 + P1 + P2 landed.** P0: F1 truth fix + dead-code
+> removal + regression test. P1: nav restructure (3 primary + "Herramientas" drawer with
+> admin/user groups), navbar topic select removed (passive scope label), "Repasar fallos"
+> consolidated to navbar tab, create-topic navbar Plus removed, session modes capped at 1+3.
+> P2: 26 emoji removed from UI strings, topic label added to atom cards in ContentStudio.
+> See commit log for hashes.
 
 ## 0. Approved decisions (user, 2026-11-11)
 

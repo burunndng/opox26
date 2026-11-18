@@ -43,8 +43,6 @@ interface NavbarProps {
   onToggleHighContrast?: () => void;
   topics: Topic[];
   selectedTopicId: string | 'all';
-  setSelectedTopicId: (id: string | 'all') => void;
-  onOpenCreateTopic?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -59,8 +57,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleHighContrast,
   topics,
   selectedTopicId,
-  setSelectedTopicId,
-  onOpenCreateTopic,
 }) => {
   const { user, loading: authLoading, signInWithGoogle, signOut } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -237,37 +233,85 @@ export const Navbar: React.FC<NavbarProps> = ({
 
               {showMoreMenu && (
                 <div role="menu" className="absolute left-0 mt-1.5 w-64 rounded-md bg-[#121722] border border-[#20293a] shadow-xl py-1.5 z-50 animate-fadeIn">
+                  {/* Gestión de contenido (admin/authoring) */}
                   <div className="px-3 py-1 text-[10px] uppercase font-mono tracking-wider text-slate-500 border-b border-[#20293a] mb-1">
-                    Contenido avanzado
+                    Gestión de contenido
                   </div>
-                  {drawerTabItems.map((item) => {
-                    const SubIcon = item.icon;
-                    const isSubActive = activeTab === item.id;
-                    return (
-                      <button
-                        key={item.id}
-                        role="menuitem"
-                        onClick={() => {
-                          setActiveTab(item.id);
-                          setShowMoreMenu(false);
-                        }}
-                        className={`w-full text-left px-3 py-2 flex items-start space-x-2.5 transition ${
-                          isSubActive
-                            ? 'bg-[#182030] text-blue-400'
-                            : 'text-slate-300 hover:bg-[#182030] hover:text-white'
-                        }`}
-                      >
-                        <SubIcon className="w-4 h-4 shrink-0 mt-0.5" />
-                        <div>
-                          <div className="text-xs font-semibold">{item.label}</div>
-                          <div className="text-[11px] text-slate-400">{item.subtext}</div>
-                        </div>
-                      </button>
-                    );
-                  })}
+                  {drawerTabItems
+                    .filter((item) => item.id === 'content' || item.id === 'items')
+                    .map((item) => {
+                      const SubIcon = item.icon;
+                      const isSubActive = activeTab === item.id;
+                      return (
+                        <button
+                          key={item.id}
+                          role="menuitem"
+                          onClick={() => {
+                            setActiveTab(item.id);
+                            setShowMoreMenu(false);
+                          }}
+                          className={`w-full text-left px-3 py-2 flex items-start space-x-2.5 transition ${
+                            isSubActive
+                              ? 'bg-[#182030] text-blue-400'
+                              : 'text-slate-300 hover:bg-[#182030] hover:text-white'
+                          }`}
+                        >
+                          <SubIcon className="w-4 h-4 shrink-0 mt-0.5" />
+                          <div>
+                            <div className="text-xs font-semibold">{item.label}</div>
+                            <div className="text-[11px] text-slate-400">{item.subtext}</div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  {onOpenJevLab && jevEnabled && (
+                    <button
+                      role="menuitem"
+                      onClick={() => {
+                        onOpenJevLab();
+                        setShowMoreMenu(false);
+                      }}
+                      title="Motor de Inferencia y Decisión"
+                      className="w-full text-left px-3 py-2 flex items-start space-x-2.5 transition text-slate-300 hover:bg-[#182030] hover:text-white"
+                    >
+                      <Cpu className="w-4 h-4 shrink-0 mt-0.5" />
+                      <div>
+                        <div className="text-xs font-semibold">Jev</div>
+                        <div className="text-[11px] text-slate-400">Ajuste del motor (avanzado)</div>
+                      </div>
+                    </button>
+                  )}
+                  {/* Para ti (user-facing tools) */}
                   <div className="px-3 py-1 text-[10px] uppercase font-mono tracking-wider text-slate-500 border-b border-[#20293a] border-t mt-1 mb-1">
-                    Ajustes y herramientas
+                    Para ti
                   </div>
+                  {drawerTabItems
+                    .filter((item) => item.id === 'chat')
+                    .map((item) => {
+                      const SubIcon = item.icon;
+                      const isSubActive = activeTab === item.id;
+                      return (
+                        <button
+                          key={item.id}
+                          role="menuitem"
+                          onClick={() => {
+                            setActiveTab(item.id);
+                            setShowMoreMenu(false);
+                          }}
+                          className={`w-full text-left px-3 py-2 flex items-start space-x-2.5 transition ${
+                            isSubActive
+                              ? 'bg-[#182030] text-blue-400'
+                              : 'text-slate-300 hover:bg-[#182030] hover:text-white'
+                          }`}
+                        >
+                          <SubIcon className="w-4 h-4 shrink-0 mt-0.5" />
+                          <div>
+                            <div className="text-xs font-semibold">{item.label}</div>
+                            <div className="text-[11px] text-slate-400">{item.subtext}</div>
+                          </div>
+                        </button>
+                      );
+                    })}
                   <button
                     role="menuitem"
                     onClick={() => {
@@ -286,23 +330,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <div className="text-[11px] text-slate-400">Anki, CSV y copia de seguridad</div>
                     </div>
                   </button>
-                  {onOpenJevLab && jevEnabled && (
-                    <button
-                      role="menuitem"
-                      onClick={() => {
-                        onOpenJevLab();
-                        setShowMoreMenu(false);
-                      }}
-                      title="Motor de Inferencia y Decisión"
-                      className="w-full text-left px-3 py-2 flex items-start space-x-2.5 transition text-slate-300 hover:bg-[#182030] hover:text-white"
-                    >
-                      <Cpu className="w-4 h-4 shrink-0 mt-0.5" />
-                      <div>
-                        <div className="text-xs font-semibold">Jev</div>
-                        <div className="text-[11px] text-slate-400">Ajuste del motor (avanzado)</div>
-                      </div>
-                    </button>
-                  )}
                 </div>
               )}
             </div>
@@ -310,32 +337,14 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Zone 3: Actions & Quick Topic Selector */}
           <div className="flex items-center space-x-2">
-            {/* Compact Topic Selector */}
-            <div className="flex items-center space-x-1.5 bg-[#121722] border border-[#20293a] rounded-md px-2.5 py-1">
-              <BookOpen className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <select
-                aria-label="Tema activo en la barra superior"
-                value={selectedTopicId}
-                onChange={(e) => setSelectedTopicId(e.target.value)}
-                className="bg-transparent text-xs text-slate-200 focus:outline-none cursor-pointer max-w-[140px] truncate"
-              >
-                <option value="all" className="bg-[#121722] text-slate-200">Todos los Temas</option>
-                {topics.map((t) => (
-                  <option key={t.id} value={t.id} className="bg-[#121722] text-slate-200">
-                    {t.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {onOpenCreateTopic && (
-              <button
-                onClick={onOpenCreateTopic}
-                title="Nuevo Tema"
-                className="p-1.5 rounded-md bg-[#121722] hover:bg-[#182030] text-slate-300 border border-[#20293a] transition"
-              >
-                <Plus className="w-3.5 h-3.5" />
-              </button>
+            {/* Passive scope label — scope is chosen in Estudiar (D1). */}
+            {selectedTopicId !== 'all' && (
+              <span className="hidden md:inline-flex items-center space-x-1.5 bg-[#121722] border border-[#20293a] rounded-md px-2.5 py-1 text-xs text-slate-200">
+                <BookOpen className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <span className="max-w-[140px] truncate">
+                  {topics.find((t) => t.id === selectedTopicId)?.name ?? 'Tema'}
+                </span>
+              </span>
             )}
 
             {/* High-contrast toggle (accessibility, spec §14) */}
@@ -467,39 +476,29 @@ export const Navbar: React.FC<NavbarProps> = ({
       </nav>
       {showMobileMore && (
         <div className="md:hidden px-4 pb-3 bg-[#0c0f17] border-b border-[#20293a] space-y-0.5">
-          {drawerTabItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setActiveTab(item.id);
-                  setShowMobileMore(false);
-                }}
-                className={`w-full text-left flex items-center space-x-2.5 px-2 py-2 rounded text-xs transition ${
-                  isActive ? 'bg-[#182030] text-blue-400 font-semibold' : 'text-slate-300 hover:bg-[#182030]'
-                }`}
-              >
-                <Icon className="w-4 h-4 shrink-0" />
-                <span className="font-medium">{item.label}</span>
-                <span className="text-slate-500 text-[11px] truncate">{item.subtext}</span>
-              </button>
-            );
-          })}
-          <button
-            onClick={() => {
-              setActiveTab('export');
-              setShowMobileMore(false);
-            }}
-            className={`w-full text-left flex items-center space-x-2.5 px-2 py-2 rounded text-xs transition ${
-              activeTab === 'export' ? 'bg-[#182030] text-blue-400 font-semibold' : 'text-slate-300 hover:bg-[#182030]'
-            }`}
-          >
-            <Settings2 className="w-4 h-4 shrink-0" />
-            <span className="font-medium">Ajustes y copia</span>
-            <span className="text-slate-500 text-[11px] truncate">Anki, CSV y copia de seguridad</span>
-          </button>
+          <div className="px-2 py-1 text-[10px] uppercase font-mono tracking-wider text-slate-500">Gestión de contenido</div>
+          {drawerTabItems
+            .filter((item) => item.id === 'content' || item.id === 'items')
+            .map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    setShowMobileMore(false);
+                  }}
+                  className={`w-full text-left flex items-center space-x-2.5 px-2 py-2 rounded text-xs transition ${
+                    isActive ? 'bg-[#182030] text-blue-400 font-semibold' : 'text-slate-300 hover:bg-[#182030]'
+                  }`}
+                >
+                  <Icon className="w-4 h-4 shrink-0" />
+                  <span className="font-medium">{item.label}</span>
+                  <span className="text-slate-500 text-[11px] truncate">{item.subtext}</span>
+                </button>
+              );
+            })}
           {onOpenJevLab && jevEnabled && (
             <button
               onClick={() => {
@@ -513,6 +512,42 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="text-slate-500 text-[11px] truncate">Ajuste del motor (avanzado)</span>
             </button>
           )}
+          <div className="px-2 py-1 text-[10px] uppercase font-mono tracking-wider text-slate-500 mt-1">Para ti</div>
+          {drawerTabItems
+            .filter((item) => item.id === 'chat')
+            .map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    setShowMobileMore(false);
+                  }}
+                  className={`w-full text-left flex items-center space-x-2.5 px-2 py-2 rounded text-xs transition ${
+                    isActive ? 'bg-[#182030] text-blue-400 font-semibold' : 'text-slate-300 hover:bg-[#182030]'
+                  }`}
+                >
+                  <Icon className="w-4 h-4 shrink-0" />
+                  <span className="font-medium">{item.label}</span>
+                  <span className="text-slate-500 text-[11px] truncate">{item.subtext}</span>
+                </button>
+              );
+            })}
+          <button
+            onClick={() => {
+              setActiveTab('export');
+              setShowMobileMore(false);
+            }}
+            className={`w-full text-left flex items-center space-x-2.5 px-2 py-2 rounded text-xs transition ${
+              activeTab === 'export' ? 'bg-[#182030] text-blue-400 font-semibold' : 'text-slate-300 hover:bg-[#182030]'
+            }`}
+          >
+            <Settings2 className="w-4 h-4 shrink-0" />
+            <span className="font-medium">Ajustes y copia</span>
+            <span className="text-slate-500 text-[11px] truncate">Anki, CSV y copia de seguridad</span>
+          </button>
         </div>
       )}
     </header>

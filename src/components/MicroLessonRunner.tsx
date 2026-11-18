@@ -156,7 +156,7 @@ export const MicroLessonRunner: React.FC<MicroLessonRunnerProps> = ({ topic, ato
           )}
           {pct < 50 && (
             <p className="text-xs text-amber-300">
-              ⚠️ Recuperación baja: estos elementos entrarán en rotación cercana mediante los ítems creados.
+              Recuperación baja: estos elementos entrarán en rotación cercana mediante los ítems creados.
             </p>
           )}
           <button onClick={onExit} className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm">

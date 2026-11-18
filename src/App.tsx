@@ -501,8 +501,6 @@ export default function App() {
         onToggleHighContrast={handleToggleHighContrast}
         topics={topics}
         selectedTopicId={selectedTopicId}
-        setSelectedTopicId={setSelectedTopicId}
-        onOpenCreateTopic={() => setIsCreateTopicModalOpen(true)}
       />
 
       {/* Main Content Area */}

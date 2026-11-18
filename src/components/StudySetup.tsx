@@ -151,26 +151,6 @@ export const StudySetup: React.FC<StudySetupProps> = ({
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <button
-            onClick={onGoToErrors}
-            className="text-left bg-[#121722] border border-[#20293a] hover:border-rose-700/60 rounded-lg p-4 transition min-h-[88px]"
-          >
-            <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-2 text-sm font-semibold text-slate-100">
-                <AlertOctagon className="w-4 h-4 text-rose-400" />
-                <span>Repasar fallos</span>
-              </span>
-              {openErrorsCount > 0 && (
-                <span className="text-[11px] font-mono font-semibold text-rose-400 tabular-nums">
-                  {openErrorsCount} abiertos
-                </span>
-              )}
-            </div>
-            <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
-              Vuelve sobre las preguntas que fallaste hasta dominar la regla.
-            </p>
-          </button>
-
-          <button
             onClick={onStartSimulacro}
             className="text-left bg-[#121722] border border-[#20293a] hover:border-slate-600 rounded-lg p-4 transition min-h-[88px]"
           >
@@ -183,6 +163,22 @@ export const StudySetup: React.FC<StudySetupProps> = ({
             </div>
             <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
               15 preguntas difíciles con −0,25 por fallo, como en el examen.
+            </p>
+          </button>
+
+          <button
+            onClick={onStartPretest}
+            className="text-left bg-[#121722] border border-[#20293a] hover:border-slate-600 rounded-lg p-4 transition min-h-[88px]"
+          >
+            <div className="flex items-center justify-between">
+              <span className="flex items-center space-x-2 text-sm font-semibold text-slate-100">
+                <Target className="w-4 h-4 text-slate-400" />
+                <span>Test de nivel</span>
+              </span>
+              <ChevronRight className="w-4 h-4 text-slate-500" />
+            </div>
+            <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
+              10 preguntas a ciegas para saber de dónde partes en un tema.
             </p>
           </button>
 
@@ -201,22 +197,6 @@ export const StudySetup: React.FC<StudySetupProps> = ({
             </div>
             <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
               Preguntas de varios temas sin avisar: entrena no confundirlos.
-            </p>
-          </button>
-
-          <button
-            onClick={onStartPretest}
-            className="text-left bg-[#121722] border border-[#20293a] hover:border-slate-600 rounded-lg p-4 transition min-h-[88px]"
-          >
-            <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-2 text-sm font-semibold text-slate-100">
-                <Target className="w-4 h-4 text-slate-400" />
-                <span>Test de nivel</span>
-              </span>
-              <ChevronRight className="w-4 h-4 text-slate-500" />
-            </div>
-            <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
-              10 preguntas a ciegas para saber de dónde partes en un tema.
             </p>
           </button>
 

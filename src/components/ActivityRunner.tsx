@@ -184,13 +184,13 @@ export function renderLifecycleBadge(state?: ItemStudyLifecycleState) {
     case 'modo_b_active':
       return (
         <span className="inline-flex items-center px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 text-[11px] font-mono border border-amber-500/30">
-          🎯 Examen Activo
+          Examen Activo
         </span>
       );
     case 'failed_in_modo_b':
       return (
         <span className="inline-flex items-center px-2 py-0.5 rounded bg-rose-500/15 text-rose-300 text-[11px] font-mono border border-rose-500/30">
-          ⚠️ Reintento Examen
+          Reintento Examen
         </span>
       );
     case 'needs_remediation':
@@ -792,14 +792,14 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
     state: 'new', // Default to 'new' so fresh items lacking FSRS data correctly enter Mode A in SRS
     selection_reason_badge:
       mode === 'interleaved'
-        ? '🔀 Mezcla de temas'
+        ? 'Mezcla de temas'
         : mode === 'pretest'
-        ? '🧭 Test de nivel'
+        ? 'Test de nivel'
         : mode === 'drill'
-        ? '🎯 Drill enfocado'
+        ? 'Drill enfocado'
         : mode === 'duel'
-        ? '⚔️ Duelo de conceptos'
-        : '🗓️ Repaso en el momento justo',
+        ? 'Duelo de conceptos'
+        : 'Repaso programado',
     selection_reason_detail:
       'Pregunta programada para repasar antes de que la olvides.',
   };
@@ -1331,7 +1331,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                   <Flame className="w-3.5 h-3.5 text-amber-400" />
                 </div>
                 <p className="text-2xl font-bold text-amber-300 mt-1 font-mono">
-                  {bestStreak} {bestStreak >= 3 ? '🔥' : ''}
+                  {bestStreak}
                 </p>
                 <span className="text-[11px] text-slate-400 font-mono">
                   {bestStreak >= 3 ? 'alta consistencia' : 'aciertos seguidos'}
@@ -1780,8 +1780,8 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
               <span className="font-sans font-medium text-slate-400">Racha:</span>
               <span>{currentStreak}</span>
               {currentStreak >= 5 && (
-                <span className="text-[11px]" title="¡En racha de fuego!">
-                  🔥
+                <span className="text-[11px] text-amber-400" title="En racha">
+                  {currentStreak}
                 </span>
               )}
             </div>
@@ -1917,7 +1917,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
         {duelPair && (
           <div className="mb-4 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-violet-500/40 bg-violet-500/10 px-3 py-2 text-xs text-violet-100">
             <Scale className="w-4 h-4 text-violet-300 shrink-0" aria-hidden="true" />
-            <span className="font-semibold text-violet-200">⚔️ Duelo:</span>
+            <span className="font-semibold text-violet-200">Duelo:</span>
             <span className="font-semibold">{duelPair.concept_a}</span>
             <span className="text-violet-400 font-mono">vs</span>
             <span className="font-semibold">{duelPair.concept_b}</span>
@@ -3174,13 +3174,13 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
                     </div>
                     {isConfidentWrong && (
                       <div className="text-xs text-rose-400 mt-0.5 font-semibold">
-                        ⚠️ Alerta — error con confianza máxima: Has fallado con seguridad máxima (3). Este ítem ha
+                        Alerta — error con confianza máxima: Has fallado con seguridad máxima (3). Este ítem ha
                         sido puesto en cuarentena con prioridad crítica para erradicar el sesgo.
                       </div>
                     )}
                     {usedHintThisItem && (
                       <div className="text-xs text-amber-300 mt-0.5">
-                        💡 Intento asistido por pista: El algoritmo FSRS ha ajustado la estabilidad de
+                        Intento asistido por pista: El algoritmo FSRS ha ajustado la estabilidad de
                         forma conservadora para programar una revisión sin ayuda próximamente.
                       </div>
                     )}

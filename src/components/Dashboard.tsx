@@ -348,15 +348,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   </button>
 
                   <div className="flex items-center justify-between text-xs pt-1">
-                    {stats.errorsCount > 0 ? (
-                      <button
-                        onClick={onGoToErrors}
-                        className="text-rose-400 hover:text-rose-300 font-medium py-2"
-                      >
-                        Repasar fallos ({stats.errorsCount})
-                      </button>
-                    ) : (
-                      <span />
+                    {stats.errorsCount > 0 && (
+                      <span className="text-[11px] font-mono text-rose-400 tabular-nums">
+                        {stats.errorsCount} fallos
+                      </span>
                     )}
                     <button
                       onClick={onGoToStudy}

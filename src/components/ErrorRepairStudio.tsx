@@ -130,7 +130,7 @@ export const ErrorRepairStudio: React.FC<ErrorRepairStudioProps> = ({
       const item = itemMap.get(err.item_id);
       md += `### Fallo #${idx + 1}: ${item?.stem || 'Pregunta'}\n`;
       md += `- **Base Legal:** ${err.legal_basis || item?.legal_basis || 'TRLGSS'}\n`;
-      md += `- **Taxonomía:** ${err.error_type_code || 'E5'} | Confianza al responder: ${err.confidence}/3 ${err.confidence === 3 ? '⚠️ [CONFIDENT-WRONG]' : ''}\n`;
+      md += `- **Taxonomía:** ${err.error_type_code || 'E5'} | Confianza al responder: ${err.confidence}/3 ${err.confidence === 3 ? '[CONFIDENT-WRONG]' : ''}\n`;
       if (err.trap_type) md += `- **Trampa Psicométrica:** ${trapLabelEs(err.trap_type)}\n`;
       md += `- **Regla Correctiva:** ${err.corrective_rule || item?.corrective_rule || item?.why_correct}\n`;
       md += `\n---\n\n`;

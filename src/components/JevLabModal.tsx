@@ -734,7 +734,7 @@ export const JevLabModal: React.FC<JevLabModalProps> = ({
             <div className="space-y-6">
               <div className="bg-[#182030]/40 p-4 rounded-xl border border-[#20293a]/60 space-y-4">
                 <div className="p-3 bg-indigo-950/40 border border-indigo-500/30 rounded-lg text-xs text-indigo-200">
-                  💡 <strong>Patrón Jev-Verified Cascade (Cookbook de OpenRouter):</strong> Un LLM generativo redacta el borrador del ejercicio y Jev (TypeSafe) actúa como auditor instantáneo verificando la fidelidad fáctica contra el texto de la ley antes de la aprobación.
+                  <strong>Patrón Jev-Verified Cascade (Cookbook de OpenRouter):</strong> Un LLM generativo redacta el borrador del ejercicio y Jev (TypeSafe) actúa como auditor instantáneo verificando la fidelidad fáctica contra el texto de la ley antes de la aprobación.
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
