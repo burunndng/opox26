@@ -29,8 +29,7 @@ export type ActiveTab =
   | 'content'
   | 'items'
   | 'chat'
-  | 'export'
-  | 'help';
+  | 'export';
 
 interface NavbarProps {
   activeTab: ActiveTab;

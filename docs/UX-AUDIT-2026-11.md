@@ -4,6 +4,9 @@
 > Companion: `docs/plans/2026-11-10-ui-ux-audit-plan.md` (method + decisions).
 > Predecessor: `docs/AUDIT-UX-LEARNING.md` (2026-10-31) — **its Top-10 and A1–A7/B1 are all
 > closed in current code** (verified below); this audit supersedes it for UI/UX matters.
+>
+> **Implementation status (2026-11-18): P0 landed.** F1 truth fix + dead-code removal + regression
+> test `tests/topic-counts.test.ts` (T1–T4). See commit log for the hash. P1/P2 remain.
 
 ## 0. Approved decisions (user, 2026-11-11)
 
@@ -38,7 +41,7 @@ Dialog contract is solid across the board: **all 9** `role="dialog"` components 
 | Topic scope `<select>` | **2 rendered simultaneously** on the Estudiar tab, both bound to `selectedTopicId` | `Navbar.tsx:317-330` (desktop header Zone 3) + `StudySetup.tsx:118-130` ("Ámbito del test") |
 | "Mis fallos / Repasar fallos" entrances | **6** (5 entrances + destination) | `Navbar.tsx:119,214` (tab+badge), `Dashboard.tsx:260` (header), `Dashboard.tsx:383` (topic card), `AnalyticsStrip.tsx:66-70` ("Reparar"), `StudySetup.tsx:154` → `ErrorRepairStudio.tsx:162` |
 | Create-topic entrances | 12 call sites → **3 visible at once** on Temario | `Navbar.tsx:339` (＋ button), `Dashboard.tsx:291` (header link), `Dashboard.tsx:405` (empty-state card) |
-| Nav surfaces | desktop primary nav (3) + "Más" drawer (3 + Export + JevLab) + mobile bottom bar + mobile drawer + JevLab listed **twice** in Navbar | `Navbar.tsx:99-310`, `:432-500`, JevLab at `:290` (desktop) and `:504` (mobile) |
+| Nav surfaces | desktop primary nav (3) + "Más" drawer (3 + Export + JevLab) + mobile bottom bar + mobile drawer; the JevLab opener appears **once per breakpoint** (desktop `:290` vs mobile `:504`) — responsive pair, not a duplicate | `Navbar.tsx:99-310`, `:432-500` |
 | Practice modes | default visible **1+2** (Empezar test, Repasar fallos, Simulacro); expanded **1+7** (＋ Mezclar temas, Test de nivel, Plazos, Duelo, Estudio guiado) | `StudySetup.tsx:103,154,174,189-270` |
 | Session start from Temario | topic-card "Empezar" duplicates the Estudiar CTA | `Dashboard.tsx:373` |
 
@@ -120,8 +123,8 @@ Regression test: pure count helper asserted against unfiltered data.
 1. F1: unfiltered `items` fetch + scoped derivation only where labelled; navbar badge global;
    regression test. (`App.tsx`, `Dashboard.tsx`, `ItemBank.tsx`, `ContentStudio.tsx`)
 2. Remove dead code: unused `CalibrationAnalytics` import (`App.tsx:8`), `'help'` `ActiveTab`
-   member (`Navbar.tsx:33`), duplicate JevLab opener (`Navbar.tsx:504` keeps mobile; `:290` keeps
-   desktop — keep both only if they render in mutually exclusive breakpoints, else dedupe).
+   member (`Navbar.tsx:33`). The JevLab opener was verified to render in mutually exclusive
+   breakpoints (desktop `:290` vs mobile `:504`) — **not a duplicate**, no change.
 
 **P1 — "less stuff" (D1–D4)**
 3. D1: drop navbar Zone-3 select → passive scope label; StudySetup keeps the only select.

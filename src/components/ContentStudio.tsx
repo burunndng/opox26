@@ -1265,6 +1265,11 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
                       {atom.legal_basis || atom.legal || 'TRLGSS'}
                     </span>
                   </div>
+                  {/* The atom list spans the whole bank, so each card names its
+                      topic — otherwise a mixed list is unlabelled. */}
+                  <span className="inline-block text-[10px] font-mono uppercase tracking-wider text-slate-500">
+                    {topics.find((t) => t.id === atom.topic_id)?.name ?? 'Sin tema'}
+                  </span>
                   <p className="text-xs text-slate-200 leading-relaxed">{atom.text}</p>
                 </div>
 

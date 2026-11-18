@@ -5,7 +5,6 @@ import { ActivityRunner } from './components/ActivityRunner.tsx';
 import { ErrorRepairStudio } from './components/ErrorRepairStudio.tsx';
 import { ContentStudio } from './components/ContentStudio.tsx';
 import { ItemBank } from './components/ItemBank.tsx';
-import { CalibrationAnalytics } from './components/CalibrationAnalytics.tsx';
 import { ExportSettingsMethodModal } from './components/ExportSettingsMethodModal.tsx';
 import { InterleavedBlockModal } from './components/InterleavedBlockModal.tsx';
 import { HelpShortcutsModal } from './components/HelpShortcutsModal.tsx';
@@ -88,6 +87,18 @@ export default function App() {
     openErrors: 0,
     confidentWrong: 0,
   });
+  // Same counters as `dueStats`, but narrowed to the selected topic. The
+  // navbar badge and the Dashboard header show global numbers; the study
+  // screen shows the scoped one so "12 pendientes en Tema 7" stays true.
+  const [scopedDueStats, setScopedDueStats] = useState({
+    dueToday: 0,
+    learning: 0,
+    newItems: 0,
+    graduated: 0,
+    maintenance: 0,
+    openErrors: 0,
+    confidentWrong: 0,
+  });
 
   // Runner state
   const [runnerItems, setRunnerItems] = useState<Item[]>([]);
@@ -147,7 +158,13 @@ export default function App() {
   const loadData = async (topicId?: string | 'all', isRetry = false) => {
     try {
       const currentTopicId = topicId !== undefined ? topicId : selectedTopicId;
-      const filterTopic = currentTopicId && currentTopicId !== 'all' ? currentTopicId : undefined;
+      const scope = currentTopicId && currentTopicId !== 'all' ? currentTopicId : undefined;
+      // The bank is GLOBAL truth: it is fetched unfiltered so that per-topic
+      // counters (Temario cards, Banco filters, Content Studio audit) show real
+      // numbers instead of "0" for every topic but the selected one.
+      // Scope is applied explicitly where a narrower session is requested.
+      // See docs/UX-AUDIT-2026-11.md §3 (F1).
+      const statPromise = api.getScheduleStats();
       const [
         top,
         atm,
@@ -158,17 +175,19 @@ export default function App() {
         att,
         warn,
         stat,
+        statScoped,
         sett,
       ] = await Promise.all([
         api.getTopics(),
-        api.getAtoms(filterTopic ? { topic_id: filterTopic } : undefined),
-        api.getClusters(filterTopic),
-        api.getConfusionPairs(filterTopic),
-        api.getItems(filterTopic ? { topic_id: filterTopic } : undefined),
+        api.getAtoms(),
+        api.getClusters(),
+        api.getConfusionPairs(),
+        api.getItems(),
         api.getErrors(),
         api.getAttempts(),
         api.getValidationWarnings(),
-        api.getScheduleStats(filterTopic),
+        statPromise,
+        scope ? api.getScheduleStats(scope) : statPromise,
         api.getSettings(),
       ]);
 
@@ -181,6 +200,7 @@ export default function App() {
       setAttempts(att);
       setWarnings(warn);
       setDueStats(stat);
+      setScopedDueStats(statScoped);
       setSettings(sett);
       setLoadError(null);
     } catch (e: any) {
@@ -200,6 +220,25 @@ export default function App() {
 
   useEffect(() => {
     loadData(selectedTopicId);
+  }, [selectedTopicId]);
+
+  // The bank itself no longer depends on the selected topic, so a scope
+  // change only needs the scoped counters — not a full re-fetch of items,
+  // atoms, clusters and pairs.
+  useEffect(() => {
+    let cancelled = false;
+    const scope = selectedTopicId !== 'all' ? selectedTopicId : undefined;
+    api
+      .getScheduleStats(scope)
+      .then((stat) => {
+        if (!cancelled) setScopedDueStats(stat);
+      })
+      .catch(() => {
+        /* the global badge stays valid; the scoped one is best-effort */
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [selectedTopicId]);
 
   // Keyboard shortcut listener for '?'
@@ -297,7 +336,16 @@ export default function App() {
     const subType = options?.subType || 'mixed';
     const count = options?.count || 10;
     const penalty = options?.baremoPenalty !== undefined ? options?.baremoPenalty : 0.25;
-    const selected = selectSniperItems(eligibleForPractice(items), openErrors, { subType, count, confusionPairs });
+    // `items` is the global bank, so the scope must be passed explicitly —
+    // otherwise the sniper would silently widen from the chosen topic to the
+    // whole syllabus.
+    const topicScope = selectedTopicId !== 'all' ? selectedTopicId : undefined;
+    const selected = selectSniperItems(eligibleForPractice(items), openErrors, {
+      subType,
+      count,
+      confusionPairs,
+      topicScope,
+    });
 
     if (selected.length === 0) {
       setToast({
@@ -482,7 +530,7 @@ export default function App() {
               topics={topics}
               selectedTopicId={selectedTopicId}
               onSelectTopic={(topicId) => setSelectedTopicId(topicId)}
-              dueCount={dueStats.dueToday}
+              dueCount={scopedDueStats.dueToday}
               openErrorsCount={dueStats.openErrors}
               onStartDue={() => handleStartDueSession()}
               onGoToErrors={() => setActiveTab('errors')}
