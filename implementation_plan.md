@@ -34,8 +34,8 @@
 
 The app is a complete local-first implementation: P1–P6 are closed and the table below records verified behavior with its evidence. Historical phase notes are audit trail, not acceptance evidence.
 
-> **Próximos pasos:** latest session diary `docs/sessions/2026-11-19-tema16-ambito-subjetivo.md`
-> (next-up: remaining Tier B rows — `docs/CONTENT-COVERAGE.md` §Tier B). Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
+> **Próximos pasos:** latest session diary `docs/sessions/2026-11-19-tema4-cotizacion.md`
+> (next-up: smoke del contenido Tema 4 en `:3000` + owner nav smoke-test; después, remaining Tier B rows — `docs/CONTENT-COVERAGE.md` §Tier B: revisión de oficio TGSS; cuotas 28/30 % y MEI 2027). Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
 
 | Area | Current status | Evidence / next focus |
 |---|---|---|
