@@ -2,6 +2,7 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { seedItems } from '../server/seedData.ts';
 import { seedItemsTema3Parte3 } from '../server/seedDataTema3.ts';
+import { seedItemsTema4 } from '../server/seedDataTema4.ts';
 import { detectAnswerInStem } from '../src/utils/learningDesignValidator.ts';
 import type { Item } from '../src/types.ts';
 
@@ -206,11 +207,19 @@ describe('Tema 3 específico bank integrity', () => {
     assert.equal(batch[0].id, 'item-t3-62', 'the batch must continue the id series at 62');
     assert.equal(batch[batch.length - 1].id, 'item-t3-69', 'the batch must close the id series at 69');
 
-    const tail = seedItems.slice(-batch.length).map((item) => item.id);
+    // Tema 4 was appended last; the Tema 3 Parte 3 batch must sit immediately
+    // before it (both batches share the canonical-position append contract).
+    const start = seedItems.findIndex((item) => item.id === batch[0].id);
+    const window = seedItems.slice(start, start + batch.length + seedItemsTema4.length);
     assert.deepEqual(
-      tail,
+      window.slice(0, batch.length).map((item) => item.id),
       batch.map((item) => item.id),
-      'seedItemsTema3Parte3 must be appended last (canonical-position contract)',
+      'seedItemsTema3Parte3 must precede the Tema 4 batch (canonical-position contract)',
+    );
+    assert.deepEqual(
+      window.slice(batch.length).map((item) => item.id),
+      seedItemsTema4.map((item) => item.id),
+      'Tema 4 batch must be appended last',
     );
   });
 });

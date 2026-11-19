@@ -30,7 +30,7 @@
 
 ---
 
-## 1. Current State (verified 2026-09-23 · refreshed 2026-11-18)
+## 1. Current State (verified 2026-09-23 · refreshed 2026-11-19)
 
 The app is a complete local-first implementation: P1–P6 are closed and the table below records verified behavior with its evidence. Historical phase notes are audit trail, not acceptance evidence.
 
@@ -41,13 +41,17 @@ The app is a complete local-first implementation: P1–P6 are closed and the tab
 |---|---|---|
 | Stack | Vite 8 + React 19 + Express 4 + TypeScript, `npm run dev` = `tsx server.ts` | `package.json` |
 | Persistence | SQLite exists; restart behavior now covered by an isolated two-boot regression test | `server/db.ts`, `tests/persistence.test.ts` |
-| Tests | Full suite green and fully isolated — **358 tests / 48 suites** (2026-11-18; `npm run lint` limpio, `npm test` OK, `npm run build` OK) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
+| Tests | Full suite green and fully isolated — **368 tests / 49 suites** (2026-11-19; `npm run lint` limpio, `npm test` OK, `npm run build` OK) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
 | Data model | Core types and SQLite tables stable; seed relationships are guarded by the integrity/reconcile suites | `src/types.ts`, `server/sqlite/connection.ts`, `tests/seed-integrity.test.ts` F1–F12, `tests/seed-reconcile.test.ts` R1–R18 |
 | Activity surfaces | All required formats wired to production scorers; cognitive-state / near-miss / quadrant evaluation complete (P4) | `src/components/ActivityRunner.tsx`, `src/scoring/evaluateItem.ts`, `tests/non-mcq-evaluation.test.ts`, `tests/scorer-hardening.test.ts` |
 | Content pipeline | Text/PDF import, offline atom suggestions, eligibility filter and quality-gated promotion enforced (P3) | `server/pdfImport.ts`, `server/heuristics.ts`, `server/validationWarnings.ts`, `ContentStudio.tsx`, `tests/validation-gate.test.ts` |
 | Scheduler | Due filter, daily new-item cap, graduation flags, maintenance and deterministic interleaving covered (P5) | `server/scheduler.ts`, `server/queueOrder.ts`, `tests/queue-order.test.ts` G1–G7, `tests/srs-graduation.test.ts`, `tests/interleaving-hardening.test.ts` |
-| Seed | 542 seeded items / 548 practice-eligible across 9 topics + retrieval/pretest; topic split and legacy re-homing guarded | `server/seedData*.ts`, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` R1/R18 |
+| Seed | 590 seeded items / 596 practice-eligible across 10 topics + retrieval/pretest; topic split and legacy re-homing guarded | `server/seedData*.ts`, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` R1/R18 |
 | Export/import | Anki/CSV/Quizlet/Markdown/backup plus validated JSON/CSV item import (P6) | `server/exporter.ts`, `server/importItems.ts`, `tests/oposilab.test.ts` 12, 15–15d |
+
+### 1.19 Content — Tema 4 (cotización) new bank from class 16-11 (2026-11-19)
+
+New topic `topic_seguridad_social_tema_4` + bank `server/seedDataTema4.ts` with 48 validated MCQs (`item-t4-1…48`) authored from the 2026-11-16 class summary (transcript from `ESPECIFICO/T4 E/lesson transcript.txt`, `TEMA 4 especi.pdf`, `NORMATIVA.pdf`) + BOE-verified anchors (RDL 2/2023, RDL 3/2026, RD 126/2026, OC PJC/297/2026, RD 643/2026). Gaps closed: caja única/Art. 40 CE/recursos art. 109; base de cotización (computables, especie, locomoción/manutención, prorrateo y retroactivo); CC vs CP y topes; MEI y solidaridad; dinámica y liquidación; plus the 10 class-test items on altas/bajas effects (arts. 32/35/36 RIA). Anchors verified in BOE; some professor claims flagged `⚠️` in the resumen were not encoded (e.g. FNAE sigla, México-style dates). `npm run lint` clean; `tests/tema4-bank.test.ts` 10/10; `npm test` 368/368 across 49 suites.
 
 ### 1.3 Content — Tema 8 (II) IP gap audit vs. class 21-10 (2026-10-31)
 

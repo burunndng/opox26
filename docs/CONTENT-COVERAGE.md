@@ -18,6 +18,7 @@ baseline; after each content batch, refresh the affected row here in the same co
 | Tema 16 (Ley 39/2015) | clase 28-10 pt2 (§1.5, §1.8) + gap audit carpeta "Tema 15 general" (§1.14) + fin de vía/firmeza (§1.16) + ámbito subjetivo arts. 1-12 (§1.17) | 77 | 2026-11-19 (§1.17) | auditado |
 | Tema 3 General (TC) | clase 26-10 (§1.7) | 24 | 2026-11-03 | auditado (new bank) |
 | Tema 9 (nacimiento y cuidado) | clase 4-11 + parte 2 + supuesto (§1.10, §1.11) | 61 | 2026-11-09 | auditado |
+| Tema 4 específico (cotización) | clase 16-11 (grupos 473/475) — resumen de transcript + deck + NORMATIVA | 48 | 2026-11-19 | auditado |
 | retrieval/pretest | — | 6 | — | n/a |
 
 ## Tier B (deferred follow-up batches)

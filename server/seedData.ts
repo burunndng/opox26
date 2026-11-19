@@ -58,6 +58,12 @@ import {
   seedConfusionPairsTema9,
 } from './seedDataTema9Meta.ts';
 import { seedItemsTema9 } from './seedDataTema9.ts';
+import {
+  seedTopicTema4,
+  seedClustersTema4,
+  seedConfusionPairsTema4,
+  seedItemsTema4,
+} from './seedDataTema4.ts';
 
 export const seedTopic: Topic = {
   "id": "topic_seguridad_social_tema_7",
@@ -69,7 +75,7 @@ export const seedTopic: Topic = {
   "updated_at": "2026-03-01T10:00:00Z"
 };
 
-export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8, seedTopicTema8IP, seedTopicTema15, seedTopicTema16, seedTopicTema3General, seedTopicTema9];
+export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8, seedTopicTema8IP, seedTopicTema15, seedTopicTema16, seedTopicTema3General, seedTopicTema9, seedTopicTema4];
 
 const seedSourceChunksTema7: SourceChunk[] = [
   {
@@ -238,7 +244,7 @@ const seedClustersTema7: Cluster[] = [
   }
 ];
 
-export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3, ...seedClustersTema8, ...seedClustersTema8IP, ...seedClustersTema3General, ...seedClustersTema9];
+export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3, ...seedClustersTema8, ...seedClustersTema8IP, ...seedClustersTema3General, ...seedClustersTema9, ...seedClustersTema4];
 
 const seedConfusionPairsTema7: ConfusionPair[] = [
   {
@@ -495,6 +501,7 @@ export const seedConfusionPairs: ConfusionPair[] = [
   ...seedConfusionPairsTema8IP,
   ...seedConfusionPairsTema3General,
   ...seedConfusionPairsTema9,
+  ...seedConfusionPairsTema4,
 ];
 
 const seedAtomsTema7: Atom[] = [
@@ -6605,4 +6612,7 @@ export const seedItems: Item[] = rebalanceCanonicalMcqOptions([
   // (2026-11-11 gap audit, arts. 57-62 RIA), appended last for the same
   // canonical-position reason as above.
   ...seedItemsTema3Parte3,
+  // Tema 4 — cotización a la Seguridad Social (2026-11-19 class gap audit),
+  // appended last for the same canonical-position reason as above.
+  ...seedItemsTema4,
 ]);
