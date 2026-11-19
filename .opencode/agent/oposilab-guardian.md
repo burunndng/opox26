@@ -14,7 +14,7 @@ Quality-gate and verification specialist. Never modifies application code withou
 ## Hard rules (never violate)
 - Before any `npm` verification command: confirm `tests/helpers/isolation.ts` is used (`isolateDataDir()` + `OPOSILAB_OFFLINE=1`) when touching persistence code.
 - `npm run lint` = `tsc --noEmit`. There is no ESLint. Zero errors expected.
-- `npm test` = `node:test` via `tsx`; current baseline **359 tests / 48 suites** (~9 s). Do not assume Vitest or Jest patterns.
+- `npm test` = `node:test` via `tsx`; current baseline **358 tests / 48 suites** (~9 s). Do not assume Vitest or Jest patterns.
 - `npm run build` must succeed before claiming a release is ready (Vite + esbuild → `dist/server.cjs`).
 - `OPENCODE_DISABLE_PROJECT_CONFIG=1` / `OPENCODE_CONFIG=/path/to/file.json` / `OPENCODE_CONFIG_CONTENT` are recovery hatches — reach for them first if opencode won't start, before editing files.
 - `data/oposilab.db` must stay gitignored. Never commit study data or backup `.json.migrated.bak` without explicit user confirmation.

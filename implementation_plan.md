@@ -30,7 +30,7 @@
 
 ---
 
-## 1. Current State (verified 2026-09-23 · refreshed 2026-11-11)
+## 1. Current State (verified 2026-09-23 · refreshed 2026-11-18)
 
 The app is a complete local-first implementation: P1–P6 are closed and the table below records verified behavior with its evidence. Historical phase notes are audit trail, not acceptance evidence.
 
@@ -41,12 +41,12 @@ The app is a complete local-first implementation: P1–P6 are closed and the tab
 |---|---|---|
 | Stack | Vite 8 + React 19 + Express 4 + TypeScript, `npm run dev` = `tsx server.ts` | `package.json` |
 | Persistence | SQLite exists; restart behavior now covered by an isolated two-boot regression test | `server/db.ts`, `tests/persistence.test.ts` |
-| Tests | Full suite green and fully isolated — **347 tests / 45 suites** (2026-11-11; `npm test` provably never touches the live DB) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
+| Tests | Full suite green and fully isolated — **358 tests / 48 suites** (2026-11-18; `npm run lint` limpio, `npm test` OK, `npm run build` OK) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
 | Data model | Core types and SQLite tables stable; seed relationships are guarded by the integrity/reconcile suites | `src/types.ts`, `server/sqlite/connection.ts`, `tests/seed-integrity.test.ts` F1–F12, `tests/seed-reconcile.test.ts` R1–R18 |
 | Activity surfaces | All required formats wired to production scorers; cognitive-state / near-miss / quadrant evaluation complete (P4) | `src/components/ActivityRunner.tsx`, `src/scoring/evaluateItem.ts`, `tests/non-mcq-evaluation.test.ts`, `tests/scorer-hardening.test.ts` |
 | Content pipeline | Text/PDF import, offline atom suggestions, eligibility filter and quality-gated promotion enforced (P3) | `server/pdfImport.ts`, `server/heuristics.ts`, `server/validationWarnings.ts`, `ContentStudio.tsx`, `tests/validation-gate.test.ts` |
 | Scheduler | Due filter, daily new-item cap, graduation flags, maintenance and deterministic interleaving covered (P5) | `server/scheduler.ts`, `server/queueOrder.ts`, `tests/queue-order.test.ts` G1–G7, `tests/srs-graduation.test.ts`, `tests/interleaving-hardening.test.ts` |
-| Seed | Eight topics / 402 seeded items / 408 practice-eligible; topic split and legacy re-homing guarded | `server/seedData*.ts`, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` R18 |
+| Seed | 534 seeded items / 540 practice-eligible across 9 topics + retrieval/pretest; topic split and legacy re-homing guarded | `server/seedData*.ts`, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` R1/R18 |
 | Export/import | Anki/CSV/Quizlet/Markdown/backup plus validated JSON/CSV item import (P6) | `server/exporter.ts`, `server/importItems.ts`, `tests/oposilab.test.ts` 12, 15–15d |
 
 ### 1.3 Content — Tema 8 (II) IP gap audit vs. class 21-10 (2026-10-31)
@@ -121,13 +121,12 @@ Auditoría del bloque de **efectos de los actos indebidos** de la clase 9-11 (`E
 
 ### 1.13 Verification Evidence (current verified baseline)
 
-- `npm run lint`: `tsc --noEmit` limpio (última pasada 2026-11-11, ver §1.15).
-- `npm test`: **347/347 en 45 suites** (2026-11-11); el R1 actualizado confirma 540.
-- `tests/seed-integrity.test.ts`: F1–F12 verdes; F7 (figura/estimación) pasa porque ningún ítem de Tema 9, del lote Tema 3 parte-2/parte-3 ni del lote Tema 15 general lleva cifras anuales vinculadas a años específicos.
-- `tests/tema8ip-bank.test.ts`: 52 ítems, claves 13/13/13/13; `tests/tema8-bank.test.ts`: 70 ítems, verde; `tests/tema15-bank.test.ts`: 145 ítems en los dos bancos del bloque general (76 Tema 15 + 69 Tema 16), verde; `tests/tema3-bank.test.ts`: 69 ítems, T1–T12 verde.
-- `tests/seed-reconcile.test.ts`: R1 actualizado a 540; los nuevos ítems se registran como `validated` con `source: 'manual'` y `item_type: 'cover_and_generate_mcq'`.
+- `npm run lint`: `tsc --noEmit` limpio (2026-11-18).
+- `npm test`: **358/358 en 48 suites** (32 ficheros `tests/*.test.ts`, 0 fallos, ~9,9 s, 2026-11-18).
+- `npm run build`: OK (2026-11-18, `vite build` + `esbuild server.ts` → `dist/server.cjs`; avisos no bloqueantes de chunk size y `import.meta` en bundle CJS de `server/pdfImport.ts`).
+- Contenido: `tests/seed-reconcile.test.ts` R1 confirma 534 sembrados / 540 elegibles; `tests/doc-freshness.test.ts` X1–X3 verdes (conteos y matriz alineados). Integridad de bancos/semillas y puertas de validación/a11y verdes en la suite completa.
 
-> **Documentación sincronizada:** `README.md` (534/540) y `docs/ACCEPTANCE.md` (criterios 21/22/35, 534/540) actualizados en esta pasada.
+> **Nota histórica:** las verificaciones registradas en §1.3–§1.12, §1.14–§1.15 corresponden a sus fechas/lotes respectivos (p.ej. §1.15: 347/347 en 45 suites el 2026-11-11). Este apartado refleja la línea base verificada más reciente.
 
 ### 1.9 Content/UX — onboarding, diálogos accesibles y StudySetup destilado (2026-11-03)
 
