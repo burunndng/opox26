@@ -10,6 +10,8 @@
 > admin/user groups), navbar topic select removed (passive scope label), "Repasar fallos"
 > consolidated to navbar tab, create-topic navbar Plus removed, session modes capped at 1+3.
 > P2: 26 emoji removed from UI strings, topic label added to atom cards in ContentStudio.
+> Follow-up (owner-approved): `src/components/CalibrationAnalytics.tsx` deleted — it was dead UI
+> (import removed in P0, never rendered).
 > See commit log for hashes.
 
 ## 0. Approved decisions (user, 2026-11-11)
