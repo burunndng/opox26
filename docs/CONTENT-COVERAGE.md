@@ -15,7 +15,7 @@ baseline; after each content batch, refresh the affected row here in the same co
 | Tema 8 específico (IT) | legacy bank, test-guarded (`tema8-bank.test.ts`) | 70 | — | no §1.x gap audit |
 | Tema 8 II (IP) | clase 21-10 (§1.3) | 52 | 2026-10-31 | auditado |
 | Tema 15 (Ley 40/2015) | clase 28-10 pt1 (§1.4) + gap audit carpeta "Tema 15 general" (§1.14) | 76 | 2026-11-10 (§1.14) | auditado |
-| Tema 16 (Ley 39/2015) | clase 28-10 pt2 (§1.5, §1.8) + gap audit carpeta "Tema 15 general" (§1.14) | 69 | 2026-11-10 (§1.14) | auditado |
+| Tema 16 (Ley 39/2015) | clase 28-10 pt2 (§1.5, §1.8) + gap audit carpeta "Tema 15 general" (§1.14) + fin de vía/firmeza (§1.16) | 72 | 2026-11-18 (§1.16) | auditado |
 | Tema 3 General (TC) | clase 26-10 (§1.7) | 24 | 2026-11-03 | auditado (new bank) |
 | Tema 9 (nacimiento y cuidado) | clase 4-11 + parte 2 + supuesto (§1.10, §1.11) | 61 | 2026-11-09 | auditado |
 | retrieval/pretest | — | 6 | — | n/a |
@@ -26,13 +26,21 @@ baseline; after each content batch, refresh the affected row here in the same co
       encuadramiento) — sin anclaje BOE verificado en el batch de actos indebidos, §1.15
 - [ ] Cuotas 28/30 % y MEI, cifras 2027 (Tema 4) — outside Tema 3 scope, §1.12
 - [ ] Sucesión solidaria (Tema 5), §1.12
-- [ ] Intervalo 9–12 meses de carencia (Tema 9), §1.11 (G15)
+- [x] G15: etiqueta ambigua resuelta (2026-11-19) — «9–12 meses» es el intervalo del lactante
+      (art. 183 TRLGSS, BOE-A-2015-11724: cuidado del lactante desde los 9 hasta los 12 meses),
+      NO un periodo de carencia. La carencia del subsidio corresponsable se exige por remisión
+      (art. 184 TRLGSS: mismos requisitos y términos que la prestación por nacimiento/cuidado,
+      art. 178 TRLGSS: <21 sin carencia; 21–<26: 90/180 días; ≥26: 180/360 días). Contenido ya
+      cubierto en el banco (cluster_lactante, item-t9-57 y bloque agrupado de carencia). No se
+      generan items nuevos: no hay hueco de contenido real. Anclas verificadas: BOE-A-2015-11724
+      arts. 183, 184, 178 (consultado 2026-11-19).
 - [ ] Tabla RG/TREBEP del §3.6 del resumen parte 2 (Tema 9), §1.11
 - [ ] Reconcile professor contradictions: 360/180 days, 50 % wording, SMI figures,
       "Victoria 4× SMI" (Tema 9), §1.11
-- [ ] **Firmeza del acto administrativo** (Tema 16) — el test de la academia lo pregunta, pero el
-      concepto solo aparece en la Ley 39/2015 dentro del bloque de recursos (art. 122), no en los
-      artículos del tema; sin anclaje propio, §1.14
+- [x] **Firmeza del acto administrativo y fin de vía** (Tema 16) — cerrado en §1.16 con 3 ítems
+      (`item-t15-146…148`, BOE-A-2015-10565 arts. 114.1.c/114.2 y 121.1/122.1, fin de vía y
+      firmeza por no interponer alzada en plazo). Condición de cierre: contraste literal BOE y
+      validación en banco; sin solape con `item-t15-26` ni con recursos de Tema 3.
 - [ ] **Ámbito subjetivo de la Ley 39/2015** (arts. 1–12) — la clase 28-10 pt2 entra por los
       arts. 13–33; representation, REA y poderes A/B/C quedan fuera de los dos bancos actuales, §1.14
 - [ ] **Técnicas de organización del Título III de la Ley 40/2015** (arts. 54–139) y potestad
