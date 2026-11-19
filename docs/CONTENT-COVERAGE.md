@@ -15,7 +15,7 @@ baseline; after each content batch, refresh the affected row here in the same co
 | Tema 8 específico (IT) | legacy bank, test-guarded (`tema8-bank.test.ts`) | 70 | — | no §1.x gap audit |
 | Tema 8 II (IP) | clase 21-10 (§1.3) | 52 | 2026-10-31 | auditado |
 | Tema 15 (Ley 40/2015) | clase 28-10 pt1 (§1.4) + gap audit carpeta "Tema 15 general" (§1.14) | 76 | 2026-11-10 (§1.14) | auditado |
-| Tema 16 (Ley 39/2015) | clase 28-10 pt2 (§1.5, §1.8) + gap audit carpeta "Tema 15 general" (§1.14) + fin de vía/firmeza (§1.16) | 72 | 2026-11-18 (§1.16) | auditado |
+| Tema 16 (Ley 39/2015) | clase 28-10 pt2 (§1.5, §1.8) + gap audit carpeta "Tema 15 general" (§1.14) + fin de vía/firmeza (§1.16) + ámbito subjetivo arts. 1-12 (§1.17) | 77 | 2026-11-19 (§1.17) | auditado |
 | Tema 3 General (TC) | clase 26-10 (§1.7) | 24 | 2026-11-03 | auditado (new bank) |
 | Tema 9 (nacimiento y cuidado) | clase 4-11 + parte 2 + supuesto (§1.10, §1.11) | 61 | 2026-11-09 | auditado |
 | retrieval/pretest | — | 6 | — | n/a |
@@ -41,8 +41,10 @@ baseline; after each content batch, refresh the affected row here in the same co
       (`item-t15-146…148`, BOE-A-2015-10565 arts. 114.1.c/114.2 y 121.1/122.1, fin de vía y
       firmeza por no interponer alzada en plazo). Condición de cierre: contraste literal BOE y
       validación en banco; sin solape con `item-t15-26` ni con recursos de Tema 3.
-- [ ] **Ámbito subjetivo de la Ley 39/2015** (arts. 1–12) — la clase 28-10 pt2 entra por los
-      arts. 13–33; representation, REA y poderes A/B/C quedan fuera de los dos bancos actuales, §1.14
+- [x] **Ámbito subjetivo de la Ley 39/2015** (arts. 1–12) — cerrado en §1.17 con 5 ítems
+      (`item-t15-149…153`, BOE-A-2015-10565 arts. 1, 3, 4, 5.3 y 7: objeto, capacidad de
+      obrar, concepto de interesado, representación y pluralidad de interesados). Anclas
+      verificadas contra el texto consolidado del BOE (consultado 2026-11-19).
 - [ ] **Técnicas de organización del Título III de la Ley 40/2015** (arts. 54–139) y potestad
       sancionadora (arts. 25–52) — otros temas del temario, §1.14
 

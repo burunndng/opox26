@@ -49,7 +49,7 @@ function longestKeyRun(items: Item[]): { key: string; length: number; at: string
 describe('Tema 15/16 general bank integrity', () => {
   test('B1: both régimen jurídico topics are populated with the audited counts', () => {
     assert.equal(tema15.length, 76, 'Tema 15 (Ley 40/2015) must hold 76 items');
-    assert.equal(tema16.length, 72, 'Tema 16 (Ley 39/2015) must hold 72 items');
+    assert.equal(tema16.length, 77, 'Tema 16 (Ley 39/2015) must hold 77 items');
   });
 
   test('B2: every item of both banks is uniquely identified with a contiguous id series', () => {
@@ -160,7 +160,7 @@ describe('Tema 15/16 general bank integrity', () => {
     }
 
     const newCounts = keyCounts([...seedItemsTema15Extra, ...seedItemsTema16Extra2]);
-    assert.deepEqual(newCounts, { A: 14, B: 13, C: 14, D: 13 });
+    assert.deepEqual(newCounts, { A: 15, B: 15, C: 15, D: 14 });
   });
 
   test('B10: no run of three identical keys inside the new batches', () => {
@@ -189,7 +189,7 @@ describe('Tema 15/16 general bank integrity', () => {
 
   test('B12: the new batches keep the documented ids and topic placement', () => {
     assert.equal(seedItemsTema15Extra.length, 40);
-    assert.equal(seedItemsTema16Extra2.length, 14);
+    assert.equal(seedItemsTema16Extra2.length, 19);
     assert.equal(
       seedItemsTema15Extra[0].id,
       'item-t15-95',
@@ -197,7 +197,7 @@ describe('Tema 15/16 general bank integrity', () => {
     );
     assert.equal(
       seedItemsTema16Extra2[seedItemsTema16Extra2.length - 1].id,
-      'item-t15-148',
+      'item-t15-153',
       'the new Tema 16 batch must close the id series',
     );
     for (const item of seedItemsTema15Extra) {

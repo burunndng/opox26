@@ -34,8 +34,8 @@
 
 The app is a complete local-first implementation: P1–P6 are closed and the table below records verified behavior with its evidence. Historical phase notes are audit trail, not acceptance evidence.
 
-> **Próximos pasos:** latest session diary `docs/sessions/2026-11-19-ux-audit-p1-p2.md`
-> (next-up: owner smoke-test of the consolidated nav en `:3000`; luego, remaining Tier B rows — `docs/CONTENT-COVERAGE.md` §Tier B). Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
+> **Próximos pasos:** latest session diary `docs/sessions/2026-11-19-tema16-ambito-subjetivo.md`
+> (next-up: remaining Tier B rows — `docs/CONTENT-COVERAGE.md` §Tier B). Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
 
 | Area | Current status | Evidence / next focus |
 |---|---|---|
@@ -46,7 +46,7 @@ The app is a complete local-first implementation: P1–P6 are closed and the tab
 | Activity surfaces | All required formats wired to production scorers; cognitive-state / near-miss / quadrant evaluation complete (P4) | `src/components/ActivityRunner.tsx`, `src/scoring/evaluateItem.ts`, `tests/non-mcq-evaluation.test.ts`, `tests/scorer-hardening.test.ts` |
 | Content pipeline | Text/PDF import, offline atom suggestions, eligibility filter and quality-gated promotion enforced (P3) | `server/pdfImport.ts`, `server/heuristics.ts`, `server/validationWarnings.ts`, `ContentStudio.tsx`, `tests/validation-gate.test.ts` |
 | Scheduler | Due filter, daily new-item cap, graduation flags, maintenance and deterministic interleaving covered (P5) | `server/scheduler.ts`, `server/queueOrder.ts`, `tests/queue-order.test.ts` G1–G7, `tests/srs-graduation.test.ts`, `tests/interleaving-hardening.test.ts` |
-| Seed | 537 seeded items / 543 practice-eligible across 9 topics + retrieval/pretest; topic split and legacy re-homing guarded | `server/seedData*.ts`, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` R1/R18 |
+| Seed | 542 seeded items / 548 practice-eligible across 9 topics + retrieval/pretest; topic split and legacy re-homing guarded | `server/seedData*.ts`, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` R1/R18 |
 | Export/import | Anki/CSV/Quizlet/Markdown/backup plus validated JSON/CSV item import (P6) | `server/exporter.ts`, `server/importItems.ts`, `tests/oposilab.test.ts` 12, 15–15d |
 
 ### 1.3 Content — Tema 8 (II) IP gap audit vs. class 21-10 (2026-10-31)
@@ -129,6 +129,14 @@ Micro-lote aprobado (A2, LO5/LO1) para cerrar la fila Tier B «firmeza del acto 
 
 **Verificación:** `npm run lint` limpio (exit 0). Focales verdes: `tests/tema15-bank.test.ts`, `tests/seed-integrity.test.ts`, `tests/seed-reconcile.test.ts`, `tests/doc-freshness.test.ts` (ajuste previo: longitud de opciones en `item-t15-147` para cumplir F3/B8 ≤1,25×). `npm test` **358/358 en 48 suites** (32 ficheros, 0 fallos, ~10,3 s, exit 0). `npm run build` OK (exit 0; avisos no bloqueantes de chunk size y `import.meta` en bundle CJS de `server/pdfImport.ts`).
 
+### 1.17 Content — Tema 16 ámbito subjetivo de la Ley 39/2015 (arts. 1, 3, 4, 5.3 y 7, 2026-11-19)
+
+Micro-lote (Tier B) para cerrar la fila «Ámbito subjetivo de la Ley 39/2015 (arts. 1–12)». Añadidos **5 ítems validados** (`item-t15-149…153`) a `topic_tema16` en `server/seedDataTema15Extra.ts` (`seedItemsTema16Extra2`, 14→19 ítems, serie hasta 153), todos anclados en BOE-A-2015-10565 (texto consolidado, consultado 2026-11-19): **149 (B)** art. 1 objeto de la Ley; **150 (C)** art. 4 concepto de interesado (tres categorías); **151 (D)** art. 5.3 acreditación de la representación (actos que la exigen vs. mero trámite); **152 (A)** art. 7 pluralidad de interesados (prelación); **153 (B)** art. 3 capacidad de obrar (tres categorías). Sin solape con `item-t15-145` (art. 2.2.b) ni con otros ítems del banco.
+
+**Actualizaciones:** `server/seedDataTema15Extra.ts` (`seedItemsTema16Extra2` 14→19, serie hasta `item-t15-153`); `tests/tema15-bank.test.ts` (B1 72→77, B9 claves `{A:15,B:15,C:15,D:14}`, B12 19/153); `tests/seed-reconcile.test.ts` R1 543→548; `README.md`, `docs/ACCEPTANCE.md`, `docs/CONTENT-COVERAGE.md` (Tema 16 77, Tier B ámbito subjetivo cerrado), `implementation_plan.md` (§1/§1.13/§1.17 y puntero de próximos pasos), `docs/sessions/2026-11-19-tema16-ambito-subjetivo.md`.
+
+**Verificación:** `npm run lint` limpio (exit 0). Focales verdes: `tests/tema15-bank.test.ts`, `tests/seed-integrity.test.ts`, `tests/seed-reconcile.test.ts`, `tests/doc-freshness.test.ts`. `npm test` **358/358 en 48 suites** (32 ficheros, 0 fallos, ~9 s, exit 0). `npm run build` OK (exit 0).
+
 ---
 
 ### 1.13 Verification Evidence (current verified baseline)
@@ -136,7 +144,7 @@ Micro-lote aprobado (A2, LO5/LO1) para cerrar la fila Tier B «firmeza del acto 
 - `npm run lint`: `tsc --noEmit` limpio (2026-11-18).
 - `npm test`: **358/358 en 48 suites** (32 ficheros `tests/*.test.ts`, 0 fallos, ~9,9 s, 2026-11-18).
 - `npm run build`: OK (2026-11-18, `vite build` + `esbuild server.ts` → `dist/server.cjs`; avisos no bloqueantes de chunk size y `import.meta` en bundle CJS de `server/pdfImport.ts`).
-- Contenido: `tests/seed-reconcile.test.ts` R1 confirma 537 sembrados / 543 elegibles; `tests/doc-freshness.test.ts` X1–X3 verdes (conteos y matriz alineados). Integridad de bancos/semillas y puertas de validación/a11y verdes en la suite completa.
+- Contenido: `tests/seed-reconcile.test.ts` R1 confirma 542 sembrados / 548 elegibles; `tests/doc-freshness.test.ts` X1–X3 verdes (conteos y matriz alineados). Integridad de bancos/semillas y puertas de validación/a11y verdes en la suite completa.
 
 > **Nota histórica:** las verificaciones registradas en §1.3–§1.12, §1.14–§1.15 corresponden a sus fechas/lotes respectivos (p.ej. §1.15: 347/347 en 45 suites el 2026-11-11). Este apartado refleja la línea base verificada más reciente.
 
