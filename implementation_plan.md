@@ -34,8 +34,8 @@
 
 The app is a complete local-first implementation: P1–P6 are closed and the table below records verified behavior with its evidence. Historical phase notes are audit trail, not acceptance evidence.
 
-> **Próximos pasos:** latest session diary `docs/sessions/2026-11-11-tema3-actos-indebidos.md`
-> (next-up: remaining Tier B rows — `docs/CONTENT-COVERAGE.md` §Tier B). Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
+> **Próximos pasos:** latest session diary `docs/sessions/2026-11-19-ux-audit-p1-p2.md`
+> (next-up: owner smoke-test of the consolidated nav en `:3000`; luego, remaining Tier B rows — `docs/CONTENT-COVERAGE.md` §Tier B). Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
 
 | Area | Current status | Evidence / next focus |
 |---|---|---|
