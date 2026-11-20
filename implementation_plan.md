@@ -46,7 +46,7 @@ The app is a complete local-first implementation: P1–P6 are closed and the tab
 | Activity surfaces | All required formats wired to production scorers; cognitive-state / near-miss / quadrant evaluation complete (P4) | `src/components/ActivityRunner.tsx`, `src/scoring/evaluateItem.ts`, `tests/non-mcq-evaluation.test.ts`, `tests/scorer-hardening.test.ts` |
 | Content pipeline | Text/PDF import, offline atom suggestions, eligibility filter and quality-gated promotion enforced (P3) | `server/pdfImport.ts`, `server/heuristics.ts`, `server/validationWarnings.ts`, `ContentStudio.tsx`, `tests/validation-gate.test.ts` |
 | Scheduler | Due filter, daily new-item cap, graduation flags, maintenance and deterministic interleaving covered (P5) | `server/scheduler.ts`, `server/queueOrder.ts`, `tests/queue-order.test.ts` G1–G7, `tests/srs-graduation.test.ts`, `tests/interleaving-hardening.test.ts` |
-| Seed | 638 seeded items / 644 practice-eligible across 11 topics + retrieval/pretest; topic split and legacy re-homing guarded | `server/seedData*.ts`, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` R1/R18 |
+| Seed | 640 seeded items / 646 practice-eligible across 11 topics + retrieval/pretest; topic split and legacy re-homing guarded | `server/seedData*.ts`, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` R1/R18 |
 | Export/import | Anki/CSV/Quizlet/Markdown/backup plus validated JSON/CSV item import (P6) | `server/exporter.ts`, `server/importItems.ts`, `tests/oposilab.test.ts` 12, 15–15d |
 
 ### 1.19 Content — Tema 4 (cotización) new bank from class 16-11 (2026-11-19)

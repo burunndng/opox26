@@ -19,7 +19,7 @@ baseline; after each content batch, refresh the affected row here in the same co
 | Tema 3 General (TC) | clase 26-10 (§1.7) | 24 | 2026-11-03 | auditado (new bank) |
 | Tema 9 (nacimiento y cuidado) | clase 4-11 + parte 2 + supuesto (§1.10, §1.11) | 61 | 2026-11-09 | auditado |
 | Tema 4 específico (cotización) | clase 16-11 (grupos 473/475) — resumen de transcript + deck + NORMATIVA | 48 | 2026-11-19 | auditado |
-| Tema 10 específico (jubilación) | clase 18-11 — transcript + `Diaposiivas tema 10ss.pdf` (resumen en `ESPECIFICO/T10/`) | 48 | 2026-11-20 | auditado |
+| Tema 10 específico (jubilación) | clase 18-11 — transcript + `Diaposiivas tema 10ss.pdf` (resumen en `ESPECIFICO/T10/`) | 50 | 2026-11-20 | auditado (49–50 vs digest Tipos jubilación.md) |
 | retrieval/pretest | — | 6 | — | n/a |
 
 ## Tier B (deferred follow-up batches)

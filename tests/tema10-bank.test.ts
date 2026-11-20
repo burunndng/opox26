@@ -43,16 +43,16 @@ function longestPositionRun(items: Item[]): { position: number; length: number; 
 
 describe('Tema 10 específico bank integrity', () => {
   test('T1: the bank holds the audited 48 items', () => {
-    assert.equal(tema10.length, 48, 'Tema 10 must hold 48 items');
-    assert.equal(batch.length, 48, 'seedItemsTema10 must export 48 items');
+    assert.equal(tema10.length, 50, 'Tema 10 must hold 48 items');
+    assert.equal(batch.length, 50, 'seedItemsTema10 must export 48 items');
   });
 
-  test('T2: unique contiguous id series item-t10-1..48', () => {
+  test('T2: unique contiguous id series item-t10-1..50', () => {
     const ids = tema10.map((item) => item.id);
     assert.equal(new Set(ids).size, ids.length, 'duplicate ids');
     const numbers = ids.map((id) => Number(id.split('-').pop())).sort((a, b) => a - b);
     assert.equal(numbers[0], 1);
-    assert.equal(numbers[numbers.length - 1], 48);
+    assert.equal(numbers[numbers.length - 1], 50);
     numbers.forEach((value, i) => assert.equal(value, i + 1, `gap at ${i + 1}`));
   });
 

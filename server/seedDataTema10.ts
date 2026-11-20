@@ -1058,7 +1058,8 @@ export const seedItemsTema10: Item[] = [
     cognitive_operations: ['numeric_precision', 'generative_retrieval'],
     figure_status: 'BOE_VERIFIED',
   }),
-  buildMcq({
+
+buildMcq({
     id: 'item-t10-48',
     cluster_id: 'cluster_t10_brecha_genero',
     stem: '¿Cómo se satisface el complemento por brecha de género y cómo influye en el límite máximo de pensiones?',
@@ -1078,4 +1079,44 @@ export const seedItemsTema10: Item[] = [
     difficulty: 3,
     cognitive_operations: ['generative_retrieval', 'micro_discrimination'],
   }),
-];
+  buildMcq({
+    id: 'item-t10-49',
+    cluster_id: 'cluster_t10_parcial_flexible_activa',
+    confusion_pair_id: 'pair_t10_4_2_3_anos',
+    stem: 'Un trabajador quiere jubilarse parcialmente sin contrato de relevo y su hecho causante se produce más de dos años antes de la edad ordinaria. ¿Cuánto puede reducir su jornada durante el primer año?',
+    prompt_before_options: 'La reducción del primer año está limitada por el supuesto de anticipación >2 años de la edad ordinaria.',
+    correct: {
+      text: 'Entre un 20 y un 33 por ciento de la jornada',
+      explanation: 'Art. 215.2.c TRLGSS: para una anticipación del acceso a la jubilación parcial en más de dos años respecto de la edad ordinaria, la reducción de jornada durante el primer año se fija entre un 20 y un 33 por ciento; desde el segundo año las partes pueden alterar la reducción dentro de los márgenes establecidos en el párrafo anterior.',
+    },
+    distractors: [
+      { text: 'Entre el 25 y el 75 por ciento de la jornada, desde el primer año sin restricciones', trap_type: 'partial_rule_accuracy', explanation: 'El intervalo 25–75 % desde el primer año sólo aplica cuando la anticipación es de dos años o menos; para más de dos años el primer año está restringido al 20–33 %.', condition_if_correct: 'Si la anticipación fuera de dos años o menos.' },
+      { text: 'La reducción está limitada al primer año; a partir del segundo año se puede alterar libremente', trap_type: 'wrong_start_date', explanation: 'El párrafo anterior limita la reducción del primer año a un 20–33 %; desde el segundo año sólo se puede alterar dentro de esos mismos márgenes.', condition_if_correct: 'Si se eliminara el máximo del párrafo anterior.' },
+      { text: 'Sin mínimo ni máximo definidos: el convenio colectivo fija el porcentaje', trap_type: 'hyper_narrow_statement', explanation: 'La ley establece en el art. 215.2.c los tramos de reducción del 20 al 33 % para el primer año de anticipación; el convenio no elimina esos límites, sólo adapta los tributos.', condition_if_correct: 'Si el límite no estuviera recogido en el texto refundido.' },
+    ],
+    legal_basis: 'Art. 215.2.c TRLGSS',
+    rule_statement: 'En el supuesto de que el acceso a la jubilación parcial se produzca con más de dos años de anticipación, la reducción de jornada de trabajo durante el primer año se fijará entre un 20 y un 33 por ciento; desde el segundo año, las partes podrán alterar la reducción dentro de los márgenes establecidos en el párrafo anterior.',
+    corrective_rule: 'Anticipación >2 años: primer año 20–33 %.',
+    difficulty: 4,
+    cognitive_operations: ['application', 'numeric_precision'],
+  }),
+  buildMcq({
+    id: 'item-t10-50',
+    cluster_id: 'cluster_t10_parcial_flexible_activa',
+    stem: 'Un trabajador está jubilado parcialmente con contrato de relevo. ¿Qué tipo de bases de cotización exige la norma sobre las bases del trabajador relevante?',
+    prompt_before_options: 'Mínima cuantificación del relevante dentro del período de base reguladora.',
+    correct: {
+      text: 'No ser inferior al 65 por ciento del promedio de las bases de los seis últimos meses del período de base reguladora de la pensión de jubilación parcial',
+      explanation: 'Art. 215.2.d TRLGSS: deben acreditarse bases no inferiores al 65 por ciento del promedio de cotización de los seis últimos meses del período de base reguladora de la pensión de jubilación parcial; si existe sucesión de empresa, se suman las bases de ambas.',
+    },
+    distractors: [
+      { text: 'No ser inferior al 50 por ciento del promedio de las bases de los seis últimos meses del período de base reguladora de la pensión', trap_type: 'numeric_precision', explanation: 'El umbral mínimo del relevante es el 65 por ciento, no el 50 por ciento.', condition_if_correct: 'Si el umbral fija fuera menor.' },
+      { text: 'No ser inferior al 65 por ciento del promedio de las bases de los doce últimos meses del período de base reguladora de la pensión', trap_type: 'numeric_substitution', explanation: 'El período de referencia son los seis últimos meses, no doce.', condition_if_correct: 'Si se extendiera el periodo.' },
+      { text: 'No ser inferior al 75 por ciento del promedio de cotización obtenida en el cómputo del período de base reguladora de la pensión', trap_type: 'factual_misapplication', explanation: 'El 75 por ciento se referente a la base mínima por antigüedad, no al promedio relevante en jubilación parcial.', condition_if_correct: 'Si se aplicara otra base.' },
+    ],
+    legal_basis: 'Art. 215.2.d TRLGSS',
+    rule_statement: 'Deberá acreditarse que las bases de cotización del trabajador relevante no sean inferiores al 65 por ciento del promedio de las bases de cotización de los seis últimos meses del período de base reguladora de la pensión de jubilación parcial; en supuestos de sucesión de empresas, la correspondencia debe calcularse sobre la suma de las bases de ambas.',
+    corrective_rule: 'Base relevante: ≥65 % de la media de los últimos 6 meses.',
+    difficulty: 4,
+    cognitive_operations: ['numeric_precision', 'application'],
+  }),];

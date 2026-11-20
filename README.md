@@ -25,8 +25,8 @@ Abre **http://localhost:3000**. La base de datos se inicializa sola en el primer
 las semillas de los once temas incluidos: Tema 7 (Régimen General), Tema 1 CE, Tema 3 específico
 (afiliación), Tema 8 específico (IT), Tema 8 II (incapacidad permanente), Tema 15 (Ley 40/2015),
 Tema 16 (Ley 39/2015), Tema 9 específico (nacimiento y cuidado), Tema 3 general (Tribunal Constitucional)
-Tema 4 específico (cotización) y Tema 10 específico (jubilación). En total, 638 ítems sembrados y
-644 ítems elegibles para práctica (incluye retrieval/pretest).
+Tema 4 específico (cotización) y Tema 10 específico (jubilación). En total, 640 ítems sembrados y
+646 ítems elegibles para práctica (incluye retrieval/pretest).
 
 Otros comandos:
 
