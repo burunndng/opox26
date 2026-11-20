@@ -3,10 +3,10 @@
 Estado verificado en la última revisión. "Test" = prueba automatizada en `tests/`;
 "Manual" = comprobación con pasos concretos. Nada se declara funcionando sin evidencia.
 
-> **Revisión 2026-11-18:** `npm run lint` limpio, `npm test` **378/378 en 50 suites** y
+> **Revisión 2026-11-20:** en HEAD `6b6b6a3`, `npm run lint` limpio, `npm test` **378/378 en 50 suites** y
 > `npm run build` OK. La spec §18 fija 23 criterios; este documento añade 7 extensiones del
 > proyecto (24–30) y 5 verificaciones de la pasada de UX/accesibilidad (31–35).
-> Estado: ✅ verificado · 🟡 cobertura parcial solo donde se indica evidencia manual pendiente (criterios 7–14).
+> Estado: ✅ verificado · 🟡 cobertura parcial donde se indica evidencia pendiente (criterios 3 y 7–14).
 >
 > Nota histórica: el recuento 172/37 correspondía a la revisión del 2026-10-26 tras descartar
 > un WIP no commiteado, y 183/40 a la auditoría del 2026-10-23 (medida con ese WIP presente).
@@ -16,7 +16,7 @@ Estado verificado en la última revisión. "Test" = prueba automatizada en `test
 |---|---|---|---|
 | 1 | Arrancar la app con un comando | ✅ | `npm install --legacy-peer-deps && npm run dev` → http://localhost:3000 (`server.ts`) |
 | 2 | Base de datos se inicializa sola | ✅ | Inicialización perezosa (`Proxy` en primer acceso) de `data/oposilab.db` vía `server/sqlite/connection.ts`, con migraciones aditivas al arrancar; `tests/sqlite.test.ts` A3 (DB vacía → null → seed), `tests/sqlite-migrations.test.ts` M1–M4, guarda de aislamiento P2.3 |
-| 3 | Importar PDF o pegar texto | ✅ | `POST /api/import/pdf` (pdfjs-dist, offline), `POST /api/import/chunk`; UI Content Studio con fallback de pegado — `tests/pipeline.test.ts` B8–B10; error 422 + `fallback:'paste'` |
+| 3 | Importar PDF o pegar texto | 🟡 | `tests/pipeline.test.ts` B8–B10 cubre el parser. En HEAD, el smoke de `npm start` sin `NODE_ENV` sirvió Vite dev; forzado a producción, `/api/import/pdf` devolvió 500 por `createRequire(import.meta.url)` vacío en el bundle CJS. La reparación y su smoke están en cambios aún sin commit. |
 | 4 | Crear topics, chunks, átomos, clusters, pares | ✅ | CRUD `server.ts` (topics/source-chunks/atoms/clusters/confusion-pairs) validado con Zod; `tests/sqlite.test.ts` A1, A10 |
 | 5 | Crear o draftar (IA) todos los tipos de actividad | ✅ | 10 `ItemType` en `src/types.ts`; TODOS los tipos del seed; drafter IA en `server/ai.ts` (opcional, siempre borrador) |
 | 6 | Validar ítems antes de activarlos | ✅ | `status: draft → validated → active`; puerta de calidad en `POST/PUT /api/items` (422 ante avisos críticos) y bloqueo de botón en Item Bank; `tests/validation-gate.test.ts` W1–W7, `/api/items/validation-warnings`, `src/utils/learningDesignValidator.ts` |
@@ -35,7 +35,7 @@ Estado verificado en la última revisión. "Test" = prueba automatizada en `test
 | 19 | Analítica: clústeres débiles, pares, confident-wrong, errores numéricos | ✅ | Motor de analítica (heat maps, matrices, alertas) + `SessionHeatMap` — `tests/analytics.test.ts` D5–D10 |
 | 20 | Exportar a Anki y CSV | ✅ | `/api/export/anki`, `/api/export/csv-items`, `/api/export/csv-errors`, Quizlet, backup JSON — test 12; muestra real en `examples/anki_sample.tsv` |
 | 21 | Seed Tema 7 carga correctamente | ✅ | `server/seedData.ts` (100 ítems: 25/20/15/10/10/8/6/6) + bancos de Tema 1, Tema 3 (69, con 12 del gap audit 9-11 y 8 de actos indebidos), Tema 8, Tema 8 II, Tema 15 (76), Tema 16 (77), Tema 3 General, Tema 9 (61), Tema 4 (48) y Tema 10 (50) + 6 de retrieval/pretest: **640 ítems sembrados / 646 elegibles** — test 1, `tests/seed-reconcile.test.ts` R1, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` (actualizado 2026-11-20) |
-| 22 | Tests unitarios de scheduling, interleaving, validación, cloze, errores | ✅ | 34 archivos en `tests/`: `oposilab` (1–19 + 15b–15d), `sqlite` (A1–A10), `pipeline` (B1–B10), `retrieval` (C11–C16), `analytics` (D1–D10), `eligibility` (E1–E4), `seed-integrity` (F1–F12), `queue-order` (G1–G7), `option-order` (O1–O5), `practice-pools` (P1–P6), `seed-reconcile` (R1–R18), `validation-warnings` (V1–V4), `validation-gate` (W1–W7), `drill-selectors`, `non-mcq-evaluation`, `jev-normalize`, `seed-sync-content`, `scorer-hardening`, `srs-graduation` (G1–G4), `interleaving-hardening` (I1–I2), `schema-contracts`, `sqlite-migrations` (M1–M4), `persistence`, `tema8-bank`, `tema8ip-bank`, `tema3-bank` (T1–T12), `tema4-bank` (T1–T10), `tema10-bank` (T1–T10), `modal-a11y`, `form-labeling`, `renderer-coverage`, `tema15-bank`, `doc-freshness` (X1–X3), `topic-counts` (C1–C4) — **378/378 en 50 suites** (verificado 2026-11-20, `npm run lint` + `npm test`) |
+| 22 | Tests unitarios de scheduling, interleaving, validación, cloze, errores | ✅ | 34 archivos en `tests/`: `oposilab` (1–19 + 15b–15d), `sqlite` (A1–A10), `pipeline` (B1–B10), `retrieval` (C11–C16), `analytics` (D1–D10), `eligibility` (E1–E4), `seed-integrity` (F1–F12), `queue-order` (G1–G7), `option-order` (O1–O5), `practice-pools` (P1–P6), `seed-reconcile` (R1–R18), `validation-warnings` (V1–V4), `validation-gate` (W1–W7), `drill-selectors`, `non-mcq-evaluation`, `jev-normalize`, `seed-sync-content`, `scorer-hardening`, `srs-graduation` (G1–G4), `interleaving-hardening` (I1–I2), `schema-contracts`, `sqlite-migrations` (M1–M4), `persistence`, `tema8-bank`, `tema8ip-bank`, `tema3-bank` (T1–T12), `tema4-bank` (T1–T10), `tema10-bank` (T1–T10), `modal-a11y`, `form-labeling`, `renderer-coverage`, `tema15-bank`, `doc-freshness` (X1–X3), `topic-counts` (C1–C4) — **378/378 en 50 suites** (`npm run lint` + `npm test` en HEAD `6b6b6a3`, 2026-11-20) |
 | 23 | README explica el uso | ✅ | `README.md` (español): instalación, base de datos, Content Studio, estudios, atajos, exportación, IA opcional, tests |
 | 24 | Cuantías 2026 verificadas en fuente oficial | ✅ | [BOE-A-2026-2548](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-2548) (RDL 3/2026, 3-feb): revalorización 2,7 %; tope 3.359,60 €/mes · 47.034,40 €/año; PNC 8.803,20 €/año en 14 pagas (RD 357/1991 art. 14.1); límites de ingresos 9.442,00 €/11.013,00 €. `figure_status` en 13 ítems del clúster `importes_2026` — `tests/seed-integrity.test.ts` F7 |
 | 25 | Práctica solo con contenido elegible y reconciliación de seeds | ✅ | Predicado compartido `isPracticeEligible` aplicado en `server/scheduler.ts` (due stats/cola/bloques) y en pools de cliente (`src/utils/practicePools.ts`, `src/utils/sniperFilter.ts`); metadatos de seeds sin intentos se reconcilian al arrancar — `tests/eligibility.test.ts` E1–E4, `tests/seed-reconcile.test.ts` R1–R18, `tests/practice-pools.test.ts` P1–P6 |
@@ -52,6 +52,6 @@ Estado verificado en la última revisión. "Test" = prueba automatizada en `test
 
 ## Pendientes declarados (fuera de alcance o diferido)
 
-- **Playwright E2E**: no implementado (no requerido como bloqueante; las 358 pruebas son unitarias/integración).
+- **Playwright E2E**: no implementado (no requerido como bloqueante; las 378 pruebas en HEAD son unitarias/integración).
 - **Ejercicios de comprobación manual sin cobertura automática**: caminar por cada tipo de actividad en la UI (criterios 7–14 se validan por código + tests del scorer, no por E2E).
 - **`package.json` conserva el nombre `react-example`** (herencia del scaffold; sin efecto funcional).

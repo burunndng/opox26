@@ -34,14 +34,14 @@
 
 The app is a complete local-first implementation: P1–P6 are closed and the table below records verified behavior with its evidence. Historical phase notes are audit trail, not acceptance evidence.
 
-> **Próximos pasos:** latest session diary `docs/sessions/2026-11-20-tema10-jubilacion.md`
-> (next-up: smoke-test visual del Tema 10 en `:3000` por el owner + nav smoke-test; después, auditoría y plan de siguientes pasos y filas Tier B pendientes — `docs/CONTENT-COVERAGE.md` §Tier B: revisión de oficio TGSS; cuotas 28/30 % y MEI 2027; tabla de coeficientes del Deck Tema 10). Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
+> **Próximos pasos:** latest session diary `docs/sessions/2026-11-20-cierre-fiabilidad.md`
+> (next-up: smoke manual en navegador cuando el owner pueda; después integrar y verificar los cambios de código que continúan en el árbol de trabajo, sin commit, y reanudar Tier B). Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
 
 | Area | Current status | Evidence / next focus |
 |---|---|---|
 | Stack | Vite 8 + React 19 + Express 4 + TypeScript, `npm run dev` = `tsx server.ts` | `package.json` |
 | Persistence | SQLite exists; restart behavior now covered by an isolated two-boot regression test | `server/db.ts`, `tests/persistence.test.ts` |
-| Tests | Full suite green and fully isolated — **368 tests / 49 suites** (2026-11-19; `npm run lint` limpio, `npm test` OK, `npm run build` OK) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
+| Tests | Committed HEAD green — **378 tests / 50 suites** (2026-11-20; clean-copy `npm run lint` + `npm test`; current working tree has additional uncommitted work) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
 | Data model | Core types and SQLite tables stable; seed relationships are guarded by the integrity/reconcile suites | `src/types.ts`, `server/sqlite/connection.ts`, `tests/seed-integrity.test.ts` F1–F12, `tests/seed-reconcile.test.ts` R1–R18 |
 | Activity surfaces | All required formats wired to production scorers; cognitive-state / near-miss / quadrant evaluation complete (P4) | `src/components/ActivityRunner.tsx`, `src/scoring/evaluateItem.ts`, `tests/non-mcq-evaluation.test.ts`, `tests/scorer-hardening.test.ts` |
 | Content pipeline | Text/PDF import, offline atom suggestions, eligibility filter and quality-gated promotion enforced (P3) | `server/pdfImport.ts`, `server/heuristics.ts`, `server/validationWarnings.ts`, `ContentStudio.tsx`, `tests/validation-gate.test.ts` |

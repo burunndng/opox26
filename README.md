@@ -119,7 +119,7 @@ sesión y calidad del banco. Activa el **alto contraste** con el botón del Navb
 - **SQLite con `node:sqlite`** (sin dependencias nativas) en lugar de better-sqlite3: cero compilación,
   una promesa de "un comando" real.
 - **Sin Drizzle** y **sin Vitest**: repositorios tipados sobre `node:sqlite` y las 378 pruebas en
-  49 suites con `node:test` cubren lo necesario con menos machinery.
+  50 suites con `node:test` cubren lo necesario con menos machinery.
 - **Módulos puros y testeados**: `server/scheduler.ts` (SRS + intercalado), `server/queueOrder.ts`
   (cola diaria), `server/validationWarnings.ts`, `server/importItems.ts`, `server/heuristics.ts`
   (sugerencias offline), `server/pdfImport.ts`, `src/scoring/evaluateItem.ts`,
