@@ -92,6 +92,57 @@ const mcqOptionInput = z
   })
   .passthrough();
 
+export const contentSetSaveInput = z
+  .object({
+    operation_id: z.string().uuid(),
+    topic: z.discriminatedUnion('kind', [
+      z.object({ kind: z.literal('existing'), id: idLike }),
+      z.object({
+        kind: z.literal('new'),
+        name: z.string().min(1).max(300),
+        description: z.string().max(10000),
+      }),
+    ]),
+    clusters: z.array(z.object({
+      temp_id: idLike,
+      name: z.string().min(1).max(300),
+      description: z.string().max(10000),
+      type: z.enum(['numeric', 'conceptual', 'procedural', 'institutional', 'exception', 'classification']),
+      priority: z.enum(['low', 'medium', 'high', 'critical']),
+    })).max(100),
+    atoms: z.array(z.object({
+      text: nonEmptyText,
+      atom_type: z.enum([
+        'definition', 'number', 'deadline', 'amount', 'percentage', 'coefficient',
+        'condition', 'exception', 'competent_body', 'legal_effect', 'classification',
+        'procedure', 'right', 'duty',
+      ]),
+      legal_basis: z.string().min(1).max(500),
+      temp_cluster_id: idLike.optional(),
+      difficulty: z.number().int().min(1).max(5),
+      tags: z.array(z.string().max(100)).max(50),
+    })).max(500),
+    confusionPairs: z.array(z.object({
+      concept_a: z.string().min(1).max(300),
+      concept_b: z.string().min(1).max(300),
+      discriminating_cue: z.string().min(1).max(5000),
+      common_trap: z.string().min(1).max(5000),
+      legal_basis_a: z.string().min(1).max(500),
+      legal_basis_b: z.string().min(1).max(500),
+      example_case: z.string().max(20000).optional(),
+      severity: z.enum(['low', 'medium', 'high', 'critical']),
+    })).max(200),
+  })
+  .superRefine((input, ctx) => {
+    if (input.clusters.length + input.atoms.length + input.confusionPairs.length === 0) {
+      ctx.addIssue({ code: 'custom', message: 'Selecciona al menos un elemento del set.' });
+    }
+    const clusterIds = input.clusters.map((cluster) => cluster.temp_id);
+    if (new Set(clusterIds).size !== clusterIds.length) {
+      ctx.addIssue({ code: 'custom', message: 'Los identificadores temporales de clúster deben ser únicos.' });
+    }
+  });
+
 export const itemInput = z
   .object({
     id: optionalId,
@@ -129,6 +180,7 @@ export const itemInput = z
 
 export const attemptInput = z
   .object({
+    id: idLike.optional(),
     item_id: idLike,
     session_id: optionalId,
     activity_type: z.string().min(1).max(60),

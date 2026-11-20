@@ -18,6 +18,8 @@ import {
   JevAttemptDiagnosisResult,
   JevAtomClassificationResult,
   JevCascadeVerificationResult,
+  ContentSetSaveInput,
+  ContentSetSaveResult,
 } from './types.ts';
 
 /**
@@ -204,6 +206,18 @@ export const api = {
         body: JSON.stringify(pair),
       },
       0
+    );
+  },
+
+  async saveContentSet(input: ContentSetSaveInput): Promise<ContentSetSaveResult> {
+    return request<ContentSetSaveResult>(
+      '/api/content-sets',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(input),
+      },
+      0,
     );
   },
 

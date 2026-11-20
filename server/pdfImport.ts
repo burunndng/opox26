@@ -43,9 +43,9 @@ export async function parsePdf(data: Uint8Array | Buffer): Promise<PdfImportResu
   }
 
   // Silence the standard-font warning by pointing at the bundled fonts.
-  const require = createRequire(import.meta.url);
   let standardFontDataUrl: string | undefined;
   try {
+    const require = createRequire(path.resolve(process.cwd(), 'package.json'));
     standardFontDataUrl = path.join(path.dirname(require.resolve('pdfjs-dist/package.json')), 'standard_fonts') + path.sep;
   } catch {
     /* optional */

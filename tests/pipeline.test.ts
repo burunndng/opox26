@@ -4,6 +4,12 @@
  */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
+import { spawn } from 'node:child_process';
+import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import net from 'node:net';
+import { build } from 'esbuild';
 import { suggestAtoms, splitIntoChunks, splitSentences } from '../server/heuristics.ts';
 import { parsePdf, PdfImportError } from '../server/pdfImport.ts';
 
@@ -190,4 +196,122 @@ describe('Phase B: Offline PDF import', () => {
       }
     );
   });
+});
+
+test('compiled server serves production assets and imports PDFs', async () => {
+  const bundleDir = await mkdtemp(path.join(process.cwd(), 'node_modules', 'oposilab-prod-test-'));
+  const workDir = await mkdtemp(path.join(os.tmpdir(), 'oposilab-prod-test-'));
+  let child: ReturnType<typeof spawn> | undefined;
+  try {
+    await mkdir(path.join(workDir, 'dist'));
+    await writeFile(path.join(workDir, 'dist', 'index.html'), '<html>production fixture</html>');
+    const bundle = path.join(bundleDir, 'server.cjs');
+    await build({
+      entryPoints: [path.join(process.cwd(), 'server.ts')],
+      outfile: bundle,
+      bundle: true,
+      platform: 'node',
+      format: 'cjs',
+      packages: 'external',
+      define: { 'process.env.NODE_ENV': '"production"' },
+      logLevel: 'silent',
+    });
+    const socket = net.createServer();
+    await new Promise<void>((resolve, reject) => socket.once('error', reject).listen(0, '127.0.0.1', resolve));
+    const port = (socket.address() as net.AddressInfo).port;
+    await new Promise<void>((resolve, reject) => socket.close((err) => err ? reject(err) : resolve()));
+    const env: NodeJS.ProcessEnv = { ...process.env, OPOSILAB_DATA_DIR: path.join(workDir, 'data'), OPOSILAB_OFFLINE: '1', PORT: String(port) };
+    delete env.NODE_ENV;
+    const origin = `http://127.0.0.1:${port}`;
+    const startServer = async () => {
+      child = spawn(process.execPath, [bundle], { cwd: workDir, env, stdio: 'ignore' });
+      let ready = false;
+      for (let i = 0; i < 100; i++) {
+        if (child.exitCode !== null) throw new Error(`production server exited ${child.exitCode}`);
+        try {
+          const response = await fetch(`${origin}/api/health`);
+          if (response.ok) { ready = true; break; }
+        } catch { /* starting up */ }
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
+      assert.ok(ready, 'production server did not start');
+    };
+    await startServer();
+    const html = await (await fetch(origin)).text();
+    assert.match(html, /production fixture/);
+    assert.doesNotMatch(html, /@vite\/client/);
+    const sendPdf = (bytes: Uint8Array) => fetch(`${origin}/api/import/pdf`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ filename: 'test.pdf', data_base64: Buffer.from(bytes).toString('base64') }),
+    });
+    const valid = await sendPdf(buildMinimalPdf('El plazo sera de cinco anos'));
+    assert.equal(valid.status, 200);
+    const result = await valid.json() as { fullText: string };
+    assert.match(result.fullText, /cinco anos/);
+    const invalid = await sendPdf(new TextEncoder().encode('un archivo PDF corrupto'));
+    assert.equal(invalid.status, 422);
+    const failure = await invalid.json() as { fallback: string };
+    assert.equal(failure.fallback, 'paste');
+
+    const contentSet = {
+      operation_id: '33333333-3333-4333-8333-333333333333',
+      topic: { kind: 'new', name: 'Set de integración', description: 'Guardado atómico.' },
+      clusters: [{
+        temp_id: 'cluster-temp',
+        name: 'Cluster de integración',
+        description: '',
+        type: 'conceptual',
+        priority: 'high',
+      }],
+      atoms: [{
+        text: 'Proposición vinculada al clúster.',
+        atom_type: 'condition',
+        legal_basis: 'Art. 1',
+        temp_cluster_id: 'cluster-temp',
+        difficulty: 2,
+        tags: ['integration'],
+      }],
+      confusionPairs: [],
+    };
+    const saveContentSet = (payload: typeof contentSet) => fetch(`${origin}/api/content-sets`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const created = await saveContentSet(contentSet);
+    assert.equal(created.status, 200);
+    const createdResult = await created.json() as { topic: { id: string }; atoms: Array<{ cluster_id: string }> };
+    assert.equal(createdResult.atoms[0].cluster_id.startsWith('cluster-set-'), true);
+    const firstServer = child;
+    assert.ok(firstServer);
+    const firstServerExit = new Promise<void>((resolve) => firstServer.once('exit', () => resolve()));
+    firstServer.kill();
+    await firstServerExit;
+    child = undefined;
+    await startServer();
+    const replay = await saveContentSet(contentSet);
+    assert.equal(replay.status, 200);
+    assert.deepEqual(await replay.json(), createdResult);
+    const conflict = await saveContentSet({
+      ...contentSet,
+      topic: { ...contentSet.topic, name: 'Payload cambiado' },
+    });
+    assert.equal(conflict.status, 409);
+    const emptySet = await saveContentSet({
+      ...contentSet,
+      operation_id: '44444444-4444-4444-8444-444444444444',
+      clusters: [],
+      atoms: [],
+    });
+    assert.equal(emptySet.status, 400);
+  } finally {
+    if (child && child.exitCode === null) {
+      const exited = new Promise<void>((resolve) => child!.once('exit', () => resolve()));
+      child.kill();
+      await exited;
+    }
+    await rm(bundleDir, { recursive: true, force: true });
+    await rm(workDir, { recursive: true, force: true });
+  }
 });

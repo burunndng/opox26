@@ -19,7 +19,10 @@ interface StudySetupProps {
   topics: Topic[];
   selectedTopicId: string | 'all';
   onSelectTopic: (topicId: string | 'all') => void;
-  dueCount: number;
+  dueCount?: number;
+  dueError?: boolean;
+  eligibleCount: number;
+  onGoToContent: () => void;
   openErrorsCount: number;
   onStartDue: () => void;
   onGoToErrors: () => void;
@@ -41,6 +44,9 @@ export const StudySetup: React.FC<StudySetupProps> = ({
   selectedTopicId,
   onSelectTopic,
   dueCount,
+  dueError,
+  eligibleCount,
+  onGoToContent,
   openErrorsCount,
   onStartDue,
   onGoToErrors,
@@ -89,7 +95,18 @@ export const StudySetup: React.FC<StudySetupProps> = ({
 
       {/* Smart default */}
       <div className="bg-[#121722] border border-[#20293a] rounded-lg p-5">
-        {dueCount > 0 ? (
+        {eligibleCount === 0 ? (
+          <p className="text-sm text-slate-300 mb-3">
+            No hay preguntas disponibles para practicar en {scopeName}.{' '}
+            <button type="button" onClick={onGoToContent} className="text-indigo-300 underline">
+              Ir a Contenidos
+            </button>
+          </p>
+        ) : dueError ? (
+          <p className="text-sm text-amber-300 mb-3">No se pudo cargar el repaso de {scopeName}.</p>
+        ) : dueCount === undefined ? (
+          <p className="text-sm text-slate-300 mb-3">Calculando el repaso de {scopeName}…</p>
+        ) : dueCount > 0 ? (
           <p className="text-sm text-slate-300 mb-3">
             Tienes <strong className="text-blue-400 font-mono tabular-nums">{dueCount}</strong>{' '}
             preguntas pendientes de repaso{dueCount === 1 ? '' : ''} en {scopeName}.
@@ -101,7 +118,8 @@ export const StudySetup: React.FC<StudySetupProps> = ({
         )}
         <button
           onClick={onStartDue}
-          className="w-full flex items-center justify-center space-x-2 py-3.5 px-4 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-base shadow-xs transition min-h-[52px]"
+          disabled={eligibleCount === 0}
+          className="w-full flex items-center justify-center space-x-2 py-3.5 px-4 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-base shadow-xs transition min-h-[52px] disabled:opacity-50"
         >
           <Play className="w-5 h-5 fill-current" />
           <span>Empezar test</span>

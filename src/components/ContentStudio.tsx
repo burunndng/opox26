@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import {
   FolderGit2,
   FileText,
@@ -86,6 +86,7 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
   const [setFilterCluster, setSetFilterCluster] = useState<string>('all');
   const [saveSuccessMessage, setSaveSuccessMessage] = useState<string | null>(null);
   const [saveErrorMessage, setSaveErrorMessage] = useState<string | null>(null);
+  const setSaveOperations = useRef(new Map<string, string>());
   const [deleteAtomConfirmOpen, setDeleteAtomConfirmOpen] = useState(false);
   const [deleteAtomConfirmId, setDeleteAtomConfirmId] = useState<string>('');
   const [activeSetSubTab, setActiveSetSubTab] = useState<'atoms' | 'clusters' | 'confusion_pairs'>(
@@ -296,80 +297,72 @@ export const ContentStudio: React.FC<ContentStudioProps> = ({
     setSaveSuccessMessage(null);
 
     try {
-      // 1. Resolve target topic
-      let targetTopicId = selectedSetTopicId;
-      if (isCreatingNewTopic || selectedSetTopicId === '__new__') {
-        const createdTopic = await api.createTopic({
-          name: newTopicName.trim() || `Set: ${articleRef || 'Normativa Extraída'}`,
-          description:
-            newTopicDesc.trim() ||
-            `Generado en 1-clic con el Asistente de Sets (${new Date().toLocaleDateString('es-ES')})`,
-          status: 'active',
-        });
-        targetTopicId = createdTopic.id;
-        setSelectedSetTopicId(targetTopicId);
-        setIsCreatingNewTopic(false);
-      }
-
-      // 2. Persist selected clusters & build temp_id -> real_id mapping
-      const clusterMap: Record<string, string> = {};
       const selectedClusters = extractedSet.clusters.filter((c) => c.selected);
-
-      for (const cl of selectedClusters) {
-        const created = await api.createCluster({
-          name: cl.name || 'Cluster Normativo',
-          description: cl.description || '',
-          type: cl.type || 'conceptual',
-          priority: cl.priority || 'high',
-          topic_id: targetTopicId,
-        });
-        if (cl.temp_id && created?.id) {
-          clusterMap[cl.temp_id] = created.id;
-        }
-      }
-
-      // 3. Persist selected atoms
       const selectedAtoms = extractedSet.atoms.filter((a) => a.selected);
-      for (const at of selectedAtoms) {
-        const resolvedClusterId = at.temp_cluster_id ? clusterMap[at.temp_cluster_id] : undefined;
-        await api.createAtom({
-          text: at.text || '',
-          atom_type: at.atom_type || 'condition',
-          legal_basis: at.legal_basis || extractedSet.detectedLegalBasis || 'TRLGSS',
-          topic_id: targetTopicId,
-          cluster_id: resolvedClusterId,
-          difficulty: at.difficulty || 2,
-          tags: at.tags || ['asistente_1clic', 'seguridad_social'],
-          status: 'validated',
-        });
-      }
-
-      // 4. Persist selected confusion pairs
       const selectedPairs = extractedSet.confusionPairs.filter((cp) => cp.selected);
-      for (const cp of selectedPairs) {
-        await api.createConfusionPair({
-          concept_a: cp.concept_a || '',
-          concept_b: cp.concept_b || '',
-          discriminating_cue: cp.discriminating_cue || '',
-          common_trap: cp.common_trap || '',
-          legal_basis_a: cp.legal_basis_a || extractedSet.detectedLegalBasis || 'TRLGSS',
-          legal_basis_b: cp.legal_basis_b || extractedSet.detectedLegalBasis || 'TRLGSS',
-          severity: cp.severity || 'high',
-          topic_id: targetTopicId,
-          status: 'validated',
-        });
+      const payload = {
+        topic: isCreatingNewTopic || selectedSetTopicId === '__new__'
+          ? {
+              kind: 'new' as const,
+              name: newTopicName.trim() || `Set: ${articleRef || 'Normativa Extraída'}`,
+              description: newTopicDesc.trim() ||
+                `Generado en 1-clic con el Asistente de Sets (${new Date().toLocaleDateString('es-ES')})`,
+            }
+          : { kind: 'existing' as const, id: selectedSetTopicId },
+        clusters: selectedClusters.map((cluster) => ({
+          temp_id: cluster.temp_id,
+          name: cluster.name || 'Cluster Normativo',
+          description: cluster.description || '',
+          type: cluster.type || 'conceptual',
+          priority: cluster.priority || 'high',
+        })),
+        atoms: selectedAtoms.map((atom) => ({
+          text: atom.text || '',
+          atom_type: (atom.atom_type || 'condition') as AtomType,
+          legal_basis: atom.legal_basis || extractedSet.detectedLegalBasis || 'TRLGSS',
+          temp_cluster_id: atom.temp_cluster_id && selectedClusters.some(
+            (cluster) => cluster.temp_id === atom.temp_cluster_id,
+          ) ? atom.temp_cluster_id : undefined,
+          difficulty: Math.max(1, Math.min(5, Math.round(atom.difficulty ?? 2))),
+          tags: atom.tags || ['asistente_1clic', 'seguridad_social'],
+        })),
+        confusionPairs: selectedPairs.map((pair) => ({
+          concept_a: pair.concept_a || '',
+          concept_b: pair.concept_b || '',
+          discriminating_cue: pair.discriminating_cue || '',
+          common_trap: pair.common_trap || '',
+          legal_basis_a: pair.legal_basis_a || extractedSet.detectedLegalBasis || 'TRLGSS',
+          legal_basis_b: pair.legal_basis_b || extractedSet.detectedLegalBasis || 'TRLGSS',
+          example_case: pair.example_case,
+          severity: pair.severity || 'high',
+        })),
+      };
+      const fingerprint = JSON.stringify(payload);
+      let operationId = setSaveOperations.current.get(fingerprint);
+      if (!operationId) {
+        operationId = crypto.randomUUID();
+        setSaveOperations.current.set(fingerprint, operationId);
       }
+      const saved = await api.saveContentSet({
+        ...payload,
+        operation_id: operationId,
+      });
 
       setSaveSuccessMessage(
         `¡Set validado y guardado en 1 clic! Se han registrado ${selectedClusters.length} clústeres, ${selectedAtoms.length} proposiciones atómicas y ${selectedPairs.length} pares de confusión en el tema.`
       );
       setSaveErrorMessage(null);
+      setSelectedSetTopicId(saved.topic.id);
+      setIsCreatingNewTopic(false);
+      setSaveOperations.current.clear();
       setExtractedSet(null);
       setDraftedAtoms([]);
       onRefresh();
     } catch (err) {
       console.error('Failed to save full set:', err);
-      setSaveErrorMessage('Hubo un error al guardar el set. Revisa la consola del navegador.');
+      setSaveErrorMessage(
+        err instanceof Error ? err.message : 'No se pudo confirmar el guardado. El set sigue disponible para reintentar.',
+      );
     } finally {
       setIsSavingFullSet(false);
     }

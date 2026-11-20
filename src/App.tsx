@@ -33,6 +33,7 @@ import {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
+  const [attemptPending, setAttemptPending] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTopicId, setSelectedTopicId] = useState<string | 'all'>('all');
 
@@ -99,6 +100,8 @@ export default function App() {
     openErrors: 0,
     confidentWrong: 0,
   });
+  const [scopedStatsTopic, setScopedStatsTopic] = useState<string>('all');
+  const [scopedStatsError, setScopedStatsError] = useState<string | null>(null);
 
   // Runner state
   const [runnerItems, setRunnerItems] = useState<Item[]>([]);
@@ -150,6 +153,16 @@ export default function App() {
   const [toast, setToast] = useState<{ message: string; kind: 'error' | 'info' } | null>(null);
 
   useEffect(() => {
+    if (!attemptPending) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [attemptPending]);
+
+  useEffect(() => {
     if (!toast) return;
     const timer = setTimeout(() => setToast(null), 5000);
     return () => clearTimeout(timer);
@@ -157,14 +170,11 @@ export default function App() {
 
   const loadData = async (topicId?: string | 'all', isRetry = false) => {
     try {
-      const currentTopicId = topicId !== undefined ? topicId : selectedTopicId;
-      const scope = currentTopicId && currentTopicId !== 'all' ? currentTopicId : undefined;
       // The bank is GLOBAL truth: it is fetched unfiltered so that per-topic
       // counters (Temario cards, Banco filters, Content Studio audit) show real
       // numbers instead of "0" for every topic but the selected one.
       // Scope is applied explicitly where a narrower session is requested.
       // See docs/UX-AUDIT-2026-11.md §3 (F1).
-      const statPromise = api.getScheduleStats();
       const [
         top,
         atm,
@@ -175,7 +185,6 @@ export default function App() {
         att,
         warn,
         stat,
-        statScoped,
         sett,
       ] = await Promise.all([
         api.getTopics(),
@@ -186,8 +195,7 @@ export default function App() {
         api.getErrors(),
         api.getAttempts(),
         api.getValidationWarnings(),
-        statPromise,
-        scope ? api.getScheduleStats(scope) : statPromise,
+        api.getScheduleStats(),
         api.getSettings(),
       ]);
 
@@ -200,7 +208,6 @@ export default function App() {
       setAttempts(att);
       setWarnings(warn);
       setDueStats(stat);
-      setScopedDueStats(statScoped);
       setSettings(sett);
       setLoadError(null);
     } catch (e: any) {
@@ -219,8 +226,8 @@ export default function App() {
   };
 
   useEffect(() => {
-    loadData(selectedTopicId);
-  }, [selectedTopicId]);
+    loadData();
+  }, []);
 
   // The bank itself no longer depends on the selected topic, so a scope
   // change only needs the scoped counters — not a full re-fetch of items,
@@ -228,18 +235,27 @@ export default function App() {
   useEffect(() => {
     let cancelled = false;
     const scope = selectedTopicId !== 'all' ? selectedTopicId : undefined;
+    setScopedStatsError(null);
+    if (!scope) {
+      setScopedDueStats(dueStats);
+      setScopedStatsTopic('all');
+      return;
+    }
     api
       .getScheduleStats(scope)
       .then((stat) => {
-        if (!cancelled) setScopedDueStats(stat);
+        if (!cancelled) {
+          setScopedDueStats(stat);
+          setScopedStatsTopic(scope);
+        }
       })
       .catch(() => {
-        /* the global badge stays valid; the scoped one is best-effort */
+        if (!cancelled) setScopedStatsError(scope);
       });
     return () => {
       cancelled = true;
     };
-  }, [selectedTopicId]);
+  }, [selectedTopicId, dueStats]);
 
   // Keyboard shortcut listener for '?'
   useEffect(() => {
@@ -261,6 +277,12 @@ export default function App() {
         queue = eligibleForPractice(
           topicScope ? items.filter(i => i.topic_id === topicScope) : items
         ).slice(0, 10);
+      }
+      if (queue.length === 0) {
+        setSelectedTopicId(topicScope ?? 'all');
+        const topicName = topics.find((topic) => topic.id === topicScope)?.name;
+        setToast({ message: `No hay preguntas disponibles para practicar en ${topicName ?? 'este ámbito'}. Añádelas desde Contenidos.`, kind: 'info' });
+        return;
       }
       setRunnerItems(queue);
       const matchedTopic = topicScope ? topics.find(t => t.id === topicScope) : null;
@@ -289,6 +311,10 @@ export default function App() {
     const topicScope = explicitTopicId || (selectedTopicId !== 'all' ? selectedTopicId : undefined);
     const pool = topicScope ? items.filter(i => i.topic_id === topicScope) : items;
     const shuffled = buildPretestPool(pool, 10);
+    if (shuffled.length === 0) {
+      setToast({ message: 'No hay preguntas disponibles para este test de nivel.', kind: 'info' });
+      return;
+    }
     setRunnerItems(shuffled);
     const matchedTopic = topicScope ? topics.find(t => t.id === topicScope) : null;
     setRunnerTitle(
@@ -491,7 +517,13 @@ export default function App() {
       {/* Top Navigation */}
       <Navbar
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={(tab) => {
+          if (attemptPending) {
+            setToast({ message: 'Confirma el guardado del intento antes de cambiar de pantalla.', kind: 'error' });
+            return;
+          }
+          setActiveTab(tab);
+        }}
         dueCount={dueStats.dueToday}
         openErrorsCount={dueStats.openErrors}
         onOpenHelp={() => setIsHelpModalOpen(true)}
@@ -528,7 +560,10 @@ export default function App() {
               topics={topics}
               selectedTopicId={selectedTopicId}
               onSelectTopic={(topicId) => setSelectedTopicId(topicId)}
-              dueCount={scopedDueStats.dueToday}
+              dueCount={scopedStatsTopic === selectedTopicId ? scopedDueStats.dueToday : undefined}
+              dueError={scopedStatsError === selectedTopicId}
+              eligibleCount={eligibleForPractice(selectedTopicId === 'all' ? items : items.filter((item) => item.topic_id === selectedTopicId)).length}
+              onGoToContent={() => setActiveTab('content')}
               openErrorsCount={dueStats.openErrors}
               onStartDue={() => handleStartDueSession()}
               onGoToErrors={() => setActiveTab('errors')}
@@ -585,6 +620,7 @@ export default function App() {
               loadData();
             }}
             setToast={setToast}
+            onAttemptPendingChange={setAttemptPending}
           />
           )
         )}

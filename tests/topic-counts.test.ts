@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import React from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { StudySetup } from '../src/components/StudySetup.tsx';
 import {
   seedItems,
   seedAtoms,
@@ -66,6 +69,29 @@ describe('Topic count truth (P0 regression for phantom zeros)', () => {
 });
 
 describe('Study scope helpers (P0 regression for scope preservation)', () => {
+  test('an empty topic shows a content action and disables starting the default test', () => {
+    const noop = () => {};
+    const html = renderToStaticMarkup(React.createElement(StudySetup, {
+      topics: [{ id: 'empty', name: 'Tema vacío' } as any],
+      selectedTopicId: 'empty',
+      onSelectTopic: noop,
+      dueCount: 0,
+      eligibleCount: 0,
+      onGoToContent: noop,
+      openErrorsCount: 0,
+      onStartDue: noop,
+      onGoToErrors: noop,
+      onStartSimulacro: noop,
+      onOpenInterleaved: noop,
+      onStartPretest: noop,
+      onStartPlazosDrill: noop,
+      onStartDuel: noop,
+      onStartGuided: noop,
+    }));
+    assert.match(html, /No hay preguntas disponibles para practicar en Tema vacío/);
+    assert.match(html, /Ir a Contenidos/);
+    assert.match(html, /<button[^>]*disabled=""[^>]*>.*?Empezar test/);
+  });
   test('scopeTopicId returns undefined for the whole syllabus', () => {
     assert.equal(scopeTopicId('all'), undefined);
   });

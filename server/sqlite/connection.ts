@@ -95,6 +95,10 @@ CREATE TABLE IF NOT EXISTS atom_tags (
   atom_id TEXT, tag_id TEXT, PRIMARY KEY (atom_id, tag_id)
 );
 CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT);
+CREATE TABLE IF NOT EXISTS content_set_operations (
+  operation_id TEXT PRIMARY KEY, payload_hash TEXT NOT NULL,
+  response_json TEXT NOT NULL, created_at TEXT NOT NULL
+);
 `;
 
 /**

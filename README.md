@@ -32,7 +32,7 @@ Otros comandos:
 
 ```bash
 npm run lint     # tsc --noEmit (0 errores exigido)
-npm test         # 378 pruebas / 50 suites (node:test vía tsx)
+npm test         # 384 pruebas / 51 suites (node:test vía tsx)
 npm run build    # bundle de producción; npm start lo sirve
 ```
 
@@ -61,6 +61,8 @@ npm run build    # bundle de producción; npm start lo sirve
 5. **Valida antes de activar**: todo lo generado por IA o heurística nace como `draft`; el Item Bank
    marca avisos de calidad (base legal ausente, distractores sin explicación/trampa, duplicados,
    stems negativos, opciones desbalanceadas) y tú decides qué pasa a `validated`/`active`.
+   El guardado del set completo es transaccional e idempotente: si se pierde la respuesta,
+   reintentar con la misma selección no duplica temas, clústeres, átomos ni pares.
 
 ## Modos de estudio
 
@@ -118,8 +120,8 @@ sesión y calidad del banco. Activa el **alto contraste** con el botón del Navb
   framework no aportaba nada pedagógicamente y el proyecto ya funcionaba).
 - **SQLite con `node:sqlite`** (sin dependencias nativas) en lugar de better-sqlite3: cero compilación,
   una promesa de "un comando" real.
-- **Sin Drizzle** y **sin Vitest**: repositorios tipados sobre `node:sqlite` y las 378 pruebas en
-  50 suites con `node:test` cubren lo necesario con menos machinery.
+- **Sin Drizzle** y **sin Vitest**: repositorios tipados sobre `node:sqlite` y las 384 pruebas en
+  51 suites con `node:test` cubren lo necesario con menos machinery.
 - **Módulos puros y testeados**: `server/scheduler.ts` (SRS + intercalado), `server/queueOrder.ts`
   (cola diaria), `server/validationWarnings.ts`, `server/importItems.ts`, `server/heuristics.ts`
   (sugerencias offline), `server/pdfImport.ts`, `src/scoring/evaluateItem.ts`,
@@ -140,7 +142,7 @@ src/components/         Dashboard, StudySetup, ActivityRunner, OnboardingModal, 
 src/utils/              analytics, retrievalMatch, learningDesignValidator, drillSelectors,
                         repairRouting, optionOrder, practicePools, useFocusTrap
 src/scoring/            evaluateItem (cloze, spot-error, two-tier, number-sort…)
-tests/                  378 pruebas en 50 suites (unit + integración)
+tests/                  384 pruebas en 51 suites (unit + integración)
 data/                   SQLite local (no versionado)
 examples/               exportaciones reales de ejemplo
 docs/                   ACCEPTANCE.md, AUDIT-UX-LEARNING.md, audit/, plans/

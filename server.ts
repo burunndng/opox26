@@ -2,18 +2,19 @@ import express from 'express';
 import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import { z } from 'zod';
-import { db } from './server/db.ts';
+import { ContentSetSaveError, db } from './server/db.ts';
 import { SchedulingEngine, InterleavingEngine } from './server/scheduler.ts';
 import { DataExporter } from './server/exporter.ts';
 import { AiAssistant } from './server/ai.ts';
 import { JevClient } from './server/jev.ts';
-import { Item, AppSettings, QualityWarning } from './src/types.ts';
+import { Item, AppSettings, QualityWarning, ContentSetSaveInput } from './src/types.ts';
 import {
   topicInput,
   sourceChunkInput,
   atomInput,
   clusterInput,
   confusionPairInput,
+  contentSetSaveInput,
   itemInput,
   attemptInput,
   errorLogUpdateInput,
@@ -221,6 +222,19 @@ async function startServer() {
     if (body === undefined) return;
     const pair = db.createConfusionPair(body as any);
     res.status(201).json(pair);
+  });
+
+  app.post('/api/content-sets', (req, res) => {
+    const body = validateBody(contentSetSaveInput, req.body, res);
+    if (body === undefined) return;
+    try {
+      res.json(db.createContentSet(body as ContentSetSaveInput));
+    } catch (error) {
+      if (error instanceof ContentSetSaveError) {
+        return res.status(error.statusCode).json({ error: error.message });
+      }
+      res.status(500).json({ error: 'No se pudo guardar el set completo.' });
+    }
   });
 
   // Items

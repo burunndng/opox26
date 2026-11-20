@@ -237,6 +237,7 @@ interface ActivityRunnerProps {
   onLaunchRepair?: (itemIds: string[]) => void;
   /** Non-blocking failure surface for record/delete/validate calls */
   setToast?: (t: { message: string; kind: 'error' | 'info' }) => void;
+  onAttemptPendingChange?: (pending: boolean) => void;
   onExit: () => void;
   onFinished: (stats: { total: number; correct: number; avgConfidence: number }) => void;
 }
@@ -253,6 +254,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
   confusionPairs,
   onLaunchRepair,
   setToast,
+  onAttemptPendingChange,
   onExit,
   onFinished,
 }) => {
@@ -397,6 +399,39 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
     BAREMOS[0];
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
   const isRecordingRef = useRef(false);
+  const [pendingAttempt, setPendingAttempt] = useState<{
+    attempt: Partial<ActivityAttempt>;
+    onSaved: () => void;
+  } | null>(null);
+  const [retryingAttempt, setRetryingAttempt] = useState(false);
+
+  const persistAttempt = async (attempt: Partial<ActivityAttempt>, onSaved: () => void) => {
+    const identified = { ...attempt, id: attempt.id ?? `attempt-${crypto.randomUUID()}` };
+    onAttemptPendingChange?.(true);
+    try {
+      await api.recordAttempt(identified);
+      onAttemptPendingChange?.(false);
+      onSaved();
+    } catch {
+      setPendingAttempt({ attempt: identified, onSaved });
+    }
+  };
+
+  const retryPendingAttempt = async () => {
+    if (!pendingAttempt || retryingAttempt) return;
+    setRetryingAttempt(true);
+    try {
+      await api.recordAttempt(pendingAttempt.attempt);
+      const onSaved = pendingAttempt.onSaved;
+      setPendingAttempt(null);
+      onAttemptPendingChange?.(false);
+      onSaved();
+    } catch {
+      // Keep the same attempt and identifier for another retry.
+    } finally {
+      setRetryingAttempt(false);
+    }
+  };
 
   // Duelo de conceptos: pair context for the current item (mode 'duel' only)
   const duelPair =
@@ -819,6 +854,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (pendingAttempt || isRecordingRef.current) return;
       const target = e.target as HTMLElement;
       if (
         (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') &&
@@ -879,6 +915,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
     twoTierStage,
     hasPositionalOptionShortcuts,
     keyboardOptions,
+    pendingAttempt,
   ]);
 
   // Handle Hint trigger
@@ -925,12 +962,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
       was_interleaved: mode === 'interleaved',
     };
 
-    try {
-      await api.recordAttempt(attempt);
-    } catch (e) {
-      setToast?.({ message: 'No se pudo guardar el intento en blanco. Inténtalo de nuevo.', kind: 'error' });
-    }
-
+    await persistAttempt(attempt, () => {
     const log: SessionAttemptLog = {
       itemId: currentItem.id,
       stem: currentItem.stem,
@@ -953,6 +985,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
     setStage('feedback');
     isRecordingRef.current = false;
+    });
   };
 
   // Handle confidence selection
@@ -998,12 +1031,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
       was_interleaved: mode === 'interleaved',
     };
 
-    try {
-      await api.recordAttempt(attempt);
-    } catch (e) {
-      setToast?.({ message: 'No se pudo guardar el intento. Inténtalo de nuevo.', kind: 'error' });
-    }
-
+    await persistAttempt(attempt, () => {
     const isAnsCorrect = result.correct;
     const penaltyForAttempt = isAnsCorrect ? 0 : baremoPenalty;
     const pointsForAttempt = isAnsCorrect ? 1.0 : -baremoPenalty;
@@ -1030,6 +1058,7 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
 
     setStage('feedback');
     isRecordingRef.current = false;
+    });
   };
 
   const handleNextItem = () => {
@@ -1504,6 +1533,25 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
   const isCorrect = evaluation?.correct ?? (selectedOption === currentItem.correct_answer);
   const isConfidentWrong = confidence === 3 && !isCorrect;
 
+  if (pendingAttempt) {
+    return (
+      <div className="max-w-xl mx-auto p-6" role="alert">
+        <h2 className="text-lg font-semibold text-slate-100">No se ha confirmado el guardado</h2>
+        <p className="mt-2 text-sm text-slate-300">
+          Tu respuesta sigue en esta pantalla. Comprueba la conexión y vuelve a intentarlo antes de continuar.
+        </p>
+        <button
+          type="button"
+          onClick={retryPendingAttempt}
+          disabled={retryingAttempt}
+          className="mt-4 min-h-[44px] rounded-md bg-indigo-600 px-4 text-white hover:bg-indigo-500 disabled:opacity-50"
+        >
+          {retryingAttempt ? 'Guardando…' : 'Reintentar guardado'}
+        </button>
+      </div>
+    );
+  }
+
   if (showModeA && currentItem) {
     const isRemediation = (fsrsInfo.lapses || 0) >= 2;
     return (
@@ -1516,18 +1564,20 @@ export const ActivityRunner: React.FC<ActivityRunnerProps> = ({
         onCompleted={async (result: boolean | { success: boolean; item: Item }) => {
           const success = typeof result === 'boolean' ? result : result.success;
           if (success) {
-            try {
-              await api.recordAttempt({
+            if (isRecordingRef.current) return;
+            isRecordingRef.current = true;
+            await persistAttempt({
                 item_id: currentItem.id,
                 activity_type: currentItem.item_type,
                 user_response: isRemediation ? 'REMEDIATED_MODE_A' : 'ENCODED_MODE_A',
                 confidence: 2,
                 correct: true,
                 time_to_answer_ms: 1000,
+              }, () => {
+                isRecordingRef.current = false;
+                setShowModeA(false);
               });
-            } catch (e) {
-              console.warn('Failed to record Mode A encoding attempt:', e);
-            }
+            return;
           }
           setShowModeA(false);
         }}

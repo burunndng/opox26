@@ -262,7 +262,11 @@ const MAPPERS: TableMapper<any>[] = [
 ];
 
 /** Syncs the whole in-memory state into SQLite in one transaction (delete-stale + upsert-current). */
-export function persistAll(conn: DatabaseSync, data: DatabaseSchema): void {
+export function persistAll(
+  conn: DatabaseSync,
+  data: DatabaseSchema,
+  contentSetOperation?: { id: string; payloadHash: string; response: unknown },
+): void {
   conn.exec('BEGIN');
   try {
     for (const mapper of MAPPERS) {
@@ -294,6 +298,18 @@ export function persistAll(conn: DatabaseSync, data: DatabaseSchema): void {
         .run('current', JSON.stringify(data.savedSessionState), new Date().toISOString());
     } else {
       conn.prepare('DELETE FROM saved_session_state WHERE id = ?').run('current');
+    }
+
+    if (contentSetOperation) {
+      conn.prepare(`
+        INSERT INTO content_set_operations (operation_id, payload_hash, response_json, created_at)
+        VALUES (?, ?, ?, ?)
+      `).run(
+        contentSetOperation.id,
+        contentSetOperation.payloadHash,
+        JSON.stringify(contentSetOperation.response),
+        new Date().toISOString(),
+      );
     }
 
     conn.exec('COMMIT');

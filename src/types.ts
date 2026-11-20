@@ -180,6 +180,45 @@ export interface ConfusionPair {
   severity: Priority;
 }
 
+export interface ContentSetSaveInput {
+  operation_id: string;
+  topic:
+    | { kind: 'existing'; id: string }
+    | { kind: 'new'; name: string; description: string };
+  clusters: Array<{
+    temp_id: string;
+    name: string;
+    description: string;
+    type: ClusterType;
+    priority: Priority;
+  }>;
+  atoms: Array<{
+    text: string;
+    atom_type: AtomType;
+    legal_basis: string;
+    temp_cluster_id?: string;
+    difficulty: number;
+    tags: string[];
+  }>;
+  confusionPairs: Array<{
+    concept_a: string;
+    concept_b: string;
+    discriminating_cue: string;
+    common_trap: string;
+    legal_basis_a: string;
+    legal_basis_b: string;
+    example_case?: string;
+    severity: Priority;
+  }>;
+}
+
+export interface ContentSetSaveResult {
+  topic: Topic;
+  clusters: Cluster[];
+  atoms: Atom[];
+  confusionPairs: ConfusionPair[];
+}
+
 export interface MCQOption {
   id: string;
   text: string;

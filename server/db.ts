@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { createHash } from 'node:crypto';
 import {
   Topic,
   SourceChunk,
@@ -14,6 +15,8 @@ import {
   AppSettings,
   QualityWarning,
   DatabaseSchema,
+  ContentSetSaveInput,
+  ContentSetSaveResult,
 } from '../src/types.ts';
 import { isBlockedFromGraduation } from '../src/utils/repairRouting.ts';
 
@@ -38,6 +41,25 @@ import { DatabaseSync } from 'node:sqlite';
 const dataDir = () => process.env.OPOSILAB_DATA_DIR || path.join(process.cwd(), 'data');
 const dbFile = () => defaultDbPath();
 const legacyJson = () => legacyJsonPath();
+
+function stableJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(stableJson).join(',')}]`;
+  if (value && typeof value === 'object') {
+    const record = value as Record<string, unknown>;
+    return `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${stableJson(record[key])}`).join(',')}}`;
+  }
+  return JSON.stringify(value) ?? 'null';
+}
+
+export class ContentSetSaveError extends Error {
+  constructor(
+    message: string,
+    public readonly statusCode: 404 | 409,
+  ) {
+    super(message);
+    this.name = 'ContentSetSaveError';
+  }
+}
 
 class LocalDatabase {
   private data: DatabaseSchema;
@@ -320,12 +342,13 @@ class LocalDatabase {
     this.saveSync();
   }
 
-  private saveSync() {
+  private saveSync(throwOnError = false) {
     try {
       if (!this.conn) this.conn = openDatabase(dbFile());
       persistAll(this.conn, this.data);
     } catch (err) {
       console.error('Failed to persist database (SQLite):', err);
+      if (throwOnError) throw err;
     }
   }
 
@@ -346,6 +369,120 @@ class LocalDatabase {
 
   public getTopic(id: string): Topic | undefined {
     return this.data.topics.find((t) => t.id === id);
+  }
+
+  public createContentSet(input: ContentSetSaveInput): ContentSetSaveResult {
+    if (!this.conn) this.conn = openDatabase(dbFile());
+    const { operation_id: operationId, ...payload } = input;
+    const payloadHash = createHash('sha256').update(stableJson(payload)).digest('hex');
+    const existing = this.conn.prepare(
+      'SELECT payload_hash, response_json FROM content_set_operations WHERE operation_id = ?',
+    ).get(operationId) as { payload_hash: string; response_json: string } | undefined;
+
+    if (existing) {
+      if (existing.payload_hash !== payloadHash) {
+        throw new ContentSetSaveError(
+          'Este identificador de guardado ya se usó con otro contenido. Vuelve a guardar el set.',
+          409,
+        );
+      }
+      return JSON.parse(existing.response_json) as ContentSetSaveResult;
+    }
+
+    const targetTopic = input.topic.kind === 'existing'
+      ? this.getTopic(input.topic.id)
+      : undefined;
+    if (input.topic.kind === 'existing' && !targetTopic) {
+      throw new ContentSetSaveError('No se encontró el tema seleccionado.', 404);
+    }
+
+    const previousTopics = this.data.topics.slice();
+    const previousClusters = this.data.clusters.slice();
+    const previousAtoms = this.data.atoms.slice();
+    const previousPairs = this.data.confusionPairs.slice();
+
+    try {
+      const now = new Date().toISOString();
+      const topic: Topic = targetTopic ?? {
+        id: `topic-set-${input.operation_id}`,
+        name: input.topic.kind === 'new' ? input.topic.name : '',
+        description: input.topic.kind === 'new' ? input.topic.description : '',
+        status: 'active',
+        created_at: now,
+        updated_at: now,
+      };
+      if (!targetTopic) this.data.topics.push(topic);
+
+      const clusterMap = new Map<string, string>();
+      const clusters: Cluster[] = input.clusters.map((cluster, index) => {
+        const created: Cluster = {
+          id: `cluster-set-${input.operation_id}-${index}`,
+          topic_id: topic.id,
+          name: cluster.name,
+          description: cluster.description,
+          type: cluster.type,
+          priority: cluster.priority,
+        };
+        clusterMap.set(cluster.temp_id, created.id);
+        this.data.clusters.push(created);
+        return created;
+      });
+
+      const atoms: Atom[] = input.atoms.map((atom, index) => {
+        const created: Atom = {
+          id: `atom-set-${input.operation_id}-${index}`,
+          topic_id: topic.id,
+          text: atom.text,
+          atom_type: atom.atom_type,
+          legal_basis: atom.legal_basis,
+          cluster_id: atom.temp_cluster_id ? clusterMap.get(atom.temp_cluster_id) : undefined,
+          difficulty: atom.difficulty,
+          tags: atom.tags,
+          status: 'validated',
+          created_at: now,
+          updated_at: now,
+        };
+        this.data.atoms.push(created);
+        return created;
+      });
+
+      const confusionPairs: ConfusionPair[] = input.confusionPairs.map((pair, index) => {
+        const created: ConfusionPair = {
+          id: `pair-set-${input.operation_id}-${index}`,
+          topic_id: topic.id,
+          concept_a: pair.concept_a,
+          concept_b: pair.concept_b,
+          discriminating_cue: pair.discriminating_cue,
+          common_trap: pair.common_trap,
+          legal_basis_a: pair.legal_basis_a,
+          legal_basis_b: pair.legal_basis_b,
+          example_case: pair.example_case,
+          status: 'validated',
+          severity: pair.severity,
+        };
+        this.data.confusionPairs.push(created);
+        return created;
+      });
+
+      const response = JSON.parse(JSON.stringify({
+        topic,
+        clusters,
+        atoms,
+        confusionPairs,
+      })) as ContentSetSaveResult;
+      persistAll(this.conn, this.data, {
+        id: operationId,
+        payloadHash,
+        response,
+      });
+      return response;
+    } catch (error) {
+      this.data.topics = previousTopics;
+      this.data.clusters = previousClusters;
+      this.data.atoms = previousAtoms;
+      this.data.confusionPairs = previousPairs;
+      throw error;
+    }
   }
 
   public createTopic(topic: Partial<Topic> & { name: string }): Topic {
@@ -562,7 +699,8 @@ class LocalDatabase {
 
   public updateReviewSchedule(
     itemId: string,
-    updates: Partial<ReviewSchedule>
+    updates: Partial<ReviewSchedule>,
+    persist = true
   ): ReviewSchedule | undefined {
     let sched = this.data.reviewSchedules.find((s) => s.item_id === itemId);
     if (!sched) {
@@ -584,186 +722,207 @@ class LocalDatabase {
       this.data.reviewSchedules.push(sched);
     }
     Object.assign(sched, updates);
-    this.saveSync();
+    if (persist) this.saveSync();
     return sched;
   }
 
-  public recordAttempt(attempt: Omit<ActivityAttempt, 'id' | 'created_at'>): {
+  public recordAttempt(attempt: Omit<ActivityAttempt, 'id' | 'created_at'> & { id?: string }): {
     attempt: ActivityAttempt;
     schedule: ReviewSchedule;
     errorLog?: ErrorLog;
   } {
-    const newAttempt: ActivityAttempt = {
-      ...attempt,
-      id: `attempt-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-      created_at: new Date().toISOString(),
-    };
-    this.data.activityAttempts.push(newAttempt);
-
-    const item = this.getItem(attempt.item_id);
-    let sched = this.getReviewSchedule(attempt.item_id);
-    if (!sched) {
-      sched = this.updateReviewSchedule(attempt.item_id, {})!;
-    }
-
-    // Successive Relearning & Spaced Repetition logic
-    const isCorrect = attempt.correct;
-    const confidence = attempt.confidence;
-    const activityType = attempt.activity_type;
-    const usedHint = !!attempt.used_hint;
-
-    // A format counts as *completed* only on a successful attempt; failures and
-    // blanks must not earn format credit toward the "2 formats" graduation rule.
-    if (isCorrect && !sched.formats_completed.includes(activityType)) {
-      sched.formats_completed.push(activityType);
-    }
-    sched.last_confidence = confidence;
-
-    let errorLog: ErrorLog | undefined;
-
-    // P5 WP5: auto-log low-confidence correct attempts (fragile knowledge) —
-    // correct + confidence < 2 flags the item as fragile (used for repair routing,
-    // not scheduling; scheduling depends on graduation rules, not this log alone).
-    if (isCorrect && confidence < 2 && !usedHint) {
-      // Fragile-knowledge diagnostic stored in attempt; repair routing can reference it.
-      // No scheduling change unless the item also has open critical errors (WP6).
-    }
-
-    if (!isCorrect) {
-      // Error handling & FSRS Error Taxonomy Integration
-      sched.lapses += 1;
-      sched.consecutive_correct_sessions = 0;
-      sched.interval_days = 0; // Immediate repair queue (due today)
-      sched.due_date = new Date().toISOString();
-      sched.state = 'learning';
-
-      const determinedErrorCode = confidence === 3 ? 'E8' : (attempt.error_type_code ?? 'E1');
-      sched.last_error_type = determinedErrorCode;
-
-      // Tailored FSRS penalty based on error taxonomy severity
-      if (determinedErrorCode === 'E8') {
-        // Confident-wrong: severe priority, maximum difficulty increase, steep stability collapse
-        sched.priority_score = 100;
-        sched.difficulty = Math.min(10, (sched.difficulty || 5) + 2.5);
-        sched.stability = Math.max(0.3, (sched.stability || 1.0) * 0.2);
-      } else if (determinedErrorCode === 'E5' || determinedErrorCode === 'E6') {
-        // Conceptual merger (E5) or Numeric/Deadline confusion (E6): high priority and penalty
-        sched.priority_score = 85;
-        sched.difficulty = Math.min(10, (sched.difficulty || 5) + 2.0);
-        sched.stability = Math.max(0.4, (sched.stability || 1.0) * 0.25);
-      } else {
-        sched.priority_score = 70 + sched.lapses * 5;
-        sched.difficulty = Math.min(10, (sched.difficulty || 5) + 1.2);
-        sched.stability = Math.max(0.5, (sched.stability || 1.0) * 0.35);
+    const existing = attempt.id && this.data.activityAttempts.find((a) => a.id === attempt.id);
+    if (existing) {
+      if (existing.item_id !== attempt.item_id || existing.correct !== attempt.correct ||
+          existing.confidence !== attempt.confidence || existing.user_response !== attempt.user_response ||
+          existing.activity_type !== attempt.activity_type) {
+        throw new Error('El identificador del intento ya corresponde a otra respuesta.');
       }
-
-      // Create Error Log with explicit taxonomy linkage and repair queue assignment
-      errorLog = {
-        id: `err-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-        attempt_id: newAttempt.id,
-        item_id: attempt.item_id,
-        topic_id: item?.topic_id ?? 'topic-tema7',
-        cluster_id: item?.cluster_id,
-        confusion_pair_id: item?.confusion_pair_id,
-        error_type_code: determinedErrorCode,
-        confidence: confidence,
-        corrective_rule: item?.corrective_rule ?? item?.rule_statement ?? 'Revisar la regla legal aplicable.',
-        legal_basis: item?.legal_basis ?? 'TRLGSS',
-        trap_type: attempt.trap_selected_by_user,
-        status: 'open',
-        next_review_date: new Date().toISOString(),
+      const schedule = this.getReviewSchedule(existing.item_id);
+      if (!schedule) throw new Error('No existe el repaso del intento guardado.');
+      return { attempt: existing, schedule, errorLog: this.data.errorLogs.find((e) => e.attempt_id === existing.id) };
+    }
+    const previousAttempts = this.data.activityAttempts.slice();
+    const previousSchedules = structuredClone(this.data.reviewSchedules);
+    const previousErrors = structuredClone(this.data.errorLogs);
+    try {
+      const newAttempt: ActivityAttempt = {
+        ...attempt,
+        id: attempt.id ?? `attempt-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
         created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
       };
-      this.data.errorLogs.push(errorLog);
-    } else {
-      // Success logic
-      if (!usedHint) {
-        sched.consecutive_correct_sessions += 1;
-      } else {
-        // Hint was used: reset consecutive unassisted streak so graduation is not unearned
+      this.data.activityAttempts.push(newAttempt);
+
+      const item = this.getItem(attempt.item_id);
+      let sched = this.getReviewSchedule(attempt.item_id);
+      if (!sched) {
+        sched = this.updateReviewSchedule(attempt.item_id, {}, false)!;
+      }
+
+      // Successive Relearning & Spaced Repetition logic
+      const isCorrect = attempt.correct;
+      const confidence = attempt.confidence;
+      const activityType = attempt.activity_type;
+      const usedHint = !!attempt.used_hint;
+
+      // A format counts as *completed* only on a successful attempt; failures and
+      // blanks must not earn format credit toward the "2 formats" graduation rule.
+      if (isCorrect && !sched.formats_completed.includes(activityType)) {
+        sched.formats_completed.push(activityType);
+      }
+      sched.last_confidence = confidence;
+
+      let errorLog: ErrorLog | undefined;
+
+      // P5 WP5: auto-log low-confidence correct attempts (fragile knowledge) —
+      // correct + confidence < 2 flags the item as fragile (used for repair routing,
+      // not scheduling; scheduling depends on graduation rules, not this log alone).
+      if (isCorrect && confidence < 2 && !usedHint) {
+        // Fragile-knowledge diagnostic stored in attempt; repair routing can reference it.
+        // No scheduling change unless the item also has open critical errors (WP6).
+      }
+
+      if (!isCorrect) {
+        // Error handling & FSRS Error Taxonomy Integration
+        sched.lapses += 1;
         sched.consecutive_correct_sessions = 0;
+        sched.interval_days = 0; // Immediate repair queue (due today)
+        sched.due_date = new Date().toISOString();
+        sched.state = 'learning';
+
+        const determinedErrorCode = confidence === 3 ? 'E8' : (attempt.error_type_code ?? 'E1');
+        sched.last_error_type = determinedErrorCode;
+
+        // Tailored FSRS penalty based on error taxonomy severity
+        if (determinedErrorCode === 'E8') {
+          // Confident-wrong: severe priority, maximum difficulty increase, steep stability collapse
+          sched.priority_score = 100;
+          sched.difficulty = Math.min(10, (sched.difficulty || 5) + 2.5);
+          sched.stability = Math.max(0.3, (sched.stability || 1.0) * 0.2);
+        } else if (determinedErrorCode === 'E5' || determinedErrorCode === 'E6') {
+          // Conceptual merger (E5) or Numeric/Deadline confusion (E6): high priority and penalty
+          sched.priority_score = 85;
+          sched.difficulty = Math.min(10, (sched.difficulty || 5) + 2.0);
+          sched.stability = Math.max(0.4, (sched.stability || 1.0) * 0.25);
+        } else {
+          sched.priority_score = 70 + sched.lapses * 5;
+          sched.difficulty = Math.min(10, (sched.difficulty || 5) + 1.2);
+          sched.stability = Math.max(0.5, (sched.stability || 1.0) * 0.35);
+        }
+
+        // Create Error Log with explicit taxonomy linkage and repair queue assignment
+        errorLog = {
+          id: `err-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+          attempt_id: newAttempt.id,
+          item_id: attempt.item_id,
+          topic_id: item?.topic_id ?? 'topic-tema7',
+          cluster_id: item?.cluster_id,
+          confusion_pair_id: item?.confusion_pair_id,
+          error_type_code: determinedErrorCode,
+          confidence: confidence,
+          corrective_rule: item?.corrective_rule ?? item?.rule_statement ?? 'Revisar la regla legal aplicable.',
+          legal_basis: item?.legal_basis ?? 'TRLGSS',
+          trap_type: attempt.trap_selected_by_user,
+          status: 'open',
+          next_review_date: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        this.data.errorLogs.push(errorLog);
+      } else {
+        // Success logic
+        if (!usedHint) {
+          sched.consecutive_correct_sessions += 1;
+        } else {
+          // Hint was used: reset consecutive unassisted streak so graduation is not unearned
+          sched.consecutive_correct_sessions = 0;
+        }
+
+        // Adjust difficulty (FSRS formula)
+        if (confidence === 3) {
+          sched.difficulty = Math.max(1.0, (sched.difficulty || 5) - 0.4);
+        } else if (confidence === 0 || confidence === 1) {
+          sched.difficulty = Math.min(10.0, (sched.difficulty || 5) + 0.3);
+        }
+
+        // Adjust ease & stability
+        let bonus = confidence === 3 ? 1.35 : confidence === 2 ? 1.15 : 1.0;
+        if (usedHint) {
+          // If assisted by hint, dampen stability gain so unassisted memory is verified soon
+          bonus = 1.05;
+        }
+        sched.stability = Math.max(1.0, (sched.stability || 1.0) * bonus);
+
+        // Interval calculation
+        if (usedHint) {
+          // With hint, keep interval short (1 to 2 days)
+          sched.interval_days = 2;
+          if (sched.state === 'new') sched.state = 'learning';
+        } else if (sched.state === 'new' || sched.state === 'learning') {
+          sched.interval_days = sched.consecutive_correct_sessions === 1 ? 1 : 3;
+          sched.state = 'review';
+        } else if (sched.state === 'review') {
+          sched.interval_days = Math.max(4, Math.round(sched.interval_days * 2.2 * sched.stability));
+        } else if (sched.state === 'graduated' || sched.state === 'maintenance') {
+          sched.interval_days = Math.max(30, Math.round(sched.interval_days * 1.8));
+        }
+
+        // Check Graduation Criteria (rule flags come from app settings):
+        // >= 3 consecutive unassisted correct, >= 2 formats when required,
+        // confidence >= configured threshold, >= 1 successful interleaved
+        // attempt when required, never assisted by a hint.
+        const {
+          confidence_required_for_graduation,
+          require_two_formats_for_graduation,
+          require_interleaved_success_for_graduation,
+          graduating_interval,
+        } = this.getSettings();
+        const hadInterleavedSuccess = this.data.activityAttempts.some(
+          (a) => a.item_id === attempt.item_id && a.correct && a.was_interleaved
+        );
+        const meetsTwoFormats = !require_two_formats_for_graduation || sched.formats_completed.length >= 2;
+        const meetsInterleaved = !require_interleaved_success_for_graduation || hadInterleavedSuccess;
+        const meetsConfidence = confidence >= (confidence_required_for_graduation ?? 2);
+
+        const openCriticalErrors = this.data.errorLogs.filter(
+          (e) => e.item_id === attempt.item_id && isBlockedFromGraduation(e)
+        );
+
+        const meetsGraduation =
+          !usedHint &&
+          sched.consecutive_correct_sessions >= 3 &&
+          meetsTwoFormats &&
+          meetsInterleaved &&
+          meetsConfidence &&
+          openCriticalErrors.length === 0; // P5 WP6: block graduation while critical confident-wrong errors unresolved
+
+        if (meetsGraduation && sched.state !== 'graduated' && sched.state !== 'maintenance') {
+          sched.state = 'graduated';
+          sched.graduated_at = new Date().toISOString();
+          sched.interval_days = Math.max(graduating_interval ?? 21, sched.interval_days);
+        }
+
+        sched.due_date = new Date(Date.now() + sched.interval_days * 24 * 3600 * 1000).toISOString();
+        sched.priority_score = Math.max(5, sched.priority_score - 15);
+
+        // If user had an open error log for this item, mark it repairing or repaired
+        const openErr = this.data.errorLogs.find(
+          (e) => e.item_id === attempt.item_id && e.status === 'open'
+        );
+        if (openErr) {
+          openErr.status = sched.consecutive_correct_sessions >= 2 ? 'repaired' : 'repairing';
+          openErr.updated_at = new Date().toISOString();
+        }
       }
 
-      // Adjust difficulty (FSRS formula)
-      if (confidence === 3) {
-        sched.difficulty = Math.max(1.0, (sched.difficulty || 5) - 0.4);
-      } else if (confidence === 0 || confidence === 1) {
-        sched.difficulty = Math.min(10.0, (sched.difficulty || 5) + 0.3);
-      }
-
-      // Adjust ease & stability
-      let bonus = confidence === 3 ? 1.35 : confidence === 2 ? 1.15 : 1.0;
-      if (usedHint) {
-        // If assisted by hint, dampen stability gain so unassisted memory is verified soon
-        bonus = 1.05;
-      }
-      sched.stability = Math.max(1.0, (sched.stability || 1.0) * bonus);
-
-      // Interval calculation
-      if (usedHint) {
-        // With hint, keep interval short (1 to 2 days)
-        sched.interval_days = 2;
-        if (sched.state === 'new') sched.state = 'learning';
-      } else if (sched.state === 'new' || sched.state === 'learning') {
-        sched.interval_days = sched.consecutive_correct_sessions === 1 ? 1 : 3;
-        sched.state = 'review';
-      } else if (sched.state === 'review') {
-        sched.interval_days = Math.max(4, Math.round(sched.interval_days * 2.2 * sched.stability));
-      } else if (sched.state === 'graduated' || sched.state === 'maintenance') {
-        sched.interval_days = Math.max(30, Math.round(sched.interval_days * 1.8));
-      }
-
-      // Check Graduation Criteria (rule flags come from app settings):
-      // >= 3 consecutive unassisted correct, >= 2 formats when required,
-      // confidence >= configured threshold, >= 1 successful interleaved
-      // attempt when required, never assisted by a hint.
-      const {
-        confidence_required_for_graduation,
-        require_two_formats_for_graduation,
-        require_interleaved_success_for_graduation,
-        graduating_interval,
-      } = this.getSettings();
-      const hadInterleavedSuccess = this.data.activityAttempts.some(
-        (a) => a.item_id === attempt.item_id && a.correct && a.was_interleaved
-      );
-      const meetsTwoFormats = !require_two_formats_for_graduation || sched.formats_completed.length >= 2;
-      const meetsInterleaved = !require_interleaved_success_for_graduation || hadInterleavedSuccess;
-      const meetsConfidence = confidence >= (confidence_required_for_graduation ?? 2);
-
-      const openCriticalErrors = this.data.errorLogs.filter(
-        (e) => e.item_id === attempt.item_id && isBlockedFromGraduation(e)
-      );
-
-      const meetsGraduation =
-        !usedHint &&
-        sched.consecutive_correct_sessions >= 3 &&
-        meetsTwoFormats &&
-        meetsInterleaved &&
-        meetsConfidence &&
-        openCriticalErrors.length === 0; // P5 WP6: block graduation while critical confident-wrong errors unresolved
-
-      if (meetsGraduation && sched.state !== 'graduated' && sched.state !== 'maintenance') {
-        sched.state = 'graduated';
-        sched.graduated_at = new Date().toISOString();
-        sched.interval_days = Math.max(graduating_interval ?? 21, sched.interval_days);
-      }
-
-      sched.due_date = new Date(Date.now() + sched.interval_days * 24 * 3600 * 1000).toISOString();
-      sched.priority_score = Math.max(5, sched.priority_score - 15);
-
-      // If user had an open error log for this item, mark it repairing or repaired
-      const openErr = this.data.errorLogs.find(
-        (e) => e.item_id === attempt.item_id && e.status === 'open'
-      );
-      if (openErr) {
-        openErr.status = sched.consecutive_correct_sessions >= 2 ? 'repaired' : 'repairing';
-        openErr.updated_at = new Date().toISOString();
-      }
+      this.saveSync(true);
+      return { attempt: newAttempt, schedule: sched, errorLog };
+    } catch (error) {
+      this.data.activityAttempts = previousAttempts;
+      this.data.reviewSchedules = previousSchedules;
+      this.data.errorLogs = previousErrors;
+      throw error;
     }
-
-    this.saveSync();
-    return { attempt: newAttempt, schedule: sched, errorLog };
   }
 
   public getErrorLogs(filter?: { status?: string; item_id?: string }): ErrorLog[] {

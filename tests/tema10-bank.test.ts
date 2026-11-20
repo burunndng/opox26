@@ -9,7 +9,7 @@ import type { Item } from '../src/types.ts';
  * Tema 10 específico ("Protección por jubilación") bank integrity.
  * Batch authored from the 2026-11-18 class (transcript + Diaposiivas tema 10ss.pdf)
  * plus BOE-verified anchors (TRLGSS, RD 453/2022, RDL 3/2026, RD 1539/2003).
- * 48 standard MCQs; no item encodes a deferred or unverified teacher claim.
+ * 50 standard MCQs; no item encodes a deferred or unverified teacher claim.
  */
 const TOPIC = 'topic_seguridad_social_tema_10';
 const tema10 = seedItems.filter((item) => item.topic_id === TOPIC);
@@ -42,9 +42,9 @@ function longestPositionRun(items: Item[]): { position: number; length: number; 
 }
 
 describe('Tema 10 específico bank integrity', () => {
-  test('T1: the bank holds the audited 48 items', () => {
-    assert.equal(tema10.length, 50, 'Tema 10 must hold 48 items');
-    assert.equal(batch.length, 50, 'seedItemsTema10 must export 48 items');
+  test('T1: the bank holds the audited 50 items', () => {
+    assert.equal(tema10.length, 50, 'Tema 10 must hold 50 items');
+    assert.equal(batch.length, 50, 'seedItemsTema10 must export 50 items');
   });
 
   test('T2: unique contiguous id series item-t10-1..50', () => {

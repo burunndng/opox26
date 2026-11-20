@@ -55,6 +55,89 @@ describe('SRS graduation hardening', () => {
     );
   });
 
+  test('retrying an identified attempt does not duplicate its SRS effects or error log', () => {
+    const item = makeItem('idempotent-retry');
+    const attempt = {
+      id: 'attempt-idempotency-test',
+      item_id: item.id,
+      activity_type: 'cover_and_generate_mcq' as const,
+      correct: false,
+      confidence: 3 as const,
+      user_response: 'B',
+    };
+    const first = db.recordAttempt(attempt);
+    const lapses = first.schedule.lapses;
+    const second = db.recordAttempt(attempt);
+    assert.equal(second.attempt.id, first.attempt.id);
+    assert.equal(second.schedule.lapses, lapses);
+    assert.equal(db.getAttempts().filter((a) => a.id === attempt.id).length, 1);
+    assert.equal(db.getErrorLogs({ item_id: item.id }).length, 1);
+    assert.throws(() => db.recordAttempt({ ...attempt, user_response: 'A' }));
+  });
+
+  test('a SQLite write failure is reported and rolls back attempt, schedule, and error log in memory', () => {
+    const item = makeItem('attempt-write-failure');
+    const conn = (db as unknown as {
+      conn: {
+        exec(sql: string): void;
+        prepare(sql: string): { get(...values: string[]): { count: number } };
+      };
+    }).conn;
+    assert.ok(conn, 'isolated SQLite connection must be open');
+    const beforeSchedule = structuredClone(db.getReviewSchedule(item.id));
+    const beforeAttempts = db.getAttempts().length;
+    const attempt = {
+      id: 'attempt-persistence-failure',
+      item_id: item.id,
+      activity_type: 'cover_and_generate_mcq' as const,
+      user_response: 'respuesta',
+      confidence: 3 as const,
+      correct: false,
+    };
+
+    conn.exec(`
+      CREATE TRIGGER fail_one_attempt_insert
+      BEFORE INSERT ON activity_attempts
+      WHEN NEW.id = '${attempt.id}'
+      BEGIN SELECT RAISE(ABORT, 'forced persistence failure'); END;
+    `);
+    try {
+      const originalConsoleError = console.error;
+      console.error = () => {};
+      try {
+        assert.throws(() => db.recordAttempt(attempt), /forced persistence failure/);
+      } finally {
+        console.error = originalConsoleError;
+      }
+      assert.equal(db.getAttempts().length, beforeAttempts);
+      assert.deepEqual(db.getReviewSchedule(item.id), beforeSchedule);
+      assert.equal(db.getErrorLogs({ item_id: item.id }).length, 0);
+      assert.equal(
+        conn.prepare('SELECT COUNT(*) AS count FROM activity_attempts WHERE id = ?').get(attempt.id)?.count,
+        0,
+      );
+      assert.equal(
+        conn.prepare('SELECT lapses AS count FROM review_schedules WHERE item_id = ?').get(item.id)?.count,
+        beforeSchedule?.lapses,
+      );
+      assert.equal(
+        conn.prepare('SELECT COUNT(*) AS count FROM error_logs WHERE item_id = ?').get(item.id)?.count,
+        0,
+      );
+    } finally {
+      conn.exec('DROP TRIGGER fail_one_attempt_insert');
+    }
+
+    const saved = db.recordAttempt(attempt);
+    assert.equal(saved.attempt.id, attempt.id);
+    assert.equal(db.getAttempts().filter((entry) => entry.id === attempt.id).length, 1);
+    assert.equal(db.getErrorLogs({ item_id: item.id }).length, 1);
+    assert.equal(
+      conn.prepare('SELECT COUNT(*) AS count FROM activity_attempts WHERE id = ?').get(attempt.id)?.count,
+      1,
+    );
+  });
+
   test('G2: graduation is blocked until a successful interleaved attempt exists', () => {
     const item = makeItem('g2');
     db.recordAttempt({ item_id: item.id, activity_type: 'cover_and_generate_mcq', correct: true, confidence: 2 });
