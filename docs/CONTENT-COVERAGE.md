@@ -19,6 +19,7 @@ baseline; after each content batch, refresh the affected row here in the same co
 | Tema 3 General (TC) | clase 26-10 (§1.7) | 24 | 2026-11-03 | auditado (new bank) |
 | Tema 9 (nacimiento y cuidado) | clase 4-11 + parte 2 + supuesto (§1.10, §1.11) | 61 | 2026-11-09 | auditado |
 | Tema 4 específico (cotización) | clase 16-11 (grupos 473/475) — resumen de transcript + deck + NORMATIVA | 48 | 2026-11-19 | auditado |
+| Tema 10 específico (jubilación) | clase 18-11 — transcript + `Diaposiivas tema 10ss.pdf` (resumen en `ESPECIFICO/T10/`) | 48 | 2026-11-20 | auditado |
 | retrieval/pretest | — | 6 | — | n/a |
 
 ## Tier B (deferred follow-up batches)
@@ -35,6 +36,7 @@ baseline; after each content batch, refresh the affected row here in the same co
       cubierto en el banco (cluster_lactante, item-t9-57 y bloque agrupado de carencia). No se
       generan items nuevos: no hay hueco de contenido real. Anclas verificadas: BOE-A-2015-11724
       arts. 183, 184, 178 (consultado 2026-11-19).
+- [ ] Tabla coeficientes reductores del Deck Tema 10 (7,5 % para 30–34 años) — no coincide con los tramos vigentes del art. 207; suelo 56 para el 45 % e hipótesis del profesor sobre el cálculo del 45 % también diferidos (§7 del resumen Tema 10)
 - [ ] Tabla RG/TREBEP del §3.6 del resumen parte 2 (Tema 9), §1.11
 - [ ] Reconcile professor contradictions: 360/180 days, 50 % wording, SMI figures,
       "Victoria 4× SMI" (Tema 9), §1.11

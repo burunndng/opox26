@@ -1,0 +1,1081 @@
+/**
+ * Seed bank for Seguridad Social Tema 10 (Bloque Específico):
+ * "Protección por jubilación".
+ *
+ * SOURCE OF TRUTH: class of 2026-11-18 (full transcript + Diaposiivas tema 10ss.pdf)
+ * and the class resumen in Documents/OPOSICIONES/ESPECIFICO/T10/. Every legal
+ * anchor below was read from the consolidated BOE text on 2026-11-19/20:
+ *   - RDLeg 8/2015 (BOE-A-2015-11724): arts. 60, 153, 165, 205–210, 214, 215,
+ *     DT 40 y DT 41.
+ *   - RD 453/2022 (BOE-A-2022-9850): arts. 3 (hecho causante) y 4 (efectos).
+ *   - RDL 3/2026 (BOE-A-2026-2548): arts. 1 y 2 (tope y brecha de género 2026).
+ *   - RD 1539/2003 (BOE-A-2003-23401): art. 3 (coeficientes 0,25 y 0,50).
+ *
+ * DEFERRED (see §7 of the class resumen): the deck's 7,5% coefficient table,
+ * the 56-year floor for the 45% disability, the professor's own hypothesis on
+ * the 45% calculation, the 2025 TJUE judgment and the 1,4-day rule for ≤5-day
+ * contracts. None of those is encoded as a key.
+ *
+ * Authoring note: as in the Tema 4 bank, `buildMcq` puts the correct option at
+ * A; `rebalanceCanonicalMcqOptions` in seedData.ts assigns the final canonical
+ * position. 48 items = six full cycles of [0,1,3,2,0,2,1,3] → 12 per position.
+ */
+
+import type { Item, MCQOption, TrapType, CognitiveOperation } from '../src/types.ts';
+
+const TOPIC = 'topic_seguridad_social_tema_10';
+const now = '2026-11-20T00:00:00Z';
+
+interface McqSpec {
+  id: string;
+  cluster_id: string;
+  confusion_pair_id?: string;
+  stem: string;
+  prompt_before_options?: string;
+  correct: { text: string; explanation: string };
+  distractors: Array<{ text: string; trap_type: TrapType; explanation: string; condition_if_correct: string }>;
+  legal_basis: string;
+  rule_statement: string;
+  corrective_rule: string;
+  difficulty: number;
+  cognitive_operations: CognitiveOperation[];
+  figure_status?: 'BOE_VERIFIED' | 'ESTIMATED_LPGE';
+}
+
+function buildMcq(spec: McqSpec): Item {
+  const letters = ['A', 'B', 'C', 'D'];
+  const options: MCQOption[] = [
+    {
+      id: letters[0], text: spec.correct.text, is_correct: true,
+      trap_type: 'partial_rule_accuracy', explanation: spec.correct.explanation,
+      condition_if_correct: 'Correcto con arreglo a la norma vigente.',
+    },
+    ...spec.distractors.map((d, i) => ({
+      id: letters[i + 1], text: d.text, is_correct: false, trap_type: d.trap_type,
+      explanation: d.explanation, condition_if_correct: d.condition_if_correct,
+    })),
+  ];
+  return {
+    id: spec.id,
+    topic_id: TOPIC,
+    cluster_id: spec.cluster_id,
+    ...(spec.confusion_pair_id ? { confusion_pair_id: spec.confusion_pair_id } : {}),
+    item_type: 'cover_and_generate_mcq',
+    stem: spec.stem,
+    ...(spec.prompt_before_options ? { prompt_before_options: spec.prompt_before_options } : {}),
+    options,
+    correct_answer: letters[0],
+    legal_basis: spec.legal_basis,
+    rule_statement: spec.rule_statement,
+    why_correct: spec.correct.explanation,
+    distractor_analysis: Object.fromEntries(spec.distractors.map((d, i) => [letters[i + 1], d.explanation])),
+    trap_types: spec.distractors.map((d) => d.trap_type),
+    corrective_rule: spec.corrective_rule,
+    difficulty: spec.difficulty,
+    cognitive_operations: spec.cognitive_operations,
+    status: 'validated',
+    source: 'manual',
+    ...(spec.figure_status ? { figure_status: spec.figure_status } : {}),
+    created_at: now,
+    updated_at: now,
+  };
+}
+
+/** 8 hecho causante/efectos + 4 requisitos + 8 base + 6 cuantía + 10 no imputable
+ *  + 6 otras anticipaciones + 4 parcial/flexible/activa + 2 brecha = 48 ítems. */
+export const seedItemsTema10: Item[] = [
+  // 1–8: hecho causante y efectos económicos
+  buildMcq({
+    id: 'item-t10-1',
+    cluster_id: 'cluster_t10_hecho_causante_efectos',
+    confusion_pair_id: 'pair_t10_hecho_causante_vs_efectos',
+    stem: 'Una solicitante presenta su impreso el 14 de abril y quiere consignar una fecha de devengo distinta. ¿Qué margen le permite la norma?',
+    prompt_before_options: 'La fecha la elige quien solicita, pero con un límite temporal.',
+    correct: {
+      text: 'Tres meses a cada lado de la petición',
+      explanation: 'La fecha indicada ha de estar comprendida dentro de los tres meses anteriores o posteriores al día de presentación, o coincidir con él.',
+    },
+    distractors: [
+      { text: 'Un mes antes y dos después de la petición, como mucho', trap_type: 'numeric_substitution', explanation: 'La norma no establece ese margen desigual; el plazo es simétrico.', condition_if_correct: 'Si el margen fuera asimétrico.' },
+      { text: 'Seis meses anteriores, sin límite posterior', trap_type: 'overbroad_statement', explanation: 'Confunde la antelación máxima del art. 3.2 con la regla general de elección de fecha.', condition_if_correct: 'Si se causara desde una situación especial.' },
+      { text: 'Cualquier fecha anterior, porque el derecho no prescribe', trap_type: 'conceptual_merger', explanation: 'La imprescriptibilidad del art. 4 no elimina el margen de elección del art. 3.1.', condition_if_correct: 'Si la fecha elegida pudiera ser libre.' },
+    ],
+    legal_basis: 'Art. 3.1 RD 453/2022',
+    rule_statement: 'La pensión contributiva se entiende causada en la fecha que indique el interesado al solicitarla, siempre que en ella concurran los requisitos y la fecha esté dentro de los tres meses anteriores o posteriores a la presentación, o coincida con ella.',
+    corrective_rule: 'Elección personal, con margen simétrico de tres meses.',
+    difficulty: 3,
+    cognitive_operations: ['application', 'numeric_precision'],
+  }),
+  buildMcq({
+    id: 'item-t10-2',
+    cluster_id: 'cluster_t10_hecho_causante_efectos',
+    stem: 'Un afiliado deja de prestar servicios y opta por la regla especial prevista para quien estaba en alta. ¿Qué fecha fija el devengo de su pensión?',
+    prompt_before_options: 'Separe la regla general de la situación de alta.',
+    correct: {
+      text: 'El día de baja en el régimen',
+      explanation: 'Cuando se causa desde una situación de alta, la pensión se entiende causada el día de baja en el régimen como consecuencia del cese.',
+    },
+    distractors: [
+      { text: 'El día en que se presente la solicitud de pensión', trap_type: 'factual_misapplication', explanation: 'Es la fecha de la gestión, no la del cese que determina el hecho causante.', condition_if_correct: 'Si no existiera la regla especial.' },
+      { text: 'El día siguiente al cese en la prestación de servicios', trap_type: 'wrong_start_date', explanation: 'El día siguiente es el de efectos económicos, no el del hecho causante.', condition_if_correct: 'Si se preguntara por los efectos económicos.' },
+      { text: 'El último día del mes natural en que cesó', trap_type: 'temporal_confusion', explanation: 'Esa regla corresponde al supuesto del art. 46.4.c) del reglamento de afiliación, no al alta ordinaria.', condition_if_correct: 'Si se tratara de un régimen especial en inactividad.' },
+    ],
+    legal_basis: 'Art. 3.2.a RD 453/2022',
+    rule_statement: 'En el supuesto de alta en algún régimen, la pensión se entiende causada el día de la baja en el régimen correspondiente como consecuencia del cese en el trabajo por cuenta propia o ajena.',
+    corrective_rule: 'Alta → fecha de baja por el cese.',
+    difficulty: 3,
+    cognitive_operations: ['micro_discrimination', 'application'],
+  }),
+  buildMcq({
+    id: 'item-t10-3',
+    cluster_id: 'cluster_t10_hecho_causante_efectos',
+    stem: 'Un trabajador sigue en excedencia forzosa por un cargo público cuando cumple la edad de retiro y pide la pensión. ¿Cuándo se produce el hecho causante?',
+    prompt_before_options: 'El profesor corrigió en clase su primer planteamiento de este caso.',
+    correct: {
+      text: 'Al cesar en el cargo o funciones',
+      explanation: 'Estando en excedencia forzosa no se está en alta ni se prestan servicios: el hecho causante se traslada a la fecha del cese en el cargo.',
+    },
+    distractors: [
+      { text: 'El día del cumpleaños que abre el derecho por edad', trap_type: 'temporal_confusion', explanation: 'La edad se cumple, pero sin alta ni servicios no puede fijarse ahí el devengo.', condition_if_correct: 'Si estuviera prestando servicios.' },
+      { text: 'La fecha en que se registra la instancia', trap_type: 'factual_misapplication', explanation: 'Es un caso especial del art. 3.2: la solicitud puede adelantarse, pero no fija el hecho causante.', condition_if_correct: 'Si no existiera la regla especial.' },
+      { text: 'El día de reincorporación al puesto de trabajo', trap_type: 'exception_ignored', explanation: 'No basta con reincorporarse: la norma atiende al cese en el cargo público.', condition_if_correct: 'Si la regla exigiera la reincorporación.' },
+    ],
+    legal_basis: 'Art. 3.2.c RD 453/2022',
+    rule_statement: 'En la situación asimilada al alta por excedencia forzosa para ocupar un cargo público que imposibilite la asistencia al trabajo, la pensión se entiende causada en la fecha del cese en el cargo o funciones.',
+    corrective_rule: 'Excedencia forzosa → fecha del cese en el cargo.',
+    difficulty: 4,
+    cognitive_operations: ['application', 'exception_detection'],
+  }),
+  buildMcq({
+    id: 'item-t10-4',
+    cluster_id: 'cluster_t10_hecho_causante_efectos',
+    stem: 'Una empresa envía a un empleado a trabajar temporalmente a otro Estado. ¿Qué fecha marca el devengo de su futura pensión si causa baja allí?',
+    prompt_before_options: 'El desplazado conserva la condición de asimilado al alta.',
+    correct: {
+      text: 'La fecha del cese en el trabajo',
+      explanation: 'En el traslado del trabajador fuera del territorio al servicio de empresa española, el hecho causante es la fecha del cese en el trabajo.',
+    },
+    distractors: [
+      { text: 'La de entrada en vigor del contrato de desplazamiento', trap_type: 'wrong_start_date', explanation: 'El inicio del desplazamiento no extingue la relación laboral.', condition_if_correct: 'Si el hecho causante fuera el inicio.' },
+      { text: 'La de baja en la Seguridad Social del país de destino', trap_type: 'wrong_competent_body', explanation: 'La norma española atiende al cese en el trabajo, no a la baja en un régimen extranjero.', condition_if_correct: 'Si se aplicara la legislación local.' },
+      { text: 'Dos años después del desplazamiento, automáticamente', trap_type: 'numeric_substitution', explanation: 'El plazo máximo del desplazamiento no determina por sí solo el devengo.', condition_if_correct: 'Si el transcurso del tiempo fijara el hecho causante.' },
+    ],
+    legal_basis: 'Art. 3.2.b RD 453/2022',
+    rule_statement: 'En la situación asimilada al alta por traslado del trabajador fuera del territorio del Estado al servicio de una empresa española, la pensión se entiende causada en la fecha del cese en el trabajo.',
+    corrective_rule: 'Desplazado → cese en el trabajo.',
+    difficulty: 3,
+    cognitive_operations: ['institutional_discrimination', 'application'],
+  }),
+  buildMcq({
+    id: 'item-t10-5',
+    cluster_id: 'cluster_t10_hecho_causante_efectos',
+    stem: 'Se agota un subsidio para mayores de cincuenta y dos años al alcanzar la edad ordinaria. ¿Qué fecha se toma como hecho causante de la jubilación?',
+    prompt_before_options: 'Hay una especialidad expresa para la extinción de prestaciones por desempleo.',
+    correct: {
+      text: 'El día de cumplimiento de la edad',
+      explanation: 'Al extinguirse la prestación o subsidio por desempleo por el cumplimiento de la edad ordinaria, el hecho causante es el día en que se cumple esa edad.',
+    },
+    distractors: [
+      { text: 'El día de la resolución firme de extinción', trap_type: 'factual_misapplication', explanation: 'Esa fecha aparece en la regla de efectos económicos, no en la del hecho causante.', condition_if_correct: 'Si se preguntara por la retroactividad.' },
+      { text: 'El día siguiente a la extinción del subsidio', trap_type: 'wrong_start_date', explanation: 'Es el inicio de los efectos económicos, que no coincide con el devengo.', condition_if_correct: 'Si se tratara del devengo económico.' },
+      { text: 'La fecha de la última prestación percibida', trap_type: 'temporal_confusion', explanation: 'El pago de la prestación anterior no fija el hecho causante de la pensión.', condition_if_correct: 'Si la fecha de pago fuera relevante.' },
+    ],
+    legal_basis: 'Art. 3.2.e RD 453/2022',
+    rule_statement: 'Cuando se extinga la prestación o subsidio por desempleo, incluido el de mayores de cincuenta y dos años, por cumplimiento de la edad ordinaria, el hecho causante de la jubilación tendrá lugar el día de cumplimiento de dicha edad.',
+    corrective_rule: 'Subsidio agotado por edad → día del cumpleaños.',
+    difficulty: 4,
+    cognitive_operations: ['exception_detection', 'application'],
+  }),
+  buildMcq({
+    id: 'item-t10-6',
+    cluster_id: 'cluster_t10_hecho_causante_efectos',
+    confusion_pair_id: 'pair_t10_hecho_causante_vs_efectos',
+    stem: 'Una persona pide la pensión varios años después de haber reunido los requisitos. ¿Qué dice la norma sobre su derecho?',
+    prompt_before_options: 'No confunda el derecho con el cobro.',
+    correct: {
+      text: 'El derecho es imprescriptible',
+      explanation: 'El derecho al reconocimiento de la pensión contributiva de jubilación es imprescriptible, sin perjuicio del límite de los efectos económicos.',
+    },
+    distractors: [
+      { text: 'El derecho caduca a los cinco años', trap_type: 'factual_misapplication', explanation: 'La prescripción de cinco años corresponde a otras acciones, no al reconocimiento de esta pensión.', condition_if_correct: 'Si se aplicara el régimen general de prescripción.' },
+      { text: 'Se pierde por no solicitarlo en el plazo de tres meses', trap_type: 'exception_ignored', explanation: 'El plazo de tres meses limita la retroactividad del cobro, no el derecho.', condition_if_correct: 'Si el derecho prescribiera.' },
+      { text: 'Solo se conserva si se acredita una causa de fuerza mayor', trap_type: 'overbroad_statement', explanation: 'No se exige causa alguna: el derecho no se extingue por el transcurso del tiempo.', condition_if_correct: 'Si hiciera falta justificar la demora.' },
+    ],
+    legal_basis: 'Art. 4.1 RD 453/2022',
+    rule_statement: 'El derecho al reconocimiento de la pensión de jubilación en su modalidad contributiva es imprescriptible, sin perjuicio de la limitación de los efectos económicos prevista en el apartado siguiente.',
+    corrective_rule: 'El derecho no prescribe; el cobro sí tiene límites.',
+    difficulty: 3,
+    cognitive_operations: ['micro_discrimination', 'generative_retrieval'],
+  }),
+  buildMcq({
+    id: 'item-t10-7',
+    cluster_id: 'cluster_t10_hecho_causante_efectos',
+    confusion_pair_id: 'pair_t10_hecho_causante_vs_efectos',
+    stem: 'El reconocimiento se solicita fuera de plazo, ya vencido el margen legal. ¿Hasta dónde llega la retroactividad del cobro?',
+    prompt_before_options: 'El profesor destacó este matiz al completar una respuesta de clase.',
+    correct: {
+      text: 'Tres meses antes de la solicitud',
+      explanation: 'Si en los supuestos del art. 3.2 la solicitud se presenta pasados tres meses, los efectos se producen a partir de los tres meses anteriores a la solicitud.',
+    },
+    distractors: [
+      { text: 'Desde la fecha del hecho causante, sin límite', trap_type: 'exception_ignored', explanation: 'Es la regla general, no la aplicable cuando la solicitud se presenta tardíamente.', condition_if_correct: 'Si la solicitud se hubiera presentado en plazo.' },
+      { text: 'Desde el día siguiente al cumplimiento de la edad', trap_type: 'wrong_start_date', explanation: 'El día siguiente es el inicio ordinario, que se pierde con la solicitud tardía.', condition_if_correct: 'Si no hubiera retraso.' },
+      { text: 'Seis meses anteriores a la fecha de presentación', trap_type: 'numeric_substitution', explanation: 'La retroactividad máxima es de tres meses, no de seis.', condition_if_correct: 'Si el plazo fuera mayor.' },
+    ],
+    legal_basis: 'Art. 4.2 RD 453/2022',
+    rule_statement: 'Los efectos económicos se producen a partir del día siguiente al hecho causante; si en los supuestos del art. 3.2 la solicitud se presenta transcurridos tres meses, los efectos se producen a partir de los tres meses anteriores a la fecha de presentación.',
+    corrective_rule: 'Solicitud tardía → retroactividad máxima de tres meses.',
+    difficulty: 4,
+    cognitive_operations: ['numeric_precision', 'exception_detection'],
+  }),
+  buildMcq({
+    id: 'item-t10-8',
+    cluster_id: 'cluster_t10_hecho_causante_efectos',
+    confusion_pair_id: 'pair_t10_hecho_causante_vs_efectos',
+    stem: 'El hecho causante se fija correctamente y la solicitud se presenta dentro de plazo. ¿Cuándo empiezan a devengarse económicamente las prestaciones?',
+    prompt_before_options: 'Distinga devengo civil de efectos de cobro.',
+    correct: {
+      text: 'El día siguiente al hecho causante',
+      explanation: 'Los efectos económicos del reconocimiento se producen a partir del día siguiente a la fecha en que se produzca el hecho causante.',
+    },
+    distractors: [
+      { text: 'El mismo día en que se produce el hecho causante', trap_type: 'temporal_confusion', explanation: 'La norma diferencia el día del devengo del de efectos: estos empiezan al día siguiente.', condition_if_correct: 'Si ambos momentos coincidieran.' },
+      { text: 'El día de la resolución administrativa de reconocimiento', trap_type: 'wrong_competent_body', explanation: 'La fecha de la resolución no determina el inicio del cobro.', condition_if_correct: 'Si el cobro empezara con la resolución.' },
+      { text: 'El primer día del mes siguiente al de la solicitud', trap_type: 'familiar_wording_trap', explanation: 'Es una regla de liquidación ajena a los efectos de la pensión.', condition_if_correct: 'Si se aplicara la regla mensual.' },
+    ],
+    legal_basis: 'Art. 4.2 RD 453/2022',
+    rule_statement: 'Los efectos económicos del reconocimiento del derecho a la pensión se producirán a partir del día siguiente a la fecha en que se produzca el hecho causante, salvo las especialidades de retroactividad del propio artículo.',
+    corrective_rule: 'Efectos económicos → día siguiente al devengo.',
+    difficulty: 3,
+    cognitive_operations: ['application', 'micro_discrimination'],
+  }),
+
+  // 9–12: requisitos de edad y cotización
+  buildMcq({
+    id: 'item-t10-9',
+    cluster_id: 'cluster_t10_requisitos_edad_cotizacion',
+    stem: 'Un trabajador acredita treinta años de cotización. ¿Qué edad ordinaria le corresponde para jubilarse en el Régimen General?',
+    prompt_before_options: 'La carrera larga abre la vía de los sesenta y cinco.',
+    correct: {
+      text: 'Sesenta y siete años',
+      explanation: 'Con menos de treinta y ocho años y seis meses cotizados, la edad ordinaria es sesenta y siete años.',
+    },
+    distractors: [
+      { text: 'Sesenta y cinco años, con independencia de los años cotizados', trap_type: 'overbroad_statement', explanation: 'La edad de sesenta y cinco exige una carrera de treinta y ocho años y seis meses.', condition_if_correct: 'Si acreditara esa carrera.' },
+      { text: 'Sesenta y seis años y diez meses', trap_type: 'temporal_confusion', explanation: 'Es una edad transitoria de años anteriores, no la regla general del art. 205.', condition_if_correct: 'Si el hecho causante se fijara en 2026.' },
+      { text: 'Sesenta y dos años, si solicita la jubilación anticipada', trap_type: 'conceptual_merger', explanation: 'La anticipación voluntaria tiene sus propios requisitos y no permite adelantar tanto.', condition_if_correct: 'Si se tratara de una modalidad anticipada.' },
+    ],
+    legal_basis: 'Art. 205.1.a TRLGSS',
+    rule_statement: 'Tendrán derecho a la pensión de jubilación quienes hayan cumplido sesenta y siete años, o sesenta y cinco cuando acrediten treinta y ocho años y seis meses de cotización, sin computar la parte proporcional de pagas extraordinarias.',
+    corrective_rule: 'Carrera corta → 67; carrera larga → 65.',
+    difficulty: 3,
+    cognitive_operations: ['generative_retrieval', 'numeric_precision'],
+  }),
+  buildMcq({
+    id: 'item-t10-10',
+    cluster_id: 'cluster_t10_requisitos_edad_cotizacion',
+    stem: '¿Qué extensión de la vida laboral permite acceder a la jubilación ordinaria a los sesenta y cinco años?',
+    prompt_before_options: 'El professor lo repetía: con 39 años cotizados ya se sabe la edad.',
+    correct: {
+      text: 'Treinta y ocho años y seis meses',
+      explanation: 'La edad de sesenta y cinco años exige acreditar treinta y ocho años y seis meses de cotización, sin la parte proporcional de pagas extraordinarias.',
+    },
+    distractors: [
+      { text: 'Treinta y cinco años completos de cotización efectiva', trap_type: 'numeric_substitution', explanation: 'Es la cifra de la anticipación voluntaria, no la de la edad ordinaria reducida.', condition_if_correct: 'Si se tratara del art. 208.' },
+      { text: 'Treinta y tres años, computando el servicio militar', trap_type: 'wrong_legal_object', explanation: 'Corresponde a la anticipación por causa no imputable.', condition_if_correct: 'Si se aplicara el art. 207.' },
+      { text: 'Cuarenta años exactos, sin fracciones de meses', trap_type: 'numeric_precision', explanation: 'La norma fija treinta y ocho años y seis meses, admitiendo años y meses completos.', condition_if_correct: 'Si el umbral fuera superior.' },
+    ],
+    legal_basis: 'Art. 205.1.a TRLGSS',
+    rule_statement: 'La edad ordinaria de sesenta y cinco años se aplica a quienes acrediten treinta y ocho años y seis meses de cotización, sin que se tenga en cuenta la parte proporcional correspondiente a las pagas extraordinarias.',
+    corrective_rule: '38 años y 6 meses → 65 años.',
+    difficulty: 3,
+    cognitive_operations: ['numeric_precision', 'generative_retrieval'],
+  }),
+  buildMcq({
+    id: 'item-t10-11',
+    cluster_id: 'cluster_t10_requisitos_edad_cotizacion',
+    stem: 'Al producirse el devengo una persona no está en alta ni asimilada, pero cumple la edad y la cotización. ¿Puede causar derecho?',
+    prompt_before_options: 'El art. 205.3 es una excepción muy preguntada.',
+    correct: {
+      text: 'Sí, sin necesidad de estar en alta',
+      explanation: 'La pensión puede causarse aunque el interesado no esté en alta ni asimilada, siempre que reúna los requisitos de edad y cotización.',
+    },
+    distractors: [
+      { text: 'No, porque el alta es requisito imprescindible', trap_type: 'absolute_relative_confusion', explanation: 'Alta y cotización son cajones distintos: la falta de alta se subsana cumpliendo edad y cotización.', condition_if_correct: 'Si no existiera el apartado 3.' },
+      { text: 'Solo si antes estuvo inscrita como demandante de empleo', trap_type: 'exception_ignored', explanation: 'La inscripción se exige en la anticipación no imputable, no en la jubilación ordinaria.', condition_if_correct: 'Si se aplicara el art. 207.' },
+      { text: 'Solo si causó baja en los tres meses anteriores', trap_type: 'factual_misapplication', explanation: 'No se exige un alta previa reciente: basta la edad y el período de cotización.', condition_if_correct: 'Si se exigiera un cese previo.' },
+    ],
+    legal_basis: 'Art. 205.3 TRLGSS',
+    rule_statement: 'No obstante lo dispuesto en el apartado 1, la pensión de jubilación podrá causarse aunque los interesados no se encuentren en el momento del hecho causante en alta o situación asimilada, siempre que reúnan los requisitos de edad y cotización.',
+    corrective_rule: 'Sin alta → basta edad y cotización.',
+    difficulty: 3,
+    cognitive_operations: ['exception_detection', 'application'],
+  }),
+  buildMcq({
+    id: 'item-t10-12',
+    cluster_id: 'cluster_t10_requisitos_edad_cotizacion',
+    stem: '¿Cuál es el período mínimo de cotización exigido con carácter general y cómo se distribuye en el tiempo?',
+    prompt_before_options: 'Dos cifras: la total y la parte reciente.',
+    correct: {
+      text: 'Quince años, dos dentro de los últimos quince',
+      explanation: 'Se exigen quince años cotizados, de los cuales al menos dos han de estar comprendidos dentro de los quince años inmediatamente anteriores al derecho.',
+    },
+    distractors: [
+      { text: 'Quince años, todos dentro de los diez anteriores', trap_type: 'numeric_substitution', explanation: 'La parte reciente es de dos años dentro de los quince anteriores.', condition_if_correct: 'Si el plazo de referencia fuera más corto.' },
+      { text: 'Diez años, sin exigencia de parte reciente', trap_type: 'hyper_narrow_statement', explanation: 'Ni la cifra ni la distribución se ajustan al art. 205.1.b).', condition_if_correct: 'Si la carencia fuera menor.' },
+      { text: 'Treinta y tres años computados sin pagas extraordinarias', trap_type: 'wrong_legal_object', explanation: 'Es la exigencia de la jubilación anticipada no imputable, no la carencia general.', condition_if_correct: 'Si se aplicara el art. 207.' },
+    ],
+    legal_basis: 'Art. 205.1.b TRLGSS',
+    rule_statement: 'Se requiere un período mínimo de cotización de quince años, de los cuales al menos dos deben estar comprendidos dentro de los quince años inmediatamente anteriores al momento de causar el derecho, sin computar la parte proporcional de pagas extraordinarias.',
+    corrective_rule: '15 años en total; 2 recientes.',
+    difficulty: 3,
+    cognitive_operations: ['numeric_precision', 'generative_retrieval'],
+  }),
+
+  // 13–20: base reguladora
+  buildMcq({
+    id: 'item-t10-13',
+    cluster_id: 'cluster_t10_base_reguladora',
+    confusion_pair_id: 'pair_t10_art209_vs_dt40',
+    stem: 'En una pregunta de la parte teórica sobre el cálculo general de la base reguladora, ¿qué operación describe el art. 209?',
+    prompt_before_options: 'El profesor distingue teoría (art. 209) de supuesto práctico (transitoria).',
+    correct: {
+      text: 'Sumar 324 bases y dividir entre 378',
+      explanation: 'Con carácter general se dividen entre 378 las 324 bases de mayor importe elegidas de entre 348 meses.',
+    },
+    distractors: [
+      { text: 'Sumar 304 bases y dividir entre 354,67', trap_type: 'temporal_confusion', explanation: 'Es la regla de la DT cuadragésima para 2027, no la del art. 209.', condition_if_correct: 'Si el supuesto se fechara en 2027.' },
+      { text: 'Sumar 300 bases y dividir entre 350', trap_type: 'numeric_substitution', explanation: 'Corresponde al régimen anterior a la reforma, no al texto vigente.', condition_if_correct: 'Si se aplicara la norma derogada.' },
+      { text: 'Sumar las 348 bases y dividir entre 348', trap_type: 'partial_rule_accuracy', explanation: 'Se descartan las 24 bases más bajas: no se suman todas.', condition_if_correct: 'Si no hubiera selección de bases.' },
+    ],
+    legal_basis: 'Art. 209.1 TRLGSS',
+    rule_statement: 'La base reguladora será el cociente de dividir entre 378 la suma de las bases de cotización de 324 meses anteriores al mes previo al hecho causante, obtenidas de 348 meses consecutivos y eligiendo de oficio las 324 de mayor importe.',
+    corrective_rule: 'Teoría → 348 / 324 / 378.',
+    difficulty: 3,
+    cognitive_operations: ['generative_retrieval', 'numeric_precision'],
+  }),
+  buildMcq({
+    id: 'item-t10-14',
+    cluster_id: 'cluster_t10_base_reguladora',
+    stem: 'Aparecen meses sin obligación de cotizar dentro del período de cálculo. ¿Cómo se integran las primeras mensualidades?',
+    prompt_before_options: 'Las primeras lagunas tienen un trato más favorable que las restantes.',
+    correct: {
+      text: 'Con la base mínima del Régimen General',
+      explanation: 'Las primeras cuarenta y ocho mensualidades sin cotización se integran con la base mínima de cotización del Régimen General correspondiente a cada mes.',
+    },
+    distractors: [
+      { text: 'Con el 50 % de la base mínima del Régimen General', trap_type: 'partial_rule_accuracy', explanation: 'Ese porcentaje se aplica a las lagunas restantes, no a las primeras.', condition_if_correct: 'Si se tratara de lagunas posteriores.' },
+      { text: 'Con la base media de los últimos doce meses cotizados', trap_type: 'factual_misapplication', explanation: 'La integración se hace con la base mínima, no con una media.', condition_if_correct: 'Si la norma exigiera una media.' },
+      { text: 'Se descartan sin sustituirlas por ninguna base', trap_type: 'exception_ignored', explanation: 'Las lagunas se integran: no pueden dejarse vacías.', condition_if_correct: 'Si no existiera la integración.' },
+    ],
+    legal_basis: 'Art. 209.1.b TRLGSS',
+    rule_statement: 'Los meses sin obligación de cotizar se integran: las primeras cuarenta y ocho mensualidades con la base mínima del Régimen General del mes respectivo y el resto con el 50 % de dicha base mínima.',
+    corrective_rule: 'Primeras 48 lagunas → base mínima íntegra.',
+    difficulty: 3,
+    cognitive_operations: ['numeric_precision', 'application'],
+  }),
+  buildMcq({
+    id: 'item-t10-15',
+    cluster_id: 'cluster_t10_base_reguladora',
+    stem: 'Superadas las primeras cuarenta y ocho lagunas, ¿qué porcentaje de la base mínima se usa para integrar las siguientes?',
+    prompt_before_options: 'El trato cambia a partir de la mensualidad cuarenta y nueve.',
+    correct: {
+      text: 'El cincuenta por ciento',
+      explanation: 'El resto de las mensualidades sin obligación de cotizar se integran con el 50 % de la base mínima del Régimen General.',
+    },
+    distractors: [
+      { text: 'El cien por ciento, igual que las primeras', trap_type: 'partial_rule_accuracy', explanation: 'El 100 % se reserva a las primeras cuarenta y ocho mensualidades.', condition_if_correct: 'Si todas las lagunas se integraran igual.' },
+      { text: 'El setenta y cinco por ciento', trap_type: 'numeric_substitution', explanation: 'No hay una regla del 75 % en la integración general de lagunas.', condition_if_correct: 'Si el porcentaje fuera otro.' },
+      { text: 'El treinta y tres por ciento de la base máxima', trap_type: 'wrong_legal_object', explanation: 'Se integra con la base mínima, no con un porcentaje de la máxima.', condition_if_correct: 'Si se usara la base máxima.' },
+    ],
+    legal_basis: 'Art. 209.1.b TRLGSS',
+    rule_statement: 'Las primeras cuarenta y ocho mensualidades sin obligación de cotizar se integran con la base mínima del Régimen General y el resto de las mensualidades con el 50 % de dicha base mínima.',
+    corrective_rule: 'Lagunas restantes → 50 % de la base mínima.',
+    difficulty: 3,
+    cognitive_operations: ['numeric_precision', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t10-16',
+    cluster_id: 'cluster_t10_base_reguladora',
+    stem: '¿Cómo se computan las bases correspondientes a los dos años inmediatamente anteriores al mes previo al devengo?',
+    prompt_before_options: 'No todas las bases se actualizan por igual.',
+    correct: {
+      text: 'Por su valor nominal, sin actualizar',
+      explanation: 'Las bases de los veinticuatro meses inmediatamente anteriores al mes previo al hecho causante se computan por su valor nominal.',
+    },
+    distractors: [
+      { text: 'Actualizadas por la evolución del IPC desde su mes', trap_type: 'rule_exception_swap', explanation: 'La actualización por IPC se aplica a las bases restantes, no a las más recientes.', condition_if_correct: 'Si se tratara de bases antiguas.' },
+      { text: 'Con el valor de la base mínima vigente en cada mes', trap_type: 'factual_misapplication', explanation: 'La base mínima se usa para integrar lagunas, no para sustituir bases cotizadas.', condition_if_correct: 'Si esos meses no hubieran cotizado.' },
+      { text: 'Reducidas un 10 % para evitar incrementos salariales', trap_type: 'numeric_substitution', explanation: 'El art. 209 limita incrementos salariales, pero no aplica una reducción del 10 %.', condition_if_correct: 'Si existiera esa regla.' },
+    ],
+    legal_basis: 'Art. 209.1.c TRLGSS',
+    rule_statement: 'Las bases correspondientes a los veinticuatro meses inmediatamente anteriores al mes previo al hecho causante se computarán en su valor nominal; las restantes se actualizarán según la evolución del IPC.',
+    corrective_rule: 'Últimos 24 meses → valor nominal.',
+    difficulty: 3,
+    cognitive_operations: ['application', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t10-17',
+    cluster_id: 'cluster_t10_base_reguladora',
+    confusion_pair_id: 'pair_t10_art209_vs_dt40',
+    stem: 'Un supuesto práctico sitúa el hecho causante en 2027. ¿Qué divisor y qué número de bases corresponden a ese ejercicio?',
+    prompt_before_options: 'El profesor decía: en el supuesto se da por buena la transitoria.',
+    correct: {
+      text: '304 bases y divisor 354,67',
+      explanation: 'Desde el 1 de enero de 2027 se dividen entre 354,67 las 304 bases de mayor importe comprendidas en 308 meses.',
+    },
+    distractors: [
+      { text: '324 bases y divisor 378', trap_type: 'temporal_confusion', explanation: 'Es la regla general del art. 209, que rige para la teoría, no para el supuesto de 2027.', condition_if_correct: 'Si la pregunta fuera teórica.' },
+      { text: '302 bases y divisor 352,33', trap_type: 'numeric_substitution', explanation: 'Es el tramo correspondiente a 2026, no al ejercicio del supuesto.', condition_if_correct: 'Si el hecho causante se fijara en 2026.' },
+      { text: '306 bases y divisor 357', trap_type: 'numeric_precision', explanation: 'Corresponde a 2028, no a 2027.', condition_if_correct: 'Si el supuesto se fechara en 2028.' },
+    ],
+    legal_basis: 'DT cuadragésima TRLGSS',
+    rule_statement: 'Desde 1 de enero de 2027, la base reguladora será el resultado de dividir entre 354,67 la suma de las 304 bases de cotización de mayor importe comprendidas en el período de los 308 meses inmediatamente anteriores al mes previo al hecho causante.',
+    corrective_rule: '2027 → 308 / 304 / 354,67.',
+    difficulty: 4,
+    cognitive_operations: ['numeric_precision', 'application'],
+    figure_status: 'BOE_VERIFIED',
+  }),
+  buildMcq({
+    id: 'item-t10-18',
+    cluster_id: 'cluster_t10_base_reguladora',
+    confusion_pair_id: 'pair_t10_art209_vs_dt40',
+    stem: '¿Qué régimen de cálculo de la base reguladora se aplica en su integridad a partir del ejercicio 2037?',
+    prompt_before_options: 'La disposición transitoria cuadragésima establece un calendario.',
+    correct: {
+      text: 'El del artículo 209.1 sin adaptación',
+      explanation: 'Desde el 1 de enero de 2037 la base reguladora se calcula aplicando íntegramente lo establecido en el art. 209.1.',
+    },
+    distractors: [
+      { text: 'El divisor 375,67 con 322 bases de 344 meses', trap_type: 'temporal_confusion', explanation: 'Es el tramo de 2036, el último antes de la regla plena.', condition_if_correct: 'Si el devengo se fijara en 2036.' },
+      { text: 'El divisor 352,33 con 302 bases', trap_type: 'wrong_start_date', explanation: 'Es el primer tramo transitorio, de 2026.', condition_if_correct: 'Si se aplicara el inicio del calendario.' },
+      { text: 'La regla del artículo 210 sobre la cuantía', trap_type: 'wrong_legal_object', explanation: 'El art. 210 regla porcentajes, no la base reguladora.', condition_if_correct: 'Si se confundieran base y cuantía.' },
+    ],
+    legal_basis: 'DT cuadragésima TRLGSS',
+    rule_statement: 'Desde el 1 de enero de 2037, la base reguladora de la pensión de jubilación se calculará aplicando en su integridad lo establecido en el artículo 209.1 del texto refundido.',
+    corrective_rule: '2037 → regla plena del art. 209.',
+    difficulty: 3,
+    cognitive_operations: ['application', 'generative_retrieval'],
+  }),
+  buildMcq({
+    id: 'item-t10-19',
+    cluster_id: 'cluster_t10_base_reguladora',
+    stem: 'El devengo se fija en octubre. ¿Cuál es el primer mes que ha de excluirse al delimitar el período de cómputo hacia atrás?',
+    prompt_before_options: 'El profesor lo repetía como paso A del cálculo.',
+    correct: {
+      text: 'El mes inmediatamente anterior al devengo',
+      explanation: 'Se descarta el mes previo al hecho causante: si el hecho causante es octubre, se excluye septiembre y se cuenta hacia atrás desde agosto.',
+    },
+    distractors: [
+      { text: 'El mes en que se produce el hecho causante', trap_type: 'factual_misapplication', explanation: 'El mes del devengo forma parte del cómputo como referencia; se descarta el previo.', condition_if_correct: 'Si se excluyera octubre.' },
+      { text: 'El mes posterior al hecho causante', trap_type: 'wrong_start_date', explanation: 'El cómputo se hace hacia atrás, no hacia delante.', condition_if_correct: 'Si se contara hacia delante.' },
+      { text: 'El primer mes del año natural en curso', trap_type: 'temporal_confusion', explanation: 'No hay una regla de corte por año natural en el cómputo.', condition_if_correct: 'Si el corte fuera anual.' },
+    ],
+    legal_basis: 'Art. 209.1.a TRLGSS',
+    rule_statement: 'Se seleccionarán los meses consecutivos e inmediatamente anteriores al del mes previo al hecho causante, por lo que el mes anterior al devengo queda fuera del período de cómputo.',
+    corrective_rule: 'Paso A: descartar el mes previo.',
+    difficulty: 4,
+    cognitive_operations: ['application', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t10-20',
+    cluster_id: 'cluster_t10_base_reguladora',
+    stem: 'Una persona tiene lagunas de cotización prolongadas y causó derecho antes de 2040. ¿Qué regla puede aplicársele si resulta más favorable?',
+    prompt_before_options: 'El texto consolidado prevé una cláusula de reversión a redacción anterior.',
+    correct: {
+      text: 'La del artículo 209.1 de 1 de enero de 2023',
+      explanation: 'Si el cálculo vigente es menos favorable, la entidad gestora aplica íntegramente la redacción del art. 209.1 de 1 de enero de 2023.',
+    },
+    distractors: [
+      { text: 'La del artículo 209 en su redacción originaria de 2015', trap_type: 'wrong_start_date', explanation: 'La fecha de referencia es 1 de enero de 2023, no 2015.', condition_if_correct: 'Si se retrotrajera a la ley original.' },
+      { text: 'La de la disposición transitoria cuadragésima primera', trap_type: 'wrong_legal_object', explanation: 'Esa disposición regula la integración de lagunas por brecha de género, no la cláusula de reversión.', condition_if_correct: 'Si se tratara de integración de lagunas.' },
+      { text: 'La de la disposición transitoria cuarta sobre pagas', trap_type: 'factual_misapplication', explanation: 'No es la norma que permite recuperar la redacción anterior del cómputo.', condition_if_correct: 'Si se aplicara otra disposición.' },
+    ],
+    legal_basis: 'DT cuarta TRLGSS',
+    rule_statement: 'Cuando el hecho causante se produzca después del 31 de diciembre de 2025 y antes del 31 de diciembre de 2040, la entidad gestora aplicará íntegramente el art. 209.1 en su redacción de 1 de enero de 2023 si ese cálculo resulta más favorable.',
+    corrective_rule: 'Reversión a la redacción de 2023 si es mejor.',
+    difficulty: 4,
+    cognitive_operations: ['exception_detection', 'generative_retrieval'],
+  }),
+
+  // 21–26: cuantía y demora
+  buildMcq({
+    id: 'item-t10-21',
+    cluster_id: 'cluster_t10_cuantia_demora',
+    stem: '¿Qué porcentaje de la base reguladora corresponde a los primeros quince años de cotización?',
+    prompt_before_options: 'El profesor lo ilustraba con una base de 2.000.',
+    correct: {
+      text: 'El cincuenta por ciento',
+      explanation: 'Por los primeros quince años cotizados se aplica el 50 % de la base reguladora.',
+    },
+    distractors: [
+      { text: 'El cuarenta y cinco por ciento', trap_type: 'numeric_substitution', explanation: 'El 45 % es un porcentaje de la jubilación activa con un año de demora.', condition_if_correct: 'Si se aplicara la escala del art. 214.' },
+      { text: 'El sesenta por ciento', trap_type: 'factual_misapplication', explanation: 'No corresponde a ningún tramo inicial del art. 210.', condition_if_correct: 'Si el porcentaje base fuera distinto.' },
+      { text: 'El cien por ciento desde el primer año cotizado', trap_type: 'overbroad_statement', explanation: 'El 100 % es el tope final, no el punto de partida.', condition_if_correct: 'Si no hubiera escala progresiva.' },
+    ],
+    legal_basis: 'Art. 210.1.a TRLGSS',
+    rule_statement: 'La cuantía de la pensión se determina aplicando a la base reguladora el 50 % por los primeros quince años cotizados.',
+    corrective_rule: '15 primeros años → 50 %.',
+    difficulty: 2,
+    cognitive_operations: ['generative_retrieval', 'numeric_precision'],
+  }),
+  buildMcq({
+    id: 'item-t10-22',
+    cluster_id: 'cluster_t10_cuantia_demora',
+    stem: 'A partir del año decimosexto, ¿cuánto se suma por cada mensualidad adicional de cotización dentro de los primeros 248 meses?',
+    prompt_before_options: 'El profesor subrayó el incremento mensual.',
+    correct: {
+      text: 'Cero coma diecinueve por ciento',
+      explanation: 'Por cada mes adicional comprendido entre el uno y el doscientos cuarenta y ocho se añade el 0,19 %.',
+    },
+    distractors: [
+      { text: 'Cero coma dieciocho por ciento', trap_type: 'numeric_precision', explanation: 'El 0,18 % se aplica a los meses que rebasan el 248.', condition_if_correct: 'Si se superara ese mes.' },
+      { text: 'Uno coma nueve por ciento', trap_type: 'numeric_substitution', explanation: 'Es un orden de magnitud distinto del previsto en la ley.', condition_if_correct: 'Si el incremento fuera diez veces mayor.' },
+      { text: 'Cero coma veinticinco por ciento', trap_type: 'factual_misapplication', explanation: 'No es el coeficiente del art. 210 para este tramo.', condition_if_correct: 'Si se aplicara otro tramo.' },
+    ],
+    legal_basis: 'Art. 210.1.b TRLGSS',
+    rule_statement: 'A partir del año decimosexto, por cada mes adicional de cotización comprendido entre los meses uno y doscientos cuarenta y ocho se añade el 0,19 % a la base reguladora.',
+    corrective_rule: 'Meses 1 a 248 → 0,19 % cada uno.',
+    difficulty: 3,
+    cognitive_operations: ['numeric_precision', 'generative_retrieval'],
+  }),
+  buildMcq({
+    id: 'item-t10-23',
+    cluster_id: 'cluster_t10_cuantia_demora',
+    stem: '¿Qué incremento por mensualidad adicional se aplica cuando se superan los 248 meses posteriores a los quince años?',
+    prompt_before_options: 'El coeficiente cambia de tramo.',
+    correct: {
+      text: 'Cero coma dieciocho por ciento',
+      explanation: 'Por cada mes que rebase el doscientos cuarenta y ocho se añade el 0,18 %, sin que el porcentaje total supere el 100 %.',
+    },
+    distractors: [
+      { text: 'Cero coma diecinueve por ciento', trap_type: 'partial_rule_accuracy', explanation: 'Es el coeficiente de los meses uno a doscientos cuarenta y ocho.', condition_if_correct: 'Si se estuviera en el tramo anterior.' },
+      { text: 'Cero coma veinte por ciento', trap_type: 'numeric_substitution', explanation: 'No es la cifra que fija el art. 210 para este tramo.', condition_if_correct: 'Si el coeficiente fuera mayor.' },
+      { text: 'Cero coma catorce por ciento', trap_type: 'numeric_precision', explanation: 'Cifra inventada: la ley solo prevé 0,19 % y 0,18 %.', condition_if_correct: 'Si existiera un tercer tramo.' },
+    ],
+    legal_basis: 'Art. 210.1.b TRLGSS',
+    rule_statement: 'Por cada mes adicional que rebase el mes doscientos cuarenta y ocho se añade el 0,18 %, sin que el porcentaje aplicable a la base reguladora supere el 100 %.',
+    corrective_rule: 'Más de 248 meses → 0,18 %.',
+    difficulty: 3,
+    cognitive_operations: ['numeric_precision', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t10-24',
+    cluster_id: 'cluster_t10_cuantia_demora',
+    stem: 'Una persona acredita diecisiete años de cotización. ¿Qué porcentaje total se aplica a su base reguladora?',
+    prompt_before_options: 'Dos años por encima de la carencia base equivalen a veinticuatro mensualidades.',
+    correct: {
+      text: 'Cincuenta y cuatro coma cincuenta y seis por ciento',
+      explanation: 'Al 50 % de los primeros quince años se suman 24 × 0,19 % = 4,56 %, resultando 54,56 %.',
+    },
+    distractors: [
+      { text: 'Cincuenta y cuatro coma cincuenta y cinco por ciento', trap_type: 'numeric_precision', explanation: 'El resultado exacto de 24 × 0,19 es 4,56 y no 4,55.', condition_if_correct: 'Si el redondeo fuera distinto.' },
+      { text: 'Cincuenta y dos coma treinta y ocho por ciento', trap_type: 'numeric_substitution', explanation: 'Solo contabilizaría doce mensualidades en lugar de veinticuatro.', condition_if_correct: 'Si solo se contara un año adicional.' },
+      { text: 'Cincuenta y siete coma sesenta por ciento', trap_type: 'factual_misapplication', explanation: 'Aplicaría el coeficiente del 0,32 % por cada mes.', condition_if_correct: 'Si el coeficiente fuera otro.' },
+    ],
+    legal_basis: 'Art. 210.1.a y b TRLGSS',
+    rule_statement: 'Aplicando el 50 % por los primeros quince años y el 0,19 % por cada uno de los veinticuatro meses adicionales, el porcentaje total resultante es 54,56 %.',
+    corrective_rule: '17 años → 50 % + 4,56 % = 54,56 %.',
+    difficulty: 4,
+    cognitive_operations: ['numeric_precision', 'application'],
+  }),
+  buildMcq({
+    id: 'item-t10-25',
+    cluster_id: 'cluster_t10_cuantia_demora',
+    stem: '¿Cuál es el incentivo por año completo de demora que puede elegir quien retrasa el acceso a la pensión?',
+    prompt_before_options: 'La elección se hace una sola vez, en la solicitud.',
+    correct: {
+      text: 'Un cuatro por ciento adicional por año',
+      explanation: 'El art. 210.2 ofrece, a elección del interesado, un 4 % adicional por cada año completo cotizado entre la edad ordinaria y el hecho causante.',
+    },
+    distractors: [
+      { text: 'Un dos por ciento adicional por año', trap_type: 'numeric_substitution', explanation: 'El 2 % se aplica a periodos superiores a seis meses e inferiores a un año desde el segundo año.', condition_if_correct: 'Si se tratara de fracciones.' },
+      { text: 'Un cinco por ciento adicional por año', trap_type: 'numeric_precision', explanation: 'El 5 puntos porcentuales por año corresponde a la jubilación activa.', condition_if_correct: 'Si se aplicara el art. 214.' },
+      { text: 'Un tres por ciento adicional por año', trap_type: 'factual_misapplication', explanation: 'Cifra que no aparece en el complemento de demora.', condition_if_correct: 'Si el incentivo fuera menor.' },
+    ],
+    legal_basis: 'Art. 210.2.a TRLGSS',
+    rule_statement: 'Cuando se acceda a la pensión a edad superior a la ordinaria, el interesado puede elegir un porcentaje adicional del 4 % por cada año completo cotizado entre el cumplimiento de esa edad y el hecho causante; desde el segundo año pueden computarse periodos de más de seis meses al 2 %.',
+    corrective_rule: 'Demora → 4 % por año, 2 % por fracción.',
+    difficulty: 3,
+    cognitive_operations: ['numeric_precision', 'exception_detection'],
+  }),
+  buildMcq({
+    id: 'item-t10-26',
+    cluster_id: 'cluster_t10_cuantia_demora',
+    stem: '¿Cuál es el límite máximo de la cuantía inicial de las pensiones públicas causadas en 2026?',
+    prompt_before_options: 'Cifra fijada por real decreto-ley ante la prórroga presupuestaria.',
+    correct: {
+      text: '3.359,60 euros al mes',
+      explanation: 'El art. 1 del RDL 3/2026 fija el límite máximo para 2026 en 3.359,60 euros mensuales o 47.034,40 euros anuales.',
+    },
+    distractors: [
+      { text: '3.359,60 euros al año', trap_type: 'numeric_substitution', explanation: 'La cifra anual es 47.034,40 euros; la mensual es 3.359,60.', condition_if_correct: 'Si se preguntara por el límite anual.' },
+      { text: '5.101,20 euros al mes', trap_type: 'wrong_legal_object', explanation: 'Es el tope máximo de la base de cotización, no el límite de la pensión.', condition_if_correct: 'Si se confundiera base con pensión.' },
+      { text: '3.000 euros al mes', trap_type: 'factual_misapplication', explanation: 'Cifra redondeada que no coincide con el límite legal.', condition_if_correct: 'Si el límite fuera inferior.' },
+    ],
+    legal_basis: 'Art. 1 RDL 3/2026 (BOE-A-2026-2548)',
+    rule_statement: 'Desde el 1 de enero de 2026 y hasta la aprobación de la Ley de Presupuestos, el límite máximo de percepción de las pensiones públicas causadas en 2026 es de 3.359,60 euros mensuales o 47.034,40 euros anuales.',
+    corrective_rule: 'Tope 2026: 3.359,60 €/mes.',
+    difficulty: 3,
+    cognitive_operations: ['numeric_precision', 'generative_retrieval'],
+    figure_status: 'BOE_VERIFIED',
+  }),
+
+  // 27–36: anticipada por causa no imputable
+  buildMcq({
+    id: 'item-t10-27',
+    cluster_id: 'cluster_t10_anticipada_no_imputable',
+    confusion_pair_id: 'pair_t10_33_vs_35',
+    stem: 'Un camarero con 32 años cotizados es despedido por causas objetivas. ¿Cumple la carencia para anticipar por causa ajena a su voluntad?',
+    prompt_before_options: 'El caso de Ricardo se resolvió en clase.',
+    correct: {
+      text: 'No: se exigen treinta y tres',
+      explanation: 'Para la anticipación no imputable se requieren treinta y tres años de cotización efectiva, sin computar pagas extraordinarias.',
+    },
+    distractors: [
+      { text: 'Sí: con treinta años basta', trap_type: 'numeric_substitution', explanation: 'Ni treinta ni treinta y dos alcanzan la carencia exigida por el art. 207.', condition_if_correct: 'Si la carencia fuera menor.' },
+      { text: 'Sí: porque el despido objetivo es causa tasada', trap_type: 'partial_rule_accuracy', explanation: 'La causa es válida, pero la cotización es insuficiente: los requisitos son cumulativos.', condition_if_correct: 'Si solo se exigiera la causa.' },
+      { text: 'No: se exigen treinta y cinco', trap_type: 'conceptual_merger', explanation: 'Treinta y cinco es la cifra de la anticipación voluntaria, más gravosa.', condition_if_correct: 'Si se aplicara el art. 208.' },
+    ],
+    legal_basis: 'Art. 207.1.c TRLGSS',
+    rule_statement: 'El acceso a la jubilación anticipada por causa no imputable exige acreditar un período mínimo de cotización efectiva de treinta y tres años, sin tener en cuenta la parte proporcional por pagas extraordinarias.',
+    corrective_rule: 'No imputable → 33 años.',
+    difficulty: 3,
+    cognitive_operations: ['application', 'numeric_precision'],
+  }),
+  buildMcq({
+    id: 'item-t10-28',
+    cluster_id: 'cluster_t10_anticipada_no_imputable',
+    stem: '¿Cuánto tiempo ha de estar inscrita como demandante de empleo quien solicite esta modalidad anticipada?',
+    prompt_before_options: 'Es un requisito previo a la solicitud, no posterior.',
+    correct: {
+      text: 'Al menos seis meses antes',
+      explanation: 'Se exige estar inscrito en las oficinas de empleo como demandante durante al menos seis meses inmediatamente anteriores a la solicitud.',
+    },
+    distractors: [
+      { text: 'Al menos tres meses antes', trap_type: 'numeric_substitution', explanation: 'La cifra es seis meses, no tres.', condition_if_correct: 'Si el plazo fuera menor.' },
+      { text: 'Seis meses después de la solicitud', trap_type: 'temporal_confusion', explanation: 'La inscripción ha ser previa, no posterior.', condition_if_correct: 'Si se admitiera la inscripción tardía.' },
+      { text: 'Doce meses ininterrumpidos antes del cese', trap_type: 'numeric_precision', explanation: 'Ni la duración ni el momento se ajustan al art. 207.', condition_if_correct: 'Si el plazo fuera mayor.' },
+    ],
+    legal_basis: 'Art. 207.1.b TRLGSS',
+    rule_statement: 'Es requisito encontrarse inscrito en las oficinas de empleo como demandante de empleo durante un plazo de al menos seis meses inmediatamente anteriores a la fecha de la solicitud de la jubilación.',
+    corrective_rule: 'Seis meses de demandante antes de pedir.',
+    difficulty: 3,
+    cognitive_operations: ['numeric_precision', 'generative_retrieval'],
+  }),
+  buildMcq({
+    id: 'item-t10-29',
+    cluster_id: 'cluster_t10_anticipada_no_imputable',
+    confusion_pair_id: 'pair_t10_4_2_3_anos',
+    stem: '¿Desde qué referencia temporal se cuentan los cuatro años de adelanto en la jubilación no imputable?',
+    prompt_before_options: 'El profesor corregía a quien los contaba desde una edad fija.',
+    correct: {
+      text: 'Desde la edad ordinaria del interesado',
+      explanation: 'Los cuatro años se cuentan hacia atrás desde la edad que en cada caso resulte de aplicación según el art. 205.1.a), individualizada para esa persona.',
+    },
+    distractors: [
+      { text: 'Desde los sesenta y cinco años, siempre', trap_type: 'absolute_relative_confusion', explanation: 'No todos los trabajadores pueden jubilarse a los sesenta y cinco: depende de su carrera.', condition_if_correct: 'Si la edad ordinaria fuera única.' },
+      { text: 'Desde los sesenta y siete años, siempre', trap_type: 'factual_misapplication', explanation: 'Quien acredita treinta y ocho años y seis meses tiene la edad ordinaria en sesenta y cinco.', condition_if_correct: 'Si la referencia fuera fija.' },
+      { text: 'Desde la fecha en que se presentó la solicitud', trap_type: 'wrong_start_date', explanation: 'La solicitud no determina la edad ordinaria de referencia.', condition_if_correct: 'Si el cómputo se hiciera desde la instancia.' },
+    ],
+    legal_basis: 'Art. 207.1.a TRLGSS',
+    rule_statement: 'Se exige tener cumplida una edad inferior en cuatro años, como máximo, a la edad que en cada caso resulte de aplicación según el art. 205.1.a), sin aplicar los coeficientes reductores de los arts. 206 y 206 bis.',
+    corrective_rule: 'Cuatro años desde la edad concreta de cada uno.',
+    difficulty: 4,
+    cognitive_operations: ['micro_discrimination', 'application'],
+  }),
+  buildMcq({
+    id: 'item-t10-30',
+    cluster_id: 'cluster_t10_anticipada_no_imputable',
+    stem: 'Un ERE extingue la totalidad de la plantilla por causas económicas. ¿Cómo se califica a estos efectos frente al despido objetivo individual?',
+    prompt_before_options: 'Ambos son causas válidas, pero no son lo mismo.',
+    correct: {
+      text: 'Es despido colectivo del artículo 51',
+      explanation: 'El art. 51 regula la extinción colectiva por causas económicas, técnicas, organizativas o de producción; el art. 52 contempla despidos objetivos individuales.',
+    },
+    distractors: [
+      { text: 'Es un despido disciplinario procedente', trap_type: 'wrong_legal_object', explanation: 'Las causas económicas no son disciplinarias y no responden a una infracción del trabajador.', condition_if_correct: 'Si existiera incumplimiento laboral.' },
+      { text: 'Es una baja voluntaria del trabajador', trap_type: 'conceptual_merger', explanation: 'La extinción dimana de la empresa, no de la voluntad del empleado.', condition_if_correct: 'Si el trabajador decidiera marcharse.' },
+      { text: 'Es una extinción por resolución judicial en concurso', trap_type: 'factual_misapplication', explanation: 'No hay aquí intervención judicial ni procedimiento concursal.', condition_if_correct: 'Si mediara un juzgado de lo mercantil.' },
+    ],
+    legal_basis: 'Art. 207.1.d.1 TRLGSS',
+    rule_statement: 'El despido colectivo por causas económicas, técnicas, organizativas o de producción conforme al art. 51 del Estatuto de los Trabajadores es causa tasada de jubilación anticipada no imputable; las causas del art. 52 son las mismas, pero los despidos son individuales.',
+    corrective_rule: 'ERE → art. 51; despido objetivo → art. 52.',
+    difficulty: 3,
+    cognitive_operations: ['institutional_discrimination', 'application'],
+  }),
+  buildMcq({
+    id: 'item-t10-31',
+    cluster_id: 'cluster_t10_anticipada_no_imputable',
+    stem: 'Una trabajadora extingue su contrato por ser víctima de violencia de género. ¿En qué modalidad de anticipación se encuadra?',
+    prompt_before_options: 'El profesor avisó de que la palabra «voluntad» aquí engaña.',
+    correct: {
+      text: 'En la de causa no imputable',
+      explanation: 'Aunque la extinción derive de la voluntad de la trabajadora, el art. 207 la incluye expresamente entre las causas no imputables, por ser la opción más favorable.',
+    },
+    distractors: [
+      { text: 'En la anticipación voluntaria del artículo 208', trap_type: 'familiar_wording_trap', explanation: 'La voluntad formal de la trabajadora no la sitúa en el art. 208: la ley la incluye en el art. 207.', condition_if_correct: 'Si se atendiera solo a la palabra voluntad.' },
+      { text: 'No da derecho a jubilación anticipada', trap_type: 'hyper_narrow_statement', explanation: 'Es la causa séptima del art. 207.1.d)', condition_if_correct: 'Si no estuviera reconocida legalmente.' },
+      { text: 'Solo si hay resolución judicial firme', trap_type: 'exception_ignored', explanation: 'No se exige resolución judicial para esta causa concreta.', condition_if_correct: 'Si se exigiera una sentencia.' },
+    ],
+    legal_basis: 'Art. 207.1.d.7 TRLGSS',
+    rule_statement: 'La extinción del contrato por voluntad de la trabajadora por ser víctima de violencia de género o violencia sexual se incluye entre las causas no imputables del art. 207.1.d), aun cuando formalmente derive de su voluntad.',
+    corrective_rule: 'Violencia de género → causa no imputable.',
+    difficulty: 4,
+    cognitive_operations: ['exception_detection', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t10-32',
+    cluster_id: 'cluster_t10_anticipada_no_imputable',
+    stem: 'En un despido objetivo, el trabajador no ha cobrado la indemnización. ¿Qué puede aportar para acceder a la anticipación?',
+    prompt_before_options: 'El profesor recordaba que esto se ha preguntado en exámenes oficiales.',
+    correct: {
+      text: 'La demanda judicial sobre la extinción',
+      explanation: 'En las causas 1.ª, 2.ª y 6.ª basta acreditar haber percibido la indemnización o haber interpuesto demanda judicial de reclamación o impugnación.',
+    },
+    distractors: [
+      { text: 'Una declaración verbal del empresario', trap_type: 'factual_misapplication', explanation: 'La norma exige documento de transferencia o documentación equivalente, o demanda judicial.', condition_if_correct: 'Si bastara una manifestación oral.' },
+      { text: 'La inscripción como demandante de empleo', trap_type: 'partial_rule_accuracy', explanation: 'La inscripción es otro requisito, pero no sustituye la acreditación de la indemnización o de la impugnación.', condition_if_correct: 'Si ambos requisitos se confundieran.' },
+      { text: 'El informe de la Inspección de Trabajo', trap_type: 'wrong_competent_body', explanation: 'No es el medio de acreditación previsto para estas causas.', condition_if_correct: 'Si se admitiera cualquier prueba.' },
+    ],
+    legal_basis: 'Art. 207.1.d TRLGSS',
+    rule_statement: 'En las causas 1.ª, 2.ª y 6.ª del art. 207.1.d) es necesario acreditar haber percibido la indemnización —mediante documento de transferencia o equivalente— o haber interpuesto demanda judicial en reclamación de la indemnización o de impugnación de la decisión extintiva.',
+    corrective_rule: 'Indemnización cobrada o demanda: una de las dos.',
+    difficulty: 4,
+    cognitive_operations: ['application', 'exception_detection'],
+  }),
+  buildMcq({
+    id: 'item-t10-33',
+    cluster_id: 'cluster_t10_anticipada_no_imputable',
+    stem: 'El administrador concursal solicita al juzgado la extinción de los contratos y el juzgado la acuerda. ¿Es causa válida de anticipación?',
+    prompt_before_options: 'El concurso aparece entre las causas tasadas.',
+    correct: {
+      text: 'Sí, por resolución judicial en el concurso',
+      explanation: 'La extinción por resolución judicial en los supuestos de la Ley Concursal es la causa tercera del art. 207.1.d).',
+    },
+    distractors: [
+      { text: 'No, porque no hay despido colectivo', trap_type: 'hyper_narrow_statement', explanation: 'La lista de causas no se agota en el art. 51: incluye la resolución judicial concursal.', condition_if_correct: 'Si solo valiera el ERE.' },
+      { text: 'Solo si el trabajador tenía antigüedad de seis años', trap_type: 'factual_misapplication', explanation: 'Esa antigüedad se exige en la jubilación parcial con relevo, no aquí.', condition_if_correct: 'Si se aplicara el art. 215.' },
+      { text: 'Solo si se inscribe como autónomo', trap_type: 'wrong_legal_object', explanation: 'No se exige el alta en el RETA para esta causa.', condition_if_correct: 'Si el trabajador pasara a cuenta propia.' },
+    ],
+    legal_basis: 'Art. 207.1.d.3 TRLGSS',
+    rule_statement: 'La extinción del contrato por resolución judicial en los supuestos contemplados en el texto refundido de la Ley Concursal es causa tasada de jubilación anticipada no imputable.',
+    corrective_rule: 'Concurso con resolución judicial → válida.',
+    difficulty: 3,
+    cognitive_operations: ['institutional_discrimination', 'application'],
+  }),
+  buildMcq({
+    id: 'item-t10-34',
+    cluster_id: 'cluster_t10_anticipada_no_imputable',
+    stem: 'Una inundación arrasa la empresa y extingue los contratos. ¿Qué condición adicional exige la ley para esta causa?',
+    prompt_before_options: 'El profesor citaba la DANA y el volcán de La Palma.',
+    correct: {
+      text: 'Que constate la fuerza mayor la autoridad laboral',
+      explanation: 'La extinción por fuerza mayor debe estar constatada por la autoridad laboral conforme al art. 51.7 del Estatuto de los Trabajadores.',
+    },
+    distractors: [
+      { text: 'Que lo declare el juzgado de lo mercantil', trap_type: 'wrong_competent_body', explanation: 'Es la autoridad laboral, no el juzgado, quien constata la fuerza mayor en esta causa.', condition_if_correct: 'Si se exigiera resolución judicial.' },
+      { text: 'Que la empresa tenga más de cincuenta trabajadores', trap_type: 'numeric_substitution', explanation: 'No se establece un umbral de plantilla para esta causa.', condition_if_correct: 'Si se aplicara el umbral del ERE.' },
+      { text: 'Que el trabajador hubiera agotado la prestación por desempleo', trap_type: 'partial_rule_accuracy', explanation: 'La inscripción como demandante se exige seis meses, pero no el agotamiento previo de la prestación.', condition_if_correct: 'Si se exigiera el agotamiento.' },
+    ],
+    legal_basis: 'Art. 207.1.d.5 TRLGSS',
+    rule_statement: 'La extinción del contrato motivada por fuerza mayor constatada por la autoridad laboral, conforme al art. 51.7 del Estatuto de los Trabajadores, es causa tasada de jubilación anticipada no imputable.',
+    corrective_rule: 'Fuerza mayor → constatación de la autoridad laboral.',
+    difficulty: 3,
+    cognitive_operations: ['institutional_discrimination', 'exception_detection'],
+  }),
+  buildMcq({
+    id: 'item-t10-35',
+    cluster_id: 'cluster_t10_anticipada_no_imputable',
+    stem: 'Fallece el empresario individual y el trabajador pierde su empleo. ¿Cómo se califica esa extinción a efectos de jubilación anticipada?',
+    prompt_before_options: 'El fallecimiento del empleador aparece en la lista cerrada.',
+    correct: {
+      text: 'Como causa no imputable al trabajador',
+      explanation: 'La muerte, jubilación o incapacidad del empresario individual, y la extinción de la personalidad jurídica del contratante, son causas tasadas del art. 207.',
+    },
+    distractors: [
+      { text: 'Como baja voluntaria del trabajador', trap_type: 'conceptual_merger', explanation: 'La extinción obedece a la desaparición del empleador, no a la decisión del empleado.', condition_if_correct: 'Si el trabajador dimitiera.' },
+      { text: 'Como causa de incapacidad permanente', trap_type: 'wrong_legal_object', explanation: 'No hay una declaración de incapacidad del trabajador, sino la del empresario.', condition_if_correct: 'Si el trabajador estuviera incapacitado.' },
+      { text: 'No da derecho porque falta resolución judicial', trap_type: 'exception_ignored', explanation: 'La causa no exige resolución judicial: basta la extinción de la relación por esa circunstancia.', condition_if_correct: 'Si se exigiera un juzgado.' },
+    ],
+    legal_basis: 'Art. 207.1.d.4 TRLGSS',
+    rule_statement: 'La muerte, jubilación o incapacidad del empresario individual, sin perjuicio del art. 44 del Estatuto de los Trabajadores, o la extinción de la personalidad jurídica del contratante, son causas de jubilación anticipada no imputable.',
+    corrective_rule: 'Empresario individual desaparecido → causa válida.',
+    difficulty: 3,
+    cognitive_operations: ['application', 'generative_retrieval'],
+  }),
+  buildMcq({
+    id: 'item-t10-36',
+    cluster_id: 'cluster_t10_anticipada_no_imputable',
+    confusion_pair_id: 'pair_t10_33_vs_35',
+    stem: '¿Cuál es el cómputo máximo del servicio militar obligatorio a efectos de la carencia de esta jubilación anticipada?',
+    prompt_before_options: 'Es una regla específica, solo para este cómputo.',
+    correct: {
+      text: 'Un año como máximo',
+      explanation: 'A estos exclusivos efectos solo se computa el servicio militar, prestación social sustitutoria o servicio social femenino, con el límite máximo de un año.',
+    },
+    distractors: [
+      { text: 'Dos años como máximo', trap_type: 'numeric_substitution', explanation: 'El límite legal es un año, no dos.', condition_if_correct: 'Si el tope fuera mayor.' },
+      { text: 'Todo el período de prestación, sin límite', trap_type: 'overbroad_statement', explanation: 'La norma impone expresamente un límite máximo de un año.', condition_if_correct: 'Si no hubiera tope.' },
+      { text: 'Seis meses, como la inscripción de demandante', trap_type: 'numeric_precision', explanation: 'Seis meses es el plazo de demandante de empleo, no el del servicio militar.', condition_if_correct: 'Si se confundieran ambos plazos.' },
+    ],
+    legal_basis: 'Art. 207.1.c TRLGSS',
+    rule_statement: 'A los exclusivos efectos del período mínimo de cotización de treinta y tres años, solo se computará el servicio militar obligatorio, prestación social sustitutoria o servicio social femenino obligatorio, con el límite máximo de un año.',
+    corrective_rule: 'Servicio militar → máximo un año.',
+    difficulty: 3,
+    cognitive_operations: ['numeric_precision', 'micro_discrimination'],
+  }),
+
+  // 37–42: otras anticipaciones (voluntad, actividad, discapacidad)
+  buildMcq({
+    id: 'item-t10-37',
+    cluster_id: 'cluster_t10_anticipada_otras',
+    confusion_pair_id: 'pair_t10_33_vs_35',
+    stem: '¿Cuál es la cotización mínima exigida para jubilarse anticipadamente por voluntad del interesado?',
+    prompt_before_options: 'Es la modalidad más gravosa en cotización.',
+    correct: {
+      text: 'Treinta y cinco años efectivos',
+      explanation: 'El art. 208 exige treinta y cinco años de cotización efectiva, sin computar la parte proporcional de pagas extraordinarias.',
+    },
+    distractors: [
+      { text: 'Treinta y tres años efectivos', trap_type: 'numeric_substitution', explanation: 'Es la cifra de la anticipación no imputable, más benévola.', condition_if_correct: 'Si se aplicara el art. 207.' },
+      { text: 'Quince años, como la jubilación ordinaria', trap_type: 'hyper_narrow_statement', explanation: 'La anticipación voluntaria eleva la carencia a treinta y cinco años.', condition_if_correct: 'Si no se elevara la carencia.' },
+      { text: 'Treinta y ocho años y seis meses', trap_type: 'wrong_legal_object', explanation: 'Es la carrera que permite jubilarse a los sesenta y cinco, no la carencia de esta modalidad.', condition_if_correct: 'Si se confundiera con la edad ordinaria.' },
+    ],
+    legal_basis: 'Art. 208.1.b TRLGSS',
+    rule_statement: 'La jubilación anticipada por voluntad del interesado exige acreditar un período mínimo de cotización efectiva de treinta y cinco años, sin tener en cuenta la parte proporcional por pagas extraordinarias.',
+    corrective_rule: 'Voluntaria → 35 años.',
+    difficulty: 3,
+    cognitive_operations: ['numeric_precision', 'generative_retrieval'],
+  }),
+  buildMcq({
+    id: 'item-t10-38',
+    cluster_id: 'cluster_t10_anticipada_otras',
+    confusion_pair_id: 'pair_t10_4_2_3_anos',
+    stem: 'Un trabajador de 62 años quiere retirarse por voluntad propia. ¿Puede hacerlo aunque se desconozca su edad ordinaria exacta?',
+    prompt_before_options: 'El profesor resolvía este caso sin saber si la edad era 65 o 67.',
+    correct: {
+      text: 'No: el adelanto máximo es de dos años',
+      explanation: 'Aun en el supuesto más favorable, con edad ordinaria de sesenta y cinco, el adelanto de dos años impide jubilarse a los sesenta y dos.',
+    },
+    distractors: [
+      { text: 'Sí, si acredita treinta y cinco años cotizados', trap_type: 'partial_rule_accuracy', explanation: 'La cotización no basta: el límite de edad es un requisito autónomo.', condition_if_correct: 'Si solo se exigiera la carencia.' },
+      { text: 'Sí, porque la edad ordinaria son siempre sesenta y cinco', trap_type: 'absolute_relative_confusion', explanation: 'La edad ordinaria depende de la carrera de cotización de cada persona.', condition_if_correct: 'Si la edad fuera única.' },
+      { text: 'Sí, si está inscrito como demandante de empleo', trap_type: 'factual_misapplication', explanation: 'La inscripción no sustituye el requisito de edad de la modalidad voluntaria.', condition_if_correct: 'Si se aplicara el art. 207.' },
+    ],
+    legal_basis: 'Art. 208.1.a TRLGSS',
+    rule_statement: 'La jubilación anticipada voluntaria exige una edad inferior en dos años, como máximo, a la edad ordinaria que corresponda según el art. 205.1.a), sin aplicar los coeficientes reductores de los arts. 206 y 206 bis.',
+    corrective_rule: 'Voluntaria → como mucho dos años antes.',
+    difficulty: 4,
+    cognitive_operations: ['application', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t10-39',
+    cluster_id: 'cluster_t10_anticipada_otras',
+    confusion_pair_id: 'pair_t10_4_2_3_anos',
+    stem: '¿Desde qué momento se cuentan los cuatro años de adelanto cuando se discute si una persona de sesenta y dos años puede jubilarse por causa no imputable?',
+    prompt_before_options: 'La respuesta depende de la carrera de cotización individual.',
+    correct: {
+      text: 'Desde su edad ordinaria concreta',
+      explanation: 'Si puede jubilarse a los sesenta y cinco o sesenta y cinco y medio, sí le alcanza; si su edad ordinaria es sesenta y seis y medio, no.',
+    },
+    distractors: [
+      { text: 'Desde los sesenta y cinco en todo caso', trap_type: 'absolute_relative_confusion', explanation: 'Quien no tiene treinta y ocho años y seis meses no puede jubilarse a los sesenta y cinco.', condition_if_correct: 'Si la edad fuera fija.' },
+      { text: 'Desde los sesenta y siete en todo caso', trap_type: 'factual_misapplication', explanation: 'La edad ordinaria puede ser sesenta y cinco para quien acredita la carrera larga.', condition_if_correct: 'Si solo existiera la edad general.' },
+      { text: 'Desde la fecha del despido', trap_type: 'wrong_start_date', explanation: 'El cese determina la causa, pero no la edad ordinaria de referencia.', condition_if_correct: 'Si el despido fijara la edad.' },
+    ],
+    legal_basis: 'Art. 207.1.a TRLGSS',
+    rule_statement: 'El adelanto de cuatro años se refiere a la edad ordinaria que en cada caso resulte de aplicación conforme al art. 205.1.a), que debe individualizarse según la cotización acreditada por el interesado.',
+    corrective_rule: 'Cuatro años desde la edad de esa persona.',
+    difficulty: 4,
+    cognitive_operations: ['application', 'calibrated_decision'],
+  }),
+  buildMcq({
+    id: 'item-t10-40',
+    cluster_id: 'cluster_t10_anticipada_otras',
+    confusion_pair_id: 'pair_t10_0_25_vs_0_50',
+    stem: 'Una gobernanta acredita un grado de discapacidad elevado durante un cuatrienio en el que siguió trabajando. ¿A qué edad puede anticipar si le correspondería retirarse a los 65?',
+    prompt_before_options: 'El caso de Rosa Jiménez se resolvió en clase.',
+    correct: {
+      text: 'A los sesenta y cuatro años',
+      explanation: 'Aplicando 0,25 por cada año trabajado con la discapacidad, cuatro años reducen un año la edad de jubilación.',
+    },
+    distractors: [
+      { text: 'A los sesenta y tres años', trap_type: 'numeric_substitution', explanation: 'Sería el resultado de aplicar 0,50, que exige necesitar concurso de otra persona.', condition_if_correct: 'Si se aplicara el coeficiente mayor.' },
+      { text: 'A los sesenta y cinco años, sin reducción', trap_type: 'exception_ignored', explanation: 'Los coeficientes reductores permiten anticipar la edad; basta la discapacidad y el trabajo con ella.', condition_if_correct: 'Si no se aplicaran coeficientes.' },
+      { text: 'A los sesenta y dos años', trap_type: 'factual_misapplication', explanation: 'Cuatro años al 0,50 solo reducen dos años; al 0,25 reducen uno.', condition_if_correct: 'Si se aplicara un coeficiente de 0,75.' },
+    ],
+    legal_basis: 'Art. 3.a RD 1539/2003; art. 206 bis TRLGSS',
+    rule_statement: 'El coeficiente del 0,25 se aplica por cada año efectivamente trabajado con un grado de discapacidad igual o superior al 65 %, reduciendo la edad ordinaria en el período equivalente.',
+    corrective_rule: '65 % + trabajo → 0,25 por año.',
+    difficulty: 4,
+    cognitive_operations: ['numeric_precision', 'application'],
+  }),
+  buildMcq({
+    id: 'item-t10-41',
+    cluster_id: 'cluster_t10_anticipada_otras',
+    confusion_pair_id: 'pair_t10_0_25_vs_0_50',
+    stem: '¿Qué hecho adicional, aparte del grado de discapacidad, abre derecho al coeficiente reductor mayor del RD 1539/2003?',
+    prompt_before_options: 'El profesor lo vinculaba a la gran invalidez.',
+    correct: {
+      text: 'Necesitar a otra persona para actos esenciales',
+      explanation: 'El coeficiente 0,50 exige, además del grado ≥65 %, la necesidad del concurso de otra persona para actos esenciales de la vida ordinaria.',
+    },
+    distractors: [
+      { text: 'Tener reconocida una pensión de viudedad', trap_type: 'wrong_legal_object', explanation: 'La viudedad no es requisito del coeficiente reductor por discapacidad.', condition_if_correct: 'Si se aplicara otra prestación.' },
+      { text: 'Haber cotizado al menos treinta y cinco años', trap_type: 'numeric_substitution', explanation: 'Es la carencia de la anticipación voluntaria, no la del coeficiente.', condition_if_correct: 'Si se aplicara el art. 208.' },
+      { text: 'Estar afiliado al Régimen del Mar', trap_type: 'true_but_irrelevant', explanation: 'El RD 1539/2003 se aplica a varios regímenes; el régimen no determina el coeficiente.', condition_if_correct: 'Si el régimen cambiara el coeficiente.' },
+    ],
+    legal_basis: 'Art. 3.b RD 1539/2003',
+    rule_statement: 'El coeficiente del 0,50 se aplica cuando el trabajador acredita un grado de minusvalía igual o superior al 65 % y la necesidad del concurso de otra persona para la realización de los actos esenciales de la vida ordinaria.',
+    corrective_rule: '0,50 exige asistencia de tercera persona.',
+    difficulty: 3,
+    figure_status: 'BOE_VERIFIED',
+    cognitive_operations: ['exception_detection', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t10-42',
+    cluster_id: 'cluster_t10_anticipada_otras',
+    stem: '¿Qué límite infranqueable de edad se aplica al anticipar por discapacidad o por actividad penosa?',
+    prompt_before_options: 'El caso de Julia, personal de vuelo de 55 años, se resolvió con esta regla.',
+    correct: {
+      text: 'Cincuenta y dos años',
+      explanation: 'Los arts. 206.6 y 206 bis.2 prohiben acceder con edad inferior a cincuenta y dos años al aplicar coeficientes reductores.',
+    },
+    distractors: [
+      { text: 'Cincuenta y seis años', trap_type: 'factual_misapplication', explanation: 'Es una cifra discutida en clase y diferida a la sesión siguiente; no figura en el art. 206 bis consultado.', condition_if_correct: 'Si se confirmara esa edad para el 45 %.' },
+      { text: 'Sesenta años', trap_type: 'numeric_substitution', explanation: 'El suelo legal es cincuenta y dos, no sesenta.', condition_if_correct: 'Si el suelo fuera mayor.' },
+      { text: 'Sesenta y cinco años', trap_type: 'partial_rule_accuracy', explanation: 'Es la edad ordinaria reducida, no el suelo infranqueable.', condition_if_correct: 'Si no pudiera anticiparse.' },
+    ],
+    legal_basis: 'Arts. 206.6 y 206 bis.2 TRLGSS',
+    rule_statement: 'La aplicación de los coeficientes reductores de la edad en ningún caso dará lugar a que el interesado pueda acceder a la pensión de jubilación con una edad inferior a cincuenta y dos años.',
+    corrective_rule: 'Suelo de 52 años para coeficientes.',
+    difficulty: 3,
+    cognitive_operations: ['numeric_precision', 'generative_retrieval'],
+  }),
+
+  // 43–46: parcial, flexible y activa
+  buildMcq({
+    id: 'item-t10-43',
+    cluster_id: 'cluster_t10_parcial_flexible_activa',
+    stem: 'Un trabajador ha cumplido la edad ordinaria y quiere reducir su jornada sin contratar a un relevista. ¿En qué horquilla debe moverse la reducción?',
+    prompt_before_options: 'La jubilación parcial sin relevo tiene su propio intervalo.',
+    correct: {
+      text: 'Entre el 25 % y el 75 % de la jornada',
+      explanation: 'Cumplida la edad ordinaria y los requisitos de la pensión, basta una reducción de jornada entre el 25 % y el 75 %, sin contrato de relevo.',
+    },
+    distractors: [
+      { text: 'Entre el 20 % y el 33 % de la jornada', trap_type: 'numeric_substitution', explanation: 'Ese intervalo se aplica el primer año cuando la anticipación supera dos años con relevo.', condition_if_correct: 'Si se anticipara más de dos años.' },
+      { text: 'Entre el 50 % y el 100 % de la jornada', trap_type: 'factual_misapplication', explanation: 'La ley fija un mínimo del 25 % y un máximo del 75 %.', condition_if_correct: 'Si el intervalo fuera distinto.' },
+      { text: 'Hasta el 50 %, sin mínimo', trap_type: 'hyper_narrow_statement', explanation: 'Existe un mínimo del 25 % y un máximo del 75 %.', condition_if_correct: 'Si no hubiera mínimo legal.' },
+    ],
+    legal_basis: 'Art. 215.1 TRLGSS',
+    rule_statement: 'Los trabajadores que hayan cumplido la edad ordinaria y reúnan los requisitos para causar la pensión podrán acceder a la jubilación parcial, sin contrato de relevo, con una reducción de jornada de entre el 25 % y el 75 %.',
+    corrective_rule: 'Sin relevo → 25 % a 75 %.',
+    difficulty: 3,
+    cognitive_operations: ['numeric_precision', 'application'],
+  }),
+  buildMcq({
+    id: 'item-t10-44',
+    cluster_id: 'cluster_t10_parcial_flexible_activa',
+    stem: 'En una jubilación parcial con contrato de relevo, ¿cuál es la antigüedad mínima exigida en la empresa?',
+    prompt_before_options: 'Se exige un período inmediatamente anterior al hecho causante.',
+    correct: {
+      text: 'Seis años inmediatamente anteriores',
+      explanation: 'Con relevo se requieren al menos seis años de antigüedad en la empresa inmediatamente anteriores a la jubilación parcial.',
+    },
+    distractors: [
+      { text: 'Tres años inmediatamente anteriores', trap_type: 'numeric_substitution', explanation: 'Tres años es el adelanto máximo de edad en esta modalidad, no la antigüedad.', condition_if_correct: 'Si se confundieran ambos conceptos.' },
+      { text: 'Seis meses inmediatamente anteriores', trap_type: 'numeric_precision', explanation: 'Seis meses es el plazo de demandante en la anticipación no imputable.', condition_if_correct: 'Si se aplicara ese plazo.' },
+      { text: 'Treinta y tres años en la empresa', trap_type: 'wrong_legal_object', explanation: 'Treinta y tres años es la cotización total exigida, no la antigüedad en la empresa.', condition_if_correct: 'Si se confundiera cotización y antigüedad.' },
+    ],
+    legal_basis: 'Art. 215.2.b TRLGSS',
+    rule_statement: 'La jubilación parcial con contrato de relevo exige acreditar un período de antigüedad en la empresa de al menos seis años inmediatamente anteriores a la fecha de la jubilación parcial.',
+    corrective_rule: 'Con relevo → 6 años de antigüedad.',
+    difficulty: 3,
+    cognitive_operations: ['numeric_precision', 'micro_discrimination'],
+  }),
+  buildMcq({
+    id: 'item-t10-45',
+    cluster_id: 'cluster_t10_parcial_flexible_activa',
+    stem: 'Una persona demora un año su jubilación y compatibiliza la pensión con trabajo por cuenta ajena. ¿Qué porcentaje de la pensión percibe inicialmente?',
+    prompt_before_options: 'La escala de la jubilación activa atiende a los años de demora.',
+    correct: {
+      text: 'El cuarenta y cinco por ciento',
+      explanation: 'Con un año de demora el porcentaje de la pensión compatible con el trabajo es del 45 %, incrementándose después 5 puntos por cada 12 meses en activa.',
+    },
+    distractors: [
+      { text: 'El cincuenta y cinco por ciento', trap_type: 'numeric_substitution', explanation: 'El 55 % corresponde a dos años de demora.', condition_if_correct: 'Si la demora fuera mayor.' },
+      { text: 'El cien por ciento desde el primer año', trap_type: 'overbroad_statement', explanation: 'El 100 % se alcanza a los cinco años de demora o con los incrementos posteriores.', condition_if_correct: 'Si no hubiera escala.' },
+      { text: 'El cincuenta por ciento', trap_type: 'factual_misapplication', explanation: 'El 50 % es el porcentaje general de cuantía por los primeros quince años cotizados.', condition_if_correct: 'Si se aplicara el art. 210.' },
+    ],
+    legal_basis: 'Art. 214.2.a TRLGSS',
+    rule_statement: 'En la jubilación activa, si se demora un año el acceso a la pensión, el porcentaje a percibir es del 45 %; el porcentaje se incrementa en 5 puntos por cada 12 meses ininterrumpidos en esa situación, con el máximo del 100 %.',
+    corrective_rule: 'Un año de demora → 45 % en activa.',
+    difficulty: 3,
+    cognitive_operations: ['numeric_precision', 'generative_retrieval'],
+  }),
+  buildMcq({
+    id: 'item-t10-46',
+    cluster_id: 'cluster_t10_parcial_flexible_activa',
+    stem: '¿Qué cotización especial se aplica mientras se compatibiliza la pensión con un trabajo por cuenta ajena en jubilación activa?',
+    prompt_before_options: 'No genera derechos a nuevas prestaciones.',
+    correct: {
+      text: 'Un nueve por ciento de solidaridad',
+      explanation: 'Además de cotizar por IT y contingencias profesionales, se aplica una cotización especial de solidaridad del 9 %, no computable a efectos de prestaciones.',
+    },
+    distractors: [
+      { text: 'Un siete por ciento a cargo exclusivo del empresario', trap_type: 'partial_rule_accuracy', explanation: 'El 7 % es la parte empresarial dentro del 9 % total; el trabajador aporta el 2 %.', condition_if_correct: 'Si solo se cotizara por la empresa.' },
+      { text: 'El tipo ordinario de contingencias comunes', trap_type: 'conceptual_merger', explanation: 'En jubilación activa no se cotiza por contingencias comunes, sino por IT, profesionales y solidaridad.', condition_if_correct: 'Si se aplicara el régimen general ordinario.' },
+      { text: 'Un dos por ciento a cargo exclusivo del pensionista', trap_type: 'numeric_substitution', explanation: 'El 2 % es solo la parte del trabajador dentro del 9 %.', condition_if_correct: 'Si solo cotizara el pensionista.' },
+    ],
+    legal_basis: 'Art. 153 TRLGSS',
+    rule_statement: 'Durante el trabajo compatible con la pensión en los términos del art. 214 se cotiza únicamente por incapacidad temporal y contingencias profesionales, más una cotización especial de solidaridad del 9 % sobre la base por contingencias comunes, no computable a prestaciones, con cargo del empresario el 7 % y del trabajador el 2 %.',
+    corrective_rule: 'Activa → 9 % de solidaridad (7 % + 2 %).',
+    difficulty: 4,
+    cognitive_operations: ['institutional_discrimination', 'numeric_precision'],
+  }),
+
+  // 47–48: brecha de género
+  buildMcq({
+    id: 'item-t10-47',
+    cluster_id: 'cluster_t10_brecha_genero',
+    stem: '¿Cuál es el importe mensual del complemento por reducción de la brecha de género fijado para 2026?',
+    prompt_before_options: 'Cifra publicada en el real decreto-ley de revalorización.',
+    correct: {
+      text: '36,90 euros mensuales',
+      explanation: 'El art. 2.2 del RDL 3/2026 fija el complemento de brecha de género para 2026 en 36,90 euros mensuales.',
+    },
+    distractors: [
+      { text: '36,90 euros anuales', trap_type: 'numeric_substitution', explanation: 'La cifra es mensual; se abona en catorce pagas.', condition_if_correct: 'Si se preguntara por el importe anual.' },
+      { text: '3.359,60 euros mensuales', trap_type: 'wrong_legal_object', explanation: 'Es el límite máximo de la pensión, no el complemento por hijo.', condition_if_correct: 'Si se confundiera con el tope.' },
+      { text: '30 euros mensuales', trap_type: 'factual_misapplication', explanation: 'Cifra aproximada que no coincide con la del RDL 3/2026.', condition_if_correct: 'Si el importe fuera menor.' },
+    ],
+    legal_basis: 'Art. 2.2 RDL 3/2026 (BOE-A-2026-2548); art. 60 TRLGSS',
+    rule_statement: 'El complemento de pensiones contributivas para la reducción de la brecha de género tendrá para 2026 un importe de 36,90 euros mensuales.',
+    corrective_rule: 'Brecha 2026 → 36,90 €/mes.',
+    difficulty: 3,
+    cognitive_operations: ['numeric_precision', 'generative_retrieval'],
+    figure_status: 'BOE_VERIFIED',
+  }),
+  buildMcq({
+    id: 'item-t10-48',
+    cluster_id: 'cluster_t10_brecha_genero',
+    stem: '¿Cómo se satisface el complemento por brecha de género y cómo influye en el límite máximo de pensiones?',
+    prompt_before_options: 'El art. 60 contiene reglas específicas de pago y de cómputo.',
+    correct: {
+      text: 'En 14 pagas y sin computar para el tope',
+      explanation: 'Se paga en catorce pagas junto con la pensión y su importe no se tiene en cuenta para aplicar el límite máximo de los arts. 57 y 58.7.',
+    },
+    distractors: [
+      { text: 'En 12 pagas y computando para el límite', trap_type: 'numeric_substitution', explanation: 'Son catorce pagas y no computa para el tope de pensiones.', condition_if_correct: 'Si se pagara en doce mensualidades.' },
+      { text: 'En una sola paga anual, junto a la declaración de la renta', trap_type: 'factual_misapplication', explanation: 'El complemento se abona con la pensión, en catorce pagas.', condition_if_correct: 'Si se satisficiera de una vez.' },
+      { text: 'En 14 pagas, sumándolo al complemento por mínimos', trap_type: 'partial_rule_accuracy', explanation: 'No se tiene en cuenta como ingreso para determinar el complemento por mínimos.', condition_if_correct: 'Si se sumara a los mínimos.' },
+    ],
+    legal_basis: 'Art. 60.7.c y d TRLGSS',
+    rule_statement: 'El complemento por reducción de la brecha de género se satisface en catorce pagas junto con la pensión que determina el derecho y su importe no se tiene en cuenta para aplicar el límite máximo de pensiones de los arts. 57 y 58.7, ni como rendimiento del trabajo para el complemento por mínimos.',
+    corrective_rule: '14 pagas; fuera del tope de pensiones.',
+    difficulty: 3,
+    cognitive_operations: ['generative_retrieval', 'micro_discrimination'],
+  }),
+];

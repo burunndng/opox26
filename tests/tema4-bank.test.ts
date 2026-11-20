@@ -131,8 +131,9 @@ describe('Tema 4 específico bank integrity', () => {
       assert.equal(item.status, 'validated', `${item.id} must be practice-eligible`);
       assert.ok(item.cluster_id?.startsWith('cluster_'), `${item.id} needs a cluster`);
     }
-    const tail = seedItems.slice(-batch.length).map((item) => item.id);
-    assert.deepEqual(tail, batch.map((item) => item.id), 'Tema 4 batch must be appended last');
+    const start = seedItems.findIndex((item) => item.id === batch[0].id);
+    const window = seedItems.slice(start, start + batch.length).map((item) => item.id);
+    assert.deepEqual(window, batch.map((item) => item.id), 'Tema 4 batch must stay contiguous');
   });
 
   test('T10: figure-bearing items declare a figure status', () => {

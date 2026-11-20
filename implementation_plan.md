@@ -46,7 +46,7 @@ The app is a complete local-first implementation: P1–P6 are closed and the tab
 | Activity surfaces | All required formats wired to production scorers; cognitive-state / near-miss / quadrant evaluation complete (P4) | `src/components/ActivityRunner.tsx`, `src/scoring/evaluateItem.ts`, `tests/non-mcq-evaluation.test.ts`, `tests/scorer-hardening.test.ts` |
 | Content pipeline | Text/PDF import, offline atom suggestions, eligibility filter and quality-gated promotion enforced (P3) | `server/pdfImport.ts`, `server/heuristics.ts`, `server/validationWarnings.ts`, `ContentStudio.tsx`, `tests/validation-gate.test.ts` |
 | Scheduler | Due filter, daily new-item cap, graduation flags, maintenance and deterministic interleaving covered (P5) | `server/scheduler.ts`, `server/queueOrder.ts`, `tests/queue-order.test.ts` G1–G7, `tests/srs-graduation.test.ts`, `tests/interleaving-hardening.test.ts` |
-| Seed | 590 seeded items / 596 practice-eligible across 10 topics + retrieval/pretest; topic split and legacy re-homing guarded | `server/seedData*.ts`, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` R1/R18 |
+| Seed | 638 seeded items / 644 practice-eligible across 11 topics + retrieval/pretest; topic split and legacy re-homing guarded | `server/seedData*.ts`, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` R1/R18 |
 | Export/import | Anki/CSV/Quizlet/Markdown/backup plus validated JSON/CSV item import (P6) | `server/exporter.ts`, `server/importItems.ts`, `tests/oposilab.test.ts` 12, 15–15d |
 
 ### 1.19 Content — Tema 4 (cotización) new bank from class 16-11 (2026-11-19)
@@ -551,3 +551,22 @@ Global constraints:
 **Non-goals:** no full mock exams, leaderboards, cloud-account dependency, payments, mobile-native app, or black-box AI content without human validation.
 
 **Execution order:** P1 → P2 → P3 → P4 → P5 → P6 — all complete as of 2026-11-03. Future work should keep the app runnable and the working tree reviewable after each change.
+
+### 1.20 Content — Tema 10 (protección por jubilación) new bank from class 18-11 (2026-11-20)
+
+New topic `topic_seguridad_social_tema_10` + 8 clusters + 5 confusion pairs in
+`server/seedDataTema10Meta.ts`; bank `server/seedDataTema10.ts` with 48 validated MCQs
+(`item-t10-1…48`) authored from the 2026-11-18 class transcript and `Diaposiivas tema 10ss.pdf`.
+Gaps closed by cluster: hecho causante/efectos (elección ±3 meses, baja, excedencia forzosa,
+desplazado, subsidio agotado, imprescriptibilidad y retroactividad), requisitos (67/65 con
+38 años 6 meses, 15/2 años, sin alta), base reguladora (art. 209 y DT 40 2027), cuantía
+(50 %, 0,19 %/0,18 %, caso 17 años, demora, tope 2026), anticipación no imputable (33 años,
+6 meses demandante, 4 años desde la edad concreta, causas 51/52/concurso/fuerza mayor/violencia
+de género, indemnización o demanda), otras anticipaciones (35 años, casos de Rosa y Julia,
+coeficientes 0,25/0,50, suelo 52), parcial/flexible/activa y brecha de género.
+Anchors verified in BOE consolidated text (2026-11-19/20): arts. 60, 153, 165, 205–210, 214,
+215 y DT 40/41 TRLGSS (BOE-A-2015-11724), RD 453/2022 (BOE-A-2022-9850), RDL 3/2026
+(BOE-A-2026-2548) y RD 1539/2003 (BOE-A-2003-23401). Deferred per §7 of the class resumen:
+the deck's 7,5 % table, the 56-year floor for 45 % disability, the professor's own hypothesis,
+the 2025 TJUE judgment and the 1,4-day rule — none encoded as a key.
+`npm run lint` clean; `tests/tema10-bank.test.ts` 10/10.

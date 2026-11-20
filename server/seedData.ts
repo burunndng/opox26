@@ -64,6 +64,12 @@ import {
   seedConfusionPairsTema4,
   seedItemsTema4,
 } from './seedDataTema4.ts';
+import {
+  seedTopicTema10,
+  seedClustersTema10,
+  seedConfusionPairsTema10,
+} from './seedDataTema10Meta.ts';
+import { seedItemsTema10 } from './seedDataTema10.ts';
 
 export const seedTopic: Topic = {
   "id": "topic_seguridad_social_tema_7",
@@ -75,7 +81,7 @@ export const seedTopic: Topic = {
   "updated_at": "2026-03-01T10:00:00Z"
 };
 
-export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8, seedTopicTema8IP, seedTopicTema15, seedTopicTema16, seedTopicTema3General, seedTopicTema9, seedTopicTema4];
+export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8, seedTopicTema8IP, seedTopicTema15, seedTopicTema16, seedTopicTema3General, seedTopicTema9, seedTopicTema4, seedTopicTema10];
 
 const seedSourceChunksTema7: SourceChunk[] = [
   {
@@ -244,7 +250,7 @@ const seedClustersTema7: Cluster[] = [
   }
 ];
 
-export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3, ...seedClustersTema8, ...seedClustersTema8IP, ...seedClustersTema3General, ...seedClustersTema9, ...seedClustersTema4];
+export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3, ...seedClustersTema8, ...seedClustersTema8IP, ...seedClustersTema3General, ...seedClustersTema9, ...seedClustersTema4, ...seedClustersTema10];
 
 const seedConfusionPairsTema7: ConfusionPair[] = [
   {
@@ -502,6 +508,7 @@ export const seedConfusionPairs: ConfusionPair[] = [
   ...seedConfusionPairsTema3General,
   ...seedConfusionPairsTema9,
   ...seedConfusionPairsTema4,
+  ...seedConfusionPairsTema10,
 ];
 
 const seedAtomsTema7: Atom[] = [
@@ -6615,4 +6622,7 @@ export const seedItems: Item[] = rebalanceCanonicalMcqOptions([
   // Tema 4 — cotización a la Seguridad Social (2026-11-19 class gap audit),
   // appended last for the same canonical-position reason as above.
   ...seedItemsTema4,
+  // Tema 10 — protección por jubilación (2026-11-20 class gap audit),
+  // appended last for the same canonical-position reason as above.
+  ...seedItemsTema10,
 ]);

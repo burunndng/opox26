@@ -92,6 +92,7 @@ test('X3: matrix rows equal re-derived per-topic item counts (and sum to the see
   const t8 = stemCount(read('server/seedDataTema8Items.ts'));
   const t1 = stemCount(read('server/seedDataTema1.ts'));
   const t4 = stemCount(read('server/seedDataTema4.ts'));
+  const t10 = stemCount(read('server/seedDataTema10.ts'));
   const t7 = firstNumber(/seedData\.ts` \((\d+) ítems/, acceptance, 'ACCEPTANCE Tema 7 count');
   const retrieval = firstNumber(/\+ (\d+) de retrieval\/pretest/, acceptance, 'ACCEPTANCE retrieval count');
 
@@ -110,8 +111,9 @@ test('X3: matrix rows equal re-derived per-topic item counts (and sum to the see
   assert.equal(cell('Tema 3 General'), t3g);
   assert.equal(cell('Tema 9'), t9);
   assert.equal(cell('Tema 4 específico'), t4);
+  assert.equal(cell('Tema 10 específico'), t10);
   assert.equal(cell('retrieval/pretest'), retrieval);
 
   const seeded = firstNumber(/(\d+) ítems sembrados/, read('README.md'), 'README sembrados');
-  assert.equal(t7 + t1 + t3 + t8 + t8ip + t15all + t3g + t9 + t4, seeded, 'matrix topics sum != README seeded');
+  assert.equal(t7 + t1 + t3 + t8 + t8ip + t15all + t3g + t9 + t4 + t10, seeded, 'matrix topics sum != README seeded');
 });
