@@ -34,7 +34,7 @@
 
 The app is a complete local-first implementation: P1–P6 are closed and the table below records verified behavior with its evidence. Historical phase notes are audit trail, not acceptance evidence.
 
-> **Próximos pasos:** latest session diary `docs/sessions/2026-11-20-cierre-fiabilidad.md`
+> **Próximos pasos:** latest session diary `docs/sessions/2026-11-23-wip-adoption.md`
 > (next-up: smoke manual en navegador cuando el owner pueda; después reanudar Tier B. Código de esta ronda verificado con 384/384 en 51 suites). Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
 
 | Area | Current status | Evidence / next focus |

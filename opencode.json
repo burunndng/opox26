@@ -1,6 +1,11 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "default_agent": "oposilab-pm",
   "agent": {
+    "oposilab-pm": {
+      "mode": "all",
+      "description": "Oposilab project manager: read-only codebase discovery before planning, evidence-based briefs, acceptance verification against docs/ACCEPTANCE.md and the documented npm commands, decision logging and status reports — not production code"
+    },
     "oposilab-guardian": {
       "mode": "all",
       "description": "Oposilab quality-gate: build loop (`npm run lint` = `tsc --noEmit`), SQLite isolation (`tests/helpers/isolation.ts`), `docs/ACCEPTANCE.md` evidence mapping, P1–P6 tracking, config/review verification"
