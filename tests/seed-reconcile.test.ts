@@ -62,13 +62,14 @@ function runProbe(dir: string, mode: string, itemId?: string): SeedState {
 describe('Boot reconciliation for untouched seed items (isolated)', () => {
   after(() => fs.rmSync(isolatedRoot, { recursive: true, force: true }));
 
-  test('R1: fresh database seeds 646 practice-eligible items and no drafts', () => {
+  test('R1: fresh database seeds 693 practice-eligible items and no drafts', () => {
     const state = runProbe(freshCaseDir('fresh'), 'snapshot');
     // Per-topic breakdown lives in docs/CONTENT-COVERAGE.md (single source of truth);
     // the totals below are: 113 core + 69 T3 + 70 T8 + 52 T8 II + 76 T15 + 77 T16
-    // + 24 T3 General + 61 T9 + 48 T4 + 50 T10 + 2 digest Tema 10 + 6 retrieval/pretest = 646.
-    assert.equal(state.seedCount, 646, '646 practice-eligible items; see docs/CONTENT-COVERAGE.md for the per-topic breakdown');
-    assert.equal(state.eligibleCount, 646);
+    // + 24 T3 General + 61 T9 + 48 T4 + 50 T10 + 47 T4 General
+    // + 2 digest Tema 10 + 6 retrieval/pretest = 693.
+    assert.equal(state.seedCount, 693, '693 practice-eligible items; see docs/CONTENT-COVERAGE.md for the per-topic breakdown');
+    assert.equal(state.eligibleCount, 693);
     assert.deepEqual(state.draftIds, []);
   });
 

@@ -70,6 +70,14 @@ import {
   seedConfusionPairsTema10,
 } from './seedDataTema10Meta.ts';
 import { seedItemsTema10 } from './seedDataTema10.ts';
+import {
+  seedTopicTema4General,
+  seedSourceChunksTema4General,
+  seedClustersTema4General,
+  seedConfusionPairsTema4General,
+  seedAtomsTema4General,
+  seedItemsTema4General,
+} from './seedDataTema4General.ts';
 
 export const seedTopic: Topic = {
   "id": "topic_seguridad_social_tema_7",
@@ -81,7 +89,7 @@ export const seedTopic: Topic = {
   "updated_at": "2026-03-01T10:00:00Z"
 };
 
-export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8, seedTopicTema8IP, seedTopicTema15, seedTopicTema16, seedTopicTema3General, seedTopicTema9, seedTopicTema4, seedTopicTema10];
+export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8, seedTopicTema8IP, seedTopicTema15, seedTopicTema16, seedTopicTema3General, seedTopicTema9, seedTopicTema4, seedTopicTema10, seedTopicTema4General];
 
 const seedSourceChunksTema7: SourceChunk[] = [
   {
@@ -140,6 +148,7 @@ export const seedSourceChunks: SourceChunk[] = [
   ...seedSourceChunksTema15,
   ...seedSourceChunksTema3General,
   ...seedSourceChunksTema9,
+  ...seedSourceChunksTema4General,
 ];
 
 const seedClustersTema7: Cluster[] = [
@@ -250,7 +259,7 @@ const seedClustersTema7: Cluster[] = [
   }
 ];
 
-export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3, ...seedClustersTema8, ...seedClustersTema8IP, ...seedClustersTema3General, ...seedClustersTema9, ...seedClustersTema4, ...seedClustersTema10];
+export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3, ...seedClustersTema8, ...seedClustersTema8IP, ...seedClustersTema3General, ...seedClustersTema9, ...seedClustersTema4, ...seedClustersTema10, ...seedClustersTema4General];
 
 const seedConfusionPairsTema7: ConfusionPair[] = [
   {
@@ -509,6 +518,7 @@ export const seedConfusionPairs: ConfusionPair[] = [
   ...seedConfusionPairsTema9,
   ...seedConfusionPairsTema4,
   ...seedConfusionPairsTema10,
+  ...seedConfusionPairsTema4General,
 ];
 
 const seedAtomsTema7: Atom[] = [
@@ -1233,6 +1243,7 @@ export const seedAtoms: Atom[] = [
   ...seedAtomsTema1,
   ...seedAtomsTema3,
   ...seedAtomsTema3General,
+  ...seedAtomsTema4General,
 ];
 
 const seedItemsTema7: Item[] = [
@@ -6625,4 +6636,7 @@ export const seedItems: Item[] = rebalanceCanonicalMcqOptions([
   // Tema 10 — protección por jubilación (2026-11-20 class gap audit),
   // appended last for the same canonical-position reason as above.
   ...seedItemsTema10,
+  // Tema 4 General — La Corona (2026-11-23 class gap audit), appended last for
+  // the same canonical-position reason as above.
+  ...seedItemsTema4General,
 ]);

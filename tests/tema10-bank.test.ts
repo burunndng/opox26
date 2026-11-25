@@ -2,6 +2,7 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { seedItems } from '../server/seedData.ts';
 import { seedItemsTema10 } from '../server/seedDataTema10.ts';
+import { seedItemsTema4General } from '../server/seedDataTema4General.ts';
 import { detectAnswerInStem } from '../src/utils/learningDesignValidator.ts';
 import type { Item } from '../src/types.ts';
 
@@ -125,14 +126,19 @@ describe('Tema 10 específico bank integrity', () => {
     assert.ok(run.length <= 2, `run of ${run.length} at ${run.at}`);
   });
 
-  test('T9: every item is validated, anchored to a Tema 10 cluster and appended last', () => {
+  test('T9: every item is validated, anchored to a Tema 10 cluster and contiguous before Tema 4 General', () => {
     for (const item of tema10) {
       assert.equal(item.topic_id, TOPIC, `${item.id} wrong topic`);
       assert.equal(item.status, 'validated', `${item.id} must be practice-eligible`);
       assert.ok(item.cluster_id?.startsWith('cluster_t10_'), `${item.id} needs a Tema 10 cluster`);
     }
-    const tail = seedItems.slice(-batch.length).map((item) => item.id);
-    assert.deepEqual(tail, batch.map((item) => item.id), 'Tema 10 batch must be appended last');
+    const start = seedItems.findIndex((item) => item.id === batch[0].id);
+    const window = seedItems.slice(start, start + batch.length + seedItemsTema4General.length);
+    assert.deepEqual(
+      window.slice(0, batch.length).map((item) => item.id),
+      batch.map((item) => item.id),
+      'Tema 10 batch must precede the Tema 4 General batch',
+    );
   });
 
   test('T10: figure-bearing items declare a figure status', () => {

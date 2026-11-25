@@ -22,17 +22,17 @@ npm run dev
 ```
 
 Abre **http://localhost:3000**. La base de datos se inicializa sola en el primer arranque y se cargan
-las semillas de los once temas incluidos: Tema 7 (Régimen General), Tema 1 CE, Tema 3 específico
+las semillas de los doce temas incluidos: Tema 7 (Régimen General), Tema 1 CE, Tema 3 específico
 (afiliación), Tema 8 específico (IT), Tema 8 II (incapacidad permanente), Tema 15 (Ley 40/2015),
-Tema 16 (Ley 39/2015), Tema 9 específico (nacimiento y cuidado), Tema 3 general (Tribunal Constitucional)
-Tema 4 específico (cotización) y Tema 10 específico (jubilación). En total, 640 ítems sembrados y
-646 ítems elegibles para práctica (incluye retrieval/pretest).
+Tema 16 (Ley 39/2015), Tema 9 específico (nacimiento y cuidado), Tema 3 general (Tribunal Constitucional),
+Tema 4 específico (cotización), Tema 10 específico (jubilación) y Tema 4 general (La Corona).
+En total, 687 ítems sembrados y 693 ítems elegibles para práctica (incluye retrieval/pretest).
 
 Otros comandos:
 
 ```bash
 npm run lint     # tsc --noEmit (0 errores exigido)
-npm test         # 384 pruebas / 51 suites (node:test vía tsx)
+npm test         # 395 pruebas / 52 suites (node:test vía tsx)
 npm run build    # bundle de producción; npm start lo sirve
 ```
 
@@ -120,8 +120,8 @@ sesión y calidad del banco. Activa el **alto contraste** con el botón del Navb
   framework no aportaba nada pedagógicamente y el proyecto ya funcionaba).
 - **SQLite con `node:sqlite`** (sin dependencias nativas) en lugar de better-sqlite3: cero compilación,
   una promesa de "un comando" real.
-- **Sin Drizzle** y **sin Vitest**: repositorios tipados sobre `node:sqlite` y las 384 pruebas en
-  51 suites con `node:test` cubren lo necesario con menos machinery.
+- **Sin Drizzle** y **sin Vitest**: repositorios tipados sobre `node:sqlite` y las 395 pruebas en
+  52 suites con `node:test` cubren lo necesario con menos machinery.
 - **Módulos puros y testeados**: `server/scheduler.ts` (SRS + intercalado), `server/queueOrder.ts`
   (cola diaria), `server/validationWarnings.ts`, `server/importItems.ts`, `server/heuristics.ts`
   (sugerencias offline), `server/pdfImport.ts`, `src/scoring/evaluateItem.ts`,
@@ -142,7 +142,7 @@ src/components/         Dashboard, StudySetup, ActivityRunner, OnboardingModal, 
 src/utils/              analytics, retrievalMatch, learningDesignValidator, drillSelectors,
                         repairRouting, optionOrder, practicePools, useFocusTrap
 src/scoring/            evaluateItem (cloze, spot-error, two-tier, number-sort…)
-tests/                  384 pruebas en 51 suites (unit + integración)
+tests/                  395 pruebas en 52 suites (unit + integración)
 data/                   SQLite local (no versionado)
 examples/               exportaciones reales de ejemplo
 docs/                   ACCEPTANCE.md, AUDIT-UX-LEARNING.md, audit/, plans/

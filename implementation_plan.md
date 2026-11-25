@@ -30,23 +30,25 @@
 
 ---
 
-## 1. Current State (verified 2026-09-23 · refreshed 2026-11-19)
+## 1. Current State (verified 2026-09-23 · refreshed 2026-11-25)
 
 The app is a complete local-first implementation: P1–P6 are closed and the table below records verified behavior with its evidence. Historical phase notes are audit trail, not acceptance evidence.
 
-> **Próximos pasos:** latest session diary `docs/sessions/2026-11-23-wip-adoption.md`
-> (next-up: smoke manual en navegador cuando el owner pueda; después reanudar Tier B. Código de esta ronda verificado con 384/384 en 51 suites). Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
+> **Próximos pasos:** latest session diary `docs/sessions/2026-11-25-tema4-general-corona.md`
+> (next-up: smoke manual en navegador cuando el owner pueda; después reanudar Tier B — el matiz
+> «español de nacimiento» sigue diferido. Código de esta ronda verificado con 395/395 en 52 suites).
+> Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
 
 | Area | Current status | Evidence / next focus |
 |---|---|---|
 | Stack | Vite 8 + React 19 + Express 4 + TypeScript, `npm run dev` = `tsx server.ts` | `package.json` |
 | Persistence | SQLite exists; restart behavior now covered by an isolated two-boot regression test | `server/db.ts`, `tests/persistence.test.ts` |
-| Tests | Full suite green — **384 tests / 51 suites** (2026-11-20; `npm run lint`, `npm test`, `npm run build` OK; smoke visual pendiente) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
+| Tests | Full suite green — **395 tests / 52 suites** (2026-11-25; `npm run lint`, `npm test`, `npm run build` OK; smoke visual pendiente) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
 | Data model | Core types and SQLite tables stable; seed relationships are guarded by the integrity/reconcile suites | `src/types.ts`, `server/sqlite/connection.ts`, `tests/seed-integrity.test.ts` F1–F12, `tests/seed-reconcile.test.ts` R1–R18 |
 | Activity surfaces | All required formats wired to production scorers; cognitive-state / near-miss / quadrant evaluation complete (P4) | `src/components/ActivityRunner.tsx`, `src/scoring/evaluateItem.ts`, `tests/non-mcq-evaluation.test.ts`, `tests/scorer-hardening.test.ts` |
 | Content pipeline | Text/PDF import, offline atom suggestions, eligibility filter, quality-gated promotion and atomic/idempotent full-set saving enforced (P3) | `server/pdfImport.ts`, `server/heuristics.ts`, `server/validationWarnings.ts`, `ContentStudio.tsx`, `server/db.ts:createContentSet`, `tests/content-set-save.test.ts` |
 | Scheduler | Due filter, daily new-item cap, graduation flags, maintenance and deterministic interleaving covered (P5) | `server/scheduler.ts`, `server/queueOrder.ts`, `tests/queue-order.test.ts` G1–G7, `tests/srs-graduation.test.ts`, `tests/interleaving-hardening.test.ts` |
-| Seed | 640 seeded items / 646 practice-eligible across 11 topics + retrieval/pretest; topic split and legacy re-homing guarded | `server/seedData*.ts`, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` R1/R18 |
+| Seed | 687 seeded items / 693 practice-eligible across 12 topics + retrieval/pretest; topic split and legacy re-homing guarded | `server/seedData*.ts`, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` R1/R18 |
 | Export/import | Anki/CSV/Quizlet/Markdown/backup plus validated JSON/CSV item import (P6) | `server/exporter.ts`, `server/importItems.ts`, `tests/oposilab.test.ts` 12, 15–15d |
 
 ### 1.19 Content — Tema 4 (cotización) new bank from class 16-11 (2026-11-19)
@@ -570,3 +572,29 @@ Anchors verified in BOE consolidated text (2026-11-19/20): arts. 60, 153, 165, 2
 the deck's 7,5 % table, the 56-year floor for 45 % disability, the professor's own hypothesis,
 the 2025 TJUE judgment and the 1,4-day rule — none encoded as a key.
 `npm run lint` clean; `tests/tema10-bank.test.ts` 10/10.
+
+### 1.21 Content — Tema 4 General (La Corona) new bank from class 23-11 (2026-11-25)
+
+New topic `topic_constitucion_tema_4` + 8 source chunks + 8 clusters + 4 confusion pairs +
+24 atoms + 47 validated MCQs (`item-t4g-1…47`) in a single file `server/seedDataTema4General.ts`,
+authored from the 2026-11-23 class resumen and `Resumen T4g (resumen SOLO del pdf).txt`.
+Gaps closed: jefatura/inviolabilidad (art. 56.1 triple function, refrendo, only-65.2 exception,
+Presidente del Congreso refrendo of art. 99 dissolution); sucesión (order, Leonor/Sofía age
+criterion, Asturias dignity since birth, extinct lines → Cortes, prohibited marriage, art. 57.5
+ley orgánica); consorte/aforamiento; regencia/tutela (causes, order, 1/3/5, requirements,
+testamentary tutor, accumulation only in parents/direct ascendants, unipersonal and political
+incompatibility); juramento/funciones; tratamientos (RD 1368/1987); Casa Real (RD 434/1988:
+units, five personnel classes, alta dirección, retribuciones, audit/legal/TIC, gifts).
+BOE-first corrections made against the live consolidated texts (consultado 2026-11-25):
+the Royal Family aforamiento is **art. 55 bis LOPJ** (LO 4/2014), not art. 58 CE (which only
+bars constitutional functions for the consort); RD 1368/1987 article numbers are 1 (Majestad,
+consortes), 2 (heir), 3 (Infantes and merced), 4 (hijos de Infantes), 5 (Regencia) and
+disposición transitoria cuarta (Reyes honoríficos); RD 434/1988 personnel classes are art. 8,
+alta dirección art. 9.1, retribuciones art. 12.2, asistencia/auditoría arts. 13.4/13.5,
+gifts the disposición adicional única, and the TIC amendment is art. 13.1 as added by
+RD 139/2026 (BOE-A-2026-4514). Deferred per §7: the professor's "español de nacimiento"
+nacionalidad-mantenida gloss, the estirpe-based consorte definition and hot-off-the-press
+succession numbering — no key encodes them. One extra item beyond the approved 46 was added
+(`item-t4g-47`) so the fourth audited confusion pair (refrendo PG vs Congreso) is exercised.
+`npm run lint` clean; `tests/tema4g-bank.test.ts` 11/11; `tests/seed-reconcile.test.ts` R1 646→693;
+`tests/tema10-bank.test.ts` T9 and `tests/doc-freshness.test.ts` X3 extended for the new tail.
