@@ -34,9 +34,9 @@
 
 The app is a complete local-first implementation: P1–P6 are closed and the table below records verified behavior with its evidence. Historical phase notes are audit trail, not acceptance evidence.
 
-> **Próximos pasos:** latest session diary `docs/sessions/2026-11-25-tema4-general-corona.md`
+> **Próximos pasos:** latest session diary `docs/sessions/2026-11-25-t4g-verification.md`
 > (next-up: smoke manual en navegador cuando el owner pueda; después reanudar Tier B — el matiz
-> «español de nacimiento» sigue diferido. Código de esta ronda verificado con 395/395 en 52 suites).
+> «español de nacimiento» sigue diferido en `docs/CONTENT-COVERAGE.md`. Código verificado con 395/395 en 52 suites, lint/build OK).
 > Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
 
 | Area | Current status | Evidence / next focus |
