@@ -699,7 +699,7 @@ const questionBank: Question[] = [
   },
   {
     stem: 'Según el artículo 57.1 CE, ¿cuál es el orden exacto de preferencia en la sucesión a la Corona?',
-    prompt: 'Memoriza la secuencia línea, grado, sexo y edad, sin invertir sus pasos.',
+    prompt: 'Recuerda los cuatro criterios del art. 57.1 CE y el orden en que se aplican.',
     key: 'A',
     correct: {
       text: 'Línea anterior, grado más próximo, varón a la mujer y persona de más edad a la de menos.',
@@ -902,7 +902,7 @@ const questionBank: Question[] = [
   },
   {
     stem: '¿Qué órgano conoce de las acciones civiles y penales dirigidas contra la Reina consorte?',
-    prompt: 'Distingue las dos Salas del Tribunal Supremo y descarta el Tribunal Constitucional.',
+    prompt: 'Identifica el órgano jurisdiccional competente y la clase de sala según la acción.',
     key: 'A',
     correct: {
       text: 'Las Salas de lo Civil y de lo Penal del Tribunal Supremo, respectivamente.',
@@ -931,7 +931,7 @@ const questionBank: Question[] = [
   },
   {
     stem: 'Además de la Reina consorte y del Príncipe o Princesa de Asturias con su consorte, ¿quién está aforado ante el Tribunal Supremo conforme a la Ley Orgánica del Poder Judicial?',
-    prompt: 'Completa el círculo de personas aforadas por el art. 55 bis LOPJ.',
+    prompt: 'Completa el círculo de personas aforadas en ese precepto de la LOPJ.',
     key: 'A',
     correct: {
       text: 'El Rey o Reina que hubiere abdicado y su consorte.',
@@ -1612,7 +1612,7 @@ const questionBank: Question[] = [
   },
   {
     stem: '¿Qué tratamiento corresponde a quien el Rey agracia con la dignidad de Infante por circunstancias excepcionales?',
-    prompt: 'Recuerda la diferencia entre Alteza y Alteza Real.',
+    prompt: 'Distingue el tratamiento del Infante por merced del que corresponde a los Infantes por derecho.',
     key: 'A',
     correct: {
       text: 'El de Alteza, no el de Alteza Real.',
@@ -1642,7 +1642,7 @@ const questionBank: Question[] = [
   },
   {
     stem: '¿Qué consideración y tratamiento corresponden a los hijos de los Infantes de España?',
-    prompt: 'Identifica la figura que recibe Excelencia.',
+    prompt: 'Distingue la condición y el tratamiento que reciben los hijos de los Infantes.',
     key: 'A',
     correct: {
       text: 'La de Grandes de España, con tratamiento de Excelencia.',
@@ -1731,7 +1731,7 @@ const questionBank: Question[] = [
   },
   {
     stem: '¿En qué unidades se estructura la Casa de S.M. el Rey según el Real Decreto 434/1988?',
-    prompt: 'Agrupa correctamente el Cuarto Militar y la Guardia Real.',
+    prompt: 'Recuerda las tres unidades en que el RD 434/1988 organiza la Casa.',
     key: 'A',
     correct: {
       text: 'Jefatura, Secretaría General y Cuarto Militar y Guardia Real.',
@@ -1760,7 +1760,7 @@ const questionBank: Question[] = [
   },
   {
     stem: '¿Cuántas clases de personal distingue el Real Decreto 434/1988 en la Casa de S.M. el Rey?',
-    prompt: 'Recuerda las cinco categorías, incluidos los funcionarios eventuales.',
+    prompt: 'Recuerda la clasificación completa del personal civil que distingue el RD 434/1988.',
     key: 'A',
     correct: {
       text: 'Cinco: alta dirección, dirección, funcionarios de carrera, funcionarios eventuales y personal laboral.',
@@ -1818,7 +1818,7 @@ const questionBank: Question[] = [
   },
   {
     stem: '¿Qué personal de la Casa Real percibe sus retribuciones por el Ministerio de la Presidencia?',
-    prompt: 'Separa a los funcionarios del personal de confianza y laboral.',
+    prompt: 'Distingue qué personal cobra con cargo a los PGE y cuál por el Ministerio de la Presidencia.',
     key: 'A',
     correct: {
       text: 'Los funcionarios de carrera y los funcionarios eventuales.',
