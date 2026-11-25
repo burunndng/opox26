@@ -126,14 +126,19 @@ describe('Tema 4 General (La Corona) bank integrity', () => {
     assert.ok(run.length <= 2, `run of ${run.length} at ${run.at}`);
   });
 
-  test('T9: every item is validated, anchored to a Tema 4 General cluster and appended last', () => {
+  test('T9: every item is validated, anchored to a Tema 4 General cluster and before Tema 5 General', () => {
     for (const item of tema4g) {
       assert.equal(item.topic_id, TOPIC, `${item.id} wrong topic`);
       assert.equal(item.status, 'validated', `${item.id} must be practice-eligible`);
       assert.ok(item.cluster_id?.startsWith('cluster_t4g_'), `${item.id} needs a Tema 4 General cluster`);
     }
-    const tail = seedItems.slice(-batch.length).map((item) => item.id);
-    assert.deepEqual(tail, batch.map((item) => item.id), 'Tema 4 General batch must be appended last');
+    const start = seedItems.findIndex((item) => item.id === batch[0].id);
+    const window = seedItems.slice(start, start + batch.length);
+    assert.deepEqual(
+      window.map((item) => item.id),
+      batch.map((item) => item.id),
+      'Tema 4 General batch must be contiguous before the Tema 5 General batch',
+    );
   });
 
   test('T10: the batch covers the eight clusters and the four confusion pairs', () => {

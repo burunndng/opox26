@@ -78,6 +78,14 @@ import {
   seedAtomsTema4General,
   seedItemsTema4General,
 } from './seedDataTema4General.ts';
+import {
+  seedTopicTema5General,
+  seedSourceChunksTema5General,
+  seedClustersTema5General,
+  seedConfusionPairsTema5General,
+  seedAtomsTema5General,
+  seedItemsTema5General,
+} from './seedDataTema5General.ts';
 
 export const seedTopic: Topic = {
   "id": "topic_seguridad_social_tema_7",
@@ -89,7 +97,7 @@ export const seedTopic: Topic = {
   "updated_at": "2026-03-01T10:00:00Z"
 };
 
-export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8, seedTopicTema8IP, seedTopicTema15, seedTopicTema16, seedTopicTema3General, seedTopicTema9, seedTopicTema4, seedTopicTema10, seedTopicTema4General];
+export const seedTopics: Topic[] = [seedTopic, seedTopicTema1, seedTopicTema3, seedTopicTema8, seedTopicTema8IP, seedTopicTema15, seedTopicTema16, seedTopicTema3General, seedTopicTema9, seedTopicTema4, seedTopicTema10, seedTopicTema4General, seedTopicTema5General];
 
 const seedSourceChunksTema7: SourceChunk[] = [
   {
@@ -149,6 +157,7 @@ export const seedSourceChunks: SourceChunk[] = [
   ...seedSourceChunksTema3General,
   ...seedSourceChunksTema9,
   ...seedSourceChunksTema4General,
+  ...seedSourceChunksTema5General,
 ];
 
 const seedClustersTema7: Cluster[] = [
@@ -259,7 +268,7 @@ const seedClustersTema7: Cluster[] = [
   }
 ];
 
-export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3, ...seedClustersTema8, ...seedClustersTema8IP, ...seedClustersTema3General, ...seedClustersTema9, ...seedClustersTema4, ...seedClustersTema10, ...seedClustersTema4General];
+export const seedClusters: Cluster[] = [...seedClustersTema7, ...seedClustersTema1, ...seedClustersTema3, ...seedClustersTema8, ...seedClustersTema8IP, ...seedClustersTema3General, ...seedClustersTema9, ...seedClustersTema4, ...seedClustersTema10, ...seedClustersTema4General, ...seedClustersTema5General];
 
 const seedConfusionPairsTema7: ConfusionPair[] = [
   {
@@ -519,6 +528,7 @@ export const seedConfusionPairs: ConfusionPair[] = [
   ...seedConfusionPairsTema4,
   ...seedConfusionPairsTema10,
   ...seedConfusionPairsTema4General,
+  ...seedConfusionPairsTema5General,
 ];
 
 const seedAtomsTema7: Atom[] = [
@@ -1244,6 +1254,7 @@ export const seedAtoms: Atom[] = [
   ...seedAtomsTema3,
   ...seedAtomsTema3General,
   ...seedAtomsTema4General,
+  ...seedAtomsTema5General,
 ];
 
 const seedItemsTema7: Item[] = [
@@ -6639,4 +6650,7 @@ export const seedItems: Item[] = rebalanceCanonicalMcqOptions([
   // Tema 4 General — La Corona (2026-11-23 class gap audit), appended last for
   // the same canonical-position reason as above.
   ...seedItemsTema4General,
+  // Tema 5 General parte 1 — Poder Legislativo (2026-11-23 class transcript),
+  // appended last for the same canonical-position reason as above.
+  ...seedItemsTema5General,
 ]);

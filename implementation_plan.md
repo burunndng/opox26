@@ -34,21 +34,22 @@
 
 The app is a complete local-first implementation: P1–P6 are closed and the table below records verified behavior with its evidence. Historical phase notes are audit trail, not acceptance evidence.
 
-> **Próximos pasos:** latest session diary `docs/sessions/2026-11-25-t4g-verification.md`
-> (next-up: smoke manual en navegador cuando el owner pueda; después reanudar Tier B — el matiz
-> «español de nacimiento» sigue diferido en `docs/CONTENT-COVERAGE.md`. Código verificado con 395/395 en 52 suites, lint/build OK).
+> **Próximos pasos:** latest session diary `docs/sessions/2026-11-25-tema5-general-parte1.md`
+> (next-up: smoke manual en navegador cuando el owner pueda; con el transcript del 30-11 añadir
+> la parte 2 de Tema 5 al mismo topic; «español de nacimiento» sigue diferido en
+> `docs/CONTENT-COVERAGE.md`. Código verificado con 406/406 en 53 suites, lint/build OK).
 > Diary entry = source of truth; update this pointer in the same commit as the next diary entry.
 
 | Area | Current status | Evidence / next focus |
 |---|---|---|
 | Stack | Vite 8 + React 19 + Express 4 + TypeScript, `npm run dev` = `tsx server.ts` | `package.json` |
 | Persistence | SQLite exists; restart behavior now covered by an isolated two-boot regression test | `server/db.ts`, `tests/persistence.test.ts` |
-| Tests | Full suite green — **395 tests / 52 suites** (2026-11-25; `npm run lint`, `npm test`, `npm run build` OK; smoke visual pendiente) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
+| Tests | Full suite green — **406 tests / 53 suites** (2026-11-25; `npm run lint`, `npm test`, `npm run build` OK; smoke visual pendiente) | `npm test`, `tests/helpers/isolation.ts`, P2.3 regression guard |
 | Data model | Core types and SQLite tables stable; seed relationships are guarded by the integrity/reconcile suites | `src/types.ts`, `server/sqlite/connection.ts`, `tests/seed-integrity.test.ts` F1–F12, `tests/seed-reconcile.test.ts` R1–R18 |
 | Activity surfaces | All required formats wired to production scorers; cognitive-state / near-miss / quadrant evaluation complete (P4) | `src/components/ActivityRunner.tsx`, `src/scoring/evaluateItem.ts`, `tests/non-mcq-evaluation.test.ts`, `tests/scorer-hardening.test.ts` |
 | Content pipeline | Text/PDF import, offline atom suggestions, eligibility filter, quality-gated promotion and atomic/idempotent full-set saving enforced (P3) | `server/pdfImport.ts`, `server/heuristics.ts`, `server/validationWarnings.ts`, `ContentStudio.tsx`, `server/db.ts:createContentSet`, `tests/content-set-save.test.ts` |
 | Scheduler | Due filter, daily new-item cap, graduation flags, maintenance and deterministic interleaving covered (P5) | `server/scheduler.ts`, `server/queueOrder.ts`, `tests/queue-order.test.ts` G1–G7, `tests/srs-graduation.test.ts`, `tests/interleaving-hardening.test.ts` |
-| Seed | 687 seeded items / 693 practice-eligible across 12 topics + retrieval/pretest; topic split and legacy re-homing guarded | `server/seedData*.ts`, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` R1/R18 |
+| Seed | 737 seeded items / 743 practice-eligible across 13 topics + retrieval/pretest; topic split and legacy re-homing guarded | `server/seedData*.ts`, `tests/seed-integrity.test.ts` F11–F12, `tests/seed-reconcile.test.ts` R1/R18 |
 | Export/import | Anki/CSV/Quizlet/Markdown/backup plus validated JSON/CSV item import (P6) | `server/exporter.ts`, `server/importItems.ts`, `tests/oposilab.test.ts` 12, 15–15d |
 
 ### 1.19 Content — Tema 4 (cotización) new bank from class 16-11 (2026-11-19)
@@ -598,3 +599,28 @@ succession numbering — no key encodes them. One extra item beyond the approved
 (`item-t4g-47`) so the fourth audited confusion pair (refrendo PG vs Congreso) is exercised.
 `npm run lint` clean; `tests/tema4g-bank.test.ts` 11/11; `tests/seed-reconcile.test.ts` R1 646→693;
 `tests/tema10-bank.test.ts` T9 and `tests/doc-freshness.test.ts` X3 extended for the new tail.
+
+### 1.22 Content — Tema 5 General parte 1 (Poder Legislativo) new bank from class 23-11 (2026-11-25)
+
+New topic `topic_constitucion_tema_5` (visible name "Poder Legislativo y Defensor del Pueblo")
++ 8 source chunks + 8 clusters + 5 confusion pairs + 26 atoms + 50 validated MCQs
+(`item-t5g-1…50`) in `server/seedDataTema5General.ts`, authored from the 2026-11-23 class
+transcript (signal 100.000 onward), its class resumen and `t5g resumen (SOLO del pdf).txt`.
+Scope: only 1.1–1.14 (diapositiva 26), the point at which the professor closed the session;
+the remaining blocks are deferred to a second batch with the 30-11 transcript (§1 of the
+class resumen, §7.A, and `docs/CONTENT-COVERAGE.md` Tier B). Gaps closed: Cortes/mandato
+(arts. 66-67, 79), Congreso (art. 68 CE + LOREG arts. 51, 44 bis, 162, 163), Senado
+(art. 69 CE and the 2026 Ibiza/Formentera reform), sufragio/inelegibilidad (LOREG arts. 3-7,
+art. 70 CE), pérdida/prerrogativas (art. 71 CE), funcionamiento (arts. 72-80 CE), funciones
+(arts. 82, 86, 99-101, 116, 134 CE) and órganos/grupos (Reglamento Congreso art. 23.1).
+BOE-first corrections made against the live consolidated texts (consultado 2026-11-25):
+art. 73.2 CE requires a majority of **cualquiera** de las Cámaras (not "cada Cámara" as the
+professor and the PDF said); LOREG art. 6.1.f covers Subsecretarios, Secretarios generales
+and Directores generales, not Ministros or Secretarios de Estado; the 2026 reform of
+art. 69.3 CE gives Ibiza and Formentera their own seats with deferred effectiveness; and
+the 23-07-2026 Reglamento del Congreso reform (BOE-A-2026-16353) moves the group-parliament
+thresholds to media 10 % / 3 % from the XVI legislatura. Deferred per §7: D'Hondt
+(illustrative), the unsourced "2 años" remark, teacher value judgements and all matter not
+yet taught. `npm run lint` clean; `tests/tema5g-bank.test.ts` 11/11; R1 693→743;
+tema4g-bank T9 and doc-freshness X3 adapted to the new tail; full suite 406/406 in 53 suites.
+

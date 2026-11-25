@@ -21,6 +21,7 @@ baseline; after each content batch, refresh the affected row here in the same co
 | Tema 4 específico (cotización) | clase 16-11 (grupos 473/475) — resumen de transcript + deck + NORMATIVA | 48 | 2026-11-19 | auditado |
 | Tema 10 específico (jubilación) | clase 18-11 — transcript + `Diaposiivas tema 10ss.pdf` (resumen en `ESPECIFICO/T10/`) | 50 | 2026-11-20 | auditado (49–50 vs digest Tipos jubilación.md) |
 | Tema 4 General (La Corona) | clase 23-11 — resumen de clase + `Resumen T4g (resumen SOLO del pdf).txt` (CE arts. 56–65, RD 1368/1987, RD 434/1988) | 47 | 2026-11-25 (§1.21) | auditado (new bank) |
+| Tema 5 General (Poder Legislativo y Defensor del Pueblo, parte 1) | clase 23-11 — transcript + resumen de clase + `t5g resumen (SOLO del pdf).txt` (CE arts. 66–80 y 134, LOREG, Reforma 2026) | 50 | 2026-11-25 (§1.22) | auditado (new bank, parcial) |
 | retrieval/pretest | — | 6 | — | n/a |
 
 ## Tier B (deferred follow-up batches)
@@ -37,6 +38,8 @@ baseline; after each content batch, refresh the affected row here in the same co
       cubierto en el banco (cluster_lactante, item-t9-57 y bloque agrupado de carencia). No se
       generan items nuevos: no hay hueco de contenido real. Anclas verificadas: BOE-A-2015-11724
       arts. 183, 184, 178 (consultado 2026-11-19).
+- [ ] **Tema 5 General parte 2** (clase 30-11): resto de 1.13 (Corona, CCAA, otras instituciones e internacional), art. 135 CE desarrollado, 1.15 Comisiones Permanentes, 1.16 Tribunal de Cuentas, Bloque 2 (elaboración de leyes: procedimiento, ILP, veto/enmiendas, sanción, ley orgánica/ordinaria, decreto-ley/legislativo, referéndum), Bloque 3 (tratados) y Bloque 4 (Defensor del Pueblo). El profesor cerró el 23-11 en el punto 1.14 (diapositiva 26) y anunció que retomaría desde la diapositiva 22 (§7.A del resumen de clase, §1.22).
+- [ ] Matiz del profesor sobre los días naturales por defecto en el bloque general (regla metodológica de clase, no cita normativa autónoma): se usa como criterio de plazos en ítems con anclaje CE/LOREG, no como norma independiente (§1.22).
 - [ ] Matiz del profesor sobre «español de nacimiento» en la tutela testamentaria del Rey menor
       (Tema 4 General, clase 23-11): el art. 60.1 CE exige literalmente «español de nacimiento»;
       la exigencia adicional de mantener actualmente la nacionalidad española no tiene anclaje
