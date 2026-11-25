@@ -34,7 +34,7 @@
 
 The app is a complete local-first implementation: P1–P6 are closed and the table below records verified behavior with its evidence. Historical phase notes are audit trail, not acceptance evidence.
 
-> **Próximos pasos:** latest session diary `docs/sessions/2026-11-25-tema5-general-parte1.md`
+> **Próximos pasos:** latest session diary `docs/sessions/2026-11-25-tema5-general-handoff.md`
 > (next-up: smoke manual en navegador cuando el owner pueda; con el transcript del 30-11 añadir
 > la parte 2 de Tema 5 al mismo topic; «español de nacimiento» sigue diferido en
 > `docs/CONTENT-COVERAGE.md`. Código verificado con 406/406 en 53 suites, lint/build OK).
